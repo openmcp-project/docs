@@ -4,7 +4,7 @@
 
 ## About this project
 
-Documentation
+Documentation and Architecture for the openmcp-project.
 
 ## Support, Feedback, Contributing
 
