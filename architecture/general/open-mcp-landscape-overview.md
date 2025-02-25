@@ -10,7 +10,7 @@ Further operators can be added to the landscape. They are devided in three categ
 
 Such operators are specified in custom resources of three kinds (`ClusterProvider`, `PlatformService`, `ServiceProvider`), and installed by three corresponding controllers, which are part of the OpenMCP Operator.
 
-![Overview](./diagram-overview.png)
+![Overview](../images/diagram-overview.png)
 
 
 ## Objectives
@@ -61,4 +61,4 @@ When selecting a cluster, the cluster scheduler must follow certain rules. Possi
 - If a workload cluster is requested, the selected cluster must have no other purposes than "workload".
 - If an mcp cluster is requested, a new cluster must be created.
 
-![diagram](./diagram-cluster-provider.png)
+![diagram](../images/diagram-cluster-provider.png)
