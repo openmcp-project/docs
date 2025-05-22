@@ -9,7 +9,7 @@ deciders: Valentin Gerlach, Rene Schünemann<br>
 
 ## Context and Problem Statement
 
-When creating services on a Kubernetes cluster, they shall be accessible from other clusters within an OpenMCP landscape. To achieve this a `Gateway` and `HTTPRoute` resource is created. The Gateway controller will assign a routable IP addresss to the Gateway resource. The HTTPRoute resource will then be used to route traffic to the service.
+When creating services on a Kubernetes cluster, they shall be accessible from other clusters within an OpenMCP landscape. To achieve this a `Gateway` and `HTTPRoute` resource is created. The Gateway controller will assign a routable IP address to the Gateway resource. The HTTPRoute resource will then be used to route traffic to the service.
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1beta1
