@@ -1,14 +1,17 @@
-[
-    { 
-       "name": "Crossplane BTP provider",
-       "url": "github.com/SAP/crossplane-provider-btp",
-       "endUserCrds": "my/path/to/allCrds",
-       "opsCrds": "my/path/to/nerdy/operational/crds",
-       "guides": [
-              {
-                   "guidePath": "path/to/dir/or/mdx",
-                   "targetPath": "end-user/provider/abc/some/thing"
-              }
-        ]
- }
-] 
+{
+  "sources": [
+    {
+      "name": "Crossplane BTP provider",
+      "url": "https://github.com/SAP/crossplane-provider-btp",
+      "branch": "move/docs",
+      "endUserCrds": "package/crds",
+      "opsCrds": null,
+      "guides": [
+        {
+          "guideDir": "docs",
+          "targetDir": "docs/providers"
+        }
+      ]
+    }
+  ]
+}
