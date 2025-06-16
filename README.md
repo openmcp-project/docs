@@ -1,22 +1,41 @@
-[![REUSE status](https://api.reuse.software/badge/github.com/openmcp-project/docs)](https://api.reuse.software/info/github.com/openmcp-project/docs)
+# Website
 
-# docs
+This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
-## About this project
+## Installation
 
-Documentation and Architecture for the openmcp-project.
+```bash
+yarn
+```
 
-## Support, Feedback, Contributing
+## Local Development
 
-This project is open to feature requests/suggestions, bug reports etc. via [GitHub issues](https://github.com/openmcp-project/docs/issues). Contribution and feedback are encouraged and always welcome. For more information about how to contribute, the project structure, as well as additional contribution information, see our [Contribution Guidelines](CONTRIBUTING.md).
+```bash
+yarn start
+```
 
-## Security / Disclosure
-If you find any bug that may be a security problem, please follow our instructions at [in our security policy](https://github.com/openmcp-project/docs/security/policy) on how to report it. Please do not create GitHub issues for security-related doubts or problems.
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-## Code of Conduct
+## Build
 
-We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone. By participating in this project, you agree to abide by its [Code of Conduct](https://github.com/SAP/.github/blob/main/CODE_OF_CONDUCT.md) at all times.
+```bash
+yarn build
+```
 
-## Licensing
+This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
-Copyright 2025 SAP SE or an SAP affiliate company and docs contributors. Please see our [LICENSE](LICENSE) for copyright and license information. Detailed information including third-party components and their licensing/copyright information is available [via the REUSE tool](https://api.reuse.software/info/github.com/openmcp-project/docs).
+## Deployment
+
+Using SSH:
+
+```bash
+USE_SSH=true yarn deploy
+```
+
+Not using SSH:
+
+```bash
+GIT_USER=<Your GitHub username> yarn deploy
+```
+
+If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
