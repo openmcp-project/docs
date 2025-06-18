@@ -11,12 +11,7 @@ sources=$(jq -c '.sources' sources.json)
 
 # Iterate over each source
 echo "$sources" | jq -c '.[]' | while read -r source; do
-    repo_url=$(echo "$source" | jq -r '.url')
-    branch=$(echo "$source" | jq -r '.branch // "main"')
-
-    # Clone the repository
-    temp_dir=$(mktemp -d)
-    git clone --branch "$branch" "$repo_url" "$temp_dir"
+    submoduleName=$(echo "$source" | jq -r '.submoduleName')
     
     # Iterate over guides array
     echo "$source" | jq -c '.guides[]' | while read -r guide; do
@@ -24,7 +19,7 @@ echo "$sources" | jq -c '.[]' | while read -r source; do
         target_directory=$(echo "$guide" | jq -r '.targetDir')
 
         # Check if guide path exists
-        if [ ! -d "$temp_dir/$guide_path" ]; then
+        if [ ! -d "$submoduleName/$guide_path" ]; then
             echo "Guide path $guide_path not found in repository $repo_url!"
             continue
         fi
@@ -32,9 +27,13 @@ echo "$sources" | jq -c '.[]' | while read -r source; do
         # Create target directory if it doesn't exist
         mkdir -p "$target_directory"
 
-        # Copy guide path to target directory
-        cp -r "$temp_dir/$guide_path/"* "$target_directory"
+        # Copy all jpg, jpeg, and png files to static/img
+        mkdir -p static/img
+        find "$submoduleName/$guide_path" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) -exec cp {} static/img/ \;
 
+        # Copy guide path to target directory
+        find "$submoduleName/$guide_path" -type f \( -iname "*.md" -o -iname "*.mdx" \) -exec cp {} "$target_directory/" \;
+        
         echo "Pulled and copied content from $guide_path to $target_directory"
     done
 done

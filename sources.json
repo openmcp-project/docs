@@ -1,9 +1,7 @@
 {
   "sources": [
     {
-      "name": "Crossplane BTP provider",
-      "url": "https://github.com/SAP/crossplane-provider-btp",
-      "branch": "move/docs",
+      "submoduleName": "crossplane-provider-btp",
       "endUserCrds": "package/crds",
       "opsCrds": null,
       "guides": [
