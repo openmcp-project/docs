@@ -59,45 +59,13 @@ spec:
   - name: foo
 status:
   observedGeneration: 3
-  lastReconcileTime: "2021-07-01T00:00:00Z"
-  ready: true
-  reason: AllGood
-  message: "The provider is ready."
+  phase: Ready
   conditions:
   - type: ProviderReady
     status: "True"
     lastTransitionTime: "2021-07-01T00:00:00Z"
     reason: <...>
     message: <...>
-  profiles:
-  - name: aws
-    providerConfigRef:
-      name: aws
-    supportedVersions:
-    - version: 1.19.1
-      deprecated: true
-    - version: 1.19.2
-      deprecated: true
-    - version: 1.20.0
-    - version: 1.20.1
-    - version: 1.20.3
-    supportedTraits:
-    - name: infrastructure/vendor/aws
-    - name: kubernetes.io/apis/compute
-  - name: aws-workerless
-    providerConfigRef:
-      name: aws
-    supportedVersions:
-    - version: 1.19.1
-      deprecated: true
-    - version: 1.19.2
-      deprecated: true
-    - version: 1.20.0
-    - version: 1.20.1
-    - version: 1.20.3
-    supportedTraits:
-    - trait: infrastructure/vendor/aws
-    - trait: cluster.openmcp.cloud/workerless
 ```
 
 A `ClusterProvider` represents a specific instance of a cluster provider. The configuration is minimal, ideally just a path to an OCI artifact. The openmcp-operator (OMCPO) deploys the corresponding controller, which requires that all cluster provider implementations can be deployed exactly the same way.
@@ -128,7 +96,28 @@ spec:
   shootTemplate: <...>
 ```
 
-After the cluster provider has started, it searches for instances of its own configuration resources, interpretes them, and exposes supported _profiles_ in its status. These profiles include available k8s versions as well as _traits_. An explanation of how traits work follows further down.
+After the cluster provider has started, it searches for instances of its own configuration resources, interpretes them, and exposes available configurations via `ClusterProfile` resources:
+```yaml
+apiVersion: clusters.openmcp.cloud/v1alpha1
+kind: ClusterProfile
+metadata:
+  name: default.gardener.gcp-workerless
+spec:
+  providerConfigRef:
+    name: gcp-workerless
+  providerRef:
+    name: gardener
+  supportedVersions:
+  - version: 1.32.4
+  - deprecated: true
+    version: 1.32.3
+  - deprecated: true
+    version: 1.32.2
+  - version: 1.31.8
+  - deprecated: true
+    version: 1.31.7
+```
+Profiles are generic and look the same for all ClusterProviders. They currently only contain the available k8s versions, but might be expanded in the future.
 
 #### ClusterProvider and ProviderConfig: 1:1 vs 1:n vs 1:1:n
 
@@ -153,17 +142,16 @@ metadata:
   name: my-mcp
   namespace: abcdefg
 spec:
-  clusterProviderRef:
-    name: gardener
-    profile: aws-workerless
   clusterConfigRef: # optional
     apiGroup: gardener.cluster.openmcp.cloud
     kind: ClusterConfig
     name: abc
   kubernetes:
     version: "1.20.3"
+  profile: default.gardener.gcp-workerless
   purposes:
   - mcp
+  tenancy: Exclusive
 status:
   observedGeneration: 3
   lastReconcileTime: "2021-07-01T00:00:00Z"
@@ -178,9 +166,9 @@ status:
     <...>
 ```
 
-`Cluster` resources represent k8s clusters. They reference a `ClusterProvider` and one of its exposed _profiles_. A `Cluster` can also reference a provider-specific `ClusterConfig` resource. However, this is not only optional, but we actually want `Clusters` with a referenced config to be the exception, not the norm. Since we only have a very limited number of cluster archetypes in use in our current landscapes, this should be possible.
+`Cluster` resources represent k8s clusters. They reference a `ClusterProfile`, which also determines the ClusterProvider that is responsible for it. A `Cluster` can also reference a provider-specific `ClusterConfig` resource. However, this is not only optional, but we actually want `Clusters` with a referenced config to be the exception, not the norm. Since we only have a very limited number of cluster archetypes in use in our current landscapes, this should be possible.
 
-The `purposes` are mostly for informative reasons in the `Cluster` resource, but more on that later.
+The `purposes` are used for scheduling via `ClusterRequest` resources.
 
 The `providerStatus` field is only interpreted by the provider responsible for the cluster and can be used to store relevant information. Keep in mind that kubernetes considers the `status` to be volatile though, meaning it must only contain information that can be recovered if the status is lost.
 
@@ -188,7 +176,7 @@ There haven't been any big discussions regarding the `Cluster` resource, we pret
 
 ### The 'ClusterRequest' API Type and the Scheduler
 
-As one might notice, an entity that wants a cluster must still know about the available `ClusterProviders` and their profiles, in order to request one. For this reason, we designed the `ClusterRequest` resource:
+As one might notice, an entity that wants a cluster must still know about the available `ClusterProfiles` in order to request one. For this reason, we designed the `ClusterRequest` resource:
 ```yaml
 apiVersion: cluster.openmcp.cloud/v1alpha1
 kind: ClusterRequest
