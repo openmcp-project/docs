@@ -82,9 +82,27 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'main',
+          sidebarId: 'about',
           position: 'left',
-          label: 'Docs',
+          label: 'About OpenMCP',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'userDocs',
+          position: 'left',
+          label: 'End-users',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'operatorDocs',
+          position: 'left',
+          label: 'Operators',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'developerDocs',
+          position: 'left',
+          label: 'Developers',
         },
         {to: '/adrs', label: 'ADRs', position: 'left'},
         {
