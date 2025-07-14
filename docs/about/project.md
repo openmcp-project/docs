@@ -3,7 +3,7 @@ slug: /
 sidebar_position: 1
 ---
 
-# About this Project
+# About openMCP
 
 👋 Welcome to the documentation of openMCP. We are part of [ApeiroRA](https://apeirora.eu/content/projects/) which is an Important Project of Common European Interest - Next Generation Cloud Infrastructures and Services (IPCEI-CIS).
 
