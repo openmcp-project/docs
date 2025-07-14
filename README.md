@@ -6,6 +6,27 @@
 
 Documentation and Architecture for the openmcp-project.
 
+## Get Started
+This project is built with [Docusaurus 3](https://docusaurus.io/)
+
+### 🚧 Prerequisites
+Make sure that you have installed the following tools on your local machine:
+- `Node@18`
+
+### 💻 Installation
+
+```
+$ npm install
+```
+
+### 🧑‍💻 Local Development
+
+```
+$ npm run start
+```
+
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+
 ## Support, Feedback, Contributing
 
 This project is open to feature requests/suggestions, bug reports etc. via [GitHub issues](https://github.com/openmcp-project/docs/issues). Contribution and feedback are encouraged and always welcome. For more information about how to contribute, the project structure, as well as additional contribution information, see our [Contribution Guidelines](CONTRIBUTING.md).
