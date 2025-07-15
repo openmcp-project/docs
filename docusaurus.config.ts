@@ -144,10 +144,23 @@ const config: Config = {
               label: 'GitHub',
               href: 'https://github.com/openmcp-project',
             },
+            {
+              label: 'Terms of Service',
+              href: 'https://www.sap.com/about/legal/terms-of-use.html',
+            },
+            {
+              label: 'Imprint',
+              href: 'https://www.sap.com/about/legal/impressum-se.html',
+            }
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company and contributors. Built with Docusaurus.`,
+      copyright: `
+        Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company and openMCP contributors.
+        <br>
+        This site is hosted by <a href="https://pages.github.com/">GitHub Pages</a>.
+        Please see the <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement">GitHub Privacy Statement</a> for any information how GitHub processes your personal data.
+      `,
     },
     prism: {
       theme: prismThemes.github,
