@@ -29,4 +29,4 @@ To facilitate a nice environment for all, check out [our Code of Conduct](https:
 
 ## 🪙 Funding
 
-![Bundesministerium für Wirtschaft und Energie (BMWE)-EU funding logo](https://apeirora.eu/assets/img/BMWK-EU.png)
+![Bundesministerium für Wirtschaft und Energie (BMWE)-EU funding logo](/img/BMWK-EU.png)
