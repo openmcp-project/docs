@@ -5,3 +5,9 @@ ValentinGerlach:
   image_url: /img/authors/ValentinGerlach.png
   socials:
     github: ValentinGerlach
+MaximilianTechritz:
+  name: Maximilian Techritz
+  title: openMCP Contributor
+  url: https://github.com/maximiliantech
+  socials:
+    github: maximiliantech
