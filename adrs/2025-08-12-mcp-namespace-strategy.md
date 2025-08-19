@@ -24,4 +24,4 @@ The hash algorithm we will use with Option 1 is [SHAKE128](https://pkg.go.dev/cr
 
 ### Consequences
 
-NONE
+- The old hash function `K8sNameHash` should not be used anymore.
