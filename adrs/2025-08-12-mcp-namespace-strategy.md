@@ -18,7 +18,7 @@ Without proper namespace isolation, MCPs could interfere with each other, leadin
 
 ## Decision Outcome
 
-Option 1: "mcp-{hash-mcp-name-and-namespace}", because it provides unique namespace isolation for each MCP while avoiding conflicts and maintaining deterministic naming that survives backup/restore operations. Option 2 would have been simpler but does not work well with backup/restore scenarios, as the UID can change after a restore operation, leading to potential conflicts and confusion.
+Option 1: "mcp-{hash-mcp-name-and-namespace}", because it provides unique namespace isolation for each MCP while avoiding conflicts and maintaining deterministic naming that survives backup/restore operations. Option 2 would have been simpler but does not work well with backup/restore scenarios, as the UID changes after a restore operation, breaking the link between the MCP and its namespace.
 
 The hash algorithm we will use with Option 1 is [SHAKE128](https://pkg.go.dev/crypto/sha3#SumSHAKE128). It is the only 128-bit algorithm that is FIPS compliant. Through the 128-bit output, we can ensure UUID style. So the namespace could look something like `mcp-3f4b2c1d-8e9a-7b6c-5d4e-3f2a1b0c9d8e`.
 
