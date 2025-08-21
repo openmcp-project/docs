@@ -1,0 +1,15 @@
+[Kk]ubebuilder
+[Kk]ustomize
+APIs?
+Bundesministerium
+CRDs?
+Crossplane
+Energie
+für
+Hetzner
+kubectl
+Kyverno
+MCPs?
+und
+Wirtschaft
+automations
