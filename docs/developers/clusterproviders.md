@@ -44,7 +44,7 @@ spec:
     version: 1.32.2
 ```
 
-`spec.providerRef` is the name of the ClusterProvider that created this `ClusterProfile`. It should be filled with the value that the provider received via its `--provider-name` argument.
+`spec.providerRef` is the name of the ClusterProvider that created this `ClusterProfile`. It should be filled with the value that the provider received via its [`--provider-name`](./provider_deployment.md#arguments) argument.
 
 `spec.providerConfigRef` is the name of the provider configuration that is responsible for this profile. Whether this refers to an actual k8s resource, an internal value or just a static string depends on the provider implementation. It is used as a label value though and therefore has to match the corresponding regex.
 
@@ -71,7 +71,8 @@ metadata:
   name: my-cluster
   namespace: my-namespace
 spec:
-  kubernetes: {}
+  kubernetes:
+    version: 1.32.8
   profile: default.myprovider.myprofile
   purposes:
   - my-purpose
@@ -82,7 +83,7 @@ Some information about the different fields:
 - The `clusters.openmcp.cloud/k8sversion` and `clusters.openmcp.cloud/provider` labels are not set by default. The cluster provider can populate them to allow for easier filtering or better column information in `kubectl get`.
   - Note that `spec.kubernetes.version` contains a desired k8s version, which does not have to match the actual k8s version that is displayed in the label.
 - The `clusters.openmcp.cloud/providerinfo` annotation can be used to hold additional provider-specific information. It is displayed as a column on `kubectl get -o wide`.
-- `spec.kubernetes.version` can contain a desired k8s version. If not set, the provider has to derive it from its configuration. The provider can decide to either throw an error or choose version if an invalid/unsupported version is specified.
+- `spec.kubernetes.version` can contain a desired k8s version. If not set, the provider has to derive it from its configuration. The provider can decide to either throw an error or choose a version if an invalid/unsupported version is specified.
 - `spec.profile` is the most important field for a ClusterProvider. It references the `ClusterProfile` that should be used for this cluster.
   - The referenced profile contains a reference to the ClusterProvider it belongs to. Since multiple ClusterProviders can run in parallel, this allows a ClusterProvider to determine whether it is responsible for this cluster resource or not.
     - **ClusterProviders must only ever act on `Cluster` resources that reference profiles belonging to themselves!**
@@ -183,7 +184,7 @@ Note that, while the example shows both, an `AccessRequest` must have exactly on
 
 If `spec.token` is set, a token-based access is requested. The ClusterProvider is expected to create a `ServiceAccount`, create `Role` (if `namespace` is not empty) and `ClusterRole` (if `namespace` is empty) resources for each entry in `spec.token.permissions`, and create `RoleBinding` and `ClusterRoleBinding` resources for each entry in `spec.token.permissions` and each entry in `spec.token.roleRefs`.
 
-Since token-based access works with kubernetes principles only, it should work on any k8s cluster and is expected to be supported by every ClusterProvider.
+Since token-based access is based on standard RBAC and TokenRequest APIs, it should work on any k8s cluster and is expected to be supported by every ClusterProvider.
 
 #### OIDC-based Access
 

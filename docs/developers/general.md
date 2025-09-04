@@ -60,7 +60,7 @@ type MyStatus struct {
 The common status contains the following fields that should be updated during reconciliation:
 - `observedGeneration`
   - The value of this field should be set to the value of `metadata.generation` during each reconciliation, independent of whether the reconciliation was successful or resulted in an error.
-    - Updating the field can be skipped if the resource has the ignore operation annotation.
+    - Updating the field should be skipped if the resource has the ignore operation annotation.
 - `conditions`
   - This is a list of conditions. It uses the same condition type that k8s also uses for its core resources, e.g. pods.
   - The condition's `type` field works like a key and should be unique among the list.
