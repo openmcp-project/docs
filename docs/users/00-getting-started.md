@@ -76,6 +76,7 @@ spec:
 
 You can install managed services in your Managed Control Plane (MCP) to extend its functionality. Currently, the following managed services are available:
 - Crossplane via the [service-provider-crossplane](https://github.com/openmcp-project/service-provider-crossplane)
+- Landscaper via the [service-provider-landscaper](https://github.com/openmcp-project/service-provider-landscaper)
 
 #### Managed Service: Crossplane
 
@@ -94,4 +95,19 @@ spec:
   providers:
     - name: provider-kubernetes
       version: v0.16.0
+```
+
+#### Managed Service: Landscaper
+
+Landscaper manages the installation, updates, and uninstallation of cloud-native workloads, with focus on larger complexities, while being capable of handling complex dependency chains between the individual components.
+
+To install a Landscaper for your MCP, you need to create a `Landscaper` resource with the same namespace and name as your `ManagedControlPlane`. The following example installs the Landscaper with default configuration.
+
+```yaml
+apiVersion: landscaper.services.openmcp.cloud/v1alpha1
+kind: Landscaper
+metadata:
+  name: mcp-01 # Same name as your ManagedControlPlane
+  namespace: project-platform-team--ws-dev # Same namespace as your ManagedControlPlane
+spec: {}
 ```
