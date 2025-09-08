@@ -51,7 +51,7 @@ spec:
 
 ### 3. Create a `ManagedControlPlane` in the `Workspace`
 
-The `ManagedControlPlane` resource is the heart of the openMCP platform. A Managed Control Plane (MCP) is a representation of a Kubernetes API. With the `ManagedControlPlane` you specify the Users that get access via ClusterRoles or Roles to the Kubernetes API of the MCP.
+The `ManagedControlPlane` resource is the heart of the openMCP platform. Each Managed Control Plane (MCP) has its own Kubernetes API endpoint and data store. You can use the `iam` property to define who should have access to the MCP and the resources it contains.
 
 ```yaml
 apiVersion: core.openmcp.cloud/v2alpha1
