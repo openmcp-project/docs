@@ -5,7 +5,7 @@
 ## Setup
 
 ### 1. Create a `Project`
-A `Project` is the starting point to our Manged Control Plane (MCP) journey. It is a logical grouping of `Workspaces` and `ManagedControlPlanes`. A `Project` can be used to represent an organization, department, team or any other logical grouping of resources.
+A `Project` is the starting point of your Manged Control Plane (MCP) journey. It is a logical grouping of `Workspaces` and `ManagedControlPlanes`. A `Project` can be used to represent an organization, department, team or any other logical grouping of resources.
 ```yaml
 apiVersion: core.openmcp.cloud/v1alpha1
 kind: Project
