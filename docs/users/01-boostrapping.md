@@ -706,7 +706,7 @@ The git repository should now be updated:
     └── root-kustomization.yaml
 ```
 
-After a while the Kustomization in the Kind cluster should be updated and the crossplane service provider should be deployed:
+After a while, the Kustomization in the Kind cluster should be updated and the crossplane service provider should be deployed:
 You can force an update of the Kustomization in the Kind cluster to pick up the changes made in the Git repository.
 
 ```shell
