@@ -732,7 +732,7 @@ sp-crossplane-6b8cccc775-9hx98            1/1     Running     0          105s
 sp-crossplane-init-6hvf4                  0/1     Completed   0          2m11s
 ```
 
-You should see that the crossplane service provider is running.
+You should see that the crossplane service provider is running. This means that from now on, the openMCP is able to provide Crossplane service instances, using the new service provider Crossplane.
 
 ### Create a Crossplane service instance on the oboarding cluster
 
