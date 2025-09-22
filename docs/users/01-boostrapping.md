@@ -764,7 +764,7 @@ You can check the status of the Crossplane instance using the following command:
 kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig get crossplane -n default my-mcp -o yaml
 ```
 
-After a while you should see output similar to the following:
+After a while, you should see output similar to the following:
 
 ```yaml
 apiVersion: crossplane.services.openmcp.cloud/v1alpha1
