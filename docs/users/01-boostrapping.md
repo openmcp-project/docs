@@ -757,7 +757,7 @@ Apply the file to onboarding cluster:
 kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig apply -f ./config/crossplane-instance.yaml
 ```
 
-The Crossplane service instance should now be created and the crossplane service provider should start to create the necessary resources to create the Crossplane instance.
+The Crossplane service provider should now start to create the necessary resources for the new Crossplane instance. As a result, a new Crossplane service instance should soon be available.
 You can check the status of the Crossplane instance using the following command:
 
 ```shell
