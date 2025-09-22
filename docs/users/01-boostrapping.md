@@ -109,7 +109,7 @@ podman network create kind --subnet 172.19.0.0/16
 kind create cluster --name platform --config ./config/kind-config.yaml
 ```
 
-Export the internal kubeconfig of the Kind cluster to a file named `platform.kubeconfig` in the configuration folder.
+Export the internal kubeconfig of the Kind cluster to a file named `platform-int.kubeconfig` in the configuration folder.
 
 ```shell
 kind get kubeconfig --internal --name platform > ./kubeconfigs/platform-int.kubeconfig
