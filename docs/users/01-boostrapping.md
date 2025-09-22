@@ -138,7 +138,7 @@ openmcpOperator:
 ### Create a Git configuration file (git-config.yaml) in the configuration folder
 
 For GitHub use a personal access token with `repo` write permissions.
-
+It is also possible to use a fine-grained token. In this case, it requires read and write permissions for `Contents`.
 ```yaml
 auth:
   basic:
