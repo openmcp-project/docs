@@ -630,7 +630,7 @@ openmcpOperator:
               tenancy: Shared
 ```
 
-Create an extra manifests folder named `extra-manifests` in the configuration folder and create a file named `crossplane-provider.yaml` with the following content:
+Create a new folder named `extra-manifests` in the configuration folder. Then create a file named `crossplane-provider.yaml` with the following content, and save it in the new `extra-manifests` folder.
 
 ```yaml
 apiVersion: crossplane.services.openmcp.cloud/v1alpha1
