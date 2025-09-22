@@ -102,7 +102,9 @@ nodes:
 ### Create the Kind cluster
 
 Create the Kind cluster using the configuration file created in the previous step.
-
+Note: In case you are using Podman instead of Docker, it is currently required to first create a suitable network for the Kind cluster by executing the following command before creating the Kind cluster itself:
+```shell
+podman network create kind --subnet 172.19.0.0/16
 ```shell
 kind create cluster --name platform --config ./config/kind-config.yaml
 ```
