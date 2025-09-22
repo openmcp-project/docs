@@ -54,6 +54,11 @@ The `openmcp-bootstrapper` then creates a FluxCD `Kustomizations` that points to
 * A Git repository that will be used to store the desired state of the openMCP landscape
 * An OCI registry that contains the `openMCP Root OCM Component` (e.g. `ghcr.io/openmcp-project`)
 
+:::info
+The Git repository used in the following examples must exist before running the `openmcp-bootstrapper` CLI tool. The `openmcp-bootstrapper` is using the default branch (like `main`) as a source to create the desired branch.
+The default branch may not be empty, but it should not contain any files or folders that would conflict with the files and folders created by the `openmcp-bootstrapper`. A recommendation is to create an empty repository with a  `README.md` file.
+:::
+
 ## Example using the Kind Cluster Provider
 
 ## Requirements
