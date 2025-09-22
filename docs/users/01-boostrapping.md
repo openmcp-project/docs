@@ -58,7 +58,7 @@ The `openmcp-bootstrapper` then creates a FluxCD `Kustomizations` that points to
 
 ## Requirements
 
-* [Docker](https://docs.docker.com/get-docker/) installed and running. Docker alternatively can be replaced with another OCI runtime that can run the `openmcp-bootstrapper` CLI tool as an OCI image.
+* [Docker](https://docs.docker.com/get-docker/) installed and running. Docker alternatively can be replaced with another OCI runtime (e.g. Podman) that can run the `openmcp-bootstrapper` CLI tool as an OCI image. Make sure that your alternative is correctly setup reg. Docker compatibility. In case of Podman, you should find a corresponding configuration under `Settings` in the Podman UI.
 * [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/) installed
 
 ### Download the `openmcp-bootstrapper` CLI tool
