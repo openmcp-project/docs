@@ -58,15 +58,19 @@ The `openmcp-bootstrapper` then creates a FluxCD `Kustomizations` that points to
 
 ## Requirements
 
-* [Docker](https://docs.docker.com/get-docker/) installed and running. Docker alternatively can be replaced with another OCI runtime (e.g. Podman) that can run the `openmcp-bootstrapper` CLI tool as an OCI image. Make sure that your alternative is correctly setup reg. Docker compatibility. In case of Podman, you should find a corresponding configuration under `Settings` in the Podman UI.
+* [Docker](https://docs.docker.com/get-docker/) installed and running. Docker alternatively can be replaced with another OCI runtime (e.g. Podman) that can run the `openmcp-bootstrapper` CLI tool as an OCI image. 
 * [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/) installed
+
+:::info
+If you are using a docker alternative, make sure that it is correctly setup regarding Docker compatibility. In case of Podman, you should find a corresponding configuration under `Settings` in the Podman UI.
+:::
 
 ### Download the `openmcp-bootstrapper` CLI tool
 
 The `openmcp-bootstrapper` CLI tool can be downloaded as an OCI image from an OCI registry (e.g. `ghcr.io/openmcp-project`).
 In this example docker will be used to run the `openmcp-bootstrapper` CLI tool.
 
-```
+```shell
 docker pull ghcr.io/openmcp-project/images/openmcp-bootstrapper:v0.1.1
 ```
 
@@ -102,11 +106,16 @@ nodes:
 ### Create the Kind cluster
 
 Create the Kind cluster using the configuration file created in the previous step.
-Note: In case you are using Podman instead of Docker, it is currently required to first create a suitable network for the Kind cluster by executing the following command before creating the Kind cluster itself:
+
+:::info
+
+In case you are using Podman instead of Docker, it is currently required to first create a suitable network for the Kind cluster by executing the following command before creating the Kind cluster itself.
 
 ```shell
 podman network create kind --subnet 172.19.0.0/16
 ```
+
+:::
 
 ```shell
 kind create cluster --name platform --config ./config/kind-config.yaml
