@@ -548,7 +548,7 @@ status:
   phase: Ready
 ```
 
-You should see that the Managed Control Plane is in the `Ready` phase.
+You should see that the Managed Control Plane is in phase `Ready`.
 The openmcp-operator should now have created a new Kind cluster that represents the managed control plane.
 You can check the list of available Kind clusters using the following command:
 
