@@ -401,7 +401,7 @@ NAMESPACE     NAME           URL                                          AGE   
 flux-system   environments   https://github.com/<your-ourg>/<your-repo>   9m6s   True    stored artifact for revision 'docs@sha1:...'
 ```
 So we have now successfully configured FluxCD to watch for changes in the specified GitHub repository, using the `environments` custom resource of kind `GitRepository`.
-Get the status of the Kustomization in the Kind cluster.
+Now let's get the status of the Kustomization in the Kind cluster.
 
 ```shell
 kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get kustomizations.kustomize.toolkit.fluxcd.io -A
