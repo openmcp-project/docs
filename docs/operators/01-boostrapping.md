@@ -400,7 +400,7 @@ You should see output similar to the following:
 NAMESPACE     NAME           URL                                          AGE    READY   STATUS
 flux-system   environments   https://github.com/<your-ourg>/<your-repo>   9m6s   True    stored artifact for revision 'docs@sha1:...'
 ```
-
+So we have now successfully configured FluxCD to watch for changes in the specified GitHub repository, using the `environments` custom resource of kind `GitRepository`.
 Get the status of the Kustomization in the Kind cluster.
 
 ```shell
