@@ -437,7 +437,7 @@ ps-managedcontrolplane-668c99c97c-9jltx   1/1     Running     0          4s
 ps-managedcontrolplane-init-49rx2         0/1     Completed   0          27s
 ```
 
-You should see that the openmcp-operator, the managedcontrolplane platform service and the cluster provider kind are running.
+So now, the openmcp-operator, the managedcontrolplane platform service and the cluster provider kind are running.
 Now your are ready to create and manage clusters using openMCP.
 
 ### Get Access to the Onboarding Cluster
