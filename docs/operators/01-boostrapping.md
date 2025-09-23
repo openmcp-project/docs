@@ -570,7 +570,7 @@ You can now get the kubeconfig of the managed control plane and save it to a fil
 kind get kubeconfig --name mcp-worker-fbmpf.040335d0 > ./kubeconfigs/my-mcp.kubeconfig
 ```
 
-You can now use the kubeconfig to access the managed control plane cluster.
+You can now use the kubeconfig to access the Managed Control Plane cluster.
 
 ```shell
 kubectl --kubeconfig ./kubeconfigs/my-mcp.kubeconfig get namespaces
