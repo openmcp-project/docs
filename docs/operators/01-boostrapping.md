@@ -475,7 +475,7 @@ Get the kubeconfig of the onboarding cluster and save it to a file named `onboar
 Please replace `onboarding.12345678` with the actual name of your onboarding cluster.
 
 ```shell
-kind get kubeconfig --name onboarding.21959962 > ./kubeconfigs/onboarding.kubeconfig
+kind get kubeconfig --name onboarding.12345678 > ./kubeconfigs/onboarding.kubeconfig
 ```
 
 ### Create a Managed Control Plane
