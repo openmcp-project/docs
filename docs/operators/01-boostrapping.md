@@ -443,7 +443,7 @@ Now your are ready to create and manage clusters using openMCP.
 ### Get Access to the Onboarding Cluster
 
 The openmcp-operator should now have created a `onboarding Cluster` resource on the platform cluster that represents the onboarding cluster.
-The onboarding cluster is a special cluster that is used to onboard new managed control planes.
+The onboarding cluster is a special cluster that is used to create new managed control planes. 
 
 ```shell
 kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get clusters.clusters.openmcp.cloud -A
