@@ -564,7 +564,7 @@ onboarding.12345678
 platform
 ```
 
-You can now get the kubeconfig of the managed control plane and save it to a file named `my-mcp.kubeconfig` in the kubeconfigs folder. Please replace `mcp-worker-fbmpf.040335d0` with the actual name of your managed control plane cluster.
+You can now get the kubeconfig of the managed control plane and save it to a file named `my-mcp.kubeconfig` in the kubeconfigs folder. Please replace `mcp-worker-abcde.87654321` with the actual name of your managed control plane cluster.
 
 ```shell
 kind get kubeconfig --name mcp-worker-fbmpf.040335d0 > ./kubeconfigs/my-mcp.kubeconfig
