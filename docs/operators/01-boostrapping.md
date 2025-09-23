@@ -61,7 +61,7 @@ The default branch may not be empty, but it should not contain any files or fold
 
 ## Example using the Kind Cluster Provider
 
-## Requirements
+### Requirements
 
 * [Docker](https://docs.docker.com/get-docker/) installed and running. Docker alternatively can be replaced with another OCI runtime (e.g. Podman) that can run the `openmcp-bootstrapper` CLI tool as an OCI image. 
 * [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/) installed
