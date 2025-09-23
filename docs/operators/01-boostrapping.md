@@ -492,7 +492,7 @@ spec:
     iam: {}
 ```
 
-Apply the file to onboarding cluster:
+Apply the file to the onboarding cluster:
 
 ```shell
 kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig apply -f ./config/my-mcp.yaml
