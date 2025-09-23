@@ -472,7 +472,7 @@ platform
 
 You can now see the new onboarding cluster.
 Get the kubeconfig of the onboarding cluster and save it to a file named `onboarding.kubeconfig` in the configuration folder.
-Please replace `onboarding.21959962` with the actual name of your onboarding cluster.
+Please replace `onboarding.12345678` with the actual name of your onboarding cluster.
 
 ```shell
 kind get kubeconfig --name onboarding.21959962 > ./kubeconfigs/onboarding.kubeconfig
