@@ -438,7 +438,7 @@ ps-managedcontrolplane-init-49rx2         0/1     Completed   0          27s
 ```
 
 So now, the openmcp-operator, the managedcontrolplane platform service and the cluster provider kind are running.
-Now your are ready to create and manage clusters using openMCP.
+You are now ready to create and manage clusters using openMCP.
 
 ### Get Access to the Onboarding Cluster
 
