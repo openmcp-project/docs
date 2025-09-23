@@ -559,8 +559,8 @@ kind get clusters
 You should see output similar to the following:
 
 ```shell
-mcp-worker-fbmpf.040335d0
-onboarding.21959962
+mcp-worker-abcde.87654321
+onboarding.12345678
 platform
 ```
 
