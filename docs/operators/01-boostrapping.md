@@ -466,7 +466,7 @@ kind get clusters
 You should see output similar to the following:
 
 ```shell
-onboarding.21959962
+onboarding.12345678
 platform
 ```
 
