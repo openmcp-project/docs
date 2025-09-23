@@ -498,7 +498,7 @@ Apply the file to the onboarding cluster:
 kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig apply -f ./config/my-mcp.yaml
 ```
 
-The Managed Control Plane should now be created and the openmcp-operator should start to create the necessary resources to create the managed control plane.
+The openmcp-operator should start to create the necessary resources in order to create the managed control plane. As a result, a new `Managed Control Plane` should be available soon.
 You can check the status of the Managed Control Plane using the following command:
 
 ```shell
