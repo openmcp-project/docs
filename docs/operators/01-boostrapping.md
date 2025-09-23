@@ -549,7 +549,7 @@ status:
 ```
 
 You should see that the Managed Control Plane is in phase `Ready`.
-The openmcp-operator should now have created a new Kind cluster that represents the managed control plane.
+The openmcp-operator should now have created a new Kind cluster that represents the Managed Control Plane.
 You can check the list of available Kind clusters using the following command:
 
 ```shell
@@ -567,7 +567,7 @@ platform
 You can now get the kubeconfig of the managed control plane and save it to a file named `my-mcp.kubeconfig` in the kubeconfigs folder. Please replace `mcp-worker-abcde.87654321` with the actual name of your managed control plane cluster.
 
 ```shell
-kind get kubeconfig --name mcp-worker-fbmpf.040335d0 > ./kubeconfigs/my-mcp.kubeconfig
+kind get kubeconfig --name mcp-worker-abcde.87654321 > ./kubeconfigs/my-mcp.kubeconfig
 ```
 
 You can now use the kubeconfig to access the Managed Control Plane cluster.
