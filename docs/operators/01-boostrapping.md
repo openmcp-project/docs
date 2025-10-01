@@ -1121,7 +1121,8 @@ spec:
 The gardener landscape configuration requires a secret that contains the kubeconfig to access the Gardener project. For that purpose, create a secret named `gardener-landscape-kubeconfig` in the `openmcp-system` namespace of the platform cluster that contains the kubeconfig file that has access to the Gardener installation.
 
 ```shell
-kubectl create secret generic gardener-landscape-kubeconfig --from-file=kubeconfig=/path/to/service-account-kubeconfig -n openmcp-system
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig create namespace openmcp-system
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig create secret generic gardener-landscape-kubeconfig --from-file=kubeconfig=/path/to/service-account-kubeconfig -n openmcp-system
 ```
 
 The kubeconfig content can be retrieved from the Gardener dashboard or by creating a service account in the Gardener project. See the [Gardener documentation](https://gardener.cloud/docs/getting-started/project/#service-accounts) for more information on how to create a service account.
@@ -1196,8 +1197,7 @@ spec:
 
 <TabItem value="AWS" label="AWS" >
 ```yaml title="config/extra-manifests/gardener-cluster-provider-shoot-small.yaml"
-apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
-kind: ProviderConfig
+text: TBD
 ```
 </TabItem>
 
@@ -1241,8 +1241,7 @@ spec:
 
 <TabItem value="AWS" label="AWS" >
 ```yaml title="config/extra-manifests/gardener-cluster-provider-shoot-small.yaml"
-apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
-kind: ProviderConfig
+text: TBD
 ```
 </TabItem>
 
@@ -1255,35 +1254,288 @@ Replace also `<kubernetes-version>` with the desired Kubernetes version (e.g. `1
 Now run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy openMCP to the `platform` Gardener Shoot cluster:
 
 ```shell
-docker run --rm --network kind -v ./config:/config -v ./kubeconfigs:/kubeconfigs ghcr.io/openmcp-project/images/openmcp-bootstrapper:${OPENMCP_BOOTSTRAPPER_VERSION} manage-deployment-repo --git-config /config/git-config.yaml --kubeconfig /kubeconfigs/platform-int.kubeconfig /config/bootstrapper-config.yaml
+docker run --rm -v ./config:/config -v ./kubeconfigs:/kubeconfigs ghcr.io/openmcp-project/images/openmcp-bootstrapper:${OPENMCP_BOOTSTRAPPER_VERSION} manage-deployment-repo --git-config /config/git-config.yaml --kubeconfig /kubeconfigs/platform.kubeconfig --extra-manifest-dir /config/extra-manifests /config/bootstrapper-config.yaml
 ```
 
 You should see output similar to the following:
 
 ```shell
-Info: Downloading component ghcr.io/openmcp-project/components//github.com/openmcp-project/openmcp:v0.0.20
+Info: Downloading component ghcr.io/openmcp-project/components//github.com/openmcp-project/openmcp:v0.0.25
 Info: Creating template transformer
 Info: Downloading template resources
-/tmp/openmcp.cloud.bootstrapper-2402093624/transformer/download/fluxcd: 9 file(s) with 691073 byte(s) written
-/tmp/openmcp.cloud.bootstrapper-2402093624/transformer/download/openmcp: 8 file(s) with 6625 byte(s) written
+/tmp/openmcp.cloud.bootstrapper-245193548/transformer/download/fluxcd: 9 file(s) with 691073 byte(s) written
+/tmp/openmcp.cloud.bootstrapper-245193548/transformer/download/openmcp: 8 file(s) with 6625 byte(s) written
 Info: Transforming templates into deployment repository structure
 Info: Fetching openmcp-operator component version
-Info: Cloning deployment repository https://github.com/reshnm/template-test
-Info: Checking out or creating branch kind
+Info: Cloning deployment repository https://github.com/reshnm/openmcp-deployment
+Info: Checking out or creating branch gardener
 Info: Applying templates from "gitops-templates/fluxcd"/"gitops-templates/openmcp" to deployment repository
-Info: Templating providers: clusterProviders=[{kind [123 34 101 120 116 114 97 86 111 108 117 109 101 77 111 117 110 116 115 34 58 91 123 34 109 111 117 110 116 80 97 116 104 34 58 34 47 118 97 114 47 114 117 110 47 100 111 99 107 101 114 46 115 111 99 107 34 44 34 110 97 109 101 34 58 34 100 111 99 107 101 114 34 125 93 44 34 101 120 116 114 97 86 111 108 117 109 101 115 34 58 91 123 34 104 111 115 116 80 97 116 104 34 58 123 34 112 97 116 104 34 58 34 47 118 97 114 47 114 117 110 47 104 111 115 116 45 100 111 99 107 101 114 46 115 111 99 107 34 44 34 116 121 112 101 34 58 34 83 111 99 107 101 116 34 125 44 34 110 97 109 101 34 58 34 100 111 99 107 101 114 34 125 93 44 34 118 101 114 98 111 115 105 116 121 34 58 34 100 101 98 117 103 34 125] map[extraVolumeMounts:[map[mountPath:/var/run/docker.sock name:docker]] extraVolumes:[map[hostPath:map[path:/var/run/host-docker.sock type:Socket] name:docker]] verbosity:debug]}], serviceProviders=[], platformServices=[], imagePullSecrets=[]
+Info: Templating providers: clusterProviders=[{gardener [] map[]}], serviceProviders=[], platformServices=[], imagePullSecrets=[]
 Info: Applying Custom Resource Definitions to deployment repository
-/tmp/openmcp.cloud.bootstrapper-2402093624/repo/resources/openmcp/crds: 8 file(s) with 475468 byte(s) written
-/tmp/openmcp.cloud.bootstrapper-2402093624/repo/resources/openmcp/crds: 1 file(s) with 1843 byte(s) written
-Info: No extra manifest directory specified, skipping
+/tmp/openmcp.cloud.bootstrapper-245193548/repo/resources/openmcp/crds: 8 file(s) with 484832 byte(s) written
+/tmp/openmcp.cloud.bootstrapper-245193548/repo/resources/openmcp/crds: 3 file(s) with 198428 byte(s) written
+Info: Applying extra manifests from /config/extra-manifests to deployment repository
 Info: Committing and pushing changes to deployment repository
-Info: Created commit: 287f9e88b905371bba412b5d0286ad02db0f4aac
-Info: Running kustomize on /tmp/openmcp.cloud.bootstrapper-2402093624/repo/envs/dev
+Info: Created commit: ee2b6ef079808fbc198b4f6eced1afb89f64d1d1
+Info: Running kustomize on /tmp/openmcp.cloud.bootstrapper-245193548/repo/envs/dev
 Info: Applying Kustomization manifest: default/bootstrap
 ```
 
+### Inspect the Git repository
 
+The desired state of the openMCP landscape has now been created in the Git repository and should look similar to the following structure:
 
+```shell
+.
+├── envs
+│   └── dev
+│       ├── fluxcd
+│       │   ├── flux-kustomization.yaml
+│       │   ├── gitrepo.yaml
+│       │   └── kustomization.yaml
+│       ├── kustomization.yaml
+│       ├── openmcp
+│       │   ├── config
+│       │   │   └── openmcp-operator-config.yaml
+│       │   └── kustomization.yaml
+│       └── root-kustomization.yaml
+└── resources
+    ├── fluxcd
+    │   ├── components.yaml
+    │   ├── flux-kustomization.yaml
+    │   ├── gitrepo.yaml
+    │   └── kustomization.yaml
+    ├── kustomization.yaml
+    ├── openmcp
+    │   ├── cluster-providers
+    │   │   └── gardener.yaml
+    │   ├── crds
+    │   │   ├── clusters.openmcp.cloud_accessrequests.yaml
+    │   │   ├── clusters.openmcp.cloud_clusterprofiles.yaml
+    │   │   ├── clusters.openmcp.cloud_clusterrequests.yaml
+    │   │   ├── clusters.openmcp.cloud_clusters.yaml
+    │   │   ├── gardener.clusters.openmcp.cloud_clusterconfigs.yaml
+    │   │   ├── gardener.clusters.openmcp.cloud_landscapes.yaml
+    │   │   ├── gardener.clusters.openmcp.cloud_providerconfigs.yaml
+    │   │   ├── openmcp.cloud_clusterproviders.yaml
+    │   │   ├── openmcp.cloud_platformservices.yaml
+    │   │   └── openmcp.cloud_serviceproviders.yaml
+    │   ├── deployment.yaml
+    │   ├── extra
+    │   │   ├── gardener-cluster-provider-shoot-small.yaml
+    │   │   ├── gardener-cluster-provider-shoot-workerless.yaml
+    │   │   └── gardener-landscape.yaml
+    │   ├── kustomization.yaml
+    │   ├── namespace.yaml
+    │   └── rbac.yaml
+    └── root-kustomization.yaml
+```
+
+The `envs/<environment-name>` folder contains the Kustomization files that are used by FluxCD to deploy openMCP to the platform cluster.
+The `resources` folder contains the base resources that are used by the Kustomization files in the `envs/<environment-name>` folder.
+
+## Inspect the Kustomizations in the platform cluster
+
+Force an update of the GitRepository and Kustomization in the Kind cluster to pick up the changes made in the Git repository.
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig -n flux-system annotate gitrepository environments reconcile.fluxcd.io/requestedAt="$(date +%s)"
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig -n flux-system patch kustomization flux-system --type merge -p '{"spec":{"force":true}}'
+```
+
+Get the status of the GitRepository in the platform cluster.
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get gitrepositories.source.toolkit.fluxcd.io -A
+```
+
+You should see output similar to the following:
+
+```shell
+NAMESPACE     NAME           URL                                          AGE    READY   STATUS
+flux-system   environments   https://github.com/<your-ourg>/<your-repo>   9m6s   True    stored artifact for revision 'docs@sha1:...'
+```
+So we have now successfully configured FluxCD to watch for changes in the specified GitHub repository, using the `environments` custom resource of kind `GitRepository`.
+Now let's get the status of the Kustomization in the Kind cluster.
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get kustomizations.kustomize.toolkit.fluxcd.io -A
+```
+
+You should see output similar to the following:
+
+```shell
+NAMESPACE     NAME          AGE   READY   STATUS
+default       bootstrap     5m31s   True    Applied revision: docs@sha1:...
+flux-system   flux-system   10m     True    Applied revision: docs@sha1:...
+```
+
+You can see that there are now two Kustomizations in the platform cluster.
+The `flux-system` Kustomization is used to deploy the FluxCD controllers and the `bootstrap` Kustomization is used to deploy openMCP to the platform cluster.
+
+### Inspect cluster profiles and clusters
+
+Based on the provider configuration for the Gardener cluster provider, two cluster profiles should have been created: `dev.gardener.shoot-small` and `dev.gardener.shoot-workerless`.
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get clusterprofiles.clusters.openmcp.cloud
+```
+
+You should see output similar to the following:
+
+```shell
+NAME                            PROVIDER   CONFIG
+dev.gardener.shoot-small        gardener   shoot-small
+dev.gardener.shoot-workerless   gardener   shoot-workerless
+```
+
+As you can see, these names match the profile names used in the openmcp-operator configuration. The nameing convention is `<environment-name>.<cluster-provider-name>.<profile>`.
+
+Inspecting a cluster profile, shows the supported kubernetes versions:
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get clusterprofiles.clusters.openmcp.cloud dev.gardener.shoot-small -o yaml
+```
+
+You should see output similar to the following:
+
+```yaml
+apiVersion: clusters.openmcp.cloud/v1alpha1
+kind: ClusterProfile
+metadata:
+  creationTimestamp: "2025-10-01T06:38:48Z"
+  generation: 1
+  name: dev.gardener.shoot-small
+  resourceVersion: "173288"
+  uid: 926aa91c-f021-41f7-b97c-dc7eaf0e19bf
+spec:
+  providerConfigRef:
+    name: shoot-small
+  providerRef:
+    name: gardener
+  supportedVersions:
+  - version: 1.33.3
+  - deprecated: true
+    version: 1.33.2
+  - version: 1.32.7
+  - deprecated: true
+    version: 1.32.6
+  - deprecated: true
+    version: 1.32.5
+  - deprecated: true
+    version: 1.32.4
+  - deprecated: true
+    version: 1.32.3
+  - deprecated: true
+    version: 1.32.2
+  - version: 1.31.11
+  - deprecated: true
+    version: 1.31.10
+  - deprecated: true
+    version: 1.31.9
+  - deprecated: true
+    version: 1.31.8
+  - deprecated: true
+    version: 1.31.7
+  - deprecated: true
+    version: 1.31.6
+  - deprecated: true
+    version: 1.31.5
+  - deprecated: true
+    version: 1.31.4
+  - deprecated: true
+    version: 1.31.3
+  - deprecated: true
+    version: 1.31.2
+  - version: 1.30.14
+  - deprecated: true
+    version: 1.30.13
+  - deprecated: true
+    version: 1.30.12
+  - deprecated: true
+    version: 1.30.11
+  - deprecated: true
+    version: 1.30.10
+  - deprecated: true
+    version: 1.30.9
+  - deprecated: true
+    version: 1.30.8
+  - deprecated: true
+    version: 1.30.7
+  - deprecated: true
+    version: 1.30.6
+  - deprecated: true
+    version: 1.30.5
+  - deprecated: true
+    version: 1.30.4
+  - deprecated: true
+    version: 1.30.3
+  - deprecated: true
+    version: 1.30.2
+  - deprecated: true
+    version: 1.30.1
+```
+
+You can also see the onboarding cluster that has been created by the openmcp-operator.
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get clusters.clusters.openmcp.cloud -A
+```
+
+You should see output similar to the following:
+
+```shell
+NAMESPACE        NAME         PURPOSES         PHASE   VERSION   PROVIDER   AGE
+openmcp-system   onboarding   ["onboarding"]   Ready   1.32.7    gardener   30m
+```
+
+You can also get the shoot name of the onboarding cluster:
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get clusters.clusters.openmcp.cloud --namespace openmcp-system onboarding -o jsonpath="{.status.providerStatus.shoot.metadata.name}"
+```
+
+You should see output similar to the following:
+
+```shell
+s-hl4uutd4
+```
+
+If you want, you can inspect the Gardener shoot in your Gardener project.
+
+### Get Access to the Onboarding Cluster
+
+In order to create resources on the onboarding cluster, you need to get access to the onboarding cluster.
+To do so, create an access request that grants admin permissions  on the onboarding cluster.
+
+Create a file named `onboarding-access-request.yaml` in the configuration folder with the following content:
+
+```yam title="config/onboarding-access-request.yaml"
+apiVersion: clusters.openmcp.cloud/v1alpha1
+kind: AccessRequest
+metadata:
+  name: bootstrapper-onboarding
+  namespace: openmcp-system
+spec:
+  clusterRef:
+    name: onboarding
+    namespace: openmcp-system
+  token:
+    permissions:
+    - rules:
+      - apiGroups:
+        - '*'
+        resources:
+        - '*'
+        verbs:
+        - '*'
+```
+
+Then apply the file to the platform cluster:
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig apply -f ./config/onboarding-access-request.yaml
+```
 
 <Tabs queryString="landscape" defaultValue="live">
 
