@@ -160,7 +160,7 @@ echo "${TAG}"
 
 In the bootstrapper configuration, replace `<openmcp-component-version>` with the latest version of the `github.com/openmcp/openmcp` root component:
 
-```yaml
+```yaml title="config/bootstrapper-config.yaml"
 component:
   location: ghcr.io/openmcp-project/components//github.com/openmcp-project/openmcp:<openmcp-component-version>
 
@@ -178,7 +178,7 @@ openmcpOperator:
 
 For GitHub use a personal access token with `repo` write permissions.
 It is also possible to use a fine-grained token. In this case, it requires read and write permissions for `Contents`.
-```yaml
+```yaml title="config/git-config.yaml"
 auth:
   basic:
     username: "<your-git-username>"
@@ -260,7 +260,7 @@ This error is also expected as the GitRepository does not exist yet. The `openmc
 
 Update the bootstrapping configuration file (bootstrapper-config.yaml) to include the kind cluster provider and the openmcp-operator configuration.
 
-```yaml
+```yaml title="config/bootstrapper-config.yaml"
 component:
   location: ghcr.io/openmcp-project/components//github.com/openmcp-project/openmcp:<openmcp-component-version>
 
@@ -504,7 +504,7 @@ kind get kubeconfig --name onboarding.12345678 > ./kubeconfigs/onboarding.kubeco
 
 Create a file named `my-mcp.yaml` with the following content in the configuration folder:
 
-```yaml
+```yaml title="config/my-mcp.yaml"
 apiVersion: core.openmcp.cloud/v2alpha1
 kind: ManagedControlPlaneV2
 metadata:
@@ -602,7 +602,7 @@ kubectl --kubeconfig ./kubeconfigs/my-mcp.kubeconfig get namespaces
 
 Update the bootstrapping configuration file (bootstrapper-config.yaml) to include the crossplane service provider.
 
-```yaml
+```yaml title="config/bootstrapper-config.yaml"
 component:
   location: ghcr.io/openmcp-project/components//github.com/openmcp-project/openmcp:<openmcp-component-version>
 
@@ -671,7 +671,7 @@ openmcpOperator:
 
 Create a new folder named `extra-manifests` in the configuration folder. Then create a file named `crossplane-provider.yaml` with the following content, and save it in the new `extra-manifests` folder.
 
-```yaml
+```yaml title="config/extra-manifests/crossplane-provider.yaml"
 apiVersion: crossplane.services.openmcp.cloud/v1alpha1
 kind: ProviderConfig
 metadata:
@@ -758,6 +758,7 @@ List the pods in the `openmcp-system` namespace again:
 ```shell
 kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get pods -n openmcp-system
 ````
+
 You should see output similar to the following:
 
 ```shell
@@ -773,11 +774,11 @@ sp-crossplane-init-6hvf4                  0/1     Completed   0          2m11s
 
 You should see that the crossplane service provider is running. This means that from now on, the openMCP is able to provide Crossplane service instances, using the new service provider Crossplane.
 
-### Create a Crossplane service instance on the oboarding cluster
+### Create a Crossplane service instance on the onboarding cluster
 
 Create a file named `crossplane-instance.yaml` with the following content in the configuration folder:
 
-```yaml
+```yaml title="config/crossplane-instance.yaml"
 apiVersion: crossplane.services.openmcp.cloud/v1alpha1
 kind: Crossplane
 metadata:
@@ -850,6 +851,7 @@ kubectl --kubeconfig ./kubeconfigs/my-mcp.kubeconfig api-resources | grep 'cross
 * An infrastructure secret in the Gardener project (see the [Gardener documentation](https://gardener.cloud/docs/getting-started/project/#infrastructure-secrets) for more information on how to create an infrastructure secret)
 * Kubectl (see the [Kubectl installation guide](https://kubernetes.io/docs/tasks/tools/#kubectl) for more information on how to install kubectl)
 * If the Gardener installation is using OIDC for authentication, install the [OIDC kubectl plugin](https://github.com/int128/kubelogin)
+* Good understanding of Gardener and how to create Gardener Shoot clusters and Service Accounts in Gardener Projects.
 
 ### Create a configuration folder
 
@@ -1041,7 +1043,7 @@ Update the bootstrapping configuration file (bootstrapper-config.yaml) to includ
 
 Please replace `<environment-name>` with the logical environment name (e.g. `dev`, `prod`, `live-eu-west`) that will be used in the Git repository to separate different environments. Notice that the same environment name must be used in the `environment` field and in the scheduler profiles.
 
-```yaml
+```yaml title="config/bootstrapper-config.yaml"
 component:
   location: ghcr.io/openmcp-project/components//github.com/openmcp-project/openmcp:<openmcp-component-version>
 
@@ -1373,6 +1375,28 @@ flux-system   flux-system   10m     True    Applied revision: docs@sha1:...
 You can see that there are now two Kustomizations in the platform cluster.
 The `flux-system` Kustomization is used to deploy the FluxCD controllers and the `bootstrap` Kustomization is used to deploy openMCP to the platform cluster.
 
+### Inspect the deployed openMCP components on the platform cluster
+
+Now check the deployed openMCP components.
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get pods -n openmcp-system
+```
+
+You should see output similar to the following:
+
+```shell
+NAME                                      READY   STATUS      RESTARTS   AGE
+cp-gardener-7f77684ffb-gw4jg              1/1     Running     0          35m
+cp-gardener-init-wxnt4                    0/1     Completed   0          35m
+openmcp-operator-785b967f66-h2dlh         1/1     Running     0          67m
+ps-managedcontrolplane-5b77749f7b-mtffp   1/1     Running     0          64m
+ps-managedcontrolplane-init-pklrl         0/1     Completed   0          67m
+```
+
+So now, the openmcp-operator, the managedcontrolplane platform service and the cluster provider gardener are running.
+You are now ready to create and manage clusters using openMCP.
+
 ### Inspect cluster profiles and clusters
 
 Based on the provider configuration for the Gardener cluster provider, two cluster profiles should have been created: `dev.gardener.shoot-small` and `dev.gardener.shoot-workerless`.
@@ -1537,17 +1561,422 @@ Then apply the file to the platform cluster:
 kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig apply -f ./config/onboarding-access-request.yaml
 ```
 
-<Tabs queryString="landscape" defaultValue="live">
+You can check the status of the access request using the following command:
 
-<TabItem value="live" label="GCP">
-```yaml title="gardener-config.yaml"
-value: GCP
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get accessrequests.clusters.openmcp.cloud --namespace openmcp-system bootstrapper-onboarding
 ```
-</TabItem>
-<TabItem value="eu" label="AWS">
-```yaml title="gardener-config.yaml"
-value: AWS
-```
-</TabItem>
 
-</Tabs>
+Once the access request has been granted, you should see output similar to the following:
+
+```shell
+NAME                      PHASE
+bootstrapper-onboarding   Granted
+```
+
+Now you can get the kubeconfig of the onboarding cluster using the following command:
+
+```shell
+SECRET_NAME=$(kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get accessrequests.clusters.openmcp.cloud --namespace openmcp-system bootstrapper-onboarding -o jsonpath="{.status.secretRef.name}")
+SECRET_NAMESPACE=$(kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get accessrequests.clusters.openmcp.cloud --namespace openmcp-system bootstrapper-onboarding -o jsonpath="{.status.secretRef.namespace}")
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get secret ${SECRET_NAME} -n ${SECRET_NAMESPACE} -o jsonpath="{.data.kubeconfig}" | base64 -d > ./kubeconfigs/onboarding.kubeconfig
+```
+
+### Create a Managed Control Plane on the Onboarding Cluster
+
+Create a file named `my-mcp.yaml` with the following content in the configuration folder:
+
+```yaml title="config/my-mcp.yaml"
+apiVersion: core.openmcp.cloud/v2alpha1
+kind: ManagedControlPlaneV2
+metadata:
+  name: my-mcp
+  namespace: default
+spec:
+  iam:
+    tokens:
+    - name: admin
+      roleRefs:
+      - kind: ClusterRole
+        name: cluster-admin
+```
+
+Apply the file to the onboarding cluster:
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig apply -f ./config/my-mcp.yaml
+```
+
+The openmcp-operator should start to create the necessary resources in order to create the managed control plane. As a result, a new `Managed Control Plane` should be available soon.
+You can check the status of the Managed Control Plane using the following command:
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig get managedcontrolplanev2 -n default my-mcp -o yaml
+```
+
+After some time (this can take about 10 to 15 minutes), you should see output similar to the following:
+
+```yaml
+apiVersion: core.openmcp.cloud/v2alpha1
+kind: ManagedControlPlaneV2
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"core.openmcp.cloud/v2alpha1","kind":"ManagedControlPlaneV2","metadata":{"annotations":{},"name":"my-mcp","namespace":"default"},"spec":{"iam":{"tokens":[{"name":"admin","roleRefs":[{"kind":"ClusterRole","name":"cluster-admin"}]}]}}}
+  creationTimestamp: "2025-10-01T11:02:29Z"
+  finalizers:
+  - core.openmcp.cloud/mcp
+  - request.clusters.openmcp.cloud/my-mcp
+  generation: 1
+  name: my-mcp
+  namespace: default
+  resourceVersion: "32021"
+  uid: acd0ce65-df78-4667-8b9c-540843a43294
+spec:
+  iam:
+    tokens:
+    - name: admin
+      roleRefs:
+      - kind: ClusterRole
+        name: cluster-admin
+status:
+  access:
+    token_admin:
+      name: zmr7k5u7
+  conditions:
+  - lastTransitionTime: "2025-10-01T11:06:35Z"
+    message: ""
+    observedGeneration: 1
+    reason: AccessReady:token_admin_True
+    status: "True"
+    type: AccessReady.token_admin
+  - lastTransitionTime: "2025-10-01T11:06:35Z"
+    message: All accesses are ready
+    observedGeneration: 1
+    reason: AllAccessReady_True
+    status: "True"
+    type: AllAccessReady
+  - lastTransitionTime: "2025-10-01T11:02:34Z"
+    message: ""
+    observedGeneration: 1
+    reason: ClusterConfigurations_True
+    status: "True"
+    type: Cluster.ClusterConfigurations
+  - lastTransitionTime: "2025-10-01T11:06:35Z"
+    message: API server /healthz endpoint responded with success status code.
+    observedGeneration: 1
+    reason: HealthzRequestSucceeded
+    status: "True"
+    type: Cluster.Gardener_APIServerAvailable
+  - lastTransitionTime: "2025-10-01T11:21:55Z"
+    message: All control plane components are healthy.
+    observedGeneration: 1
+    reason: ControlPlaneRunning
+    status: "True"
+    type: Cluster.Gardener_ControlPlaneHealthy
+  - lastTransitionTime: "2025-10-01T11:21:55Z"
+    message: All nodes are ready.
+    observedGeneration: 1
+    reason: EveryNodeReady
+    status: "True"
+    type: Cluster.Gardener_EveryNodeReady
+  - lastTransitionTime: "2025-10-01T11:21:55Z"
+    message: All observability components are healthy.
+    observedGeneration: 1
+    reason: ObservabilityComponentsRunning
+    status: "True"
+    type: Cluster.Gardener_ObservabilityComponentsHealthy
+  - lastTransitionTime: "2025-10-01T11:21:55Z"
+    message: All system components are healthy.
+    observedGeneration: 1
+    reason: SystemComponentsRunning
+    status: "True"
+    type: Cluster.Gardener_SystemComponentsHealthy
+  - lastTransitionTime: "2025-10-01T11:02:34Z"
+    message: ""
+    observedGeneration: 1
+    reason: LandscapeManagement_True
+    status: "True"
+    type: Cluster.LandscapeManagement
+  - lastTransitionTime: "2025-10-01T11:02:34Z"
+    message: ""
+    observedGeneration: 1
+    reason: Meta_True
+    status: "True"
+    type: Cluster.Meta
+  - lastTransitionTime: "2025-10-01T11:02:34Z"
+    message: ""
+    observedGeneration: 1
+    reason: ShootManagement_True
+    status: "True"
+    type: Cluster.ShootManagement
+  - lastTransitionTime: "2025-10-01T11:02:34Z"
+    message: Cluster conditions have been synced to MCP
+    observedGeneration: 1
+    reason: ClusterConditionsSynced_True
+    status: "True"
+    type: ClusterConditionsSynced
+  - lastTransitionTime: "2025-10-01T11:02:34Z"
+    message: ClusterRequest is ready
+    observedGeneration: 1
+    reason: ClusterRequestReady_True
+    status: "True"
+    type: ClusterRequestReady
+  - lastTransitionTime: "2025-10-01T11:02:29Z"
+    message: ""
+    observedGeneration: 1
+    reason: Meta_True
+    status: "True"
+    type: Meta
+  observedGeneration: 1
+  phase: Ready
+```
+
+The `status.phase` should be `Ready` and the `AllAccessReady` condition should be `True`.
+
+You can now get the kubeconfig of the managed control plane using the following command:
+
+```shell
+TOKEN_NAME=$(kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig get managedcontrolplanev2 -n default my-mcp -o jsonpath="{.status.access.token_admin.name}")
+TOKEN_NAMESPACE=$(kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig get managedcontrolplanev2 -n default my-mcp -o jsonpath="{.metadata.namespace}")
+kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig get secret ${TOKEN_NAME} -n ${TOKEN_NAMESPACE} -o jsonpath="{.data.kubeconfig}" | base64 -d > ./kubeconfigs/my-mcp.kubeconfig
+```
+
+### Deploy the Crossplane Service Provider on the platform cluster
+
+Update the bootstrapping configuration file (bootstrapper-config.yaml) to include the crossplane service provider.
+
+```yaml title="config/bootstrapper-config.yaml"
+component:
+  location: ghcr.io/openmcp-project/components//github.com/openmcp-project/openmcp:<openmcp-component-version>
+
+repository:
+  url: https://github.com/<your-org>/<your-repo>
+  branch: <branch-name>
+
+environment: <environment-name>
+
+providers:
+  clusterProviders:
+  - name: gardener
+  serviceProviders:
+  - name: crossplane
+
+openmcpOperator:
+  config:
+    managedControlPlane:
+      mcpClusterPurpose: mcp-worker
+      reconcileMCPEveryXDays: 7
+    scheduler:
+      scope: Cluster
+      purposeMappings:
+        mcp-worker:
+          template:
+            metadata:
+              namespace: openmcp-system
+            spec:
+              profile: <environment-name>.gardener.shoot-small
+              tenancy: Exclusive
+        platform:
+          template:
+            metadata:
+              namespace: openmcp-system
+              labels:
+                clusters.openmcp.cloud/delete-without-requests: "false"
+            spec:
+              profile: <environment-name>.gardener.shoot-small
+              tenancy: Shared
+        onboarding:
+          template:
+            metadata:
+              namespace: openmcp-system
+              labels:
+                clusters.openmcp.cloud/delete-without-requests: "false"
+            spec:
+              profile: <environment-name>.gardener.shoot-workerless
+              tenancy: Shared
+        workload:
+          tenancyCount: 20
+          template:
+            metadata:
+              namespace: openmcp-system
+            spec:
+              profile: <environment-name>.gardener.shoot-small
+              tenancy: Shared
+```
+
+Then create a file named `crossplane-provider.yaml` with the following content, and save it in the new `extra-manifests` folder.
+
+```yaml title="config/extra-manifests/crossplane-provider.yaml"
+apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  chart:
+    repository: "https://charts.crossplane.io/stable"
+    name: crossplane
+    availableVersions:
+      - v1.20.0
+      - v1.19.0
+  availableProviders:
+    - name: provider-kubernetes
+      package: xpkg.upbound.io/upbound/provider-kubernetes
+      versions:
+        - v0.16.0
+```
+
+Run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy the crossplane service provider to the Kind cluster.
+
+```shell
+docker run --rm  -v ./config:/config -v ./kubeconfigs:/kubeconfigs ghcr.io/openmcp-project/images/openmcp-bootstrapper:${OPENMCP_BOOTSTRAPPER_VERSION} manage-deployment-repo --git-config /config/git-config.yaml --kubeconfig /kubeconfigs/platform.kubeconfig --extra-manifest-dir /config/extra-manifests /config/bootstrapper-config.yaml
+```
+
+See the `--extra-manifest-dir` parameter that points to the folder containing the extra manifest file created in the previous step. All manifest files in this folder will be added to the Kustomization used by FluxCD to deploy openMCP to the Kind cluster.
+
+The git repository should now be updated:
+
+```shell
+.
+├── envs
+│   └── dev
+│       ├── fluxcd
+│       │   ├── flux-kustomization.yaml
+│       │   ├── gitrepo.yaml
+│       │   └── kustomization.yaml
+│       ├── kustomization.yaml
+│       ├── openmcp
+│       │   ├── config
+│       │   │   └── openmcp-operator-config.yaml
+│       │   └── kustomization.yaml
+│       └── root-kustomization.yaml
+└── resources
+    ├── fluxcd
+    │   ├── components.yaml
+    │   ├── flux-kustomization.yaml
+    │   ├── gitrepo.yaml
+    │   └── kustomization.yaml
+    ├── kustomization.yaml
+    ├── openmcp
+    │   ├── cluster-providers
+    │   │   └── gardener.yaml
+    │   ├── crds
+    │   │   ├── clusters.openmcp.cloud_accessrequests.yaml
+    │   │   ├── clusters.openmcp.cloud_clusterprofiles.yaml
+    │   │   ├── clusters.openmcp.cloud_clusterrequests.yaml
+    │   │   ├── clusters.openmcp.cloud_clusters.yaml
+    │   │   ├── crossplane.services.openmcp.cloud_providerconfigs.yaml
+    │   │   ├── gardener.clusters.openmcp.cloud_clusterconfigs.yaml
+    │   │   ├── gardener.clusters.openmcp.cloud_landscapes.yaml
+    │   │   ├── gardener.clusters.openmcp.cloud_providerconfigs.yaml
+    │   │   ├── openmcp.cloud_clusterproviders.yaml
+    │   │   ├── openmcp.cloud_platformservices.yaml
+    │   │   └── openmcp.cloud_serviceproviders.yaml
+    │   ├── deployment.yaml
+    │   ├── extra
+    │   │   ├── crossplane-provider.yaml
+    │   │   ├── gardener-cluster-provider-shoot-small.yaml
+    │   │   ├── gardener-cluster-provider-shoot-workerless.yaml
+    │   │   └── gardener-landscape.yaml
+    │   ├── kustomization.yaml
+    │   ├── namespace.yaml
+    │   ├── rbac.yaml
+    │   └── service-providers
+    │       └── crossplane.yaml
+    └── root-kustomization.yaml
+```
+
+After a while, the Kustomization in the platform cluster should be updated and the crossplane service provider should be deployed:
+You can force an update of the Kustomization in the platform cluster to pick up the changes made in the Git repository.
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig -n flux-system annotate gitrepository environments reconcile.fluxcd.io/requestedAt="$(date +%s)"
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig -n default patch kustomization bootstrap --type merge -p '{"spec":{"force":true}}'
+```
+
+List the pods in the `openmcp-system` namespace again:
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get pods -n openmcp-system
+````
+
+You should see output similar to the following:
+
+```shell
+NAME                                      READY   STATUS      RESTARTS   AGE
+cp-gardener-84b7ff4c9c-vf2sc              1/1     Running     0          3m3s
+cp-gardener-init-xr7fs                    0/1     Completed   0          3m7s
+openmcp-operator-785b967f66-h2dlh         1/1     Running     0          74m
+ps-managedcontrolplane-5b77749f7b-mtffp   1/1     Running     0          71m
+ps-managedcontrolplane-init-pklrl         0/1     Completed   0          74m
+```
+
+You should see that the crossplane service provider is running. This means that from now on, the openMCP is able to provide Crossplane service instances, using the new service provider Crossplane.
+
+### Create a Crossplane service instance on the onboarding cluster
+
+Create a file named `crossplane-instance.yaml` with the following content in the configuration folder:
+
+```yaml title="config/crossplane-instance.yaml"
+apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+kind: Crossplane
+metadata:
+  name: my-mcp
+  namespace: default
+spec:
+  version: v1.20.0
+  providers:
+    - name: provider-kubernetes
+      version: v0.16.0
+```
+
+Apply the file to onboarding cluster:
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig apply -f ./config/crossplane-instance.yaml
+```
+
+The Crossplane service provider should now start to create the necessary resources for the new Crossplane instance. As a result, a new Crossplane service instance should soon be available.
+You can check the status of the Crossplane instance using the following command:
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig get crossplane -n default my-mcp -o yaml
+```
+
+After a while, you should see output similar to the following:
+
+```yaml
+apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+kind: Crossplane
+metadata:
+  finalizers:
+  - openmcp.cloud/finalizers
+  generation: 1
+  name: sample
+  namespace: default
+spec:
+  providers:
+  - name: provider-kubernetes
+    version: v0.16.0
+  version: v1.20.0
+status:
+  conditions:
+  - lastTransitionTime: "2025-09-16T14:09:56Z"
+    message: Crossplane is healthy.
+    reason: Healthy
+    status: "True"
+    type: CrossplaneReady
+  - lastTransitionTime: "2025-09-16T14:10:01Z"
+    message: ProviderKubernetes is healthy.
+    reason: Healthy
+    status: "True"
+    type: ProviderKubernetesReady
+  observedGeneration: 0
+  phase: ""
+```
+
+Crossplane and the provider Kubernetes should now be available on the mcp cluster.
+
+```shell
+kubectl --kubeconfig ./kubeconfigs/my-mcp.kubeconfig api-resources | grep 'crossplane\|kubernetes'
+```
