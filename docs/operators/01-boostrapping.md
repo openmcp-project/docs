@@ -1166,7 +1166,7 @@ spec:
         controlPlaneConfig:
           apiVersion: gcp.provider.extensions.gardener.cloud/v1alpha1
           kind: ControlPlaneConfig
-          zone: europe-west1-c
+          zone: <zone-name> # e.g. europe-west1-c
         infrastructureConfig:
           apiVersion: gcp.provider.extensions.gardener.cloud/v1alpha1
           kind: InfrastructureConfig
@@ -1190,16 +1190,82 @@ spec:
             size: 50Gi
             type: pd-balanced
           zones:
-          - <zone-name> # eg europe-west1-c
+          - <zone-name> # e.g. europe-west1-c
       purpose: evaluation
-      region: <region-name> # eg europe-west1
+      region: <region-name> # e.g. europe-west1
       secretBindingName: <gardener-secret-binding-name>
 ```
 </TabItem>
 
 <TabItem value="AWS" label="AWS" >
 ```yaml title="config/extra-manifests/gardener-cluster-provider-shoot-small.yaml"
-text: TBD
+apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: shoot-small
+spec:
+  landscapeRef:
+    name: gardener-landscape
+  project: <gardener-project-name>
+  providerRef:
+    name: gardener
+  shootTemplate:
+    spec:
+      cloudProfile:
+        kind: CloudProfile
+        name: aws
+      kubernetes:
+        version: "<kubernetes-version>" # e.g. "1.32"
+      maintenance:
+        autoUpdate:
+          kubernetesVersion: true
+        timeWindow:
+          begin: 220000+0200
+          end: 230000+0200
+      networking:
+        type: calico
+        nodes: 10.180.0.0/16
+      provider:
+        controlPlaneConfig:
+          apiVersion: aws.provider.extensions.gardener.cloud/v1alpha1
+          kind: ControlPlaneConfig
+          cloudControllerManager:
+            useCustomRouteController: true
+          storage:
+            managedDefaultClass: true
+        infrastructureConfig:
+          apiVersion: aws.provider.extensions.gardener.cloud/v1alpha1
+          kind: InfrastructureConfig
+          networks:
+            vpc:
+              cidr: 10.180.0.0/16
+            zones:
+              - name: <zone-name> # e.g. eu-west-1a
+                workers: 10.180.0.0/19
+                public: 10.180.32.0/20
+                internal: 10.180.48.0/20
+        type: aws
+        workers:
+        - cri:
+            name: containerd
+          machine:
+            architecture: amd64
+            image:
+              name: gardenlinux
+              version: "<garden-linux-version>" # e.g. "1592.9.0"
+            type: m5.large
+          maxSurge: 1
+          maximum: 5
+          minimum: 1
+          name: default-worker
+          volume:
+            size: 50Gi
+            type: gp3
+          zones:
+          - <zone-name> # e.g. eu-west-1a
+      purpose: evaluation
+      region: <region-name> # e.g. eu-west-1
+      secretBindingName: <gardener-secret-binding-name>
 ```
 </TabItem>
 
@@ -1243,7 +1309,33 @@ spec:
 
 <TabItem value="AWS" label="AWS" >
 ```yaml title="config/extra-manifests/gardener-cluster-provider-shoot-small.yaml"
-text: TBD
+apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: shoot-workerless
+spec:
+  landscapeRef:
+    name: gardener-landscape
+  project: <gardener-project-name>
+  providerRef:
+    name: gardener
+  shootTemplate:
+    spec:
+      cloudProfile:
+        kind: CloudProfile
+        name: aws
+      kubernetes:
+        version: "<kubernetes-version>" # e.g. "1.32"
+      maintenance:
+        autoUpdate:
+          kubernetesVersion: true
+        timeWindow:
+          begin: 220000+0200
+          end: 230000+0200
+      provider:
+        type: aws
+      purpose: evaluation
+      region: <region-name> # e.g. eu-west-1
 ```
 </TabItem>
 
