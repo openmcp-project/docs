@@ -1308,7 +1308,7 @@ spec:
 </TabItem>
 
 <TabItem value="AWS" label="AWS" >
-```yaml title="config/extra-manifests/gardener-cluster-provider-shoot-small.yaml"
+```yaml title="config/extra-manifests/gardener-cluster-provider-shoot-workerless.yaml"
 apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
 kind: ProviderConfig
 metadata:
