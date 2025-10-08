@@ -872,7 +872,7 @@ mkdir kubeconfigs
 
 ### Create a Gardener Shoot for the Platform Cluster
 
-openMCP requirese a running Kubernetes cluster that acts as the platform cluster.
+openMCP requires a running Kubernetes cluster that acts as the platform cluster.
 The platform cluster hosts the openmcp-operator and all service providers, cluster providers and platform services.
 In this example, we will create a Gardener Shoot cluster that acts as the platform cluster. See the [Gardener documentation](https://gardener.cloud/docs/getting-started/shoots/) for more information on how to create a Gardener Shoot cluster.
 
