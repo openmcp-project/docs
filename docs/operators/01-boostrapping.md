@@ -151,7 +151,7 @@ Replace `<your-org>` and `<your-repo>` with your Git organization and repository
 The environment can be set to the logical environment name (e.g. `dev`, `prod`, `live-eu-west`) that will be used in the Git repository to separate different environments.
 The branch can be set to the desired branch name in the Git repository that will be used to store the desired state of the openMCP landscape.
 
-Get the latest version of the `github.com/openmcp/openmcp` root component:
+Get the latest version of the `github.com/openmcp-project/openmcp` root component:
 
 ```shell
 TAG=$(curl -s "https://api.github.com/repos/openmcp-project/openmcp/releases/latest" | grep '"tag_name":' | cut -d'"' -f4)
