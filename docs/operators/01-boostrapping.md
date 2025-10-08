@@ -936,7 +936,7 @@ TAG=$(curl -s "https://api.github.com/repos/openmcp-project/openmcp/releases/lat
 echo "${TAG}"
 ```
 
-In the bootstrapper configuration, replace `<openmcp-component-version>` with the latest version of the `github.com/openmcp/openmcp` root component:
+In the bootstrapper configuration, replace `<openmcp-component-version>` with the latest version of the `github.com/openmcp-project/openmcp` root component:
 
 ```yaml title="config/bootstrapper-config.yaml"
 component:
