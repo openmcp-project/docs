@@ -1008,7 +1008,7 @@ image-automation-controller-56df4c78dc-qwmfm   1/1     Running   0          9m35
 image-reflector-controller-56f69fcdc9-pgcgx    1/1     Running   0          9m35s
 kustomize-controller-b4c4dcdc8-g49gc           1/1     Running   0          9m38s
 notification-controller-59d754d599-w7fjp       1/1     Running   0          9m36s
-source-controller-6b45b6464f-jbgb6             1/1     Running   0          9m38
+source-controller-6b45b6464f-jbgb6             1/1     Running   0          9m38s
 ```
 
 ```shell
