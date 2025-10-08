@@ -917,7 +917,7 @@ Alternatively, you can create a service account with the `Admin` role in the Gar
 Now, create a new Gardener Shoot cluster in your Gardener project using the Gardener dashboard or the Gardener API via kubectl. The name of the Shoot cluster shall be `platform`.
 Please consult the [Gardener documentation](https://gardener.cloud/docs/getting-started/shoots/) for more information on how to create a Gardener Shoot cluster.
 
-Download the admin kubeconfig of the `platform` Shoot cluster using the script created above and save it to a file named `platform.kubeconfig` in the `kubeconfigs` folder.
+Download the admin kubeconfig of the `platform` Shoot cluster using the script created above (`get-shoot-kubeconfig.sh`) and save it to a file named `platform.kubeconfig` in the `kubeconfigs` folder.
 
 ```shell
 ./scripts/get-shoot-kubeconfig.sh <path-to-gardener-kubeconfig> <your-gardener-project-name> platform > ./kubeconfigs/platform.kubeconfig
