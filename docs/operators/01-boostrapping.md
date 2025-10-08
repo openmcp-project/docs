@@ -910,7 +910,7 @@ Make the script executable:
 chmod +x ./scripts/get-shoot-kubeconfig.sh
 ```
 
-In order to execute this script, you need a kubeconfig file that has access to the Gardener installation. This can be aquired by navigating to the Gardener dashboard, then selecting your user, settings and under `Access` download the Kubeconfig file.
+In order to execute this script, you need a kubeconfig file that has access to the Gardener installation. This can be aquired by navigating to the Gardener dashboard, then selecting your user (icon in the upper right corner) -> click 'My Account' and under `Access` download the Kubeconfig file.
 
 Alternatively, you can create a service account with the `Admin` rolen in the Gardener project and then retrieve the kubeconfig for the sercice account. See the [Gardener documentation](https://gardener.cloud/docs/getting-started/project/#service-accounts) for more information on how to create a service account.
 
