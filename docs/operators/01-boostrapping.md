@@ -1920,7 +1920,7 @@ spec:
         - v0.16.0
 ```
 
-Run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy the crossplane service provider to the Kind cluster.
+Run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy the crossplane service provider to the Shoot cluster.
 
 ```shell
 docker run --rm  -v ./config:/config -v ./kubeconfigs:/kubeconfigs ghcr.io/openmcp-project/images/openmcp-bootstrapper:${OPENMCP_BOOTSTRAPPER_VERSION} manage-deployment-repo --git-config /config/git-config.yaml --kubeconfig /kubeconfigs/platform.kubeconfig --extra-manifest-dir /config/extra-manifests /config/bootstrapper-config.yaml
