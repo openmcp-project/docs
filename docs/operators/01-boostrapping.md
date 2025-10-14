@@ -1126,7 +1126,7 @@ Create a service account with at least the `admin` role in the Gardener project.
 
 ```shell
 kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig create namespace openmcp-system
-kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig create secret generic gardener-landscape-kubeconfig --from-file=kubeconfig=/./kubeconfigs/gardener-landscape.kubeconfig -n openmcp-system
+kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig create secret generic gardener-landscape-kubeconfig --from-file=kubeconfig=./kubeconfigs/gardener-landscape.kubeconfig -n openmcp-system
 ```
 
 The kubeconfig content can be retrieved from the Gardener dashboard or by creating a service account in the Gardener project. See the [Gardener documentation](https://gardener.cloud/docs/getting-started/project/#service-accounts) for more information on how to create a service account.
