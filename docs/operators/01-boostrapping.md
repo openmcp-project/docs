@@ -1122,7 +1122,7 @@ spec:
 
 The gardener landscape configuration requires a secret that contains the kubeconfig to access the Gardener project. For that purpose, create a secret named `gardener-landscape-kubeconfig` in the `openmcp-system` namespace of the platform cluster that contains the kubeconfig file that has access to the Gardener installation.
 See the [Gardener documentation](https://gardener.cloud/docs/dashboard/automated-resource-management/#create-a-service-account) on how to create a service account in the Gardener project using the Gardener dashboard.
-Create a service account with at least the `admin` role in the Gardener project. Then [download]((https://gardener.cloud/docs/dashboard/automated-resource-management/#use-the-service-account)) the kubeconfig for the service account and save it to a file named `./kubeconfigs/gardener-landscape.kubeconfig`.
+Create a service account with at least the `admin` role in the Gardener project. Then [download](https://gardener.cloud/docs/dashboard/automated-resource-management/#use-the-service-account) the kubeconfig for the service account and save it to a file named `./kubeconfigs/gardener-landscape.kubeconfig`.
 
 ```shell
 kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig create namespace openmcp-system
