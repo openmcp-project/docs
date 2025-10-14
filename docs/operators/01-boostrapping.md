@@ -1347,6 +1347,10 @@ Replace `<gardener-project-name>` with the name of your Gardener project and `<g
 
 Replace also `<kubernetes-version>` with the desired Kubernetes version (e.g. `1.32`), `<garden-linux-version>` with the desired Garden Linux version (e.g. `1592.9.0`), `<region-name>` with the desired region (e.g. `europe-west1`), and `<zone-name>` with the desired zone (e.g. `europe-west1-c`).
 
+:::info
+Please adjust the shoot configuration based on your specific needs, e.g. change `Evaluation` to `Production` as purpose, if you are planning to use the MCP for productive purposes. For all the details reg. Shoot configuration, please consult the respective Gardener documentation.
+:::
+
 Now run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy openMCP to the `platform` Gardener Shoot cluster:
 
 ```shell
