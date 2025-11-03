@@ -137,7 +137,7 @@ Here we define the core interfaces that a consumer (`ServiceProvider` developer)
 
 The actual domain layer of a `ServiceProvider` (layer on top of the [runtime](#runtime)). The foundation to build a `ServiceProvider` template.
 
-A `ServiceProvider` has the following responsibilities:
+A `ServiceProvider` defines how a `DomainService` can be consumed by a tenant. It has the following responsibilities:
 
 - Manage the lifecycle of the `API` and `Run` of a `DomainService`.
 - Allow multiple `APIClusters` to target the same `RunCluster`, e.g. the Crossplane managed resources on `MCP` A and `MCP` B are reconciled by the same Crossplane installation on a shared `WorkloadCluster`.
