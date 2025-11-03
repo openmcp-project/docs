@@ -7,6 +7,7 @@
 - Define a `ServiceProvider` model that implements the higher level `API`/`Run` platform concept (to allow flexible deployment models, e.g. with `ClusterProvider` kcp)
 - Define `ServiceProvider` contract to implement `ServiceProvider` as a loosely coupled component in the openMCP context
 - Define how a `ServiceProvider` can be validated
+- (MCP) v1 learnings have been addressed
 
 ## Non-Goals
 
@@ -101,7 +102,7 @@ The following validation flow validates that a `ServiceProvider` is working as e
 
 ## Runtime
 
-What is a runtime? A runtime is a collection of abstractions and contracts that provides an environment in which user-defined logic is executed.
+A runtime is a collection of abstractions and contracts that provides an environment in which user-defined logic is executed.
 
 The service provider runtime is built on top of controller-runtime and provides a service provider specific reconciliation loop.
 
@@ -132,17 +133,18 @@ This may include special domain semantics similar to `ManagementPolicies` or the
 
 Here we define the core interfaces that a consumer (`ServiceProvider` developer) has to implement, e.g. in Crossplane `ExternalConnector` creates `ExternalClient` which implements CRUD operations with `ExternalObservation`, `ExternalCreation`, etc. `Managed` interface defines what makes a k8s object a managed Crossplane resource, e.g. by referencing a `ProviderConfig`, specifying `ManagementPolicies`, `ConnectionSecrets`, etc.
 
-### Observability
-
-Logging, metrics, traces?
-
 ## Domain
 
 The actual domain layer of a `ServiceProvider` (layer on top of the [runtime](#runtime)). The foundation to build a `ServiceProvider` template.
 
-### RBAC
+A `ServiceProvider` has the following responsibilities:
 
-What permissions does a service provider need...
+- Manage the lifecycle of the `API` and `Run` of a `DomainService`.
+- Allow multiple `APIClusters` to target the same `RunCluster`, e.g. the Crossplane managed resources on `MCP` A and `MCP` B are reconciled by the same Crossplane installation on a shared `WorkloadCluster`.
+
+## Template / Builder
+
+Do we want a CLI like kubebuilder or a template like crossplane provider template?
 
 ## Service Provider Manager
 
@@ -151,3 +153,15 @@ The component that manages the lifecyclee of `ServiceProviders` and provides ser
 candidates e.g. `openmcp-operator` or `service-provider-operator`
 
 out of scope?
+
+## Ideas
+
+- `SoftDelete` platform concept. A `managed` service can transition to a `unmanaged` service by soft deleting its corresponding `ServiceProviderAPI` or the `ServiceProvider` entirely without losing the `DomainService`. This way a tenant could offboard itself partially or entirely from the platform without losing the provisioned infrastructure. This obviously depends on the ownership model of the infrastructure.
+
+## References
+
+Projects in the same problem space:
+
+- [Crossplane](https://www.crossplane.io/)
+- [kube-bind](https://github.com/kube-bind/kube-bind)
+- [multi-cluster-runtime](https://github.com/kubernetes-sigs/multicluster-runtime)
