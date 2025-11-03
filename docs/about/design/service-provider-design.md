@@ -119,9 +119,11 @@ The following overview illustrates the layers in a simplified way:
 | :--- | :--- |
 | Service Provider | defines `ServiceProviderAPI` and implements service-provider-runtime operations |
 | service-provider-runtime | defines ServiceProvider reconciliation semantics |
-| controller-runtime | defines generic reconciliation semantics |
+| multicluster/controller-runtime | defines generic reconciliation semantics |
 | Kubernetes API machinery | k8s essentials |
 | Go runtime / OS kernel | process/thread execution, memory management |
+
+Multi-cluster functionality will most likely be part of `service-provider-runtime`, e.g. a facade-like layer on top of `multicluster-runtime` to enable service deployment on shared `WorkloadCluster`.
 
 ### Execution Model
 
@@ -140,7 +142,9 @@ The actual domain layer of a `ServiceProvider` (layer on top of the [runtime](#r
 A `ServiceProvider` defines how a `DomainService` can be consumed by a tenant. It has the following responsibilities:
 
 - Manage the lifecycle of the `API` and `Run` of a `DomainService`.
-- Allow multiple `APIClusters` to target the same `RunCluster`, e.g. the Crossplane managed resources on `MCP` A and `MCP` B are reconciled by the same Crossplane installation on a shared `WorkloadCluster`.
+- Provide its platform facing `API` -> `ServiceProviderConfig`
+- Provide its tenant facing `API` -> `ServiceConfig`
+- Allow multiple `APIClusters` to target the same `RunCluster`, e.g. the Crossplane managed resources on `MCP` A and `MCP` B are reconciled by the same Crossplane installation on a shared `WorkloadCluster` -> we can think of this as a `multicluster-runtime` facade that is part of [service-provider-runtime](#runtime).
 
 ## Template / Builder
 
@@ -160,8 +164,8 @@ out of scope?
 
 ## References
 
-Projects in the same problem space:
+Projects with similar concepts:
 
 - [Crossplane](https://www.crossplane.io/)
 - [kube-bind](https://github.com/kube-bind/kube-bind)
-- [multi-cluster-runtime](https://github.com/kubernetes-sigs/multicluster-runtime)
+- [multicluster-runtime](https://github.com/kubernetes-sigs/multicluster-runtime)
