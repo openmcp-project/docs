@@ -123,7 +123,7 @@ The following overview illustrates the layers in a simplified way:
 | Kubernetes API machinery | k8s essentials |
 | Go runtime / OS kernel | process/thread execution, memory management |
 
-Multi-cluster functionality will most likely be part of `service-provider-runtime`, e.g. a facade-like layer on top of `multicluster-runtime` to enable service deployment on shared `WorkloadCluster`.
+Multi-cluster functionality will most likely be part of `service-provider-runtime`, e.g. a layer on top of `multicluster-runtime` or an `object-syncer/juggler` to enable service deployment on shared `WorkloadCluster`.
 
 ```mermaid
 graph TD
@@ -141,6 +141,84 @@ graph TD
 Here we define what a run/reconcile cycle means, e.g. observe followed by an orchestration of actions like create, update, delete.
 
 This may include special domain semantics similar to `ManagementPolicies` or the `pause` state/mechanism in Crossplane.
+
+The following two diagrams illustrate the `juggler` vs `multicluster-runtime` versions.
+
+"Multicluster-runtime" facade version (not feasable because essentially this means replacing controller-runtime with multicluster-runtime in domain controllers):
+
+```mermaid
+graph TD
+    %% WorkloadCluster
+    subgraph WorkloadCluster/RUN
+        DS[DomainService/RUN]
+        subgraph ServiceProviderInstance
+            SPR[service-provider-runtime]
+        end
+    end
+
+    %% MCPClusterA
+    subgraph MCPClusterA/API
+        DSAA[DomainServiceAPI]
+    end
+
+    %% MCPClusterB
+    subgraph MCPClusterB/API
+        DSAB[DomainServiceAPI]
+    end
+
+    %% MCPClusterC
+    subgraph MCPClusterC/API
+        DSAC[DomainServiceAPI]
+    end
+
+    %% edges
+    DS ---|forwardRequests/syncStatus| SPR
+    SPR -->|reconciles|DSAA
+    SPR -->|reconciles|DSAB
+    SPR -->|reconciles|DSAC
+```
+
+Object syncer / juggler version:
+
+```mermaid
+graph TD
+    %% WorkloadCluster
+    subgraph WorkloadCluster/RUN
+        DS[DomainService/RUN]
+        DSAACopy[DomainServiceAPICopyA]
+        DSABCopy[DomainServiceAPICopyB]
+        DSACCopy[DomainServiceAPICopyC]
+        subgraph ServiceProviderInstance
+            SPR[service-provider-runtime]
+        end
+    end
+
+    %% MCPClusterA
+    subgraph MCPClusterA/API
+        DSAA[DomainServiceAPI]
+    end
+
+    %% MCPClusterB
+    subgraph MCPClusterB/API
+        DSAB[DomainServiceAPI]
+    end
+
+    %% MCPClusterC
+    subgraph MCPClusterC/API
+        DSAC[DomainServiceAPI]
+    end
+
+    %% edges
+    DS -->|reconciles| DSAACopy
+    DS -->|reconciles| DSABCopy
+    DS -->|reconciles| DSACCopy
+    DSAACopy ---|create/sync| SPR
+    DSABCopy ---|create/sync| SPR
+    DSACCopy ---|create/sync| SPR
+    SPR -->|sync|DSAA
+    SPR -->|sync|DSAB
+    SPR -->|sync|DSAC
+```
 
 ### Abstractions and Contracts
 
