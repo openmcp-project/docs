@@ -125,6 +125,17 @@ The following overview illustrates the layers in a simplified way:
 
 Multi-cluster functionality will most likely be part of `service-provider-runtime`, e.g. a facade-like layer on top of `multicluster-runtime` to enable service deployment on shared `WorkloadCluster`.
 
+```mermaid
+graph TD
+    SPC[service-provider-controller]
+    SPR[service-provider-runtime]
+    MCR[multicluster-runtime]
+
+    %% edges
+    SPC -->|imports|SPR
+    SPR -->|imports/abstracts|MCR
+```
+
 ### Execution Model
 
 Here we define what a run/reconcile cycle means, e.g. observe followed by an orchestration of actions like create, update, delete.
