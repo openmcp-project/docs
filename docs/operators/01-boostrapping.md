@@ -178,6 +178,7 @@ openmcpOperator:
 
 For GitHub use a personal access token with `repo` write permissions.
 It is also possible to use a fine-grained token. In this case, it requires read and write permissions for `Contents`.
+
 ```yaml title="config/git-config.yaml"
 auth:
   basic:
@@ -422,6 +423,7 @@ You should see output similar to the following:
 NAMESPACE     NAME           URL                                          AGE    READY   STATUS
 flux-system   environments   https://github.com/<your-ourg>/<your-repo>   9m6s   True    stored artifact for revision 'docs@sha1:...'
 ```
+
 So we have now successfully configured FluxCD to watch for changes in the specified GitHub repository, using the `environments` custom resource of kind `GitRepository`.
 Now let's get the status of the Kustomization in the Kind cluster.
 
@@ -671,23 +673,33 @@ openmcpOperator:
 
 Create a new folder named `extra-manifests` in the configuration folder. Then create a file named `crossplane-provider.yaml` with the following content, and save it in the new `extra-manifests` folder.
 
+:::info
+Note that service provider crossplane only supports the installation of crossplane from an OCI registry. Replace the chart locations in the `ProviderConfig` with the OCI registry where you mirror your crossplane chart versions. OpenMCP will provide this as part of an open source [Releasechannel](https://github.com/openmcp-project/backlog/issues/323) in an upcoming update.
+:::
+
 ```yaml title="config/extra-manifests/crossplane-provider.yaml"
 apiVersion: crossplane.services.openmcp.cloud/v1alpha1
 kind: ProviderConfig
 metadata:
   name: default
 spec:
-  chart:
-    repository: "https://charts.crossplane.io/stable"
-    name: crossplane
-    availableVersions:
-      - v1.20.0
-      - v1.19.0
-  availableProviders:
-    - name: provider-kubernetes
-      package: xpkg.upbound.io/upbound/provider-kubernetes
-      versions:
-        - v0.16.0
+  versions:
+    - version: v2.0.2
+      chart:
+        url: ghcr.io/openmcp-project/charts/crossplane:2.0.2
+      image:
+        url: xpkg.crossplane.io/crossplane/crossplane:v2.0.2
+    - version: v1.20.1
+      chart:
+        url: ghcr.io/openmcp-project/charts/crossplane:1.20.1
+      image:
+        url: xpkg.crossplane.io/crossplane/crossplane:v1.20.1
+  providers:
+    availableProviders:
+      - name: provider-kubernetes
+        package: xpkg.upbound.io/upbound/provider-kubernetes
+        versions:
+          - v0.16.0
 ```
 
 Run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy the crossplane service provider to the Kind cluster.
@@ -1455,6 +1467,7 @@ You should see output similar to the following:
 NAMESPACE     NAME           URL                                          AGE    READY   STATUS
 flux-system   environments   https://github.com/<your-ourg>/<your-repo>   9m6s   True    stored artifact for revision 'docs@sha1:...'
 ```
+
 So we have now successfully configured FluxCD to watch for changes in the specified GitHub repository, using the `environments` custom resource of kind `GitRepository`.
 Now let's get the status of the Kustomization in the Kind cluster.
 
@@ -1905,23 +1918,33 @@ openmcpOperator:
 
 Then create a file named `crossplane-provider.yaml` with the following content, and save it in the new `extra-manifests` folder.
 
+:::info
+Note that service provider crossplane only supports the installation of crossplane from an OCI registry. Replace the chart locations in the `ProviderConfig` with the OCI registry where you mirror your crossplane chart versions. OpenMCP will provide this as part of an open source [Releasechannel](https://github.com/openmcp-project/backlog/issues/323) in an upcoming update.
+:::
+
 ```yaml title="config/extra-manifests/crossplane-provider.yaml"
 apiVersion: crossplane.services.openmcp.cloud/v1alpha1
 kind: ProviderConfig
 metadata:
   name: default
 spec:
-  chart:
-    repository: "https://charts.crossplane.io/stable"
-    name: crossplane
-    availableVersions:
-      - v1.20.0
-      - v1.19.0
-  availableProviders:
-    - name: provider-kubernetes
-      package: xpkg.upbound.io/upbound/provider-kubernetes
-      versions:
-        - v0.16.0
+  versions:
+    - version: v2.0.2
+      chart:
+        url: ghcr.io/openmcp-project/charts/crossplane:2.0.2
+      image:
+        url: xpkg.crossplane.io/crossplane/crossplane:v2.0.2
+    - version: v1.20.1
+      chart:
+        url: ghcr.io/openmcp-project/charts/crossplane:1.20.1
+      image:
+        url: xpkg.crossplane.io/crossplane/crossplane:v1.20.1
+  providers:
+    availableProviders:
+      - name: provider-kubernetes
+        package: xpkg.upbound.io/upbound/provider-kubernetes
+        versions:
+          - v0.16.0
 ```
 
 Run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy the crossplane service provider to the Shoot cluster.
