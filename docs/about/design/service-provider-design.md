@@ -177,7 +177,7 @@ The following overview illustrates the layers of a `ServiceProvider` controller 
 
 In contrast to the API [contracts](#contracts)
 
-Main tasks towards MCP/Workload Clusters based on watching the Onboarding Cluster APIs:
+Main tasks towards MCP/Workload Clusters based on watching the `ServiceProviderAPI`:
 
 - Create Service Deployment (Init Lifecycle)
 - Observe Service Deployment (Drift Detection)
