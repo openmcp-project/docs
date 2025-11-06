@@ -25,7 +25,7 @@ If we map this to the abstract terminology of a `DomainService` and `DomainServi
 
 #### End User Facing
 
-A `ServiceProviders` defines a `ServiceProviderAPI` to expose its managed service offering to end users. It is important to distinguish between `DomainServiceAPI` and `ServiceProviderAPI`. Both are end user facing but the `DomainServiceAPI` is the API that provides end user value while the `ServiceProviderAPI` defines the openMCP flavor of a `DomainService`. As with any other managed service offering, a `ServiceProvider` in openMCP restricts the usage of `DomainService` as part of his end user offering. A shifting range of platform supported `DomainService` versions that are available at a certain point in time is a typical example.
+A `ServiceProviders` defines a `ServiceProviderAPI` to expose its managed service offering to end users. It is important to distinguish between `DomainServiceAPI` and `ServiceProviderAPI`. Both are end user facing but the `DomainServiceAPI` is the API that provides end user value while the `ServiceProviderAPI` defines the openMCP flavor of a `DomainService`. As with any other managed service offerings, a `ServiceProvider` in openMCP restricts the usage of `DomainService` to a subset of features. A simple example is a shifting range of platform supported `DomainService` versions that are available at a certain point.
 
 ```mermaid
 graph LR
