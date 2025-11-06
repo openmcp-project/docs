@@ -132,7 +132,7 @@ graph TD
     Crossplane -->|reconciles|Bucket
 ```
 
-- The [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) manages the lifecyclee of `ServiceProviders`.
+- The [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) manages the lifecycle of `ServiceProviders`.
 
 ## Validation
 
