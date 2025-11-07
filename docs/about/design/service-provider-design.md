@@ -219,7 +219,7 @@ The remainder of this document contains topics that are out of scope for now.
 
 ### Multicluster Execution Model
 
-Multi-cluster functionality for `ServiceProvider` is a design goal for future iterations and might get integrated into `service-provider-runtime`. This would enable service deployment on shared `WorkloadCluster`.
+Multi-cluster functionality for `ServiceProvider` is a design goal for future iterations and might get integrated into `service-provider-runtime`. This would generally enable to run any `DomainService` on shared `WorkloadCluster`.
 
 An approach could be to sync API objects between `API` and `RUN` clusters as a feature of service-provider-runtime.
 
