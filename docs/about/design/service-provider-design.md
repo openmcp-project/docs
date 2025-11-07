@@ -209,6 +209,10 @@ sequenceDiagram
     spr-->>cr: requeueAfter
 ```
 
+:::info
+This sequence expects that a `ServiceProviderConfig` does not require validation by a `ServiceProvider`. How valid `ServiceProviderConfigs` are generated in the `PlatformCluster` is tbd.
+:::
+
 ## Out of Scope
 
 The remainder of this document contains topics that are out of scope for now.
