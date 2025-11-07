@@ -60,25 +60,31 @@ End users need to be aware of a) the available service offerings and b) valid in
 
 Both points are the responsibility of `PlatformServices` and not the `ServiceProvider` itself.
 
-A) is realized by installing the `ServiceProviderAPI` on the `OnboardingCluster`.
+A) is realized by installing the `ServiceProviderAPI` on the `OnboardingCluster`. Any platform tenant is aware of any available `ServiceProviderAPI`. In other words the platform doesn't hide its end user facing feature set depending on whether a user belongs to a tenant that is able to successfully consume a `ServiceProviderAPI`.
 
-B) is realized by communicating the `ServiceProviderConfig` options that are available to the user.
+B) is realized by communicating the `ServiceProviderConfig` options that are available to the user. A user of a tenant without a `ServiceProviderConfig` can consume a `ServiceProviderAPI` but `DomainService` deployment will be denied.
 
 One special kind of config information that a `ServiceProvider` needs are the artifact versions he can use to deploy a service. OpenMCP introduces the concept of `ReleaseChannels` that define the available artifacts (container images, helm charts, etc.) in context of an openMCP installation. A `ServiceProvider` indirectly consumes a `ReleaseChannel` via its `ServiceProviderConfig`:
 
 ```mermaid
-graph LR
-    RC[ReleaseChannel]
-    SPC[ServiceProviderConfig]
-    SP[ServiceProvider]
+graph TD
+    subgraph Platform
+        subgraph ServiceProvider
+            SPC[ServiceProviderConfig]
+            SP[ServiceProvider]
+        end
+        TN[Tenant]
+        RC[ReleaseChannel]
+    end
 
     %% edges
     SP -->|one...uses...many|SPC
     SPC -->|many...references subset of artifacts...one|RC
+    SPC ---|many...allows access...many|TN
 ```
 
 :::info
-A `ServiceProviderConfig` may hold configuration parameters other than `ReleaseChannel` information/artifact versions.
+A `ServiceProviderConfig` may hold configuration parameters other than `ReleaseChannel` information/artifact versions. In that sense it is more than just a 'version pinning' mechanism.
 :::
 
 ### Deployment Model
