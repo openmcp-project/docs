@@ -159,18 +159,18 @@ tbd.
 
 ## Runtime
 
-A runtime is a collection of abstractions and contracts that provides an environment in which user-defined logic is executed.
+A runtime is a collection of abstractions and contracts that provides an environment in which user-defined logic is executed. This introduces a clear separation between `ServiceProvider` developer domain and platform developer domain.
 
-The `service-provider-runtime` is built on top of `controller-runtime` and provides a service provider specific reconciliation loop. It gives us as a platform the possibility to implement platform specific features around service providers that are not `DomainService` specific. This way we provide a consistent experience to both end users and developers when working with `ServiceProviders`.
+The `service-provider-runtime` is built on top of `controller-runtime` and provides a service provider specific reconciliation loop. It gives us as a platform the possibility to implement platform specific features around service providers. At the same time `ServiceProvider` developers can focus on `DomainService` specific logic without the burden to understand platform internals. This way we provide a consistent experience to both end users and developers when working with `ServiceProviders`.
 
 The following overview illustrates the layers of a `ServiceProvider` controller a simplified way:
 
-| Layer | Description |
-| :--- | :--- |
-| Service Provider | defines `ServiceProviderAPI`/`ServiceProviderConfig` and implements service-provider-runtime operations |
-| service-provider-runtime | defines ServiceProvider reconciliation semantics |
-| multicluster/controller-runtime | defines generic reconciliation semantics |
-| Kubernetes API machinery | k8s essentials |
+| Layer | Description | Target Audience |
+| :--- | :--- | :--- |
+| Service Provider | defines `ServiceProviderAPI`/`ServiceProviderConfig` and implements service-provider-runtime operations | service provider developers |
+| service-provider-runtime | defines ServiceProvider reconciliation semantics | platform developers |
+| multicluster/controller-runtime | defines generic reconciliation semantics | out of scope |
+| Kubernetes API machinery | k8s essentials | out of scope |
 
 ### Abstractions
 
@@ -178,16 +178,36 @@ In contrast to the API [contracts](#contracts)
 
 Main tasks towards MCP/Workload Clusters based on watching the `ServiceProviderAPI`:
 
-- Create Service Deployment (Init Lifecycle)
-- Observe Service Deployment (Drift Detection)
-- Update Service Deployment (Reconcile Drift)
-- Delete Service Deployment (End Lifecycle)
+- Observe Service Deployment (Drift Detection) -> IN: context, apiObject, reconcileScope; OUT: bool[exists, drift], error
+- Create Service Deployment (Init Lifecycle) -> IN: context, apiObject, reconcileScope; OUT: error
+- Update Service Deployment (Reconcile Drift) -> IN: context, apiObject, reconcileScope; OUT: error
+- Delete Service Deployment (End Lifecycle) -> IN: context, apiObject, reconcileScope; OUT: error
+
+where `reconcileScope` holds the `ServiceProviderConfig` and clients to access onboarding, mcp and workload clusters.
 
 Main tasks towards `PlatformCluster` based on `ServiceProviderConfig`:
 
 - resolve and validate `ServiceProviderConfig` against e.g. available `ReleaseChannel`
 
-Here we define the core interfaces that a consumer (`ServiceProvider` developer) has to implement, e.g. in Crossplane `ExternalConnector` creates `ExternalClient` which implements CRUD operations with `ExternalObservation`, `ExternalCreation`, etc. `Managed` interface defines what makes a k8s object a managed Crossplane resource, e.g. by referencing a `ProviderConfig`, specifying `ManagementPolicies`, `ConnectionSecrets`, etc.
+### Reconcile Sequence
+
+```mermaid
+sequenceDiagram
+    %% participants
+    participant cr as controller-runtime
+    participant spr as service-provider-runtime
+    participant sp as service-provider
+
+    %% messages
+    cr->>spr: reconcile
+    spr->>spr: set up reconcileScope
+    spr-->>cr: end if no service provider config exists
+    spr->>spr: fetch API object from onboarding cluster
+    spr->>sp: observe(apiObject, reconcileScope)
+    sp-->>spr: exists/drift
+    spr->>sp: create/update/delete(apiObject, reconcileScope)
+    spr-->>cr: requeueAfter
+```
 
 ## Out of Scope
 
