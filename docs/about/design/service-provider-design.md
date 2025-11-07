@@ -19,13 +19,13 @@ A `ServiceProvider` enables platform users to consume a `DomainServiceAPI` of a 
 
 For example platform users want to use [Crossplane](https://www.crossplane.io/), specifically the `Object` API of [provider-kubernetes](https://github.com/crossplane-contrib/provider-kubernetes) to create Kubernetes objects on Kubernetes clusters they own without having to manage Crossplane themselves. So essentially consume `Crossplane` as a managed service of the `openMCP` platform.
 
-If we map this to the abstract terminology of a `DomainService` and `DomainServiceAPI`, this means users want to consume the `DomainServiceAPI` -> `Object` of a `DomainService` -> `Crossplane`. Note that `provider-kubernetes` depends on a running Crossplane installation to work properly. That is why `provider-kubernetes` itself can't be a `DomainService`.
+If we map this to the terminology of a `DomainService` and `DomainServiceAPI`, this means users want to consume the `DomainServiceAPI` -> `Object` of a `DomainService` -> `Crossplane`. Note that `provider-kubernetes` depends on a running Crossplane installation to work properly. That is why `provider-kubernetes` itself can't be a `DomainService`.
 
 ### Contracts
 
 #### End User Facing
 
-A `ServiceProviders` defines a `ServiceProviderAPI` to expose its managed service offering to end users. It is important to distinguish between `DomainServiceAPI` and `ServiceProviderAPI`. Both are end user facing but the `DomainServiceAPI` is the API that provides end user value while the `ServiceProviderAPI` defines the openMCP flavor of a `DomainService`. As with any other managed service offerings, a `ServiceProvider` in openMCP restricts the usage of `DomainService` to a subset of features. A simple example is a shifting range of platform supported `DomainService` versions that are available at a certain point.
+A `ServiceProvider` defines a `ServiceProviderAPI` to expose its managed service offering to end users. It is important to distinguish between `DomainServiceAPI` and `ServiceProviderAPI`. Both are end user facing but the `DomainServiceAPI` is the API that provides end user value while the `ServiceProviderAPI` defines the openMCP flavor of a `DomainService`. As with any other managed service offerings, a `ServiceProvider` in openMCP restricts the usage of `DomainService` to a subset of features. A simple example is a shifting range of platform supported `DomainService` versions that are available at a certain point.
 
 ```mermaid
 graph LR
