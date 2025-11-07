@@ -161,7 +161,7 @@ tbd.
 
 A runtime is a collection of abstractions and contracts that provides an environment in which user-defined logic is executed.
 
-The service provider runtime is built on top of controller-runtime and provides a service provider specific reconciliation loop. It gives us as a platform the possibility to implement platform specific feature around service providers that is are not `DomainService` specific. This way we provide a consistent experience to both end users and developers when working with `ServiceProviders`.
+The `service-provider-runtime` is built on top of `controller-runtime` and provides a service provider specific reconciliation loop. It gives us as a platform the possibility to implement platform specific features around service providers that are not `DomainService` specific. This way we provide a consistent experience to both end users and developers when working with `ServiceProviders`.
 
 The following overview illustrates the layers of a `ServiceProvider` controller a simplified way:
 
