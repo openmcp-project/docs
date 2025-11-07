@@ -161,14 +161,7 @@ tbd.
 
 A runtime is a collection of abstractions and contracts that provides an environment in which user-defined logic is executed.
 
-The service provider runtime is built on top of controller-runtime and provides a service provider specific reconciliation loop.
-
-It provides:
-
-- client abstractions (in xp external clients, in openmcp e.g. reuse common juggler reconcilers like flux?)
-- lifecycle management abstractions of `ServiceProviderAPI` objects (the reconcile loop)
-- platform specific features (in xp e.g. late initialize, external-name and pause annotations), enables us to implement platform features for all service providers (a `ServiceProvider` only needs to update their runtime dependency)
-- handling of cross-cutting concerns like event recording, logging, metrics, rate limits
+The service provider runtime is built on top of controller-runtime and provides a service provider specific reconciliation loop. It gives us as a platform the possibility to implement platform specific feature around service providers that is are not `DomainService` specific. This way we provide a consistent experience to both end users and developers when working with `ServiceProviders`.
 
 The following overview illustrates the layers of a `ServiceProvider` controller a simplified way:
 
@@ -248,11 +241,8 @@ graph TD
 
 ### Ideas
 
-- `SoftDelete` platform concept. A `managed` service can transition to a `unmanaged` service by soft deleting its corresponding `ServiceProviderAPI` or the `ServiceProvider` entirely without losing the `DomainService`. This way a tenant could offboard itself partially or entirely from the platform without losing the provisioned infrastructure. This obviously depends on the ownership model of the infrastructure.
-- In the above model the `OnboardingCluster` is a continuous `API` cluster. We might want to provision dedicated or shared tenant `API` servers (e.g. with `ClusterProvider` kcp) based on some kind of component discovery that lets the tenant pick its feature/component set. This way the `OnboardingCluster` is only used to onboard new tenants. And we don't run into CRD management hell/bottlenecks.
-- Another thought regarding the `OnboardingCluster`. If we introduce tenant `API` clusters, they could be used to create MCPs. This again implies that instead of having the `OnboardingCluster` create `MCPs`, we might want to have the `OnboardingCluster` create `Tenants` as the entry point for users -> start with an identity object like `Tenant` or `Account` instead of a usage artifact like `MCP`.
+- `SoftDelete` platform concept. A `managed` service can transition to a `unmanaged` service by soft deleting its corresponding `ServiceProviderConfig` without losing the `DomainService`. This way a tenant could offboard itself partially or entirely from the platform without losing the provisioned infrastructure. This obviously depends on the ownership model of the infrastructure.
 - Distinguish between `Run` and `API` artifacts on all platform layers
-- Illustrate different deployment models with `Run`/`API` concept
 
 ### Terminology
 
