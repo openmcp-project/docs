@@ -1,8 +1,10 @@
 # Service Provider Design
 
+This document outlines the `ServiceProvider` domain and its technical considerations within the context of the [openMCP project](https://github.com/openmcp-project/), providing a foundation for understanding its architecture and operational aspects.
+
 ## Goals
 
-- Define clear terminology around `ServiceProvider` in the OpenMCP space
+- Define clear terminology around `ServiceProvider` within the openMCP project
 - Establish the scope of a `ServiceProvider`, including its responsibilities and boundaries
 - Define a `ServiceProvider` implementation layer to implement common features and ensure consistency across `ServiceProvider` instances
 - Outline how a `ServiceProvider` can be validated
