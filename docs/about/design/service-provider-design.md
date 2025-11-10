@@ -3,28 +3,28 @@
 ## Goals
 
 - Define clear terminology around `ServiceProvider` in the OpenMCP space
-- Define `ServiceProvider` scope: responsibilities and boundaries of a `ServiceProvider`
-- Define a `ServiceProvider` implementation layer to implement common features and establish consistency across `ServiceProvider` instances
-- Define how a `ServiceProvider` can be validated
+- Establish the scope of a `ServiceProvider`, including its responsibilities and boundaries
+- Define a `ServiceProvider` implementation layer to implement common features and ensure consistency across `ServiceProvider` instances
+- Outline how a `ServiceProvider` can be validated
 
 ## Non-Goals
 
-- `ServiceProviders` does not need to deploy its `DomainService` on `WorkloadClusters`. For now a `DomainService` can be deployed on both `WorkloadCluster` or `MCPCluster`.
-- Define a `ServiceProvider` model that implements a higher level `API`/`Run` platform concept (to allow flexible deployment models, e.g. with `ClusterProvider` kcp)
+- `ServiceProviders` are not required to deploy their `DomainService` on `WorkloadClusters`. For now, a `DomainService` can be deployed on either a `WorkloadCluster` or `MCPCluster`.
+- Define a `ServiceProvider` model that implements a higher level `API`/`Run` platform concept (e.g., to allow flexible deployment models, e.g. with `ClusterProvider` kcp)
 
 ## Domain
 
-A `ServiceProvider` enables platform users to consume a `DomainServiceAPI` of a third party `DomainService`. A `DomainService` is a third party service that provides its service to end users in terms of a `DomainServiceAPI`.
+A `ServiceProvider` enables platform users to consume the `DomainServiceAPI` of a third-party `DomainService`. A `DomainService` is a third-party service that delivers its functionality to end users through a `DomainServiceAPI`.
 
-For example platform users want to use [Crossplane](https://www.crossplane.io/), specifically the `Object` API of [provider-kubernetes](https://github.com/crossplane-contrib/provider-kubernetes) to create Kubernetes objects on Kubernetes clusters they own without having to manage Crossplane themselves. So essentially consume `Crossplane` as a managed service of the `openMCP` platform.
+For example, platform users may want to use [Crossplane](https://www.crossplane.io/), specifically the `Object` API of [provider-kubernetes](https://github.com/crossplane-contrib/provider-kubernetes), to create Kubernetes objects on their own Kubernetes clusters without the need to manage Crossplane themselves. Essentially, they would consume `Crossplane` as a managed service of the `openMCP` platform.
 
-If we map this to the terminology of a `DomainService` and `DomainServiceAPI`, this means users want to consume the `DomainServiceAPI` -> `Object` of a `DomainService` -> `Crossplane`. Note that `provider-kubernetes` depends on a running Crossplane installation to work properly. That is why `provider-kubernetes` itself can't be a `DomainService`.
+If we map this to the terminology of a `DomainService` and `DomainServiceAPI`, it means that users want to consume the `DomainServiceAPI` (i.e. `Object`) of a `DomainService` (i.e. `Crossplane`). Note that `provider-kubernetes` depends on a running Crossplane installation to function properly, which is why `provider-kubernetes` itself cannot be considered a `DomainService` itself.
 
-### Contracts
+### API Objects
 
 #### End User Facing
 
-A `ServiceProvider` defines a `ServiceProviderAPI` to expose its managed service offering to end users. It is important to distinguish between `DomainServiceAPI` and `ServiceProviderAPI`. Both are end user facing but the `DomainServiceAPI` is the API that provides end user value while the `ServiceProviderAPI` defines the openMCP flavor of a `DomainService`. As with any other managed service offerings, a `ServiceProvider` in openMCP restricts the usage of `DomainService` to a subset of features. A simple example is a shifting range of platform supported `DomainService` versions that are available at a certain point.
+A `ServiceProvider` defines a `ServiceProviderAPI` to expose its managed service offering to end users. It is important to distinguish between `DomainServiceAPI` and `ServiceProviderAPI`. While both are end-user facing, the `DomainServiceAPI` is the API that delivers direct value to end users, whereas the `ServiceProviderAPI` represents the openMCP specific implementation of a `DomainService`. As with any other managed service offering, a `ServiceProvider` in openMCP restricts the usage of `DomainService` to a subset of its features. A simple example of this is the shifting range of platform supported `DomainService` versions that are available at a given time.
 
 ```mermaid
 graph LR
@@ -37,7 +37,7 @@ graph LR
 
 #### Platform Operator Facing
 
-A `ServiceProvider` defines a `ServiceProviderConfig` to enable platform operators to define managed service offerings in terms of the available feature set of a `DomainService`. E.g. tenant 1 can consume `ServiceProviderAPI` `Crossplane` via a `ServiceProviderConfig` `A` that enables the installation of Crossplane versions `v1` and `v2`, while tenant 2 is only able to consume `Crossplane` version `v1` via `ServiceProviderConfig` `B`.
+A `ServiceProvider` defines a `ServiceProviderConfig` that allows platform operators to specify managed service offerings based on the available feature set of a `DomainService`. For example, tenant 1 can consume the `ServiceProviderAPI` for `Crossplane` through a `ServiceProviderConfig` (i.e. `CrossplaneProviderConfig`) `A` that enables the installation of Crossplane versions `v1` and `v2`. In contrast, tenant 2 is restricted to consuming only `Crossplane` version `v1` through `CrossplaneProviderConfig` `B`.
 
 ```mermaid
 graph LR
@@ -50,20 +50,20 @@ graph LR
 ```
 
 :::info
-Unlike a Crossplane `ProviderConfig` that is referenced by a `ManagedResource`, a `ServiceProviderConfig` is not directly referenced in `ServiceProviderAPI` objects. Consistent handling of `ServiceProviderConfig` across different `ServiceProviders` is still a goal we want to achieve to establish a consistent user and developer experience.
+The `ServiceProvider` object itself is a higher level platform concept that is described in the corresponding `PlatformService`, [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
 :::
 
 ### Service Discovery
 
-End users need to be aware of a) the available service offerings and b) valid input values to consume a service offering.
+End users need to be aware of a) the available service offerings, and b) valid input values to consume a service offering.
 
-Both points are the responsibility of `PlatformServices` and not the `ServiceProvider` itself.
+Both responsibilities fall under the scope of `PlatformServices` and not the `ServiceProvider` itself.
 
-A) is realized by installing the `ServiceProviderAPI` on the `OnboardingCluster`. Any platform tenant is aware of any available `ServiceProviderAPI`. In other words the platform doesn't hide its end user facing feature set depending on whether a user belongs to a tenant that is able to successfully consume a `ServiceProviderAPI`.
+A) The available service offerings are made visible by installing the `ServiceProviderAPI` on the `OnboardingCluster`. This ensures that any platform tenant is aware all available `ServiceProviderAPI`. In other words, the platform does not hide its end-user-facing feature set, even if a user belongs to a tenant that cannot successfully consume a specific `ServiceProviderAPI`.
 
-B) is realized by communicating the `ServiceProviderConfig` options that are available to the user. A user of a tenant without a `ServiceProviderConfig` can consume a `ServiceProviderAPI` but `DomainService` deployment will be denied.
+B) Valid input values are communicated through the `ServiceProviderConfig` options available to the user. A user from a tenant without an associated `ServiceProviderConfig` can still access a `ServiceProviderAPI`, but any attempt to deploy a `DomainService` will be denied.
 
-One special kind of config information that a `ServiceProvider` needs are the artifact versions he can use to deploy a service. OpenMCP introduces the concept of `ReleaseChannels` that define the available artifacts (container images, helm charts, etc.) in context of an openMCP installation. A `ServiceProvider` indirectly consumes a `ReleaseChannel` via its `ServiceProviderConfig`:
+Technically, a `ServiceProvider` requires specific configuration information about the artifact versions it can use to deploy a service. To address this, openMCP introduces the concept of `ReleaseChannels`, which define the available artifacts (e.g. container images, helm charts, etc.) within the context of an openMCP installation. A `ServiceProvider` indirectly consumes a `ReleaseChannel` through its `ServiceProviderConfig`:
 
 ```mermaid
 graph TD
@@ -83,12 +83,12 @@ graph TD
 ```
 
 :::info
-A `ServiceProviderConfig` may hold configuration parameters other than `ReleaseChannel` information/artifact versions. In that sense it is more than just a 'version pinning' mechanism.
+A `ServiceProviderConfig` may include configuration parameters beyond just `ReleaseChannel` information or artifact versions. In this sense, it is more than just a 'version pinning' mechanism.
 :::
 
 ### Deployment Model
 
-A `ServiceProvider` runs on the `PlatformCluster` and reconcile its `ServiceProviderAPI` on the `OnboardingCluster`. A `ServiceProvider` deploys a `DomainService` either on a `WorkloadCluster` or `MCPCluster` that reconciles the `DomainServiceAPI`.
+A `ServiceProvider` runs on the `PlatformCluster` and reconcile its `ServiceProviderAPI` on the `OnboardingCluster`. It deploys a `DomainService` on either a `WorkloadCluster` or `MCPCluster`, which then reconciles the `DomainServiceAPI`.
 
 ```mermaid
 graph TD
@@ -116,7 +116,7 @@ graph TD
     SPO-->|installs/reconciles|SP
 ```
 
-The `DomainServiceAPI` is either reconciled on the `MCPCluster` or a `WorkloadCluster`. The following diagram illustrates two simplified `DomainService` examples `Landscaper` and `Crossplane` with the corresponding `DomainServiceAPIs` `Installation` and `Bucket`.
+The `DomainServiceAPI` is reconciled either on the `MCPCluster` or a `WorkloadCluster`. The following diagram illustrates two simplified `DomainService` examples, `Landscaper` and `Crossplane`, along with their corresponding `DomainServiceAPIs`, `Installation` and `Bucket`.
 
 ```mermaid
 graph TD
@@ -141,52 +141,48 @@ graph TD
 
 ## Validation
 
-A `ServiceProvider` is considered healthy if both its `API` and `Run` part have been successfully synced and are ready for consumption.
+A `ServiceProvider` is considered healthy if both its `API` and `Run` components have been successfully synced and are ready for consumption.
 
-The following validation flow validates that a `ServiceProvider` is working as expected:
+The following validation flow validates that a `ServiceProvider` is functioning as expected:
 
-0. SETUP: Create test environment by installing any `ServiceProvider` prerequisite: a) k8s cluster, e.g. kind, b) install `service-provider-operator` -> wait for operator to be available
-1. ASSESS: Request `ServiceProvider` -> wait for `API` and `Run` components to be `synced` and `ready`
-2. ASSESS: Consume `API` to provision `DomainService` -> wait for DomainService to be `synced` and `ready`
-3. ASSESS: (optional) Consume `DomainServiceAPI` depending on the provider/domain context this may or may not be required
-4. ASSESS: Delete `ServiceProvider` -> wait for `API`, `Run`, `ServiceProvider` to be successfully removed
-5. TEARDOWN: Delete test environment components
-
-## Template
-
-tbd.
+0. SETUP: Create test environment by installing any `ServiceProvider` prerequisite: a) k8s cluster, e.g. kind, b) install `service-provider-operator` and wait for the operator to become available
+1. ASSESS: Request `ServiceProvider` and wait for `ServiceProvider` deployment and `ServiceProviderAPI` to become available
+2. ASSESS: Consume `ServiceProviderAPI` to provision a `DomainService` and wait for the `DomainService` and `DomainServiceAPI` to become available
+3. ASSESS: (optional) Depending on the `DomainService` context, consume the `DomainServiceAPI` and validate that the `DomainService` is functioning as expected
+4. ASSESS: Delete the `ServiceProvider` and wait for `ServiceProvider` deployment and `ServiceProviderAPI` to be successfully removed
+5. TEARDOWN: Clean up by deleting the test environment components
 
 ## Runtime
 
-A runtime is a collection of abstractions and contracts that provides an environment in which user-defined logic is executed. This introduces a clear separation between `ServiceProvider` developer domain and platform developer domain.
+A runtime is a collection of abstractions and contracts that provides an environment for executing user-defined logic. This establishes a clear separation between `ServiceProvider` the developer domain and the platform developer domain.
 
-The `service-provider-runtime` is built on top of `controller-runtime` and provides a service provider specific reconciliation loop. It gives us as a platform the possibility to implement platform specific features around service providers. At the same time `ServiceProvider` developers can focus on `DomainService` specific logic without the burden to understand platform internals. This way we provide a consistent experience to both end users and developers when working with `ServiceProviders`.
+The `service-provider-runtime` is built on top of `controller-runtime` and introduces a service provider specific reconciliation loop. The design enables us as a platform to implement platform specific features around service providers, while allowing `ServiceProvider` developers to focus solely on `DomainService` specific logic without needing to understand platform internals. This approach ensures a consistent experience for both end users and developers when working with `ServiceProviders`.
 
-The following overview illustrates the layers of a `ServiceProvider` controller a simplified way:
+The following table provides a simplified overview of the layers within a `ServiceProvider` controller:
 
 | Layer | Description | Target Audience |
 | :--- | :--- | :--- |
-| Service Provider | defines `ServiceProviderAPI`/`ServiceProviderConfig` and implements service-provider-runtime operations | service provider developers |
-| service-provider-runtime | defines ServiceProvider reconciliation semantics | platform developers |
-| multicluster/controller-runtime | defines generic reconciliation semantics | out of scope |
-| Kubernetes API machinery | k8s essentials | out of scope |
+| Service Provider | Defines `ServiceProviderAPI`/`ServiceProviderConfig` and implements service-provider-runtime operations | Service provider developers |
+| service-provider-runtime | Defines ServiceProvider reconciliation semantics | Platform developers |
+| multicluster/controller-runtime | Defines generic reconciliation semantics | Out of scope |
+| Kubernetes API machinery | Kubernetes essentials | Out of scope |
 
-### Abstractions
+### Functionality
 
-In contrast to the API [contracts](#contracts)
+This section outlines the main functionality implemented within the runtime. Currently, the focus is on establishing consistency across `ServiceProvider` implementations. However, this section can be extended in the future to include more generic `ServiceProvider` concepts that are handled within the runtime.
 
-Main tasks towards MCP/Workload Clusters based on watching the `ServiceProviderAPI`:
+Main tasks towards MCP/Workload Clusters (based on watching the `ServiceProviderAPI`):
 
 - Observe Service Deployment (Drift Detection) -> IN: context, apiObject, reconcileScope; OUT: bool[exists, drift], error
 - Create Service Deployment (Init Lifecycle) -> IN: context, apiObject, reconcileScope; OUT: error
 - Update Service Deployment (Reconcile Drift) -> IN: context, apiObject, reconcileScope; OUT: error
 - Delete Service Deployment (End Lifecycle) -> IN: context, apiObject, reconcileScope; OUT: error
 
-where `reconcileScope` holds the `ServiceProviderConfig` and clients to access onboarding, mcp and workload clusters.
+In this context, `reconcileScope` holds the `ServiceProviderConfig` and provides clients to access onboarding, mcp and workload clusters.
 
-Main tasks towards `PlatformCluster` based on `ServiceProviderConfig`:
+Main tasks towards `PlatformCluster` (based on `ServiceProviderConfig`):
 
-- resolve and validate `ServiceProviderConfig` against e.g. available `ReleaseChannel`
+- resolve and validate `ServiceProviderConfig` against `DomainService` context and available `ReleaseChannel` options
 
 ### Reconcile Sequence
 
@@ -211,6 +207,13 @@ sequenceDiagram
 :::info
 The validation of a `ServiceProviderConfig`, if required, is part of `ServiceProvider` layer and not the runtime layer.
 :::
+
+## Related Artifacts
+
+The following artifacts are derived from this document and must be continuously updated to maintain consistency:
+
+- Service Provider Template
+- Service Provider Runtime
 
 ## Out of Scope
 
