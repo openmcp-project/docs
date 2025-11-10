@@ -18,11 +18,9 @@ A `ServiceProvider` enables platform users to consume the `DomainServiceAPI` of 
 
 For example, platform users may want to use [Crossplane](https://www.crossplane.io/), specifically the `Object` API of [provider-kubernetes](https://github.com/crossplane-contrib/provider-kubernetes), to create Kubernetes objects on their own Kubernetes clusters without the need to manage Crossplane themselves. Essentially, they would consume `Crossplane` as a managed service of the `openMCP` platform.
 
-If we map this to the terminology of a `DomainService` and `DomainServiceAPI`, it means that users want to consume the `DomainServiceAPI` (i.e. `Object`) of a `DomainService` (i.e. `Crossplane`). Note that `provider-kubernetes` depends on a running Crossplane installation to function properly, which is why `provider-kubernetes` itself cannot be considered a `DomainService` itself.
+If we map this to the terminology of a `DomainService` and `DomainServiceAPI`, it means that users want to consume the `DomainServiceAPI` (i.e. `Object`) of a `DomainService` (i.e. `Crossplane`). Note that `provider-kubernetes` depends on a running Crossplane installation to function properly, which is why `provider-kubernetes` itself cannot be considered a `DomainService`.
 
-### API Objects
-
-#### End User Facing
+### End User Objects
 
 A `ServiceProvider` defines a `ServiceProviderAPI` to expose its managed service offering to end users. It is important to distinguish between `DomainServiceAPI` and `ServiceProviderAPI`. While both are end-user facing, the `DomainServiceAPI` is the API that delivers direct value to end users, whereas the `ServiceProviderAPI` represents the openMCP specific implementation of a `DomainService`. As with any other managed service offering, a `ServiceProvider` in openMCP restricts the usage of `DomainService` to a subset of its features. A simple example of this is the shifting range of platform supported `DomainService` versions that are available at a given time.
 
@@ -31,11 +29,15 @@ graph LR
     USR[User]
     SPA[ServiceProviderAPI]
     DSA[DomainServiceAPI]
-    USR --> SPA
-    USR --> DSA
+    USR -->|manages instances|SPA
+    USR -->|manages instances|DSA
 ```
 
-#### Platform Operator Facing
+:::info
+Depending on the [deployment model](#deployment-model) of a `ServiceProvider`, the `DomainService` deployment itself may or may not be visible to end users.
+:::
+
+### Platform Operator Objects
 
 A `ServiceProvider` defines a `ServiceProviderConfig` that allows platform operators to specify managed service offerings based on the available feature set of a `DomainService`. For example, tenant 1 can consume the `ServiceProviderAPI` for `Crossplane` through a `ServiceProviderConfig` (i.e. `CrossplaneProviderConfig`) `A` that enables the installation of Crossplane versions `v1` and `v2`. In contrast, tenant 2 is restricted to consuming only `Crossplane` version `v1` through `CrossplaneProviderConfig` `B`.
 
@@ -45,19 +47,21 @@ graph LR
     OP[Operator]
     SP[ServiceProvider]
     SPC[ServiceProviderConfig]
-    OP --> SP
-    OP --> SPC
+    OP -->|manages instances|SP
+    OP -->|manages instances|SPC
 ```
+
+Operations of `ServiceProvider` and `ServiceProviderConfig` instances may be partially or fully automated.
 
 :::info
 The `ServiceProvider` object itself is a higher level platform concept that is described in the corresponding `PlatformService`, [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
 :::
 
-### Service Discovery
+### Service Discovery and Access Management
 
 End users need to be aware of a) the available service offerings, and b) valid input values to consume a service offering.
 
-Both responsibilities fall under the scope of `PlatformServices` and not the `ServiceProvider` itself.
+Both responsibilities fall under the scope of the openMCP platform and not the `ServiceProvider` itself.
 
 A) The available service offerings are made visible by installing the `ServiceProviderAPI` on the `OnboardingCluster`. This ensures that any platform tenant is aware all available `ServiceProviderAPI`. In other words, the platform does not hide its end-user-facing feature set, even if a user belongs to a tenant that cannot successfully consume a specific `ServiceProviderAPI`.
 
