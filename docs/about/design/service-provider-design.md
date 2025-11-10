@@ -91,11 +91,11 @@ The `ServiceProvider` object itself is a higher level platform concept that is d
 
 ### Service Discovery and Access Management
 
-End users need to be aware of a) the available service offerings, and b) valid input values to consume a service offering.
+End users need to be aware of a) the available managed services, and b) valid input values to consume a service offering.
 
 A) The available service offerings are made visible by installing the `ServiceProviderAPI` on the `OnboardingCluster` (see [deployment model](#deployment-model)). This ensures that any platform tenant is aware of all available `ServiceProviderAPIs`. In other words, the platform does not hide its end-user-facing feature set, even if a user belongs to a tenant that cannot successfully consume a specific `ServiceProviderAPI`.
 
-B) Valid input values are communicated through `ServiceProviderConfig` objects created on the `OnboardingCluster`. A user from a tenant without an associated `ServiceProviderConfig` can technically still access a `ServiceProviderAPI`, but any attempt to deploy a `DomainService` will be denied. It is important to note that `ServiceProviderConfigs` are owned and managed by the platform operator but are exposed to end users for consumption.
+B) Valid input values are communicated through `ServiceProviderConfig` objects created on the `OnboardingCluster`. A user from a tenant without an associated `ServiceProviderConfig` can technically still request a `DomainService` through a `ServiceProviderAPI`, but any attempt to deploy the `DomainService` will be denied by the `ServiceProvider`. It is important to note that `ServiceProviderConfigs` are owned and managed by the platform operator.
 
 ### Deployment Model
 
