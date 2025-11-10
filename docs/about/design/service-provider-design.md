@@ -4,9 +4,8 @@
 
 - Define clear terminology around `ServiceProvider` in the OpenMCP space
 - Define `ServiceProvider` scope: responsibilities and boundaries of a `ServiceProvider`
-- Define `ServiceProvider` contract to implement `ServiceProvider` as a loosely coupled component in the openMCP context
+- Define a `ServiceProvider` implementation layer to implement common features and establish consistency across `ServiceProvider` instances
 - Define how a `ServiceProvider` can be validated
-- (MCP) v1 learnings have been addressed
 
 ## Non-Goals
 
@@ -210,7 +209,7 @@ sequenceDiagram
 ```
 
 :::info
-This sequence expects that a `ServiceProviderConfig` does not require validation by a `ServiceProvider`. How valid `ServiceProviderConfigs` are generated in the `PlatformCluster` is tbd.
+The validation of a `ServiceProviderConfig`, if required, is part of `ServiceProvider` layer and not the runtime layer.
 :::
 
 ## Out of Scope
