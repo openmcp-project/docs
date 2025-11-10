@@ -36,7 +36,7 @@ Note that `provider-kubernetes` depends on a running Crossplane installation to 
 
 The following subsections describe the objects that a `ServiceProvider` introduces.
 
-### End User Objects
+### API
 
 A `ServiceProvider` defines a `ServiceProviderAPI` to allow end users to request managed service. It is important to distinguish between `ServiceProviderAPI` and `DomainServiceAPI`.
 
@@ -52,7 +52,7 @@ graph LR
 While both are end user facing, they serve different purposes:
 
 - The `ServiceProviderAPI` allows end users to request a `DomainService` and gain access to its `DomainServiceAPI`.
-- The `DomainServiceAPI` delivers direct value to end users by providing the functionality a `DomainService`.
+- The `DomainServiceAPI` delivers direct value to end users by providing the functionality of a `DomainService`.
 
 ```mermaid
 sequenceDiagram
@@ -67,7 +67,7 @@ sequenceDiagram
     usr->>ds: uses domain service through DomainServiceAPI
 ```
 
-### Platform Operator Objects
+### Config
 
 A `ServiceProvider` defines a `ServiceProviderConfig` that enables platform operators to specify different offerings of a managed `DomainService`. For example, tenant 1 can consume the `ServiceProviderAPI` for `Crossplane` through a `CrossplaneProviderConfig` `A`, which allows the installation of Crossplane versions `v1` and `v2`. In contrast, tenant 2 is restricted to consuming only `Crossplane` version `v1` through `CrossplaneProviderConfig` `B`.
 
@@ -76,12 +76,14 @@ graph LR
     %% Operator
     OP[Operator]
     SP[ServiceProvider]
+    SPA[ServiceProviderAPI]
     SPC[ServiceProviderConfig]
     OP -->|manages instances|SP
     OP -->|manages instances|SPC
+    OP -. installs .-> SPA
 ```
 
-Management of `ServiceProvider` and `ServiceProviderConfig` instances may be partially or fully automated.
+All operator tasks may be partially or fully automated.
 
 :::info
 The `ServiceProvider` object itself is a higher level platform concept that is described in the corresponding `PlatformService`, [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
@@ -94,8 +96,6 @@ End users need to be aware of a) the available service offerings, and b) valid i
 A) The available service offerings are made visible by installing the `ServiceProviderAPI` on the `OnboardingCluster` (see [deployment model](#deployment-model)). This ensures that any platform tenant is aware of all available `ServiceProviderAPIs`. In other words, the platform does not hide its end-user-facing feature set, even if a user belongs to a tenant that cannot successfully consume a specific `ServiceProviderAPI`.
 
 B) Valid input values are communicated through `ServiceProviderConfig` objects created on the `OnboardingCluster`. A user from a tenant without an associated `ServiceProviderConfig` can technically still access a `ServiceProviderAPI`, but any attempt to deploy a `DomainService` will be denied. It is important to note that `ServiceProviderConfigs` are owned and managed by the platform operator but are exposed to end users for consumption.
-
-Both objects are managed by the platform operator and not the `ServiceProvider` itself (see [platform operator objects](#platform-operator-objects)).
 
 ### Deployment Model
 
