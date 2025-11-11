@@ -151,33 +151,6 @@ graph TD
     Crossplane -->|reconciles|Bucket
 ```
 
-- The [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) manages the lifecycle of `ServiceProviders`.
-
-### Release Channel Detour
-
-Technically, a `ServiceProvider` requires configuration information about the artifact versions it can use to deploy a service. To address this, openMCP introduces the concept of `ReleaseChannels`, which define the available artifacts (e.g. container images, helm charts, etc.) within the context of an openMCP installation. A `ServiceProvider` indirectly consumes a `ReleaseChannel` through its `ServiceProviderConfig`:
-
-```mermaid
-graph TD
-    subgraph Platform
-        subgraph ServiceProvider
-            SPC[ServiceProviderConfig]
-            SP[ServiceProvider]
-        end
-        TN[Tenant]
-        RC[ReleaseChannel]
-    end
-
-    %% edges
-    SP -->|one...uses...many|SPC
-    SPC ---|many...references subset of artifacts...one|RC
-    SPC ---|many...allows access...many|TN
-```
-
-:::info
-A `ServiceProviderConfig` may include configuration parameters beyond just `ReleaseChannel` information or artifact versions. In this sense, it is more than just a 'version pinning' mechanism.
-:::
-
 ## Validation
 
 A `ServiceProvider` is considered healthy if both its `API` and `Run` components have been successfully synced and are ready for consumption.
@@ -257,6 +230,31 @@ The following artifacts are derived from this document and must be continuously 
 ## Out of Scope
 
 The remainder of this document contains topics that are out of scope for now.
+
+### Release Channel Detour
+
+Technically, a `ServiceProvider` requires configuration information about the artifact versions it can use to deploy a service. To address this, openMCP introduces the concept of `ReleaseChannels`, which define the available artifacts (e.g. container images, helm charts, etc.) within the context of an openMCP installation. A `ServiceProvider` indirectly consumes a `ReleaseChannel` through its `ServiceProviderConfig`:
+
+```mermaid
+graph TD
+    subgraph Platform
+        subgraph ServiceProvider
+            SPC[ServiceProviderConfig]
+            SP[ServiceProvider]
+        end
+        TN[Tenant]
+        RC[ReleaseChannel]
+    end
+
+    %% edges
+    SP -->|one...uses...many|SPC
+    SPC ---|many...references subset of artifacts...one|RC
+    SPC ---|many...allows access...many|TN
+```
+
+:::info
+A `ServiceProviderConfig` may include configuration parameters beyond just `ReleaseChannel` information or artifact versions. In this sense, it is more than just a 'version pinning' mechanism.
+:::
 
 ### Multicluster Execution Model
 
