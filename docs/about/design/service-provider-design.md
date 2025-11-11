@@ -87,7 +87,7 @@ graph LR
 All operator tasks may be partially or fully automated.
 
 :::info
-The `ServiceProvider` object itself is a higher level platform concept that is described in the corresponding `PlatformService`, [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
+The `ServiceProvider` object itself is a higher level platform concept that is described in the corresponding `PlatformService`, i.e. [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
 :::
 
 ### Service Discovery and Access Management
@@ -158,7 +158,7 @@ A `ServiceProvider` is considered healthy if both its `API` and `Run` components
 
 The following validation flow validates that a `ServiceProvider` is functioning as expected:
 
-0. SETUP: Create test environment by installing any `ServiceProvider` prerequisite: a) k8s cluster, e.g. kind, b) install `service-provider-operator` and wait for the operator to become available
+0. SETUP: Create test environment by installing any `ServiceProvider` prerequisite: a) create `PlatformCluster` with kind, b) install [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) and [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and wait for everything to become available
 1. ASSESS: Request `ServiceProvider` and wait for `ServiceProvider` deployment and `ServiceProviderAPI` to become available
 2. ASSESS: Consume `ServiceProviderAPI` to provision a `DomainService` and wait for the `DomainService` and `DomainServiceAPI` to become available
 3. ASSESS: Consume the `DomainServiceAPI` and validate that the `DomainService` is functioning as expected
