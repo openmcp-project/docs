@@ -64,6 +64,7 @@ sequenceDiagram
     %% messages
     usr->>sp: request domain service through ServiceProviderAPI
     sp->>ds: deploys
+    sp-->>usr: installs DomainServiceAPI in user MCP
     usr->>ds: uses domain service through DomainServiceAPI
 ```
 
