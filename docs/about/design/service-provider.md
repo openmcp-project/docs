@@ -1,4 +1,4 @@
-# Service Provider Design
+# Service Providers
 
 This document outlines the `ServiceProvider` domain and its technical considerations within the context of the [openMCP project](https://github.com/openmcp-project/), providing a foundation for understanding its architecture and operational aspects.
 
