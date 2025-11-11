@@ -227,6 +227,7 @@ The following artifacts are derived from this document and must be continuously 
 
 - Service Provider Template
 - Service Provider Runtime
+- Service Provider Development Guide
 
 ## Out of Scope
 
