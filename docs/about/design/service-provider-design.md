@@ -193,9 +193,9 @@ Main tasks towards MCP/Workload Clusters (based on watching the `ServiceProvider
 
 In this context, `reconcileScope` holds the `ServiceProviderConfig` and provides clients to access onboarding, mcp and workload clusters.
 
-Main tasks towards `PlatformCluster` (based on `ServiceProviderConfig`):
+Main tasks towards Onboarding/Platform Cluster (based on `ServiceProviderConfig` location):
 
-- resolve and validate `ServiceProviderConfig` against `DomainService` context and available `ReleaseChannel` options
+- resolve and validate `ServiceProviderConfig` against `DomainService` context (e.g. available `ReleaseChannel` options)
 
 ### Reconcile Sequence
 
