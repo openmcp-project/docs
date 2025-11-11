@@ -161,9 +161,9 @@ The following validation flow validates that a `ServiceProvider` is functioning 
 0. SETUP: Create test environment by installing any `ServiceProvider` prerequisite: a) k8s cluster, e.g. kind, b) install `service-provider-operator` and wait for the operator to become available
 1. ASSESS: Request `ServiceProvider` and wait for `ServiceProvider` deployment and `ServiceProviderAPI` to become available
 2. ASSESS: Consume `ServiceProviderAPI` to provision a `DomainService` and wait for the `DomainService` and `DomainServiceAPI` to become available
-3. ASSESS: (optional) Depending on the `DomainService` context, consume the `DomainServiceAPI` and validate that the `DomainService` is functioning as expected
-4. ASSESS: Delete the `ServiceProvider` and wait for `ServiceProvider` deployment and `ServiceProviderAPI` to be successfully removed
-5. TEARDOWN: Clean up by deleting the test environment components
+3. ASSESS: Consume the `DomainServiceAPI` and validate that the `DomainService` is functioning as expected
+4. ASSESS: Delete the `ServiceProviderAPI` object and wait for the `DomainService` deployment and `DomainServiceAPI` to be successfully removed
+5. TEARDOWN: Delete the `ServiceProvider` and clean up by deleting the test environment components
 
 ## Runtime
 
