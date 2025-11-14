@@ -1,0 +1,4 @@
+[submodule "crossplane-provider-btp"]
+	path = crossplane-provider-btp
+	url = git@github.com:SAP/crossplane-provider-btp.git
+	branch = move/docs
