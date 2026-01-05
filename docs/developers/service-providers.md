@@ -16,9 +16,10 @@ Let's get started!
 ## Overview
 Picture what service-provider-velero will offer once completed:
 - Created an end-user facing `Velero` CRD for the Onboarding API to order a Velero Service instance in your `ManagedControlPlane`
-- Implement a Controller that reconciles `Velero` Service Resources and that handles the lifecycle of Velero instances in CO ControlPlane API.
-- Service Instance CRDs will be registered on end-users CO ControlPlane API
-- Velero itself will run in shared workload cluster and reconcile the Service Instance CRDs
+- Implement a Controller that reconciles `Velero` Service Resources and that handles the lifecycle of Velero instances in `ManagedControlPlane` API.
+- Service Instance CRDs will be registered on end-users ManagedControlPlane
+- Velero itself will run the ManagedControlPlane
+- Optional: Velero itself will run in shared workload cluster and reconcile the Service Instance CRDs
 
 ## Prerequisites
 Go to https://github.com/openmcp-project/service-provider-template and use this template repository to create a new repository for your Service Provider. You can do this by clicking on the "Use this template" button on the GitHub page.
