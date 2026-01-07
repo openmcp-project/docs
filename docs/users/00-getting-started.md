@@ -80,7 +80,7 @@ spec:
 ```
 
 Under `spec.iam` you can define the authentication for your ManagedControlPlane. You can use OIDC-based authentication for human users and token-based authentication for machine users.
-In case of OIDC-based authentication, ClusterRoleBindings will get created that map the specified roles to the defined subjects. The same applies to token-based authentication where the specified roles will get bound to the generated ServiceAccount on the ManagedControlPlane.
+For authorization, ClusterRoleBindings will map the specified roles to the defined subjects. For token-based authentication, the specified roles will get bound to a generated ServiceAccount on the ManagedControlPlane.
 
 In `status.access` you will find the references to the secrets at the Onboarding API that contain the kubeconfig to access your MCP for the OIDC and/or token-based authentication methods.
 
