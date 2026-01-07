@@ -61,16 +61,28 @@ metadata:
   namespace: project-platform-team--ws-dev
 spec:
   iam:
-    roleBindings:
-    - subjects:
-      - kind: User
-        name: first.user@example.com
-      - kind: User
-        name: second.user@example.com
-      roleRefs:
+    oidc: # for human authentication
+      defaultProvider:
+        roleBindings: # authorization for human users
+        - roleRefs:
+          - kind: ClusterRole
+            name: cluster-admin
+          subjects:
+          - kind: User
+            name: first.user@example.com
+          - kind: User
+            name: second.user@example.com
+    tokens: # for machine authentication
+    - name: xyz-service-token
+      roleRefs: # authorization for machine users
       - kind: ClusterRole
         name: cluster-admin
 ```
+
+Under `spec.iam` you can define the authentication for your ManagedControlPlane. You can use OIDC-based authentication for human users and token-based authentication for machine users.
+In case of OIDC-based authentication, ClusterRoleBindings will get created that map the specified roles to the defined subjects. The same applies to token-based authentication where the specified roles will get bound to the generated ServiceAccount on the ManagedControlPlane.
+
+In `status.access` you will find the references to the secrets at the Onboarding API that contain the kubeconfig to access your MCP for the OIDC and/or token-based authentication methods.
 
 ### 4. Install managed services in your Managed Control Plane (MCP)
 
