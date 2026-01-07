@@ -104,10 +104,11 @@ Landscaper manages the installation, updates, and uninstallation of cloud-native
 To install a Landscaper for your MCP, you need to create a `Landscaper` resource with the same namespace and name as your `ManagedControlPlane`. The following example installs the Landscaper with default configuration.
 
 ```yaml
-apiVersion: landscaper.services.openmcp.cloud/v1alpha1
+apiVersion: landscaper.services.openmcp.cloud/v1alpha2
 kind: Landscaper
 metadata:
   name: mcp-01 # Same name as your ManagedControlPlane
   namespace: project-platform-team--ws-dev # Same namespace as your ManagedControlPlane
-spec: {}
+spec: 
+  version: v0.137.0 
 ```
