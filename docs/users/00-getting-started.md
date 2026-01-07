@@ -110,5 +110,5 @@ metadata:
   name: mcp-01 # Same name as your ManagedControlPlane
   namespace: project-platform-team--ws-dev # Same namespace as your ManagedControlPlane
 spec: 
-  version: v0.137.0 
+  version: v0.142.0
 ```
