@@ -152,7 +152,7 @@ type ManagedResource struct {
 
 ## Edit the ProviderConfig API
 
-Service providers must expose a `ProviderConfig` which platform operators use to configure provider behavior. Because [provider deployment](https://openmcp-project.github.io/docs/developers/provider_deployment/) does support passing arguments to the binary directly, configuration must be expressed via this API.
+Service providers must expose a `ProviderConfig` which platform operators use to configure provider behavior. Because [provider deployment](https://openmcp-project.github.io/docs/developers/provider_deployment/) does not support passing arguments to the binary directly, configuration must be expressed via this API.
 
 Typical settings include version constraints, image locations and pull secrets which are especially important to support air-gapped environments.
 
