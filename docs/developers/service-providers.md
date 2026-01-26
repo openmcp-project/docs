@@ -2,9 +2,9 @@
 
 This guide shows you how to create Service Provider for the OpenMCP ecosystem from scratch. Service Providers are the heart of the OpenMCP platform, as they provide the capabilities to offer Infrastructure as Data services to end users.
 
-In this guide, we will walk you through the steps of creating a Service Provider, explain the context a service provider operates in, and demonstrate how a service provider can be end-to-end tested.
+In this guide, we will walk you through the steps of creating a Service Provider using the [service-provider-template](https://github.com/openmcp-project/service-provider-template), explain the context a service provider operates in, and demonstrate how to run end-to-end tests for it.
 
-This guide explains the `FooService` example generated from the [service-provider-template](https://github.com/openmcp-project/service-provider-template) and used to bootstrap [service-provider-velero](https://github.com/openmcp-project/service-provider-velero). By the end of this guide, you should have a solid understanding of how a service provider works internally and be able build a real world provider like [service-provider-velero](https://github.com/openmcp-project/service-provider-velero).
+By the end of this guide, you should have a solid understanding of how a service works and be ready to build a real world provider such as [service-provider-velero](https://github.com/openmcp-project/service-provider-velero).
 
 Let's get started!
 
