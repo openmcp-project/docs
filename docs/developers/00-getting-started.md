@@ -4,6 +4,6 @@ Here you will find all the information you need to get started with our project.
 
 Have a look at our [design documentation](./../about/design/service-provider.md) to understand the architecture and design principles behind the project.
 
-Check our guide on [how to create a Service Provider](./service-provider.md) to turn the next Kubernetes-native application into an as-a-Service offering.
+Check our guide on [how to create a Service Provider](./../developers/service-providers.md) to turn the next Kubernetes-native application into an as-a-Service offering.
 
 Let's get started in building your first Service Provider for the OpenMCP ecosystem!
