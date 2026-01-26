@@ -22,7 +22,7 @@ For a visual overview of how these components fit into an openMCP installation, 
 Start by creating a new repository for your service provider using the [service-provider-template](https://github.com/openmcp-project/service-provider-template). Click "Use this template" button on the GitHub page and give your new repository a name that reflects the domain service it provides, e.g. `service-provider-velero` for a service provider that deploys Velero.
 
 Clone the newly created repository to your local machine and open it with your favorite IDE.
-Finally, ensure that you have Go installed. You can download it from [go.dev](https://golang.org/dl).
+Finally, ensure that you have Go installed. You can download it from [go.dev](https://go.dev/dl/).
 
 ## Service Provider Template Usage
 
@@ -49,7 +49,7 @@ This test bootstraps a complete local openMCP installation with all required com
 - **A managed control plane cluster (MCP)** where your service provider installs its [DomainServiceAPI](https://openmcp-project.github.io/docs/about/design/service-provider#api) and optionally its workload.
 - **An optional workload cluster**, provisioned when using the template fla `-w`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the MCP. This will result int another kind cluster.
 
-The tempalte generator removes its own code after execution. If you want to revert your changes and start fresh, simply use git and delete any generated untracked files. For this reason, remove template-generation step from the e2e test `.github/workflows/go.yaml` before committing your changes (otherwise your workflow will fail).
+The template generator removes its own code after execution. If you want to revert your changes and start fresh, simply use git and delete any generated untracked files. For this reason, remove template-generation step from the e2e test `.github/workflows/go.yaml` before committing your changes (otherwise your workflow will fail).
 
 ```yaml
       - name: Generate template
