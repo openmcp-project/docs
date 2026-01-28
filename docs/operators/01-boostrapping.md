@@ -166,7 +166,7 @@ component:
 
 repository:
   url: https://github.com/<your-org>/<your-repo>
-  branch: <branch-name>
+  pushBranch: <branch-name>
 
 environment: <environment-name>
 
@@ -267,7 +267,7 @@ component:
 
 repository:
   url: https://github.com/<your-org>/<your-repo>
-  branch: <branch-name>
+  pushBranch: <branch-name>
 
 environment: <environment-name>
 
@@ -610,7 +610,7 @@ component:
 
 repository:
   url: https://github.com/<your-org>/<your-repo>
-  branch: <branch-name>
+  pushBranch: <branch-name>
 
 environment: <environment-name>
 
@@ -956,7 +956,7 @@ component:
 
 repository:
   url: https://github.com/<your-org>/<your-repo>
-  branch: <branch-name>
+  pushBranch: <branch-name>
 
 environment: <environment-name>
 
@@ -1061,7 +1061,7 @@ component:
 
 repository:
   url: https://github.com/<your-org>/<your-repo>
-  branch: <branch-name>
+  pushBranch: <branch-name>
 
 environment: <environment-name>
 
@@ -1863,7 +1863,7 @@ component:
 
 repository:
   url: https://github.com/<your-org>/<your-repo>
-  branch: <branch-name>
+  pushBranch: <branch-name>
 
 environment: <environment-name>
 
