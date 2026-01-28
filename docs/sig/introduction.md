@@ -160,6 +160,7 @@ TBD
 - SIG Owners meet to discuss
 - Escalated to managers if unresolved
 - Managers make binding decision
+- Decision documented and communicated
 
 ### Escalation Timeline
 - Initial discussion: 1 week
