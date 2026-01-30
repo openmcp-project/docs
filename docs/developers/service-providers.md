@@ -172,7 +172,57 @@ spec:
     - name: aws
       versions: ["v1.13.0"]
       image: "velero/velero-plugin-for-aws"
+  imagePullSecrets:
+    - name: privateregcred
 ```
+
+Note that these image pull secrets reference secrets stored on the platform cluster. It is the responsibility of the service provider to ensure that the referenced secrets are copied to the cluster in which the deployments run.
+
+To synchronize the image pull secrets between the platform cluster and the cluster where your workloads run, you can use the [SecretMutator](https://github.com/openmcp-project/controller-utils/blob/main/pkg/resources/secret.go) from [controller-utils](https://github.com/openmcp-project/controller-utils) inside your [CreateOrUpdate](#createorupdate-operation) logic.
+
+Velero implements this synchronization as follows:
+
+```go
+// internal/controller/velero_controller.go
+func (r *VeleroReconciler) CreateOrUpdate(ctx context.Context, obj *apiv1alpha1.Velero, pc *apiv1alpha1.ProviderConfig, clusters spruntime.ClusterContext) (ctrl.Result, error) {
+ ...
+ workloadCluster := resources.NewManagedCluster(clusters.WorkloadCluster.Client(), clusters.WorkloadCluster.RESTConfig(), instance.Namespace(obj), resources.WorkloadCluter)
+ secret.Configure(workloadCluster, r.PlatformCluster, pc.Spec.ImagePullSecrets, r.PodNamespace)
+ ...
+}
+
+// pkg/secret/secret.go
+func Configure(cluster resources.ManagedCluster, platformCluster *clusters.Cluster, imagePullSecrets []corev1.LocalObjectReference, sourceNamespace string) {
+ for _, pullSecret := range imagePullSecrets {
+  secret := resources.NewManagedObject(&corev1.Secret{
+   ObjectMeta: metav1.ObjectMeta{
+    Name:      pullSecret.Name,
+    Namespace: cluster.GetDefaultNamespace(),
+   },
+  }, resources.ManagedObjectContext{
+   ReconcileFunc: func(ctx context.Context, o client.Object) error {
+    oSecret := o.(*corev1.Secret)
+    sourceSecret := &corev1.Secret{
+     ObjectMeta: metav1.ObjectMeta{
+      Name:      pullSecret.Name,
+      Namespace: sourceNamespace,
+     },
+    }
+    // retrieve source secret from platform cluster
+    if err := platformCluster.Client().Get(ctx, client.ObjectKeyFromObject(sourceSecret), sourceSecret); err != nil {
+     return err
+    }
+    mutator := openmcpresources.NewSecretMutator(pullSecret.Name, cluster.GetDefaultNamespace(), sourceSecret.Data, corev1.SecretTypeDockerConfigJson)
+    return mutator.Mutate(oSecret)
+   },
+   StatusFunc: resources.SimpleStatus,
+  })
+  cluster.AddObject(secret)
+ }
+}
+```
+
+Finally, ensure that the synchronized image pull secrets are [referenced in any workload](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret) you reconcile.
 
 ## Edit the ServiceProviderReconciler
 
@@ -204,16 +254,21 @@ func (r *FooServiceReconciler) CreateOrUpdate(ctx context.Context, svcobj *apiv1
 
 In a real world example like Velero, this step contains installing and reconciling every required resource, including CRDs, namespace(s), service account(s), deployments(s), etc. into the MCP and workload cluster.
 
-The `ClusterContext` gives you access to all relevant clusters:
+The `ClusterContext` provides access to all request specific clusters. These clusters include the managed control plane and, when requested, the workload cluster associated with the current request. Note that the workload cluster is optional and will not be available for providers that deploy their workload directly to the managed control plane.
 
 ```go
 type ClusterContext struct {
- // MCPCluster is the managed control plane that belongs to the current reconcile request
  MCPCluster *clusters.Cluster
- // WorkloadCluster is the workload cluster that belongs the current reconcile request
  WorkloadCluster *clusters.Cluster
- // PlatformCluster is the static platform cluster
- PlatformCluster *clusters.Cluster
+}
+```
+
+In contrast, the platform and onboarding clusters are static clusters that are assigned to the reconciler at initialization.
+
+```go
+type FooServiceReconciler struct {
+ OnboardingCluster *clusters.Cluster
+ PlatformCluster   *clusters.Cluster
 }
 ```
 
