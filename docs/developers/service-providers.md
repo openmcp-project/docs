@@ -36,9 +36,10 @@ go run ./cmd/template -v -module github.com/openmcp-project/service-provider-vel
 
 The template generates a fully functional service provider that can be executed and deployed on your local machine using [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
 
-To run the the generated end-to-end test using [task](https://taskfile.dev/), execute:
+To run the the generated end-to-end test using [task](https://taskfile.dev/), init the [build](https://github.com/openmcp-project/build) submodule and execute the e2e test:
 
 ```bash
+git submodule update --init --recursive
 task test-e2e
 ```
 
