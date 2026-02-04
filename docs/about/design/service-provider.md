@@ -23,7 +23,7 @@ This document outlines the `ServiceProvider` domain and its technical considerat
 
 A `ServiceProvider` enables platform operators to offer managed `DomainServices` to end users. A `DomainService` is a third-party service that delivers its functionality to end users through a `DomainServiceAPI`.
 
-For example, consider an openMCP installation that aims to provide [Crossplane](https://www.crossplane.io/) as a managed service to its end user. Let's assume that end users specifically want to use the `Object` API of [provider-kubernetes](https://github.com/crossplane-contrib/provider-kubernetes), to create Kubernetes objects on their own Kubernetes clusters without the need to manage Crossplane themselves.
+For example, consider an openMCP installation that aims to provide [Crossplane](https://www.crossplane.io/) as a managed service to its end users. Let's assume that end users specifically want to use the `Object` API of [provider-kubernetes](https://github.com/crossplane-contrib/provider-kubernetes), to create Kubernetes objects on their own Kubernetes clusters without the need to manage Crossplane themselves.
 
 If we map this to the terminology of a `DomainService` and `DomainServiceAPI`:
 
@@ -32,6 +32,10 @@ If we map this to the terminology of a `DomainService` and `DomainServiceAPI`:
 
 :::info
 Note that `provider-kubernetes` depends on a running Crossplane installation to function properly. Therefore, `provider-kubernetes` itself cannot be considered a `DomainService`.
+:::
+
+:::info
+Note that `DomainServiceAPI` is not an Object or a CRD. It is a name that represents objects or CRDs that a `DomainService` will expose to its users by installing their objects or CRDs into the target cluster.
 :::
 
 The following subsections describe the objects that a `ServiceProvider` introduces.

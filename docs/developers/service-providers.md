@@ -48,7 +48,14 @@ This test bootstraps a complete local openMCP installation with all required com
 - **The platform cluster** where your service provider is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator)
 - **The onboarding cluster** where end users request the domain service you provider offers.
 - **A managed control plane cluster (MCP)** where your service provider installs its [DomainServiceAPI](https://openmcp-project.github.io/docs/about/design/service-provider#api) and optionally its workload.
-- **An optional workload cluster**, provisioned when using the template fla `-w`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the MCP. This will result int another kind cluster.
+- **An optional workload cluster**, provisioned when using the template flag `-w`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the MCP. This will result in another kind cluster.
+
+:::info
+This means running the above command from the [Service Provider Template Usage](#service-provider-template-usage) section with `-w` like this:
+```bash
+go run ./cmd/template -v -w -module github.com/openmcp-project/service-provider-velero -kind Velero -group velero
+```
+:::
 
 The template generator removes its own code after execution. If you want to revert your changes and start fresh, simply use git and delete any generated untracked files. For this reason, remove template-generation step from the e2e test `.github/workflows/go.yaml` before committing your changes (otherwise your workflow will fail).
 
@@ -62,9 +69,9 @@ The template generator removes its own code after execution. If you want to reve
 
 The service provider template is built with [kubebuilder](https://book.kubebuilder.io/introduction), so the project follows the conventions of typical Kubernetes controllers:
 
-- **api/** includes a generated velero and provider config type that you
+- **api/** includes generated types and their CRDs which the crd manager will install during the `initCommand`.
 - **internal/controller/** contains the `Reconciler` where you implement your domain specific reconcile logic.
-- **pkg/runtime** contains generic reconcilers that handle openMCP specific logic such as cluster access management and provider config updates. You normally should modify this package. If you encounter any issues, create an issue in the template repository.
+- **pkg/runtime** contains generic reconcilers that handle openMCP specific logic such as cluster access management and provider config updates. You normally should not modify this package. If you encounter any issues, create an issue in the template repository.
 
 If you are new to implementing Kubernetes controllers, consider completing [building a CronJob tutorial](https://book.kubebuilder.io/cronjob-tutorial/cronjob-tutorial.html) before returning to this guide. The rest of this guide highlights the most important steps to create a service provider and the differences compared to a regular Kubernetes controller.
 
@@ -356,3 +363,177 @@ Assess("verify service can be consumed", func(ctx context.Context, t *testing.T,
    return ctx
 })
 ```
+
+## Best Practices
+
+### For simple deployments
+
+For simple deployments that don't require too much hassle, it is wise to just implement the deployment generation and creation in the Go code using plain
+`Deployment` objects and `ServiceAccount` objects for access setups. For example:
+
+```
+// in authz package
+// Configure adds a managed ClusterRoleBinding object to the given cluster.
+// The passed in service account is granted the cluster-admin role.
+func Configure(cluster resources.ManagedCluster, msa *authn.ManagedServiceAccount) {
+	crb := resources.NewManagedObject(&rbacv1.ClusterRoleBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: clusterRoleBindingName,
+		},
+	}, resources.ManagedObjectContext{
+		ReconcileFunc: func(_ context.Context, o client.Object) error {
+			oCRB := o.(*rbacv1.ClusterRoleBinding)
+			oCRB.Subjects = []rbacv1.Subject{
+				{
+					Kind:      rbacv1.ServiceAccountKind,
+					Name:      msa.Name,
+					Namespace: msa.Namespace,
+				},
+			}
+			oCRB.RoleRef = rbacv1.RoleRef{
+				APIGroup: rbacv1.GroupName,
+				Kind:     "ClusterRole",
+				Name:     "cluster-admin",
+			}
+			return nil
+		},
+		StatusFunc: resources.SimpleStatus,
+	})
+	cluster.AddObject(crb)
+}
+```
+
+And then, during `CreateOrUpdate` or the `Delete` flows, you could call them as such:
+
+```go
+// CreateOrUpdate is called on every add or update event
+func (r *VeleroReconciler) CreateOrUpdate(ctx context.Context, obj *apiv1alpha1.Velero, pc *apiv1alpha1.ProviderConfig, clusters spruntime.ClusterContext) (ctrl.Result, error) {
+	l := log.FromContext(ctx)
+	spruntime.StatusProgressing(obj, "Reconciling", "Reconcile in progress")
+	err := r.ensureInstanceID(ctx, obj)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	mgr, err := r.configResources(obj, pc, clusters)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	results := mgr.Apply(ctx)
+	errRes := false
+	for _, r := range results {
+		if r.Error != nil {
+			l.Error(r.Error, objectutils.ObjectID(r.Object.GetObject()))
+			errRes = true
+		}
+	}
+	managedResources := resultsToResources(results)
+	obj.Status.Resources = managedResources
+	if allResourcesReady(managedResources) {
+		spruntime.StatusReady(obj)
+	}
+	if errRes {
+		return ctrl.Result{}, errors.New("reconciliation result contains errors")
+	}
+	return ctrl.Result{}, nil
+}
+```
+
+Where `configResources` calls each individual package's `Configure` function like this:
+
+```go
+namespace.Configure(mcpCluster, resources.Orphan)
+...
+authz.Configure(mcpCluster, mcpServiceAccount)
+...
+deployment.ConfigureMcp(mcpCluster, images["velero"], instance.GetID(obj))
+...
+...
+```
+
+This will always reconcile all the objects handled by this service provider.
+
+### For complex deployments with lot of moving parts
+
+Now, consider a more complex deployment that requires and has a lot of buttons and switches to set during the deployment. This would be rather cumbersome and difficult to
+manage from Go code.
+
+We recommend using Flux ( or any other deployment handling operator that understand Helm ) to do such deployments.
+
+:::info
+At the time of this writing, a flux provider implementation is in the works.
+:::
+
+Simply create a `HelmRelease` object with all the bells whistles set using the `ProviderConfig` optionally.
+
+Here is a plain example of an `OCIRepository` pointing to a configurable URL with a configurable version coming from either the `ServiceProviderAPI`:
+
+```go
+// createOciRepository creates a repository pointing to the helm repo containing the to be deployed chart.
+func createOciRepository(url, version string) *sourcev1.OCIRepository {
+	return &sourcev1.OCIRepository{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      OCIRepositoryName,
+			Namespace: metav1.NamespaceDefault,
+		},
+		Spec: sourcev1.OCIRepositorySpec{
+			Interval: metav1.Duration{Duration: time.Minute},
+			URL:      url,
+			Reference: &sourcev1.OCIRepositoryRef{
+				Tag: version,
+			},
+		},
+	}
+}
+
+// createHelmRelease creates a release for a chart with some optional helm values.
+func createHelmRelease() (*helmv2.HelmRelease, error) {
+	values := make(map[string]interface{})
+	values["manager"] = map[string]interface{}{
+		"concurrency": map[string]interface{}{
+			"resource": 21,
+		},
+		"logging": map[string]interface{}{
+			"level": "debug",
+		},
+	}
+	content, err := json.Marshal(values)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal helm value overrides: %w", err)
+	}
+
+	return &helmv2.HelmRelease{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      HelmReleaseName,
+			Namespace: metav1.NamespaceDefault,
+		},
+		Spec: helmv2.HelmReleaseSpec{
+			Interval:        metav1.Duration{Duration: time.Minute},
+			TargetNamespace: metav1.NamespaceDefault,
+			ChartRef: &helmv2.CrossNamespaceSourceReference{
+				Kind:      "OCIRepository",
+				Name:      OCIRepositoryName,
+				Namespace: metav1.NamespaceDefault,
+			},
+			Values: &apiextensionsv1.JSON{Raw: content},
+      // ServiceAccountName: --> could be created first and then passed in here.
+			KubeConfig: &meta.KubeConfigReference{
+				ConfigMapRef: &meta.LocalObjectReference{},
+				SecretRef:    &meta.SecretKeyReference{},
+			},
+		},
+	}, nil
+}
+```
+
+In here, the values, for example, could come from the `ProviderConfig`. Or further image accesses could be configured by other service accounts and secrets
+being created as a first step.
+
+Also notice the `KubeConfig` section. Your service provider controller is deployed in the Platform cluster. The target controller that your provider is deploying
+will run in either the MCP or the Workload cluster. This depends on your choice, however, it is recommended to deploy into the workload cluster as documented [here](https://openmcp-project.github.io/docs/about/design/service-provider/#non-goals).
+
+This means that Flux will need a KubeConfig in order to deploy to the ManagedControlPlane cluster. And this is the KubeConfig that is given to Flux in this section.
+
+:::info
+Note, that as of this writing, it's a bit difficult to obtain the KubeConfig for the Workload Cluster. MCPCluster KubeConfig is obtained via a AccessRequest. For an example,
+please look at how the [service-provider-crossplane](https://github.com/openmcp-project/service-provider-crossplane/blob/3f8a16d1c4f00c92ef45c5271982d60084aee897/internal/controller/crossplane_controller.go#L193-L217) is doing this.
+:::
