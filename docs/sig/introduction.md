@@ -25,7 +25,7 @@ A new SIG may be proposed when:
 **Creation Process:**
 1. Proposal submitted to Technical Steering Committee (TSC) with justification
 2. Community feedback period (minimum 2 weeks)
-3. ??? approval
+3. TSC approval
 4. Charter development and publication
 5. Initial leadership team appointment
 
