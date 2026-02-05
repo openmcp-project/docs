@@ -58,7 +58,7 @@ SIGs **MUST** have a charter defining their scope, responsibilities, decision-ma
 **Out of Scope:**
 - Areas explicitly owned by other SIGs
 - Cross-cutting concerns (e.g., security, release management)
-- Strategic decisions reserved for project managers
+- Strategic decisions reserved for TSC
 - Governance matters outside the SIG's purview
 
 #### Roles and Responsibilities
@@ -71,16 +71,16 @@ SIGs operate with a **four-tier role structure**:
 - **Responsibilities:**
     - Organize and facilitate SIG meetings
     - Maintain charter and documentation
-    - Communicate with other SIGs and project managers
+    - Communicate with other SIGs and stakeholders
     - Ensure transparency and public accessibility of decisions
     - Manage SIG roadmap and priorities
     - Mentor and develop approvers and contributors
     - Ensure succession planning
     - Escalate conflicts and blockers
-    - Report quarterly to project managers
+    - Report quarterly to TSC
 
-- **Selection:** Appointed by project managers based on community nomination and demonstrated leadership
-- **Term:** 1 year, renewable (??)
+- **Selection:** Appointed by TSC based on community nomination and demonstrated leadership
+- **Term:** 1 year, renewable
 
 ### SIG Approver (Technical Authority)
 - **Minimum required:** At least 2 per SIG
@@ -92,7 +92,7 @@ SIGs operate with a **four-tier role structure**:
     - Contribute to roadmap planning
     - Participate in SIG meetings (minimum 80% attendance)
 
-- **Selection:** Nominated by SIG Owner, approved by project managers
+- **Selection:** Nominated by SIG Owner, approved by TSC
 - **Criteria:** Demonstrated expertise, consistent contributions, community respect
 - **Term:** 1 year, renewable
 
@@ -245,7 +245,7 @@ Subprojects are focused work efforts within a SIG, each with designated ownershi
 [Describe how the SIG makes decisions. Example: "Decisions are made through consensus among approvers. If consensus cannot be reached, the SIG Owner makes the final decision with documented rationale."]
 
 ### Escalation
-[Describe escalation path. Example: "Conflicts are first discussed within the SIG. If unresolved after 2 weeks, they are escalated to project managers."]
+[Describe escalation path. Example: "Conflicts are first discussed within the SIG. If unresolved after 2 weeks, they are escalated to TSC."]
 
 ## Roadmap
 
