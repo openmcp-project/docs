@@ -40,7 +40,7 @@ SIGs **MUST** have a charter defining their scope, responsibilities, decision-ma
 **Charter Requirements:**
 - **MUST** be publicly accessible in the OpenMCP repository
 - **MUST** be reviewed and updated at least annually
-- **MUST** be approved by XXX
+- **MUST** be approved by TSC
 - **MUST** be communicated to all SIG members and the broader community
 
 ### Minimum Charter Sections
