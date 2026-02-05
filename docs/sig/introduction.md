@@ -23,7 +23,7 @@ A new SIG may be proposed when:
 - Community members demonstrate sustained interest in a specific domain
 
 **Creation Process:**
-1. Proposal submitted to ??? with justification
+1. Proposal submitted to Technical Steering Committee (TSC) with justification
 2. Community feedback period (minimum 2 weeks)
 3. ??? approval
 4. Charter development and publication
