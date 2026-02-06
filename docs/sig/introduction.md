@@ -137,7 +137,7 @@ TBD
 
 ### Required Communication Channels
 - **Public Meetings:** At least bi-weekly, with recorded notes
-- **Async Communication:** Dedicated Slack/Successor channel or mailing list
+- **Async Communication:** Dedicated communication channel or mailing list
 - **Documentation:** Public pages or repository for designs, decisions, roadmap
 - **Meeting Notes:** Published within 48 hours, including decisions and action items
 - **Roadmap:** Published and updated quarterly
