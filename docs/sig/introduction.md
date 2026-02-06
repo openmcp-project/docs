@@ -125,7 +125,7 @@ TBD
 | **Roadmap/Priorities** | Owner + Approvers | Discussion, documented decision | Quarterly |
 | **Charter Updates** | Owner + TSC | Community feedback, formal approval | As needed |
 | **Scope Changes** | Owner + TSC | SIG proposal, community input | 30 days |
-| **Conflict Resolution** | Owner → Managers | Discussion, escalation if needed | 14 days |
+| **Conflict Resolution** | Owner → TSC | Discussion, escalation if needed | 14 days |
 
 ### Consensus Model
 - Decisions should aim for consensus among approvers
