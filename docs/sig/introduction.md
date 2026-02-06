@@ -146,8 +146,8 @@ TBD
 ### Escalation Path
 1. SIG Owner attempts resolution
 2. Cross-SIG discussion if multiple SIGs affected
-3. Manager mediation if unresolved
-4. Final decision by managers
+3. TSC mediation if unresolved
+4. Final decision by TSC
 
 ## Conflict Resolution
 TBD
@@ -158,8 +158,8 @@ TBD
 
 ### External Conflicts (between SIGs)
 - SIG Owners meet to discuss
-- Escalated to managers if unresolved
-- Managers make binding decision
+- Escalated to TSC if unresolved
+- TSC make binding decision
 - Decision documented and communicated
 
 ### Escalation Timeline
