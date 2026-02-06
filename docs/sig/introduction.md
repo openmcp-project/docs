@@ -124,7 +124,7 @@ TBD
 | **Technical Changes** | Approvers | Code review, consensus-seeking | Per contribution |
 | **Roadmap/Priorities** | Owner + Approvers | Discussion, documented decision | Quarterly |
 | **Charter Updates** | Owner + TSC | Community feedback, formal approval | As needed |
-| **Scope Changes** | Managers | SIG proposal, community input | 30 days |
+| **Scope Changes** | Owner + TSC | SIG proposal, community input | 30 days |
 | **Conflict Resolution** | Owner → Managers | Discussion, escalation if needed | 14 days |
 
 ### Consensus Model
