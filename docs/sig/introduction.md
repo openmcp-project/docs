@@ -212,7 +212,7 @@ Subprojects are focused work efforts within a SIG, each with designated ownershi
 ### SIG Owner
 - **Name(s):** [Owner name(s)]
 - **Contact:** [Email/Slack handle]
-- **Responsibilities:** Organize meetings, maintain charter, communicate with other SIGs, manage roadmap, mentor team members, report to managers
+- **Responsibilities:** Organize meetings, maintain charter, communicate with other SIGs, manage roadmap, mentor team members, report to TSC
 
 ### SIG Approvers
 - **Name(s):** [Approver name(s)]
