@@ -239,6 +239,12 @@ Subprojects are focused work efforts within a SIG, each with designated ownershi
 - **Mailing List:** [mailing-list@example.com]
 - **Documentation:** [Link to wiki/repository]
 
+## Meeting Schedule
+
+- **Regular Meetings:** [Day, time, frequency]
+- **Meeting Notes:** [Link to meeting notes repository]
+- **Calendar:** [Link to calendar or iCal]
+
 ## Decision-Making
 
 ### Decision Process
@@ -259,12 +265,6 @@ Subprojects are focused work efforts within a SIG, each with designated ownershi
 ### Next Quarter Goals
 - [Goal 1]
 - [Goal 2]
-
-## Meeting Schedule
-
-- **Regular Meetings:** [Day, time, frequency]
-- **Meeting Notes:** [Link to meeting notes repository]
-- **Calendar:** [Link to calendar or iCal]
 
 ## How to Contribute
 
