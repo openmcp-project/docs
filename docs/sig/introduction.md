@@ -180,7 +180,7 @@ Subprojects are focused work efforts within a SIG, each with designated ownershi
 - All code and documentation must be owned by a subproject
 
 ### Subproject Lifecycle
-- **Creation:** Proposed by SIG Owner or Approvers
+- **Creation:** Proposed and Approved by SIG Owner or Approvers
 - **Active:** Ongoing development and maintenance
 - **Maintenance:** Stable, minimal changes
 - **Archived:** No longer actively developed
