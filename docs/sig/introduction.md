@@ -186,7 +186,7 @@ Subprojects are focused work efforts within a SIG, each with designated ownershi
 - **Archived:** No longer actively developed
 
 ## Charter Template
-- [SIG Charter Template](
+- [SIG Charter Template](./sig-charter-template.md)
 
 ## References and Inspiration
 
