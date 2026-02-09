@@ -257,12 +257,12 @@ Subprojects are focused work efforts within a SIG, each with designated ownershi
 
 [Link to public roadmap or brief description of current priorities]
 
-### Current Priorities
+### Current Priorities (optional)
 - [Priority 1]
 - [Priority 2]
 - [Priority 3]
 
-### Next Quarter Goals
+### Next Quarter Goals (optional)
 - [Goal 1]
 - [Goal 2]
 
