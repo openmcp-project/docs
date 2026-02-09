@@ -116,7 +116,7 @@ SIGs operate with a **four-tier role structure**:
     - Contribute ideas and proposals
 
 ## Decision-Making Process
-TBD
+
 ### Decision Types and Authority
 
 | Decision Type | Authority | Process | Timeline |
@@ -150,7 +150,7 @@ TBD
 4. Final decision by TSC
 
 ## Conflict Resolution
-TBD
+
 ### Internal Conflicts (within SIG)
 - Discussed in SIG meetings
 - Owner facilitates resolution
