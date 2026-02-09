@@ -180,10 +180,31 @@ Subprojects are focused work efforts within a SIG, each with designated ownershi
 - All code and documentation must be owned by a subproject
 
 ### Subproject Lifecycle
-- **Creation:** Proposed and Approved by SIG Owner or Approvers
-- **Active:** Ongoing development and maintenance
-- **Maintenance:** Stable, minimal changes
-- **Archived:** No longer actively developed
+
+#### Creation
+- Proposed by any Contributor, Approver, or Owner within the SIG with a clear problem statement and scope
+- Approved by SIG Owner or Approvers after review
+- **Transition to Active:** Upon approval and initial contributor assignment
+
+#### Active
+- Ongoing development and maintenance
+- Regular contributions and releases
+- Active community engagement
+- **Transition to Maintenance:** When feature development completes and the subproject reaches stability (no major changes planned for 6+ months)
+
+#### Maintenance
+- Stable codebase with minimal changes
+- Focus on bug fixes, security patches, and dependency updates
+- No new feature development
+- **Transition to Active:** If significant new features are planned and approved
+- **Transition to Archived:** After 12 months of inactivity or when functionality is deprecated/superseded
+
+#### Archived
+- No longer actively developed or maintained
+- Read-only repository state
+- Documentation preserved for historical reference
+- **Transition to Active/Maintenance:** Requires new proposal and SIG approval to revive
+
 
 ## Charter Template
 - [SIG Charter Template](./sig-charter-template.md)
