@@ -127,7 +127,7 @@ Create the Kind cluster using the configuration file created in the previous ste
 
 :::warning
 
-Please check if your current `kind` network is has a `/16` subnet. This is required for our cluster-provider-kind.
+Please check if your current `kind` network has a `/16` subnet. This is required for our cluster-provider-kind.
 You can check the current network configuration using:
 
 ```shell
