@@ -85,7 +85,7 @@ docker pull ghcr.io/openmcp-project/images/openmcp-bootstrapper:${OPENMCP_BOOTST
 
 ### Requirements
 
-* [Docker](https://docs.docker.com/get-docker/) installed and running. Docker alternatively can be replaced with another OCI runtime (e.g. Podman) that can run the `openmcp-bootstrapper` CLI tool as an OCI image. 
+* [Docker](https://docs.docker.com/get-docker/) installed and running. Docker alternatively can be replaced with another OCI runtime (e.g. Podman) that can run the `openmcp-bootstrapper` CLI tool as an OCI image.
 * [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/) installed
 
 :::info
@@ -125,8 +125,27 @@ nodes:
 
 Create the Kind cluster using the configuration file created in the previous step.
 
-:::info
+:::warning
 
+Please check if your current `kind` network has a `/16` subnet. This is required for our cluster-provider-kind.
+You can check the current network configuration using:
+
+```shell
+docker network inspect kind | jq ".[].IPAM.Config.[].Subnet"
+"172.19.0.0/16"
+```
+
+If the result is not specifying `/16` but something smaller like `/24` you need to delete the network and create a new one. For that **all kind clusters needs to be deleted**. Then run:
+
+```shell
+docker network rm kind
+
+docker network create kind --subnet 172.19.0.0/16
+```
+
+:::
+
+:::info Podman Support
 In case you are using Podman instead of Docker, it is currently required to first create a suitable network for the Kind cluster by executing the following command before creating the Kind cluster itself.
 
 ```shell
@@ -467,7 +486,7 @@ You are now ready to create and manage clusters using openMCP.
 ### Get Access to the Onboarding Cluster
 
 The openmcp-operator should now have created a `onboarding Cluster` resource on the platform cluster that represents the onboarding cluster.
-The onboarding cluster is a special cluster that is used to create new managed control planes. 
+The onboarding cluster is a special cluster that is used to create new managed control planes.
 
 ```shell
 kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get clusters.clusters.openmcp.cloud -A
