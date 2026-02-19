@@ -170,7 +170,7 @@ SIGs operate with a **four-tier role structure**:
 ## Subprojects and Work Organization
 
 ### Subproject Definition
-Subprojects are focused work efforts within a SIG, each with designated ownership and clear deliverables.
+Subprojects are focused work efforts within a SIG, each with designated ownership and clear deliverables such as code, documentation, or APIs.
 
 ### Subproject Requirements
 - Each subproject must have at least one designated owner
