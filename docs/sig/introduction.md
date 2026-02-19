@@ -63,7 +63,7 @@ SIGs **MUST** have a charter defining their scope, responsibilities, decision-ma
 
 #### Roles and Responsibilities
 
-SIGs operate with a **four-tier role structure**:
+SIGs operate with a **trhee-tier role structure**:
 
 ### SIG Owner (Organizer/Facilitator)
 - **Minimum required:** At least 1 per SIG
@@ -96,24 +96,17 @@ SIGs operate with a **four-tier role structure**:
 - **Criteria:** Demonstrated expertise, consistent contributions, community respect
 - **Term:** 1 year, renewable
 
-### SIG Contributor (Active Participant)
-- **Definition:** Individuals with demonstrated, ongoing contributions
-- **Responsibilities:**
-    - Contribute code, documentation, or testing
-    - Participate in discussions and design reviews
-    - Help review contributions from others
-    - Attend SIG meetings when possible
-    - Support community members
-
-- **Selection:** Self-identified through consistent contributions
-- **Recognition:** Listed in SIG documentation
-
-### Community Member (Open Participation)
-- **Definition:** Anyone interested in the SIG's work
+### SIG Contributor
+- **Definition:** Anyone interested in the SIG's work who participates through contributions or engagement
 - **Participation:**
-    - Attend meetings and discussions
-    - Ask questions and provide feedback
-    - Contribute ideas and proposals
+  - Contribute code, documentation, or testing
+  - Attend meetings and discussions
+  - Participate in design reviews
+  - Ask questions and provide feedback
+  - Help review contributions from others
+  - Support community members
+
+- **Recognition:** Contributors with sustained, significant contributions are listed in SIG documentation
 
 ## Decision-Making Process
 
