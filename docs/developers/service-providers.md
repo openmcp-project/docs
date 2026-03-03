@@ -262,12 +262,18 @@ func (r *FooServiceReconciler) CreateOrUpdate(ctx context.Context, svcobj *apiv1
 
 In a real world example like Velero, this step contains installing and reconciling every required resource, including CRDs, namespace(s), service account(s), deployments(s), etc. into the MCP and workload cluster.
 
-The `ClusterContext` provides access to all request specific clusters. These clusters include the managed control plane and, when requested, the workload cluster associated with the current request. Note that the workload cluster is optional and will not be available for providers that deploy their workload directly to the managed control plane.
+The `ClusterContext` provides access to all request specific clusters. This always includes the managed control plane and, when requested, the workload cluster associated with the current request.
+
+The workload cluster is optional and will not be available for providers that deploy their workload directly to the managed control plane.
+
+In addition, `ClusterContext` exposes two `ObjectKeys` that can be used to retrieve the kubeconfig for either the managed control plane or the workload cluster. These kubeconfigs can be passed to a [HelmReleases spec](https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.HelmReleaseSpec) when a service provider uses Flux to deploy its service.
 
 ```go
 type ClusterContext struct {
  MCPCluster *clusters.Cluster
+ MCPAccessSecretKey client.ObjectKey
  WorkloadCluster *clusters.Cluster
+ WorkloadAccessSecretKey client.ObjectKey
 }
 ```
 
