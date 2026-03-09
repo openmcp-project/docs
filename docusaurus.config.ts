@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Open Managed Control Plane (openMCP)',
+  title: 'Open Control Plane',
   tagline: 'Part of ApeiroRA and NeoNephos.',
   favicon: 'img/favicon.ico',
 
@@ -74,9 +74,9 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'Open Managed Control Plane (openMCP)',
+      title: 'Open Control Plane',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'Open Control Plane Logo',
         src: 'img/logo.svg',
       },
       items: [
@@ -84,7 +84,7 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'about',
           position: 'left',
-          label: 'About OpenMCP',
+          label: 'About',
         },
         {
           type: 'docSidebar',
@@ -135,6 +135,10 @@ const config: Config = {
               label: 'NeoNephos',
               href: 'https://neonephos.org/',
             },
+                        {
+              label: 'Crossplane Provider Community @ SAP',
+              href: 'https://github.com/SAP/crossplane-provider-docs',
+            },
           ],
         },
         {
@@ -156,7 +160,7 @@ const config: Config = {
         },
       ],
       copyright: `
-        Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company and openMCP contributors.
+        Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company and openControlPlane contributors.
         <br>
         This site is hosted by <a href="https://pages.github.com/">GitHub Pages</a>.
         Please see the <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement">GitHub Privacy Statement</a> for any information how GitHub processes your personal data.
