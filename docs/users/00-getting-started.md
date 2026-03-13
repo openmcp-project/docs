@@ -53,7 +53,7 @@ To create it, run:
 kubectl create -f project.yaml
 ```
 
-_**Note**_: We are using `apply` here for a reason. This goes for the rest of this guide.
+_**Note**_: We are using `create` here for a reason. This goes for the rest of this guide.
 
 Once the project reconciles, check the project status. It should contain a `namespace` section that the project generated.
 
@@ -61,6 +61,7 @@ To check the status, you should have access to list your specific project with:
 
 ```
 $> kubectl describe project ocm-team
+
 Name:         platform-team
 Namespace:
 ... <redacted>
@@ -126,6 +127,7 @@ You inspect the resource by running the following command:
 
 ```
 $> kubectl describe workspace dev -n project-platform-team
+
 Name:         dev
 Namespace:    project-platform-team
 Labels:       <none>
@@ -207,15 +209,53 @@ _**Note**_: If any of the needed resources to install a specific service provide
 Once the `ManageControlPlane` object reconciles, you should see something like this:
 
 ```
-<placeholder>
+$> kubectl describe mcpv2 mcp-01 -n project-ocm-team--ws-canary
+
+Name:         mcp-01
+Namespace:    project-platform-team--ws-dev
+Labels:       <none>
+Annotations:  <none>
+API Version:  core.openmcp.cloud/v2alpha1
+Kind:         ManagedControlPlaneV2
+Metadata:
+  Creation Timestamp:  2026-03-13T09:36:31Z
+  ...
+Spec:
+  Iam:
+    Oidc:
+      Default Provider:
+        Role Bindings:
+          Role Refs:
+            Kind:  ClusterRole
+            Name:  cluster-admin
+          Subjects:
+            Kind:  User
+            Name:  first.user@example.com
+            Kind:  User
+            Name:  second.user@example.com
+    Tokens:
+      Name:  xyz-service-token
+      Role Refs:
+        Kind:  ClusterRole
+        Name:  cluster-admin
+Status:
+  Access:
+    oidc_openmcp:
+      Name:  oidc-openmcp.mcp-01.kubeconfig
+    token_xyz-service-token:
+      Name:  token-xyz-service-token.mcp-01.kubeconfig
+  Conditions:
+    Last Transition Time:  2026-03-13T13:25:00Z
+    Message:
+    ...
 ```
 
-Note the `status.access` resource under `<placeholder>`. This is the Secret you need to fetch in order to get your kubeconfig for the provisioned MCP cluster.
+Note the `status.access` resource under `oidc_openmcp`. This is the Secret you need to fetch in order to get your kubeconfig for the provisioned MCP cluster.
 
 To fetch that value and put it into a file called `mcp-kubeconfig.yaml`, run the following command:
 
 ```
-<placeholder>
+kubectl get secrets "$(kubectl get mcpv2 mcp-01 -n project-platform-team--ws-dev -o jsonpath='{.status.access.oidc_openmcp.name}')" -n project-platform-team--ws-dev -o jsonpath='{.data.kubeconfig}' | base64 -d > mcp-kubeconfig.yaml
 ```
 
 ### 4. Install managed services in your Managed Control Plane (MCP)
@@ -279,14 +319,30 @@ apiVersion: ocm.services.openmcp.cloud/v1alpha1
 kind: OCM
 metadata:
   name: mcp-01 # must match your MCP cluster so it will track the right cluster
+  namespace: project-platform-team--ws-dev
 spec:
-  version: v0.1.0
+  version: 0.2.0
 ```
 
 Once this object reconciles, you should see something like this in its status:
 
 ```
-<placeholder>
+# Make sure you are using the kubeconfig for that MCP cluster
+$> kubectl describe pod -n ocm-k8s-toolkit-system ocm-k8s-toolkit-controller-manager-
+
+Name:             ocm-k8s-toolkit-controller-manager-68b94b65bc-8ggv8
+Namespace:        ocm-k8s-toolkit-system
+Priority:         0
+Service Account:  ocm-k8s-toolkit-controller-manager
+...
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  56s   default-scheduler  Successfully assigned ocm-k8s-toolkit-system/ocm-k8s-toolkit-controller-manager-68b94b65bc-8ggv8 to ***
+  Normal  Pulling    56s   kubelet            Pulling image "ghcr.io/open-component-model/kubernetes/controller:0.2.0@sha256:78ffe14f5175e3510f6dfb20df0a07eeb2de99ee24e56a0015dd941727b1c9e7"
+  Normal  Pulled     53s   kubelet            Successfully pulled image "ghcr.io/open-component-model/kubernetes/controller:0.2.0@sha256:78ffe14f5175e3510f6dfb20df0a07eeb2de99ee24e56a0015dd941727b1c9e7" in 2.718s (2.718s including waiting). Image size: 34158077 bytes.
+  Normal  Created    53s   kubelet            Created container: manager
+  Normal  Started    53s   kubelet            Started container manager
 ```
 
 The base ocm installation comes with a bare minimum set of RBAC settings. To extend this, simply follow our guide here: [custom RBAC for OCM](https://github.com/open-component-model/open-component-model/blob/main/kubernetes/controller/docs/getting-started/custom-rbac.md).
