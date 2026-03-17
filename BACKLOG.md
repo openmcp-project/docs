@@ -17,11 +17,8 @@
 
 - [ ] Onboarding API - why/what it helps for
 - [ ] Johannes change icon
-- [ ] End user getting started: Prerequisites (platform installed)
-- [ ] End user getting started: authentication/authorization
 - [ ] End user getting started: MCP Server - max b to publish
 - [ ] End user getting started: Edit docs
-- [ ] End user getting started: pictures
 - [ ] Operators: getting started (currently empty)
 - [ ] Operators: Happy Path docs
 - [ ] Contributing: Wie mach ich was (How do I do what) - Extend - Fundamental - How to
@@ -36,6 +33,9 @@
 
 ## Done
 
+- [x] End user getting started: Prerequisites (platform installed)
+- [x] End user getting started: authentication/authorization
+- [x] End user getting started: pictures (hierarchy diagram)
 - [x] Double check no openMCP → OpenControlPlane (cleanup legacy naming)
 - [x] SIGs mit rein (include SIGs)
 - [x] Community seite - how to participate
