@@ -13,6 +13,22 @@
 - **Mermaid** diagrams
 - **Node.js 18+**
 
+## Brand Colors
+
+**Teal Spectrum** (primary brand colors):
+- **Teal 2** (lightest): `#C2FCEE` | RGB 194/252/238 | Pantone 317 C
+- **Teal 4** (bright): `#2CE0BF` | RGB 44/224/191 | Pantone 3255 C  
+- **Teal 6** (medium): `#049F9A` | RGB 4/159/154 | Pantone 2233 C
+- **Teal 7** (darker): `#07838F` | RGB 7/131/143 | Pantone 2235 C
+- **Teal 10** (dark): `#02414C` | RGB 2/65/76 | Pantone 2215 C
+- **Teal 11** (darkest): `#012931` | RGB 1/41/49 | Pantone 2189 C
+
+**Usage:**
+- Use lighter teals (2, 4) for backgrounds and highlights
+- Medium teals (6, 7) for primary actions and branding  
+- Darker teals (10, 11) for text and contrast elements
+- Consider gradients between adjacent teal shades
+
 ## Structure
 
 ```
