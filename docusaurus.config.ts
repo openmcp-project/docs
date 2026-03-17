@@ -104,6 +104,12 @@ const config: Config = {
           position: 'left',
           label: 'Developers',
         },
+        {
+          type: 'docSidebar',
+          sidebarId: 'communitySidebar',
+          position: 'left',
+          label: 'Community',
+        },
         {to: '/adrs', label: 'ADRs', position: 'left'},
         {
           href: 'https://github.com/openmcp-project/docs',
