@@ -1,10 +1,10 @@
 # Service Providers
 
-This document outlines the `ServiceProvider` domain and its technical considerations within the context of the [openMCP project](https://github.com/openmcp-project/), providing a foundation for understanding its architecture and operational aspects.
+This document outlines the `ServiceProvider` domain and its technical considerations within the context of the [OpenControlPlane project](https://github.com/openmcp-project/), providing a foundation for understanding its architecture and operational aspects.
 
 ## Goals
 
-- Define clear terminology around `ServiceProvider` within the openMCP project
+- Define clear terminology around `ServiceProvider` within the OpenControlPlane project
 - Establish the scope of a `ServiceProvider`, including its responsibilities and boundaries
 - Define a `ServiceProvider` implementation layer to implement common features and ensure consistency across `ServiceProvider` instances
 - Outline how a `ServiceProvider` can be validated
@@ -16,14 +16,14 @@ This document outlines the `ServiceProvider` domain and its technical considerat
 
 ## Terminology
 
-- `End Users`: These are the consumers of services provided by an openMCP platform installation. They operate on the `OnboardingCluster` and `MCPCluster` (see [deployment model](#deployment-model)).
-- `Platform Operators`: These are either human users or technical systems that are responsible for managing an openMCP platform installation. While they may operate on any cluster, their primary focus is on the `PlatformCluster` and `WorkloadCluster`.
+- `End Users`: These are the consumers of services provided by an OpenControlPlane platform installation. They operate on the `OnboardingCluster` and `MCPCluster` (see [deployment model](#deployment-model)).
+- `Platform Operators`: These are either human users or technical systems that are responsible for managing an OpenControlPlane platform installation. While they may operate on any cluster, their primary focus is on the `PlatformCluster` and `WorkloadCluster`.
 
 ## Domain
 
 A `ServiceProvider` enables platform operators to offer managed `DomainServices` to end users. A `DomainService` is a third-party service that delivers its functionality to end users through a `DomainServiceAPI`.
 
-For example, consider an openMCP installation that aims to provide [Crossplane](https://www.crossplane.io/) as a managed service to its end users. Let's assume that end users specifically want to use the `Object` API of [provider-kubernetes](https://github.com/crossplane-contrib/provider-kubernetes), to create Kubernetes objects on their own Kubernetes clusters without the need to manage Crossplane themselves.
+For example, consider an OpenControlPlane installation that aims to provide [Crossplane](https://www.crossplane.io/) as a managed service to its end users. Let's assume that end users specifically want to use the `Object` API of [provider-kubernetes](https://github.com/crossplane-contrib/provider-kubernetes), to create Kubernetes objects on their own Kubernetes clusters without the need to manage Crossplane themselves.
 
 If we map this to the terminology of a `DomainService` and `DomainServiceAPI`:
 

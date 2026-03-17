@@ -1,6 +1,6 @@
 # General Controller Guidelines
 
-This document contains some general guidelines for contributing code to openMCP controllers. The goal is to align the coding and make all controllers look and behave similarly.
+This document contains some general guidelines for contributing code to OpenControlPlane controllers. The goal is to align the coding and make all controllers look and behave similarly.
 
 ## Reconcile Logic
 

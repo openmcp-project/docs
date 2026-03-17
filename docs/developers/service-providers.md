@@ -1,6 +1,6 @@
 # Service Providers
 
-This guide shows you how to create Service Provider for the OpenMCP ecosystem from scratch. Service Providers are the heart of the OpenMCP platform, as they provide the capabilities to offer Infrastructure as Data services to end users.
+This guide shows you how to create Service Provider for the OpenControlPlane ecosystem from scratch. Service Providers are the heart of the OpenControlPlane platform, as they provide the capabilities to offer Infrastructure as Data services to end users.
 
 In this guide, we will walk you through the steps of creating a Service Provider using the [service-provider-template](https://github.com/openmcp-project/service-provider-template), explain the context a service provider operates in, and demonstrate how to run end-to-end tests for it.
 
@@ -15,7 +15,7 @@ A service provider consists of the following two major parts, similar to a regul
 - **A user-facing ServiceProviderAPI**: This allows end users to request a `DomainService` for a `ManagedControlPlane`, e.g. `FooService` or `Velero`.
 - **A controller that reconciles the ServiceProviderAPI**: This controller manages the lifecycle of the provided `DomainService` and its API (such as `Foo` or the CRDs of Velero).
 
-For a visual overview of how these components fit into an openMCP installation, refer to the [service provider deployment model](https://openmcp-project.github.io/docs/about/design/service-provider#deployment-model).
+For a visual overview of how these components fit into an OpenControlPlane installation, refer to the [service provider deployment model](https://openmcp-project.github.io/docs/about/design/service-provider#deployment-model).
 
 ## Prerequisites
 
@@ -26,7 +26,7 @@ Finally, ensure that you have Go installed. You can download it from [go.dev](ht
 
 ## Service Provider Template Usage
 
-The template allows you to create a service provider without requiring deep knowledge of the underlying OpenMCP platform.
+The template allows you to create a service provider without requiring deep knowledge of the underlying OpenControlPlane platform.
 
 Run the following command to generate a new provider. Replace `velero` with the kind of your service:
 

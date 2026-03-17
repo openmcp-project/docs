@@ -6,14 +6,11 @@
 - [ ] Favicon update
 - [ ] Farbverlauf (gradient styling)
 - [ ] SVG graphics/icons
-- [ ] SIGs mit rein (include SIGs)
-- [ ] Community seite - how to participate
 - [ ] Related? Crossplane usw (add related projects section)
 - [ ] Are CRD reflected? (stretch goal)
 - [ ] Teal farbspektrum und content aware coloring
 - [ ] Maybe in Browser with WASM? (stretch)
 - [ ] Contributing: Design decisions (ADRs et al)
-- [ ] Contributing: Wie kann ich partizipieren (How can I participate) - an der community
 - [ ] Index: Was möchte ich machen (What do I want to do)
 
 ## Next
@@ -31,8 +28,6 @@
 
 ## In Progress
 
-- [ ] Double check no openMCP → open control plane (cleanup legacy naming)
-
 ## Review
 
 - [ ] Operators: common soon - Observability, upgrading
@@ -40,6 +35,11 @@
 - [ ] Operators: delete it - backup?
 
 ## Done
+
+- [x] Double check no openMCP → OpenControlPlane (cleanup legacy naming)
+- [x] SIGs mit rein (include SIGs)
+- [x] Community seite - how to participate
+- [x] Contributing: Wie kann ich partizipieren (How can I participate) - an der community
 
 ---
 

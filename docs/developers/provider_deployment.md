@@ -1,6 +1,6 @@
 # Provider Deployment
 
-The openMCP architecture knows three different kinds of providers:
+The OpenControlPlane architecture knows three different kinds of providers:
 - `ClusterProviders` manage kubernetes clusters and access to them
 - `PlatformServices` provide landscape-wide service functionalities
 - `ServiceProviders` provide the actual services that can be consumed by customers via the ManagedControlPlanes

@@ -1,6 +1,6 @@
 # Getting Started
 
-> This is a quick guide on how to get started with the openMCP platform. This guide is not complete and will be extended in the future.
+> This is a quick guide on how to get started with the OpenControlPlane platform. This guide is not complete and will be extended in the future.
 
 ## Setup
 
@@ -51,7 +51,7 @@ spec:
 
 ### 3. Create a `ManagedControlPlane` in the `Workspace`
 
-The `ManagedControlPlane` resource is the heart of the openMCP platform. Each Managed Control Plane (MCP) has its own Kubernetes API endpoint and data store. You can use the `iam` property to define who should have access to the MCP and the resources it contains.
+The `ManagedControlPlane` resource is the heart of the OpenControlPlane platform. Each Managed Control Plane (MCP) has its own Kubernetes API endpoint and data store. You can use the `iam` property to define who should have access to the MCP and the resources it contains.
 
 ```yaml
 apiVersion: core.openmcp.cloud/v2alpha1

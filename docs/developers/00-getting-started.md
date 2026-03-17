@@ -6,4 +6,4 @@ Have a look at our [design documentation](./../about/design/service-provider.md)
 
 Check our guide on [how to create a Service Provider](./../developers/service-providers.md) to turn the next Kubernetes-native application into an as-a-Service offering.
 
-Let's get started in building your first Service Provider for the OpenMCP ecosystem!
+Let's get started in building your first Service Provider for the OpenControlPlane ecosystem!

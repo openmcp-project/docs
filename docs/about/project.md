@@ -3,9 +3,9 @@ slug: /
 sidebar_position: 1
 ---
 
-# About openMCP
+# About OpenControlPlane
 
-👋 Welcome to the documentation of openMCP. We are part of [ApeiroRA](https://apeirora.eu/content/projects/) which is an Important Project of Common European Interest - Next Generation Cloud Infrastructures and Services (IPCEI-CIS).
+👋 Welcome to the documentation of OpenControlPlane. We are part of [ApeiroRA](https://apeirora.eu/content/projects/) which is an Important Project of Common European Interest - Next Generation Cloud Infrastructures and Services (IPCEI-CIS).
 
 ## 🌐 ApeiroRA?
 
@@ -15,9 +15,9 @@ By being open source, ApeiroRA provides a cross-border spillover effect, solidif
 
 Learn more about ApeiroRA by checking out the official website at [https://apeirora.eu/](https://apeirora.eu/).
 
-## 🤝 openMCP and ApeiroRA
+## 🤝 OpenControlPlane and ApeiroRA
 
-The Open Managed Control Plane (openMCP) enables extensible Infrastructure- and Configuration-as-Data capabilities as a Service. Based on the Kubernetes Resource Model, all resources in the cloud-edge continuum with ApeiroRA are accessible and managed via a declarative API and corresponding controllers and operators. Together with the controller which understand OCM and declarative deployment orchestrators, consumers can subscribe to a product release-train of software producers and implement an automated, GitOps-driven deployment workflow at the edges.
+OpenControlPlane enables extensible Infrastructure- and Configuration-as-Data capabilities as a Service. Based on the Kubernetes Resource Model, all resources in the cloud-edge continuum with ApeiroRA are accessible and managed via a declarative API and corresponding controllers and operators. Together with the controller which understand OCM and declarative deployment orchestrators, consumers can subscribe to a product release-train of software producers and implement an automated, GitOps-driven deployment workflow at the edges.
 
 ## 👥 Get Involved
 

@@ -1,10 +1,10 @@
-# CLAUDE.md - Open Control Plane Documentation
+# CLAUDE.md - OpenControlPlane Documentation
 
 ## About
 
-**Open Control Plane** provides Infrastructure- and Configuration-as-Data capabilities via Kubernetes Resource Model APIs. Part of ApeiroRA (IPCEI-CIS European cloud initiative).
+**OpenControlPlane** provides Infrastructure- and Configuration-as-Data capabilities via Kubernetes Resource Model APIs. Part of ApeiroRA (IPCEI-CIS European cloud initiative).
 
-> **Note:** Legacy "openMCP" references should be updated to "Open Control Plane"
+> **Note:** Legacy "openMCP" references should be updated to "OpenControlPlane"
 
 ## Tech Stack
 

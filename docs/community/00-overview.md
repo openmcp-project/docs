@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Community
 
-Welcome to the Open Control Plane community!
+Welcome to the OpenControlPlane community!
 
 ## Get Involved
 

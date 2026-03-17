@@ -2,10 +2,10 @@ import Tabs from '@theme/Tabs';
 import CodeBlock from '@theme/CodeBlock';
 import TabItem from '@theme/TabItem';
 
-# openMCP Landscape Bootstrapping
+# OpenControlPlane Landscape Bootstrapping
 
-To set up and and manage openMCP landscapes, a concept named bootstrapping is used.
-Bootstrapping works for creating new landscapes as well as updating existing landscapes with new versions of openMCP.
+To set up and and manage OpenControlPlane landscapes, a concept named bootstrapping is used.
+Bootstrapping works for creating new landscapes as well as updating existing landscapes with new versions of OpenControlPlane.
 The bootstrapping involves the creation of a GitOps process where the desired state of the landscape is stored in a Git repository and is being synced to the actual landscape using FluxCD.
 The operator of a landscape can configure the bootstrapping to their liking by providing a bootstrapping configuration that controls the configuration of the openmcp-operator including all desired cluster-providers, service-providers, and platform services.
 The bootstrapping is performed by the `openmcp-bootstrapper` command line tool (https://github.com/openmcp-project/bootstrapper).

@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Special Interest Groups (SIGs)
 
-SIGs are the primary organizational unit for focused work within Open Control Plane. Each SIG has a charter, leads, and regular meetings.
+SIGs are the primary organizational unit for focused work within OpenControlPlane. Each SIG has a charter, leads, and regular meetings.
 
 ## SIG Extensibility
 
