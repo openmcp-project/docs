@@ -82,35 +82,28 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'about',
-          position: 'left',
-          label: 'About',
-        },
-        {
-          type: 'docSidebar',
           sidebarId: 'userDocs',
           position: 'left',
-          label: 'End-users',
+          label: 'Get Started',
         },
         {
           type: 'docSidebar',
           sidebarId: 'operatorDocs',
           position: 'left',
-          label: 'Operators',
+          label: 'Run Your Platform',
         },
         {
           type: 'docSidebar',
           sidebarId: 'developerDocs',
           position: 'left',
-          label: 'Developers',
+          label: 'Build Together',
         },
         {
           type: 'docSidebar',
           sidebarId: 'communitySidebar',
-          position: 'left',
+          position: 'right',
           label: 'Community',
         },
-        {to: '/adrs', label: 'ADRs', position: 'left'},
         {
           href: 'https://github.com/openmcp-project/docs',
           label: 'GitHub',

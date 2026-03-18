@@ -1,0 +1,8 @@
+{
+  "label": "Cluster Providers",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Cluster Providers are Kubernetes-native applications that manage and provision clusters within the OpenControlPlane ecosystem."
+  }
+}

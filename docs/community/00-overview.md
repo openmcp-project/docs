@@ -10,8 +10,8 @@ Welcome to the OpenControlPlane community!
 
 - **GitHub**: [openmcp-project](https://github.com/openmcp-project) - Issues, discussions, code
 - **Contribute**: Check our [Contributing Guide](https://github.com/openmcp-project/community/blob/main/CONTRIBUTING.md)
-- **Join a SIG**: Participate in [Special Interest Groups](./sigs)
-- **Attend Meetings**: See our [meeting schedule](./meetings)
+- **Join a SIG**: Participate in [Special Interest Groups](./01-sigs)
+- **Attend Meetings**: See our [meeting schedule](./02-meetings)
 
 ## Code of Conduct
 

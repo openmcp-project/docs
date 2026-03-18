@@ -6,7 +6,7 @@ This document aims to describe the tasks of a ClusterProvider and the contract t
 
 ## Deploying a ClusterProvider
 
-ClusterProviders are usually deployed via the [provider deployment](./provider_deployment.md) mechanism and need to stick to the corresponding contract.
+ClusterProviders are usually deployed via the [provider deployment](../provider_deployment.mdx) mechanism and need to stick to the corresponding contract.
 
 ## Implementing a ClusterProvider
 

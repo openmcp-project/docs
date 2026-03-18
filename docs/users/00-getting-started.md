@@ -323,7 +323,7 @@ spec:
 
 Congratulations! You have a working ControlPlane. Here's what you can explore next:
 
-- **[What is a Managed Control Plane?](../about/concepts/managed-control-plane.md)** — Deeper understanding of ControlPlanes
-- **[Service Providers](../about/concepts/service-provider.md)** — How managed services work
+- **[What is a Managed Control Plane?](./concepts/managed-control-plane.md)** — Deeper understanding of ControlPlanes
+- **[Service Providers](./concepts/service-provider.md)** — How managed services work
 - **[Crossplane Service Provider](https://github.com/openmcp-project/service-provider-crossplane)** — Manage cloud infrastructure
 - **[Landscaper Service Provider](https://github.com/openmcp-project/service-provider-landscaper)** — Orchestrate complex workloads

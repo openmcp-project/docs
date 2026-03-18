@@ -1,0 +1,8 @@
+{
+  "label": "ADRs",
+  "position": 99,
+  "link": {
+    "type": "generated-index",
+    "description": "Architectural Decision Records document important technical decisions made in the OpenControlPlane project."
+  }
+}

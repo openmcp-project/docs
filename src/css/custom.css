@@ -36,6 +36,23 @@
   --lp-c-brand-3: var(--lp-c-green-3);
   --lp-c-brand-soft: var(--lp-c-green-soft);
 
+  /* Role-based Teal Spectrum */
+  --teal-2: #C2FCEE;
+  --teal-4: #2CE0BF;
+  --teal-6: #049F9A;
+  --teal-7: #07838F;
+  --teal-10: #02414C;
+  --teal-11: #012931;
+
+  /* Role Colors - Light to Dark gradient for End User -> Operator -> Contributor */
+  --role-enduser-primary: var(--teal-7);
+  --role-enduser-secondary: var(--teal-10);
+  --role-operator-primary: var(--teal-10);
+  --role-operator-secondary: var(--teal-11);
+  --role-contributor-primary: transparent;
+  --role-contributor-secondary: transparent;
+  --role-contributor-border: var(--teal-11);
+
   /* Button Colors */
   --lp-button-brand-bg: #009f76;
   --lp-button-brand-border: transparent;
@@ -392,6 +409,7 @@
   width: 100%;
 }
 
+/* Legacy brand/alt button styles for other buttons */
 .action.brand a {
   background: var(--lp-c-green-3);
   color: black;
@@ -423,6 +441,57 @@
 
 .action.alt a:active {
   transform: translateY(0);
+}
+
+/* Role-specific hero button colors - MUST come after generic .action.alt a */
+.lp-home .action.alt a[href*="/users/"],
+.lp-home .action a[href*="/users/"] {
+  background: var(--role-enduser-primary) !important;
+  color: white !important;
+  border-color: transparent;
+}
+
+.lp-home .action.alt a[href*="/users/"]:hover,
+.lp-home .action a[href*="/users/"]:hover {
+  background: var(--role-enduser-secondary) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(7, 131, 143, 0.4);
+  color: white !important;
+}
+
+.lp-home .action.alt a[href*="/operators/"],
+.lp-home .action a[href*="/operators/"] {
+  background: var(--role-operator-primary) !important;
+  color: white !important;
+  border-color: transparent;
+}
+
+.lp-home .action.alt a[href*="/operators/"]:hover,
+.lp-home .action a[href*="/operators/"]:hover {
+  background: var(--role-operator-secondary) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(2, 65, 76, 0.4);
+  color: white !important;
+}
+
+.lp-home .action.alt a[href*="/developers/"],
+.lp-home .action a[href*="/developers/"] {
+  background: transparent !important;
+  color: white !important;
+  border: none !important;
+}
+
+.lp-home .action.alt a[href*="/developers/"]:hover,
+.lp-home .action a[href*="/developers/"]:hover {
+  background: rgba(1, 41, 49, 0.3) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(1, 41, 49, 0.4);
+  color: white !important;
+}
+
+.action a:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .lp-home .actions {
@@ -678,6 +747,44 @@ html[data-theme="light"] .lp-home .image-bg {
   opacity: 0.3;
 }
 
+/* Light theme: override for button colors */
+html[data-theme="light"] .lp-home .action.alt a[href*="/users/"],
+html[data-theme="light"] .lp-home .action a[href*="/users/"] {
+  background: var(--role-enduser-primary) !important;
+  color: white !important;
+}
+
+html[data-theme="light"] .lp-home .action.alt a[href*="/users/"]:hover,
+html[data-theme="light"] .lp-home .action a[href*="/users/"]:hover {
+  background: var(--role-enduser-secondary) !important;
+  color: white !important;
+}
+
+html[data-theme="light"] .lp-home .action.alt a[href*="/operators/"],
+html[data-theme="light"] .lp-home .action a[href*="/operators/"] {
+  background: var(--role-operator-primary) !important;
+  color: white !important;
+}
+
+html[data-theme="light"] .lp-home .action.alt a[href*="/operators/"]:hover,
+html[data-theme="light"] .lp-home .action a[href*="/operators/"]:hover {
+  background: var(--role-operator-secondary) !important;
+  color: white !important;
+}
+
+html[data-theme="light"] .lp-home .action.alt a[href*="/developers/"],
+html[data-theme="light"] .lp-home .action a[href*="/developers/"] {
+  background: transparent !important;
+  color: var(--teal-11) !important;
+  border: none !important;
+}
+
+html[data-theme="light"] .lp-home .action.alt a[href*="/developers/"]:hover,
+html[data-theme="light"] .lp-home .action a[href*="/developers/"]:hover {
+  background: rgba(1, 41, 49, 0.1) !important;
+  color: var(--teal-10) !important;
+}
+
 html[data-theme="light"] .lp-home .actions .action a {
   color: #ffffff !important;
 }
@@ -739,6 +846,44 @@ html[data-theme="dark"] .get-started-section span {
 
 html[data-theme="dark"] .get-started-section a:not(.button) {
   color: var(--ifm-color-primary) !important;
+}
+
+/* Dark mode: ensure role button colors are visible */
+html[data-theme="dark"] .lp-home .action.alt a[href*="/users/"],
+html[data-theme="dark"] .lp-home .action a[href*="/users/"] {
+  background: var(--role-enduser-primary) !important;
+  color: white !important;
+}
+
+html[data-theme="dark"] .lp-home .action.alt a[href*="/users/"]:hover,
+html[data-theme="dark"] .lp-home .action a[href*="/users/"]:hover {
+  background: var(--role-enduser-secondary) !important;
+  color: white !important;
+}
+
+html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/"],
+html[data-theme="dark"] .lp-home .action a[href*="/operators/"] {
+  background: var(--role-operator-primary) !important;
+  color: white !important;
+}
+
+html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/"]:hover,
+html[data-theme="dark"] .lp-home .action a[href*="/operators/"]:hover {
+  background: var(--role-operator-secondary) !important;
+  color: white !important;
+}
+
+html[data-theme="dark"] .lp-home .action.alt a[href*="/developers/"],
+html[data-theme="dark"] .lp-home .action a[href*="/developers/"] {
+  background: transparent !important;
+  color: white !important;
+  border: none !important;
+}
+
+html[data-theme="dark"] .lp-home .action.alt a[href*="/developers/"]:hover,
+html[data-theme="dark"] .lp-home .action a[href*="/developers/"]:hover {
+  background: rgba(1, 41, 49, 0.3) !important;
+  color: white !important;
 }
 
 /* ===== Dark mode: footer ===== */
@@ -1046,6 +1191,491 @@ html[data-theme="light"] #__docusaurus :where(.markdown, .theme-doc-markdown, .c
   .ocp-footer__eu-logos {
     align-self: center;
   }
+/* ===== Ecosystem Project Cards ===== */
+.ecosystem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 32px 0;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--lp-c-bg-elv);
+  border: 1px solid var(--lp-c-border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  text-decoration: none !important;
+  color: inherit;
+  height: 100%;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(7, 131, 143, 0.2);
+  border-color: var(--teal-7);
+}
+
+.project-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.project-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.project-card h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--lp-c-text-1);
+}
+
+.project-card .project-description {
+  flex-grow: 1;
+  margin: 0 0 16px 0;
+  color: var(--lp-c-text-2);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.project-card p {
+  flex-grow: 1;
+  margin: 0 0 16px 0;
+  color: var(--lp-c-text-2);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.project-links {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.project-link {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  border: 1px solid;
+}
+
+.project-link-primary {
+  background: var(--teal-7);
+  color: white;
+  border-color: var(--teal-7);
+}
+
+.project-link-primary:hover {
+  background: var(--teal-10);
+  border-color: var(--teal-10);
+  color: white;
+}
+
+.project-link-secondary {
+  background: transparent;
+  color: var(--lp-c-text-1);
+  border-color: var(--lp-c-border);
+}
+
+.project-link-secondary:hover {
+  background: var(--lp-c-bg-soft);
+  border-color: var(--teal-7);
+  color: var(--teal-7);
+}
+
+/* Light theme adjustments */
+html[data-theme="light"] .project-card {
+  background: var(--lp-c-bg-soft);
+  border-color: var(--lp-c-border);
+}
+
+html[data-theme="light"] .project-card:hover {
+  box-shadow: 0 8px 24px rgba(7, 131, 143, 0.15);
+}
+
+html[data-theme="light"] .project-link-secondary {
+  color: var(--lp-c-text-1);
+}
+
+html[data-theme="light"] .project-link-secondary:hover {
+  color: var(--teal-10);
+  border-color: var(--teal-10);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .ecosystem-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-links {
+    flex-direction: column;
+  }
+}
+
+/* ===== Role-based Navbar & Sidebar Styling ===== */
+
+/* Navbar links - Always show role color with underline accent */
+.navbar__item.navbar__link--active {
+  position: relative;
+}
+
+/* End Users - Get Started */
+[data-current-sidebar="userDocs"] .navbar__link[href*="/users/"],
+[data-current-sidebar="userDocs"] a[href*="/users/"].navbar__link {
+  color: var(--role-enduser-primary) !important;
+  font-weight: 600;
+  border-bottom: 3px solid var(--role-enduser-primary);
+  padding-bottom: 4px;
+}
+
+.navbar__link[href*="/users/"]:hover,
+a[href*="/users/"].navbar__link:hover {
+  color: var(--role-enduser-primary) !important;
+}
+
+/* Operators - Run Your Platform */
+[data-current-sidebar="operatorDocs"] .navbar__link[href*="/operators/"],
+[data-current-sidebar="operatorDocs"] a[href*="/operators/"].navbar__link {
+  color: var(--role-operator-primary) !important;
+  font-weight: 600;
+  border-bottom: 3px solid var(--role-operator-primary);
+  padding-bottom: 4px;
+}
+
+.navbar__link[href*="/operators/"]:hover,
+a[href*="/operators/"].navbar__link:hover {
+  color: var(--role-operator-primary) !important;
+}
+
+/* Developers - Build Together */
+[data-current-sidebar="developerDocs"] .navbar__link[href*="/developers/"],
+[data-current-sidebar="developerDocs"] a[href*="/developers/"].navbar__link {
+  color: var(--teal-11) !important;
+  font-weight: 600;
+  border-bottom: 3px solid var(--teal-11);
+  padding-bottom: 4px;
+}
+
+.navbar__link[href*="/developers/"]:hover,
+a[href*="/developers/"].navbar__link:hover {
+  color: var(--teal-11) !important;
+}
+
+/* Light theme navbar - more visible colors */
+html[data-theme="light"] [data-current-sidebar="userDocs"] .navbar__link[href*="/users/"],
+html[data-theme="light"] .navbar__link[href*="/users/"]:hover {
+  color: var(--teal-7) !important;
+}
+
+html[data-theme="light"] [data-current-sidebar="operatorDocs"] .navbar__link[href*="/operators/"],
+html[data-theme="light"] .navbar__link[href*="/operators/"]:hover {
+  color: var(--teal-10) !important;
+}
+
+html[data-theme="light"] [data-current-sidebar="developerDocs"] .navbar__link[href*="/developers/"],
+html[data-theme="light"] .navbar__link[href*="/developers/"]:hover {
+  color: var(--teal-11) !important;
+}
+
+/* Dark theme - brighter colors for better visibility */
+html[data-theme="dark"] [data-current-sidebar="userDocs"] .navbar__link[href*="/users/"],
+html[data-theme="dark"] .navbar__link[href*="/users/"]:hover {
+  color: var(--teal-4) !important;
+}
+
+html[data-theme="dark"] [data-current-sidebar="operatorDocs"] .navbar__link[href*="/operators/"],
+html[data-theme="dark"] .navbar__link[href*="/operators/"]:hover {
+  color: var(--teal-6) !important;
+}
+
+html[data-theme="dark"] [data-current-sidebar="developerDocs"] .navbar__link[href*="/developers/"],
+html[data-theme="dark"] .navbar__link[href*="/developers/"]:hover {
+  color: var(--teal-7) !important;
+}
+
+/* Sidebar visual distinction based on current section */
+[data-current-sidebar="userDocs"] .theme-doc-sidebar-container {
+  border-left: 4px solid var(--role-enduser-primary);
+}
+
+[data-current-sidebar="userDocs"] .menu__link--active {
+  background-color: color-mix(in srgb, var(--role-enduser-primary) 15%, transparent) !important;
+  border-left: 3px solid var(--role-enduser-primary) !important;
+  color: var(--role-enduser-primary) !important;
+}
+
+[data-current-sidebar="userDocs"] .menu__link:hover {
+  background-color: color-mix(in srgb, var(--role-enduser-primary) 8%, transparent);
+  color: var(--role-enduser-primary);
+}
+
+[data-current-sidebar="userDocs"] .menu__list-item-collapsible:hover {
+  background-color: color-mix(in srgb, var(--role-enduser-primary) 8%, transparent);
+}
+
+[data-current-sidebar="operatorDocs"] .theme-doc-sidebar-container {
+  border-left: 4px solid var(--role-operator-primary);
+}
+
+[data-current-sidebar="operatorDocs"] .menu__link--active {
+  background-color: color-mix(in srgb, var(--role-operator-primary) 15%, transparent) !important;
+  border-left: 3px solid var(--role-operator-primary) !important;
+  color: var(--role-operator-primary) !important;
+}
+
+[data-current-sidebar="operatorDocs"] .menu__link:hover {
+  background-color: color-mix(in srgb, var(--role-operator-primary) 8%, transparent);
+  color: var(--role-operator-primary);
+}
+
+[data-current-sidebar="operatorDocs"] .menu__list-item-collapsible:hover {
+  background-color: color-mix(in srgb, var(--role-operator-primary) 8%, transparent);
+}
+
+[data-current-sidebar="developerDocs"] .theme-doc-sidebar-container {
+  border-left: 4px solid var(--teal-11);
+}
+
+[data-current-sidebar="developerDocs"] .menu__link--active {
+  background-color: color-mix(in srgb, var(--teal-11) 15%, transparent) !important;
+  border-left: 3px solid var(--teal-11) !important;
+  color: var(--teal-11) !important;
+}
+
+[data-current-sidebar="developerDocs"] .menu__link:hover {
+  background-color: color-mix(in srgb, var(--teal-11) 8%, transparent);
+  color: var(--teal-11);
+}
+
+[data-current-sidebar="developerDocs"] .menu__list-item-collapsible:hover {
+  background-color: color-mix(in srgb, var(--teal-11) 8%, transparent);
+}
+
+/* Light theme sidebar adjustments for better contrast */
+html[data-theme="light"] [data-current-sidebar="userDocs"] .menu__link--active {
+  color: var(--role-enduser-primary) !important;
+  font-weight: 600;
+}
+
+html[data-theme="light"] [data-current-sidebar="userDocs"] .menu__link:hover {
+  color: var(--role-enduser-primary);
+}
+
+html[data-theme="light"] [data-current-sidebar="operatorDocs"] .menu__link--active {
+  color: var(--role-operator-primary) !important;
+  font-weight: 600;
+}
+
+html[data-theme="light"] [data-current-sidebar="operatorDocs"] .menu__link:hover {
+  color: var(--role-operator-primary);
+}
+
+html[data-theme="light"] [data-current-sidebar="developerDocs"] .menu__link--active {
+  color: var(--teal-11) !important;
+  font-weight: 600;
+}
+
+html[data-theme="light"] [data-current-sidebar="developerDocs"] .menu__link:hover {
+  color: var(--teal-11);
+}
+
+/* ===== Ecosystem Page Styling ===== */
+
+.ecosystem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
+  margin: 48px 0;
+}
+
+.project-card {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  padding: 32px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--teal-4), var(--teal-6));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  border-color: var(--teal-6);
+}
+
+.project-card:hover::before {
+  opacity: 1;
+}
+
+html[data-theme="dark"] .project-card {
+  background: var(--ifm-background-surface-color);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+html[data-theme="dark"] .project-card:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  border-color: var(--teal-4);
+}
+
+.project-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.project-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.project-card-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+}
+
+.project-description {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  flex-grow: 1;
+}
+
+html[data-theme="dark"] .project-description {
+  color: var(--ifm-color-emphasis-600);
+}
+
+.project-links {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.project-link {
+  flex: 1;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.project-link-primary {
+  background: var(--teal-6);
+  color: white;
+}
+
+.project-link-primary:hover {
+  background: var(--teal-7);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(4, 159, 154, 0.3);
+}
+
+.project-link-secondary {
+  background: transparent;
+  color: var(--teal-6);
+  border-color: var(--teal-6);
+}
+
+.project-link-secondary:hover {
+  background: var(--teal-6);
+  color: white;
+  transform: translateY(-1px);
+}
+
+html[data-theme="dark"] .project-link-primary {
+  background: var(--teal-7);
+}
+
+html[data-theme="dark"] .project-link-primary:hover {
+  background: var(--teal-6);
+  box-shadow: 0 4px 8px rgba(44, 224, 191, 0.3);
+}
+
+html[data-theme="dark"] .project-link-secondary {
+  color: var(--teal-4);
+  border-color: var(--teal-4);
+}
+
+html[data-theme="dark"] .project-link-secondary:hover {
+  background: var(--teal-7);
+  border-color: var(--teal-7);
+  color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ecosystem-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .project-card {
+    padding: 24px;
+  }
+
+  .project-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .project-links {
+    flex-direction: column;
+  }
+
+  .project-link {
+    flex: none;
+  }
+}
+
+/* ===== Role-based Page Header Accents ===== */
+/* Add subtle top border to main content based on current section */
+article[data-role="enduser"] {
+  border-top: 4px solid var(--role-enduser-primary);
+  padding-top: 1rem;
+}
 
   .ocp-footer__neonephos {
     align-self: flex-end;

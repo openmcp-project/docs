@@ -79,13 +79,13 @@ export default function Home() {
             <div className="container" style={{ padding: "0" }}>
               <div className="actions">
                 <div className="action medium alt">
-                  <a href="/docs/users/getting-started">End user guides</a>
+                  <a href="/docs/users/getting-started">Get Started</a>
                 </div>
                 <div className="action medium alt">
-                  <a href="/docs/operators/getting-started">Operator guides</a>
+                  <a href="/docs/operators/getting-started">Run Your Platform</a>
                 </div>
                 <div className="action medium alt">
-                  <a href="/docs/developers/getting-started">Contribute</a>
+                  <a href="/docs/developers/getting-started">Build Together</a>
                 </div>
               </div>
             </div>
@@ -190,14 +190,14 @@ export default function Home() {
         <section className="get-started-section gray-white">
           <Link
             className="button button--primary button--lg"
-            to="/crossplane-provider-docs/docs/contribution/understand-providers"
+            to="/developers/getting-started"
           >
             Start contributing
           </Link>
           <span>
             or explore{" "}
-            <Link to="/crossplane-provider-docs/docs/crossplane-provider-btp/docs/user/external-name">
-              our crossplane provider for SAP BTP
+            <Link to="/users/ecosystem">
+              our cloud native ecosystem
             </Link>
           </span>
         </section>
@@ -241,13 +241,15 @@ export default function Home() {
               </p>
               <Link
                 className="button button--primary button--lg"
-                to="https://github.com/SAP?q=crossplane&type=all"
+                to="https://github.com/openmcp-project"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 💪 See our projects
               </Link>
               <br />
               <span>
-                and learn <Link to="/crossplane-provider-docs/docs/contribution/understand-providers">how to contribute</Link>
+                and learn <Link to="/developers/getting-started">how to contribute</Link>
               </span>
               <br />
               <br />
