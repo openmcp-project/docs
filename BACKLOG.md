@@ -24,12 +24,17 @@
 
 ## Review
 
-- [ ] Operators: common soon - Observability, upgrading
-- [ ] Operators: Release channels  
-- [ ] Operators: delete it - backup?
-
 ## Done
 
+- [x] Theme-aware section backgrounds (CSS vars instead of hardcoded dark)
+- [x] Navbar scroll transparency effect (transparent at top, solid on scroll)
+- [x] Footer logo sizing (EU + NeoNephos enlarged)
+- [x] Light-mode axolotl drop shadow (0.25 opacity + gradient blob restored)
+- [x] Content max-width alignment (1152px hero/features/footer, 1152px navbar)
+- [x] Swizzled footer — 3-row layout (EU banner, copyright, legal links)
+- [x] NeoNephos SVG logo in footer
+- [x] Feature card mouse-tracking glow effect
+- [x] Axolotl drop shadow (dark mode)
 - [x] Favicon update (axolotl mascot, multi-size .ico)
 - [x] SVG graphics/icons (co_axolotl.svg vector trace, 160KB)
 - [x] Navbar logo — mirrored axolotl facing left + transparent background variant
