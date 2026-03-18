@@ -1,4 +1,4 @@
-# Cluster Providers
+# Develop
 
 A *ClusterProvider* is one of the three provider types in the OpenControlPlane architecture (the other two being *PlatformService* and *ServiceProvider*). ClusterProviders are responsible for managing kubernetes clusters and access to them, based on our [cluster API](https://github.com/openmcp-project/openmcp-operator/tree/main/api/clusters/v1alpha1).
 
