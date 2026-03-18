@@ -2,18 +2,16 @@
 sidebar_position: 1
 ---
 
-# Provider Deployment
+# Deploy
 
-The OpenControlPlane architecture knows three different kinds of providers:
-- `ClusterProviders` manage kubernetes clusters and access to them
-- `PlatformServices` provide landscape-wide service functionalities
-- `ServiceProviders` provide the actual services that can be consumed by customers via the ManagedControlPlanes
+`ClusterProviders` manage Kubernetes clusters and access to them within the OpenControlPlane ecosystem.
 
-All providers can automatically be deployed via the corresponding provider resources: `ClusterProvider`, `PlatformService`, and `ServiceProvider`. The [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) is responsible for these resources.
+They can automatically be deployed via the `ClusterProvider` resource. The [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) is responsible for these resources.
 
-For now, the spec of all three provider kinds looks exactly the same, which is why they are all explained together.
-All of them are cluster-scoped resources.
-This is a `ClusterProvider` resource as an example:
+All providers are cluster-scoped resources.
+
+## Example ClusterProvider Resource
+
 ```yaml
 apiVersion: openmcp.cloud/v1alpha1
 kind: ClusterProvider
@@ -26,11 +24,9 @@ spec:
 
 ## Common Provider Contract
 
-This section explains the contract that provider implementations must follow for the deployment to work.
+All provider types (ClusterProviders, ServiceProviders, PlatformServices) follow the same deployment contract.
 
 ### Executing the Binary
-
-Further information on how the provider binary is executed can be found below.
 
 #### Image
 
@@ -87,9 +83,12 @@ Providers generally live in the platform cluster, so they can simply access it b
 
 This flow is already implemented in the library function [`CreateAndWaitForCluster](https://github.com/openmcp-project/openmcp-operator/blob/v0.11.2/lib/clusteraccess/clusteraccess.go#L387).
 
-### Examples
+## Deployment Example
 
-Basically, the `ClusterProvider` from the example above will result in the following `Job` and `Deployment` (redacted to the more relevant fields):
+The `ClusterProvider` resource above will result in the following `Job` and `Deployment` (redacted to the more relevant fields):
+
+### Init Job
+
 ```yaml
 apiVersion: batch/v1
 kind: Job
@@ -165,6 +164,9 @@ spec:
       serviceAccount: gardener-init
       serviceAccountName: gardener-init
 ```
+
+### Controller Deployment
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment

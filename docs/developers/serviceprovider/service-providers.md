@@ -1,4 +1,4 @@
-# Service Providers
+# Develop
 
 This guide shows you how to create Service Provider for the OpenControlPlane ecosystem from scratch. Service Providers are the heart of the OpenControlPlane platform, as they provide the capabilities to offer Infrastructure as Data services to end users.
 
