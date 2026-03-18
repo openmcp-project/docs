@@ -1761,6 +1761,30 @@ article[data-role="enduser"] {
   fill: rgba(44, 224, 191, 0.6);
 }
 
+[data-theme='dark'] .cloud-badge text {
+  fill: #ffffff;
+}
+
+[data-theme='dark'] .sonar-sweep circle {
+  fill: rgba(44, 224, 191, 0.7);
+}
+
+[data-theme='dark'] .sonar-sweep circle:nth-child(2) {
+  fill: rgba(44, 224, 191, 0.5);
+}
+
+[data-theme='dark'] .sonar-sweep circle:nth-child(3) {
+  fill: rgba(44, 224, 191, 0.4);
+}
+
+[data-theme='dark'] .sonar-sweep circle:nth-child(4) {
+  fill: rgba(44, 224, 191, 0.3);
+}
+
+[data-theme='dark'] .sonar-sweep circle:nth-child(5) {
+  fill: rgba(44, 224, 191, 0.2);
+}
+
 [data-theme='dark'] .cloud-dot-2,
 [data-theme='dark'] .cloud-dot-3 {
   fill: rgba(194, 252, 238, 0.4);
@@ -1827,14 +1851,14 @@ article[data-role="enduser"] {
   /* Cloud 2-1 (left cloud above CP2) */
   .cp-cloud-2-1 {
     bottom: 44%;
-    right: 14%;
+    right: 12%;
     left: auto;
   }
 
   /* Cloud 2-2 (right cloud above CP2) */
   .cp-cloud-2-2 {
     bottom: 44%;
-    right: 36%;
+    right: -2%;
     left: auto;
   }
 }
