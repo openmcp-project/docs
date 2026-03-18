@@ -63,7 +63,7 @@ Before you begin, ensure you have:
 | **kubeconfig** | Configured to connect to the Onboarding API |
 
 :::tip Platform Access
-If you don't have access to an OpenControlPlane installation, contact your platform operator. Operators can follow the [Bootstrapping Guide](../operators/01-boostrapping.md) to set up a new environment.
+If you don't have access to an OpenControlPlane installation, contact your platform operator. Operators can follow the [Bootstrapping Guide](/docs/operators/bootstrapping/bootstrapping-overview) to set up a new environment.
 :::
 
 ---

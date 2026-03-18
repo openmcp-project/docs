@@ -6,7 +6,7 @@ This document aims to describe the tasks of a ClusterProvider and the contract t
 
 ## Deploying a ClusterProvider
 
-ClusterProviders are usually deployed via the [provider deployment](../provider_deployment.mdx) mechanism and need to stick to the corresponding contract.
+ClusterProviders are usually deployed via the provider deployment mechanism and need to stick to the corresponding contract.
 
 ## Implementing a ClusterProvider
 
@@ -44,7 +44,7 @@ spec:
     version: 1.32.2
 ```
 
-`spec.providerRef` is the name of the ClusterProvider that created this `ClusterProfile`. It should be filled with the value that the provider received via its [`--provider-name`](./provider_deployment.md#arguments) argument.
+`spec.providerRef` is the name of the ClusterProvider that created this `ClusterProfile`. It should be filled with the value that the provider received via its `--provider-name` argument.
 
 `spec.providerConfigRef` is the name of the provider configuration that is responsible for this profile. Whether this refers to an actual k8s resource, an internal value or just a static string depends on the provider implementation. It is used as a label value though and therefore has to match the corresponding regex.
 
@@ -99,7 +99,7 @@ The rest of the reconciliation logic is pretty much provider specific: If the `C
 
 #### Status Reporting
 
-Since creating, updating, or deleting k8s clusters can easily take several minutes, reporting the current status is very important here. It is recommended to make good use of the conditions that are part of the status. ClusterProviders must adhere to the [general status reporting rules](./general.md#status-reporting).
+Since creating, updating, or deleting k8s clusters can easily take several minutes, reporting the current status is very important here. It is recommended to make good use of the conditions that are part of the status. ClusterProviders must adhere to general status reporting rules.
 
 In addition to the common status, the `Cluster` status contains a few more fields that can be set by the ClusterProvider:
 - `apiServer` should be filled with the k8s cluster's apiserver endpoint, as soon as it is known.
@@ -209,7 +209,7 @@ It modifies the `AccessRequest` in the following way:
 
 This means that the AccessRequest controller in a ClusterProvider must only act on AccessRequests that have both of the aforementioned labels set. They can then expect `spec.clusterRef` to be set and don't need to check for `spec.requestRef`.
 
-It is recommended to use [event filtering](./general.md#event-filtering) to avoid reconciling AccessRequests that belong to another provider or have not yet been prepared by the generic controller. The controller-utils library contains a `HasLabelPredicate` filter that can be used for both, verifying existence of a label as well as checking if it has a specific value:
+It is recommended to use event filtering to avoid reconciling AccessRequests that belong to another provider or have not yet been prepared by the generic controller. The controller-utils library contains a `HasLabelPredicate` filter that can be used for both, verifying existence of a label as well as checking if it has a specific value:
 ```go
 import (
 	ctrl "sigs.k8s.io/controller-runtime"
