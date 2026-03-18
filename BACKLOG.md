@@ -4,16 +4,16 @@
 
 
 ## Next
-- [ ] More engaging ansprache (improve language/tone)
-- [ ] Farbverlauf (gradient styling)
-- [ ] Related? Crossplane usw (add related projects section)
-- [ ] Are CRD reflected? (stretch goal)
-- [ ] Teal farbspektrum und content aware coloring
+- [x] More engaging ansprache (improve language/tone)
+- [x] Farbverlauf (gradient styling) [ott]
+- [ ] Related? Crossplane usw (add related projects section) [ott]
+- [ ] Are CRD reflected? (stretch goal) [ott]
+- [ ] Teal farbspektrum und content aware coloring [ott]
 - [ ] Maybe in Browser with WASM? (stretch)
-- [ ] Contributing: Design decisions (ADRs et al)
+- [x] Contributing: Design decisions (ADRs et al) 
 - [ ] Index: Was möchte ich machen (What do I want to do)
 - [ ] Onboarding API - why/what it helps for
-- [ ] Johannes change icon
+- [ ] Johannes change icons
 - [ ] End user getting started: MCP Server - max b to publish
 - [ ] End user getting started: Edit docs
 - [ ] Operators: getting started (currently empty)
