@@ -21,6 +21,23 @@ export default function Home() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const navbar = document.querySelector(".navbar");
+    const handleScroll = () => {
+      if (window.scrollY < 10) {
+        navbar?.classList.add("navbar--transparent");
+      } else {
+        navbar?.classList.remove("navbar--transparent");
+      }
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      navbar?.classList.remove("navbar--transparent");
+    };
+  }, []);
+
   function isInViewport(element) {
     const rect = element.getBoundingClientRect();
     return (

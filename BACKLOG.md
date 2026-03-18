@@ -2,6 +2,8 @@
 
 ## Backlog
 
+
+## Next
 - [ ] More engaging ansprache (improve language/tone)
 - [ ] Farbverlauf (gradient styling)
 - [ ] Related? Crossplane usw (add related projects section)
@@ -10,9 +12,6 @@
 - [ ] Maybe in Browser with WASM? (stretch)
 - [ ] Contributing: Design decisions (ADRs et al)
 - [ ] Index: Was möchte ich machen (What do I want to do)
-
-## Next
-
 - [ ] Onboarding API - why/what it helps for
 - [ ] Johannes change icon
 - [ ] End user getting started: MCP Server - max b to publish

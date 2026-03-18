@@ -31,7 +31,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               aria-label="NeoNephos"
             >
-              <img src={useBaseUrl('/img/neonephos.svg')} alt="NeoNephos Logo" style={{height: '40px'}} />
+              <img src={useBaseUrl('/img/neonephos.svg')} alt="NeoNephos Logo" style={{height: '80px', minWidth: '120px'}} />
             </a>
           </div>
         </div>
