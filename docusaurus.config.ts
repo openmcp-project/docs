@@ -77,7 +77,7 @@ const config: Config = {
       title: 'Open Control Plane',
       logo: {
         alt: 'Open Control Plane Logo',
-        src: 'img/logo.svg',
+        src: 'img/co_axolotl_mirrored.png',
       },
       items: [
         {

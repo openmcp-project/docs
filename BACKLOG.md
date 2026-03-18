@@ -3,9 +3,7 @@
 ## Backlog
 
 - [ ] More engaging ansprache (improve language/tone)
-- [ ] Favicon update
 - [ ] Farbverlauf (gradient styling)
-- [ ] SVG graphics/icons
 - [ ] Related? Crossplane usw (add related projects section)
 - [ ] Are CRD reflected? (stretch goal)
 - [ ] Teal farbspektrum und content aware coloring
@@ -33,6 +31,9 @@
 
 ## Done
 
+- [x] Favicon update (axolotl mascot, multi-size .ico)
+- [x] SVG graphics/icons (co_axolotl.svg vector trace, 160KB)
+- [x] Navbar logo — mirrored axolotl facing left + transparent background variant
 - [x] End user getting started: Prerequisites (platform installed)
 - [x] End user getting started: authentication/authorization
 - [x] End user getting started: pictures (hierarchy diagram)
