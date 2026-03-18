@@ -950,6 +950,10 @@ html[data-theme="light"] #__docusaurus :where(.markdown, .theme-doc-markdown, .c
   color: #3fdec0;
 }
 
+[data-theme='dark'] .ocp-footer__neonephos img {
+  filter: brightness(0) invert(1);
+}
+
 /* Copyright row */
 .ocp-footer__copyright-row {
   border-bottom: 1px solid var(--ifm-color-emphasis-200);

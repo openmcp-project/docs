@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved */
 import React from 'react';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import Link from '@docusaurus/Link';
 
 export default function Footer() {
   const bmwkEuImg = useBaseUrl('/img/BMWK-EU.png');
@@ -57,29 +58,11 @@ export default function Footer() {
       <div className="ocp-footer__legal-row">
         <div className="ocp-footer__inner">
           <nav className="ocp-footer__legal-links" aria-label="Legal">
-            <a
-              href="https://www.sap.com/about/legal/terms-of-use.html"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Terms of Use
-            </a>
+            <Link to="/about/terms-of-use">Terms of Use</Link>
             <span className="ocp-footer__legal-sep" aria-hidden="true">|</span>
-            <a
-              href="https://docs.github.com/en/github/site-policy/github-privacy-statement"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Privacy Statement
-            </a>
+            <Link to="/about/privacy">Privacy Statement</Link>
             <span className="ocp-footer__legal-sep" aria-hidden="true">|</span>
-            <a
-              href="https://www.sap.com/about/legal/impressum-se.html"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Legal Disclosure
-            </a>
+            <Link to="/about/legal-disclosure">Legal Disclosure</Link>
           </nav>
         </div>
       </div>
