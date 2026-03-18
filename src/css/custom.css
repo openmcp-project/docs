@@ -255,6 +255,7 @@
   z-index: 1;
   transform-origin: 50% 55%;
   animation: lp-axolotl-float 10s ease-in-out infinite;
+  filter: drop-shadow(-2px 4px 6px rgba(0, 0, 0, 0.2));
 }
 
 @keyframes lp-axolotl-float {
@@ -423,6 +424,41 @@
   border-radius: 12px;
   padding: 16px 28px 24px 28px;
   transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background-color: var(--ifm-background-surface-color);
+  transition: border-color 0.25s, background-color 0.25s;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.lp-feature-card .mouse-glow {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 12px;
+  background: radial-gradient(circle, rgba(30, 143, 149, 0.45) 0%, rgba(194, 252, 238, 0.25) 60%, transparent 100%);
+  filter: blur(48px);
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.lp-feature-card:hover .mouse-glow {
+  opacity: 0.95;
+}
+
+.lp-feature-card > *:not(.mouse-glow) {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 640px) {
+  .lp-feature-card .mouse-glow {
+    display: none;
+  }
 }
 
 .lp-feature-card img {
@@ -811,5 +847,191 @@ html[data-theme="light"] #__docusaurus :where(.markdown, .theme-doc-markdown, .c
   .typing-open-source {
     width: 17ch;
     font-size: 2em;
+  }
+}
+
+/* ===== Custom Footer (ocp-footer) ===== */
+.ocp-footer {
+  background-color: #f6f8f9;
+  border-top: 1px solid #e7ecef;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #1b242a;
+}
+
+[data-theme='dark'] .ocp-footer {
+  background-color: #161618;
+  border-top-color: #2e2e32;
+  color: #98989f;
+}
+
+/* EU Banner row */
+.ocp-footer__eu-banner {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e7ecef;
+  padding: 20px 0;
+}
+
+[data-theme='dark'] .ocp-footer__eu-banner {
+  background-color: #1e1e20;
+  border-bottom-color: #2e2e32;
+}
+
+.ocp-footer__eu-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.ocp-footer__eu-logos {
+  flex-shrink: 0;
+}
+
+.ocp-footer__eu-logos img {
+  max-height: 64px;
+  max-width: 200px;
+  display: block;
+}
+
+.ocp-footer__eu-text {
+  flex: 1;
+  font-size: 11px;
+  color: #5a6a73;
+}
+
+[data-theme='dark'] .ocp-footer__eu-text {
+  color: #6a6a71;
+}
+
+.ocp-footer__eu-text p {
+  margin: 0;
+}
+
+.ocp-footer__eu-text p + p {
+  margin-top: 4px;
+}
+
+.ocp-footer__neonephos {
+  flex-shrink: 0;
+  font-size: 15px;
+}
+
+.ocp-footer__neonephos a {
+  color: #049F9A;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.ocp-footer__neonephos a:hover {
+  color: #07838F;
+  text-decoration: underline;
+}
+
+[data-theme='dark'] .ocp-footer__neonephos a {
+  color: #2CE0BF;
+}
+
+[data-theme='dark'] .ocp-footer__neonephos a:hover {
+  color: #3fdec0;
+}
+
+/* Copyright row */
+.ocp-footer__copyright-row {
+  border-bottom: 1px solid #e7ecef;
+  padding: 16px 0;
+}
+
+[data-theme='dark'] .ocp-footer__copyright-row {
+  border-bottom-color: #2e2e32;
+}
+
+.ocp-footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.ocp-footer__copyright-row p {
+  margin: 0;
+  font-size: 12px;
+  color: #5a6a73;
+}
+
+[data-theme='dark'] .ocp-footer__copyright-row p {
+  color: #98989f;
+}
+
+.ocp-footer__copyright-row a {
+  color: #049F9A;
+  text-decoration: none;
+}
+
+.ocp-footer__copyright-row a:hover {
+  text-decoration: underline;
+  color: #07838F;
+}
+
+[data-theme='dark'] .ocp-footer__copyright-row a {
+  color: #2CE0BF;
+}
+
+/* Legal links row */
+.ocp-footer__legal-row {
+  padding: 12px 0;
+}
+
+.ocp-footer__legal-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ocp-footer__legal-links a {
+  color: #5a6a73;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.ocp-footer__legal-links a:hover {
+  color: #049F9A;
+  text-decoration: underline;
+}
+
+[data-theme='dark'] .ocp-footer__legal-links a {
+  color: #98989f;
+}
+
+[data-theme='dark'] .ocp-footer__legal-links a:hover {
+  color: #3fdec0;
+}
+
+.ocp-footer__legal-sep {
+  color: #c0cdd4;
+  font-size: 12px;
+  user-select: none;
+}
+
+[data-theme='dark'] .ocp-footer__legal-sep {
+  color: #6a6a71;
+}
+
+/* Responsive footer */
+@media (max-width: 768px) {
+  .ocp-footer__eu-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .ocp-footer__eu-logos {
+    align-self: center;
+  }
+
+  .ocp-footer__neonephos {
+    align-self: flex-end;
   }
 }

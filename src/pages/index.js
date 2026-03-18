@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import clsx from "clsx";
 import Layout from "@theme/Layout";
 import ThemedImage from "@theme/ThemedImage";
@@ -28,6 +28,25 @@ export default function Home() {
       rect.left >= 0 &&
       rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
       rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
+  function FeatureCard({ children }) {
+    const cardRef = useRef(null);
+    const glowRef = useRef(null);
+
+    const handleMouseMove = (e) => {
+      if (!cardRef.current || !glowRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      glowRef.current.style.left = `${e.clientX - rect.left}px`;
+      glowRef.current.style.top = `${e.clientY - rect.top}px`;
+    };
+
+    return (
+      <div className="lp-feature-card" ref={cardRef} onMouseMove={handleMouseMove}>
+        <div className="mouse-glow" ref={glowRef} />
+        {children}
+      </div>
     );
   }
 
@@ -72,7 +91,7 @@ export default function Home() {
         <section className="features-section" style={{ background: "var(--lp-c-bg-elv)", padding: "48px 24px" }}>
           <div className="container">
             <div className="lp-features">
-              <div className="lp-feature-card">
+              <FeatureCard>
                 <ThemedImage
                   alt="Code icon"
                   sources={{
@@ -82,8 +101,8 @@ export default function Home() {
                 />
                 <h3>Everything in code</h3>
                 <p>Define your entire cloud landscape using code. Always know exactly what's defined and leverage review-based workflows, version control, and much more.</p>
-              </div>
-              <div className="lp-feature-card">
+              </FeatureCard>
+              <FeatureCard>
                 <ThemedImage
                   alt="Reconcile icon"
                   sources={{
@@ -93,8 +112,8 @@ export default function Home() {
                 />
                 <h3>Continuous self-healing</h3>
                 <p>Keep your landscape in sync. Crossplane continuously observes the desired and the actual state and reconciles any differences automatically.</p>
-              </div>
-              <div className="lp-feature-card">
+              </FeatureCard>
+              <FeatureCard>
                 <ThemedImage
                   alt="Align icon"
                   sources={{
@@ -106,8 +125,8 @@ export default function Home() {
                 <p>
                   Use a unified approach to define and manage resources across multiple cloud providers and services, reducing infrastructure complexity significantly.
                 </p>
-              </div>
-              <div className="lp-feature-card">
+              </FeatureCard>
+              <FeatureCard>
                 <ThemedImage
                   alt="Puzzle icon"
                   sources={{
@@ -119,8 +138,8 @@ export default function Home() {
                 <p>
                   Define your landscapes in modular building blocks using <i>Crossplane Compositions</i> or <i>Helm charts</i>. Replicate modules easily across different regions or stages.
                 </p>
-              </div>
-              <div className="lp-feature-card">
+              </FeatureCard>
+              <FeatureCard>
                 <ThemedImage
                   alt="Platform icon"
                   sources={{
@@ -132,8 +151,8 @@ export default function Home() {
                 <p>
                   Prebuild your own platform tailored to the specific needs of your organization and offer it to development teams in a self-service way.
                 </p>
-              </div>
-              <div className="lp-feature-card">
+              </FeatureCard>
+              <FeatureCard>
                 <ThemedImage
                   alt="Simple icon"
                   sources={{
@@ -146,7 +165,7 @@ export default function Home() {
                   Whether you are a cloud expert or just getting started — our providers are designed to help everyone.
                   We run 100% open-source.
                 </p>
-              </div>
+              </FeatureCard>
             </div>
           </div>
         </section>
