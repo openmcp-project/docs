@@ -83,7 +83,7 @@ export default function Home() {
           <div className="main">
             <h1 className="heading">
               <span className="name clip">open control plane docs</span>
-              <span className="text">Bring the power of open-source to your enterprise!</span>
+              <span className="text">Give your teams the power to run robust, compliant clouds. Public, private, or Sovereign.</span>
             </h1>
             <div className="container" style={{ padding: "0" }}>
               <div className="actions">
