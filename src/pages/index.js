@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import Layout from "@theme/Layout";
 import ThemedImage from "@theme/ThemedImage";
@@ -9,17 +9,168 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
+  const [activeFeature, setActiveFeature] = useState(0);
+  const [activeProviderFeature, setActiveProviderFeature] = useState(0);
+  const [activeAnywhereFeature, setActiveAnywhereFeature] = useState(0);
+  const section1Ref = useRef(null);
+  const section2Ref = useRef(null);
+  const section3Ref = useRef(null);
 
   useEffect(() => {
     const innersourceText = document.getElementsByClassName("typing-open-source")[0];
+    const essentialCards = document.querySelectorAll(".essentials-card");
+
     const onScroll = () => {
       if (innersourceText && isInViewport(innersourceText)) {
         innersourceText.classList.add("animate");
       }
+
+      essentialCards.forEach((card) => {
+        if (isInViewport(card)) {
+          card.classList.add("visible");
+        }
+      });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Handle scroll-based feature switching based on main page scroll
+  useEffect(() => {
+    const handleMainScroll = () => {
+      const section = section1Ref.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Calculate how far through the section we've scrolled
+      const sectionVisible = windowHeight - rect.top;
+      const sectionTotalScroll = windowHeight + rect.height;
+      const progress = Math.max(0, Math.min(1, sectionVisible / sectionTotalScroll));
+
+      // Different thresholds for mobile vs desktop
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        // Mobile: quicker transitions since sections are stacked vertically
+        if (progress < 0.2) {
+          setActiveFeature(0);
+        } else if (progress < 0.4) {
+          setActiveFeature(1);
+        } else {
+          setActiveFeature(2);
+        }
+      } else {
+        // Desktop: original thresholds
+        if (progress < 0.25) {
+          setActiveFeature(0);
+        } else if (progress < 0.45) {
+          setActiveFeature(1);
+        } else {
+          setActiveFeature(2);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleMainScroll, { passive: true });
+    handleMainScroll();
+    return () => window.removeEventListener('scroll', handleMainScroll);
+  }, []);
+
+  // Handle scroll-based feature switching for providers section
+  useEffect(() => {
+    const handleProviderScroll = () => {
+      const section = section2Ref.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      const sectionVisible = windowHeight - rect.top;
+      const sectionTotalScroll = windowHeight + rect.height;
+      const progress = Math.max(0, Math.min(1, sectionVisible / sectionTotalScroll));
+
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        if (progress < 0.2) {
+          setActiveProviderFeature(0);
+        } else if (progress < 0.4) {
+          setActiveProviderFeature(1);
+        } else {
+          setActiveProviderFeature(2);
+        }
+      } else {
+        if (progress < 0.25) {
+          setActiveProviderFeature(0);
+        } else if (progress < 0.45) {
+          setActiveProviderFeature(1);
+        } else {
+          setActiveProviderFeature(2);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleProviderScroll, { passive: true });
+    handleProviderScroll();
+    return () => window.removeEventListener('scroll', handleProviderScroll);
+  }, []);
+
+  // Handle scroll-based feature switching for anywhere section
+  useEffect(() => {
+    const handleAnywhereScroll = () => {
+      const section = section3Ref.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      const sectionVisible = windowHeight - rect.top;
+      const sectionTotalScroll = windowHeight + rect.height;
+      const progress = Math.max(0, Math.min(1, sectionVisible / sectionTotalScroll));
+
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        if (progress < 0.2) {
+          setActiveAnywhereFeature(0);
+        } else if (progress < 0.4) {
+          setActiveAnywhereFeature(1);
+        } else {
+          setActiveAnywhereFeature(2);
+        }
+      } else {
+        if (progress < 0.25) {
+          setActiveAnywhereFeature(0);
+        } else if (progress < 0.45) {
+          setActiveAnywhereFeature(1);
+        } else {
+          setActiveAnywhereFeature(2);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleAnywhereScroll, { passive: true });
+    handleAnywhereScroll();
+    return () => window.removeEventListener('scroll', handleAnywhereScroll);
+  }, []);
+
+  // Handle button clicks
+  const handleFeatureClick = (featureIndex) => {
+    setActiveFeature(featureIndex);
+  };
+
+  // Handle provider button clicks
+  const handleProviderFeatureClick = (featureIndex) => {
+    setActiveProviderFeature(featureIndex);
+  };
+
+  // Handle anywhere button clicks
+  const handleAnywhereFeatureClick = (featureIndex) => {
+    setActiveAnywhereFeature(featureIndex);
+  };
 
   useEffect(() => {
     const navbar = document.querySelector(".navbar");
@@ -392,6 +543,7 @@ export default function Home() {
       <main>
         <section className="features-section" style={{ background: "var(--lp-c-bg-elv)", padding: "48px 24px" }}>
           <div className="container">
+            <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '48px', fontSize: '2.5rem', fontWeight: '700' }}>How it works</h2>
             <div className="lp-features">
               <FeatureCard>
                 <ThemedImage
@@ -485,6 +637,454 @@ export default function Home() {
               our cloud native ecosystem
             </Link>
           </span>
+        </section>
+
+        <section className="essentials-section" ref={section1Ref}>
+          <div className="essentials-container">
+            <div className="essentials-unified">
+              {/* Left side - buttons and content */}
+              <div className="essentials-sidebar">
+                <h2 className="essentials-title">Cloud Orchestration power to your engineering teams</h2>
+                <Link className="section-cta-link" to="/users">Read end user guides</Link>
+
+                <div className="essentials-buttons">
+                  <button
+                    className={`essentials-nav-button ${activeFeature === 0 ? 'active' : ''}`}
+                    onClick={() => handleFeatureClick(0)}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="16 18 22 12 16 6" />
+                      <polyline points="8 6 2 12 8 18" />
+                    </svg>
+                    <span>Declarative API</span>
+                  </button>
+                  <button
+                    className={`essentials-nav-button ${activeFeature === 1 ? 'active' : ''}`}
+                    onClick={() => handleFeatureClick(1)}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    <span>Self-healing landscapes</span>
+                  </button>
+                  <button
+                    className={`essentials-nav-button ${activeFeature === 2 ? 'active' : ''}`}
+                    onClick={() => handleFeatureClick(2)}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                      <circle cx="12" cy="17" r="0.5" fill="currentColor" />
+                    </svg>
+                    <span>GitOps</span>
+                  </button>
+                </div>
+
+                <div className="essentials-content-flip">
+                  <div className={`essentials-content-item ${activeFeature === 0 ? 'active' : ''}`}>
+                    <h3>Declarative API everywhere</h3>
+                    <p>Define your infrastructure as declarative YAML. The control plane reconciles your desired state with reality—creating, updating, and managing cloud resources automatically.</p>
+                  </div>
+                  <div className={`essentials-content-item ${activeFeature === 1 ? 'active' : ''}`}>
+                    <h3>Self-healing</h3>
+                    <p>The control plane continuously monitors your resources and automatically corrects drift, recovers from failures, and ensures your infrastructure matches the desired state at all times—powered by Crossplane.</p>
+                  </div>
+                  <div className={`essentials-content-item ${activeFeature === 2 ? 'active' : ''}`}>
+                    <h3>GitOps</h3>
+                    <p>GitOps enables easy replication across environments, reviewed rollouts with version control, and leverages industry-standard tools like Git, CI/CD, and Flux—perfectly integrated by design.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right side - visual area */}
+              <div className="essentials-visual-unified">
+                {/* Feature 0: Declarative API - use cp2.png */}
+                <img
+                  className={`unified-cp unified-cp-declarative ${activeFeature === 0 ? 'active' : ''}`}
+                  src={require("/img/cp2.png").default}
+                  alt="Control Plane"
+                />
+
+                {/* Feature 1: Self-healing - use cp2-crossplane.png */}
+                <img
+                  className={`unified-cp unified-cp-selfhealing ${activeFeature === 1 ? 'active' : ''}`}
+                  src={require("/img/platform/cp2-crossplane.png").default}
+                  alt="Control Plane"
+                />
+
+                {/* Feature 2: GitOps - use cp2-flux.png */}
+                <img
+                  className={`unified-cp unified-cp-gitops ${activeFeature === 2 ? 'active' : ''}`}
+                  src={require("/img/platform/cp2-flux.png").default}
+                  alt="Control Plane"
+                />
+
+                {/* Feature 0: Declarative API - YAML left, cloud right */}
+                <div className={`essentials-visual-content ${activeFeature === 0 ? 'active' : ''}`}>
+                  <div className="yaml-left-container">
+                    <pre className="essentials-yaml-unified">
+{`apiVersion: openmcp.cloud/v1alpha1
+kind: ManagedControlPlane
+metadata:
+  name: team-prod
+spec:
+  provider: gardener
+---
+apiVersion: openmcp.cloud/v1alpha1
+kind: Database
+metadata:
+  name: prod-db
+spec:
+  engine: postgresql
+---
+apiVersion: openmcp.cloud/v1alpha1
+kind: Subaccount
+metadata:
+  name: team-alpha
+spec:
+  region: eu-central-1`}
+                    </pre>
+                  </div>
+
+                  {/* Animated line connection - same style as hero */}
+                  <svg className={`yaml-connection-line ${activeFeature === 0 ? 'animate' : ''}`} style={{ position: 'absolute', right: '130px', top: '50%', transform: 'translateY(-50%)', width: '200px', height: '2px' }}>
+                    <line x1="0" y1="1" x2="200" y2="1" stroke="rgba(147, 51, 234, 0.2)" strokeWidth="2" strokeDasharray="3,3" />
+                  </svg>
+
+                  {/* Database and Account icons inside cloud */}
+                  <div className="yaml-right-container">
+                    <svg className={`yaml-cloud-right ${activeFeature === 0 ? 'animate' : ''}`} width="400" height="300" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="yamlCloudGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style={{ stopColor: 'rgba(123, 97, 255, 0.12)' }} />
+                          <stop offset="100%" style={{ stopColor: 'rgba(147, 51, 234, 0.1)' }} />
+                        </linearGradient>
+                      </defs>
+                      <path className="yaml-cloud-shape" d="M 60 20 L 75 27.5 L 75 42.5 L 60 50 L 45 42.5 L 45 27.5 Z"
+                            fill="url(#yamlCloudGradient)" stroke="rgba(147, 51, 234, 0.5)" strokeWidth="2" />
+
+                      {/* Database icon - left side */}
+                      <g className="yaml-cloud-icon yaml-cloud-icon-database" transform="translate(50, 28) scale(0.22)">
+                        <ellipse cx="12" cy="5" rx="9" ry="3" stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" />
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
+                              stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                      </g>
+
+                      {/* Account/User icon - right side */}
+                      <g className="yaml-cloud-icon yaml-cloud-icon-account" transform="translate(64, 28) scale(0.22)">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        <circle cx="12" cy="7" r="4" stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" />
+                      </g>
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Feature 1: Self-healing - 4 resource icons around CP */}
+                <div className={`essentials-visual-content ${activeFeature === 1 ? 'active' : ''}`}>
+                  <div className="selfhealing-animation-area">
+                    {/* Database - top */}
+                    <div className={`healing-resource healing-resource-1 ${activeFeature === 1 ? 'animate' : ''}`}>
+                      <div className="healing-resource-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <ellipse cx="12" cy="5" rx="9" ry="3" className="resource-icon-stroke" strokeWidth="2" fill="none" />
+                          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
+                                className="resource-icon-stroke" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      <svg className="healing-conn-line-simple" width="3" height="80" viewBox="0 0 3 80">
+                        <line x1="1.5" y1="0" x2="1.5" y2="80" className="healing-conn-simple" strokeWidth="3" />
+                      </svg>
+                    </div>
+
+                    {/* User - right */}
+                    <div className={`healing-resource healing-resource-2 ${activeFeature === 1 ? 'animate' : ''}`}>
+                      <div className="healing-resource-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <circle cx="12" cy="7" r="4" className="resource-icon-stroke" strokeWidth="2" />
+                        </svg>
+                      </div>
+                      <svg className="healing-conn-line-simple" width="80" height="3" viewBox="0 0 80 3">
+                        <line x1="0" y1="1.5" x2="80" y2="1.5" className="healing-conn-simple" strokeWidth="3" />
+                      </svg>
+                    </div>
+
+                    {/* Server - bottom */}
+                    <div className={`healing-resource healing-resource-3 ${activeFeature === 1 ? 'animate' : ''}`}>
+                      <div className="healing-resource-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="2" y="2" width="20" height="8" rx="2" ry="2" className="resource-icon-stroke" strokeWidth="2" />
+                          <rect x="2" y="14" width="20" height="8" rx="2" ry="2" className="resource-icon-stroke" strokeWidth="2" />
+                          <line x1="6" y1="6" x2="6.01" y2="6" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
+                          <line x1="6" y1="18" x2="6.01" y2="18" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                      </div>
+                      <svg className="healing-conn-line-simple" width="3" height="80" viewBox="0 0 3 80">
+                        <line x1="1.5" y1="0" x2="1.5" y2="80" className="healing-conn-simple" strokeWidth="3" />
+                      </svg>
+                    </div>
+
+                    {/* Storage - left */}
+                    <div className={`healing-resource healing-resource-4 ${activeFeature === 1 ? 'animate' : ''}`}>
+                      <div className="healing-resource-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" className="resource-icon-stroke" strokeWidth="2" />
+                          <polyline points="3.27 6.96 12 12.01 20.73 6.96" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <line x1="12" y1="22.08" x2="12" y2="12" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                      </div>
+                      <svg className="healing-conn-line-simple" width="80" height="3" viewBox="0 0 80 3">
+                        <line x1="0" y1="1.5" x2="80" y2="1.5" className="healing-conn-simple" strokeWidth="3" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Feature 2: GitOps - clouds split with badges */}
+                <div className={`essentials-visual-content ${activeFeature === 2 ? 'active' : ''}`}>
+                  <div className="gitops-animation-area">
+                    {/* Left cloud */}
+                    <svg className={`gitops-cloud gitops-cloud-original ${activeFeature === 2 ? 'animate' : ''}`} width="240" height="172" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="gitopsCloudOriginal" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style={{ stopColor: 'rgba(123, 97, 255, 0.12)' }} />
+                          <stop offset="100%" style={{ stopColor: 'rgba(147, 51, 234, 0.1)' }} />
+                        </linearGradient>
+                      </defs>
+                      {/* Badge inside SVG */}
+                      <g className="cloud-badge">
+                        <rect x="28" y="5" width="16" height="6" rx="3" fill="rgba(4, 159, 154, 0.3)" stroke="rgba(44, 224, 191, 0.6)" strokeWidth="0.5" />
+                        <text x="36" y="9" fontSize="3.5" fill="#000000" textAnchor="middle" fontWeight="600" fontFamily="sans-serif">dev</text>
+                      </g>
+                      <path d="M 60 20 L 75 27.5 L 75 42.5 L 60 50 L 45 42.5 L 45 27.5 Z"
+                            fill="url(#gitopsCloudOriginal)" stroke="rgba(147, 51, 234, 0.5)" strokeWidth="2" />
+                      <g transform="translate(54, 30) scale(0.18)">
+                        <ellipse cx="12" cy="5" rx="9" ry="3" stroke="rgba(147, 51, 234, 0.8)" strokeWidth="2" fill="none" />
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
+                              stroke="rgba(147, 51, 234, 0.8)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                      </g>
+                    </svg>
+
+                    {/* Right cloud */}
+                    <svg className={`gitops-cloud gitops-cloud-replica ${activeFeature === 2 ? 'animate' : ''}`} width="240" height="172" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="gitopsCloudReplica" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style={{ stopColor: 'rgba(186, 164, 255, 0.15)' }} />
+                          <stop offset="100%" style={{ stopColor: 'rgba(167, 139, 250, 0.12)' }} />
+                        </linearGradient>
+                      </defs>
+                      {/* Badge inside SVG */}
+                      <g className="cloud-badge">
+                        <rect x="28" y="5" width="18" height="6" rx="3" fill="rgba(167, 139, 250, 0.3)" stroke="rgba(186, 164, 255, 0.6)" strokeWidth="0.5" />
+                        <text x="37" y="9" fontSize="3.5" fill="#000000" textAnchor="middle" fontWeight="600" fontFamily="sans-serif">live</text>
+                      </g>
+                      <path d="M 60 20 L 75 27.5 L 75 42.5 L 60 50 L 45 42.5 L 45 27.5 Z"
+                            fill="url(#gitopsCloudReplica)" stroke="rgba(167, 139, 250, 0.6)" strokeWidth="2" />
+                      <g transform="translate(54, 30) scale(0.18)">
+                        <ellipse cx="12" cy="5" rx="9" ry="3" stroke="rgba(167, 139, 250, 0.9)" strokeWidth="2" fill="none" />
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
+                              stroke="rgba(167, 139, 250, 0.9)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                      </g>
+                    </svg>
+
+                    {/* Connection lines to CP - same style as hero */}
+                    <svg className="gitops-conn-svg" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '420px', height: '2px', pointerEvents: 'none' }}>
+                      <line className={`gitops-conn-left ${activeFeature === 2 ? 'animate' : ''}`} x1="0" y1="1" x2="140" y2="1" stroke="rgba(147, 51, 234, 0.2)" />
+                      <line className={`gitops-conn-right ${activeFeature === 2 ? 'animate' : ''}`} x1="280" y1="1" x2="420" y2="1" stroke="rgba(147, 51, 234, 0.2)" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <section className="providers-section" ref={section2Ref}>
+          <div className="providers-container">
+            <div className="providers-unified">
+              {/* Left side - visual area */}
+              <div className="providers-visual-unified">
+                {/* Three control planes in triangle formation */}
+                <img
+                  className={`providers-cp providers-cp-top providers-cp-1 ${activeProviderFeature === 0 ? 'pos-onboarding-1' : ''} ${activeProviderFeature === 1 ? 'pos-tooling-1' : ''} ${activeProviderFeature === 2 ? 'pos-obs-1' : ''}`}
+                  src={require("/img/cp2.png").default}
+                  alt="Control Plane 1"
+                />
+                <img
+                  className={`providers-cp providers-cp-bottom-left providers-cp-2 ${activeProviderFeature === 0 ? 'pos-onboarding-2' : ''} ${activeProviderFeature === 1 ? 'pos-tooling-2' : ''} ${activeProviderFeature === 2 ? 'pos-obs-2' : ''}`}
+                  src={require("/img/cp3.png").default}
+                  alt="Control Plane 2"
+                />
+                <img
+                  className={`providers-cp providers-cp-bottom-right providers-cp-3 ${activeProviderFeature === 0 ? 'pos-onboarding-3' : ''} ${activeProviderFeature === 1 ? 'pos-tooling-3' : ''} ${activeProviderFeature === 2 ? 'pos-obs-3' : ''}`}
+                  src={require("/img/cp4.png").default}
+                  alt="Control Plane 3"
+                />
+
+                {/* Central onboarding API feature - show API icon in center with lines to all CPs */}
+                <div className={`providers-onboarding-container ${activeProviderFeature === 0 ? 'animate' : ''}`}>
+                  <svg className="providers-onboarding-icon" width="70" height="70" viewBox="0 0 24 24">
+                    <defs>
+                      <linearGradient id="onboardingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="rgba(147, 51, 234, 0.9)" />
+                        <stop offset="100%" stopColor="rgba(168, 85, 247, 0.6)" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="url(#onboardingGradient)" strokeWidth="2" />
+                    <path d="M16 12l-4-4-4 4M12 16V8" fill="none" stroke="url(#onboardingGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+
+                  <svg className="providers-onboarding-connections" width="100%" height="100%">
+                    <line className="providers-onboarding-line providers-onboarding-line-top" x1="50%" y1="50%" x2="50%" y2="23%" />
+                    <line className="providers-onboarding-line providers-onboarding-line-bl" x1="50%" y1="50%" x2="27%" y2="77%" />
+                    <line className="providers-onboarding-line providers-onboarding-line-br" x1="50%" y1="50%" x2="73%" y2="77%" />
+                  </svg>
+                </div>
+
+                {/* Shared tooling feature - central tooling icon connected to all three CPs */}
+                <div className={`providers-tooling-container ${activeProviderFeature === 1 ? 'animate' : ''}`}>
+                  <svg className="providers-tooling-icon" width="70" height="70" viewBox="0 0 24 24">
+                    <defs>
+                      <linearGradient id="toolingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="rgba(147, 51, 234, 0.9)" />
+                        <stop offset="100%" stopColor="rgba(168, 85, 247, 0.6)" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" fill="none" stroke="url(#toolingGradient)" strokeWidth="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" fill="url(#toolingGradient)" />
+                    <polyline points="21 15 16 10 5 21" fill="none" stroke="url(#toolingGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+
+                  <svg className="providers-tooling-connections" width="100%" height="100%">
+                    <line className="providers-tooling-line providers-tooling-line-top" x1="50%" y1="50%" x2="50%" y2="23%" />
+                    <line className="providers-tooling-line providers-tooling-line-bl" x1="50%" y1="50%" x2="27%" y2="77%" />
+                    <line className="providers-tooling-line providers-tooling-line-br" x1="50%" y1="50%" x2="73%" y2="77%" />
+                  </svg>
+                </div>
+
+                {/* Observability feature - TBD */}
+                <div className={`providers-observability-container ${activeProviderFeature === 2 ? 'animate' : ''}`}>
+                  {/* Placeholder for observability visualization */}
+                </div>
+              </div>
+
+              {/* Right side - buttons and content */}
+              <div className="providers-sidebar">
+                <h2 className="providers-title">On control planes provided by OpenControlPlane</h2>
+                <Link className="section-cta-link providers-cta-link" to="/operators">Read operator guides</Link>
+
+                <div className="providers-buttons">
+                  <button
+                    className={`providers-nav-button ${activeProviderFeature === 0 ? 'active' : ''}`}
+                    onClick={() => handleProviderFeatureClick(0)}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M16 12l-4-4-4 4M12 16V8" />
+                    </svg>
+                    <span>Central onboarding API</span>
+                  </button>
+                  <button
+                    className={`providers-nav-button ${activeProviderFeature === 1 ? 'active' : ''}`}
+                    onClick={() => handleProviderFeatureClick(1)}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                    <span>Shared tooling</span>
+                  </button>
+                  <button
+                    className={`providers-nav-button ${activeProviderFeature === 2 ? 'active' : ''}`}
+                    onClick={() => handleProviderFeatureClick(2)}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg>
+                    <span>Bring own observability stack</span>
+                  </button>
+                </div>
+
+                <div className="providers-content-flip">
+                  <div className={`providers-content-item ${activeProviderFeature === 0 ? 'active' : ''}`}>
+                    <h3>Central onboarding API</h3>
+                    <p>As an operator, provide a central onboarding API where end users can order control planes with standardized configurations. Streamline provisioning and ensure consistency across your organization.</p>
+                  </div>
+                  <div className={`providers-content-item ${activeProviderFeature === 1 ? 'active' : ''}`}>
+                    <h3>Shared tooling</h3>
+                    <p>Share common tools across all control planes including Vault for secrets management, Kyverno for policy enforcement, custom IDPs for authentication, and GitHub registries for container images.</p>
+                  </div>
+                  <div className={`providers-content-item ${activeProviderFeature === 2 ? 'active' : ''}`}>
+                    <h3>Bring own observability stack</h3>
+                    <p>Integrate your preferred monitoring and observability tools seamlessly with your control planes.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="anywhere-section" ref={section3Ref}>
+          <div className="anywhere-container">
+            <div className="anywhere-unified">
+              {/* Left side - buttons and content */}
+              <div className="anywhere-sidebar">
+                <h2 className="anywhere-title">Runs everywhere</h2>
+                <Link className="section-cta-link" to="/operators">Read operator guides</Link>
+
+                <div className="anywhere-content-horizontal">
+                  <div className={`anywhere-content-card ${activeAnywhereFeature === 0 ? 'active' : ''}`}>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                    <h3>Anywhere</h3>
+                    <p>Deploy control planes anywhere—fully compatible with open source <Link to="https://github.com/gardener/gardener" target="_blank" rel="noopener noreferrer">Gardener</Link> on any Kubernetes cluster.</p>
+                  </div>
+                  <div className={`anywhere-content-card ${activeAnywhereFeature === 1 ? 'active' : ''}`}>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 9.9-1" />
+                    </svg>
+                    <h3>Sovereign clouds</h3>
+                    <p>Meet strict data residency and compliance requirements.</p>
+                  </div>
+                  <div className={`anywhere-content-card ${activeAnywhereFeature === 2 ? 'active' : ''}`}>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="16 18 22 12 16 6" />
+                      <polyline points="8 6 2 12 8 18" />
+                    </svg>
+                    <h3>Kind <span className="new-badge-inline">New</span></h3>
+                    <p>Develop and test locally using Kind clusters.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right side - visual area */}
+              <div className="anywhere-visual-unified">
+                {/* Three control planes that fade in */}
+                <img
+                  className="anywhere-cp anywhere-cp-1"
+                  src={require("/img/cp2.png").default}
+                  alt="Control Plane 1"
+                />
+                <img
+                  className="anywhere-cp anywhere-cp-2"
+                  src={require("/img/cp3.png").default}
+                  alt="Control Plane 2"
+                />
+                <img
+                  className="anywhere-cp anywhere-cp-3"
+                  src={require("/img/cp4.png").default}
+                  alt="Control Plane 3"
+                />
+              </div>
+            </div>
+          </div>
         </section>
 
         <section className="open-source-section">
