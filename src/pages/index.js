@@ -147,30 +147,30 @@ export default function Home() {
                     <circle cx="60" cy="15" r="0.4" fill="rgba(168, 85, 247, 0.2)" />
                   </g>
                   {/* User icon - top left */}
-                  <g className="cloud-resource-icon icon-user" transform="translate(54, 20) scale(0.22)">
+                  <g className="cloud-resource-icon icon-user" transform="translate(54, 20) scale(0.264)">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"
                           stroke="rgba(168, 85, 247, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                   </g>
                   {/* Database icon - top right */}
-                  <g className="cloud-resource-icon icon-database" transform="translate(66, 20) scale(0.22)">
+                  <g className="cloud-resource-icon icon-database" transform="translate(66, 20) scale(0.264)">
                     <ellipse cx="12" cy="5" rx="9" ry="3" stroke="rgba(147, 51, 234, 0.6)" strokeWidth="2" fill="none" />
                     <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
                           stroke="rgba(147, 51, 234, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                   </g>
                   {/* Key icon - left */}
-                  <g className="cloud-resource-icon icon-key" transform="translate(51, 25) scale(0.22)">
+                  <g className="cloud-resource-icon icon-key" transform="translate(51, 25) scale(0.264)">
                     <circle cx="7.5" cy="15.5" r="5.5" stroke="rgba(123, 97, 255, 0.6)" strokeWidth="2" fill="none" />
                     <path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"
                           stroke="rgba(123, 97, 255, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                   </g>
                   {/* Server icon - right */}
-                  <g className="cloud-resource-icon icon-server" transform="translate(69, 25) scale(0.22)">
+                  <g className="cloud-resource-icon icon-server" transform="translate(69, 25) scale(0.264)">
                     <rect x="2" y="2" width="20" height="8" rx="2" ry="2" stroke="rgba(168, 85, 247, 0.6)" strokeWidth="2" fill="none" />
                     <rect x="2" y="14" width="20" height="8" rx="2" ry="2" stroke="rgba(168, 85, 247, 0.6)" strokeWidth="2" fill="none" />
                     <path d="M6 6h.01M6 18h.01" stroke="rgba(123, 97, 255, 0.6)" strokeWidth="2" strokeLinecap="round" />
                   </g>
                   {/* Network icon - bottom center */}
-                  <g className="cloud-resource-icon icon-network" transform="translate(60, 30) scale(0.22)">
+                  <g className="cloud-resource-icon icon-network" transform="translate(60, 30) scale(0.264)">
                     <rect x="9" y="2" width="6" height="6" rx="1" stroke="rgba(147, 51, 234, 0.6)" strokeWidth="2" fill="none" />
                     <rect x="3" y="16" width="6" height="6" rx="1" stroke="rgba(147, 51, 234, 0.6)" strokeWidth="2" fill="none" />
                     <rect x="15" y="16" width="6" height="6" rx="1" stroke="rgba(147, 51, 234, 0.6)" strokeWidth="2" fill="none" />
@@ -221,25 +221,25 @@ export default function Home() {
                     <circle cx="60" cy="15" r="0.4" fill="rgba(44, 224, 191, 0.2)" />
                   </g>
                   {/* CPU icon - top left */}
-                  <g className="cloud-resource-icon icon-cpu" transform="translate(54, 20) scale(0.22)">
+                  <g className="cloud-resource-icon icon-cpu" transform="translate(54, 20) scale(0.264)">
                     <rect x="4" y="4" width="16" height="16" rx="2" stroke="rgba(44, 224, 191, 0.6)" strokeWidth="2" fill="none" />
                     <path d="M9 9h6v6H9zM9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"
                           stroke="rgba(4, 159, 154, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                   </g>
                   {/* Container/Docker icon - top right */}
-                  <g className="cloud-resource-icon icon-docker" transform="translate(66, 20) scale(0.22)">
+                  <g className="cloud-resource-icon icon-docker" transform="translate(66, 20) scale(0.264)">
                     <path d="M22 7.7c-.3-.2-.8-.2-1.2-.2-1.6 0-2.8.9-3.6 1.9-.6-.2-1.2-.3-1.9-.3-3.4 0-6.1 2.7-6.1 6.1 0 .3 0 .7.1 1C5.9 17.4 3 20.5 3 24h18c3.3 0 6-2.7 6-6 0-2.8-1.9-5.2-4.6-5.9l-.4-.1v-.4c0-1.5-.7-2.9-1.8-3.9z"
                           stroke="rgba(4, 159, 154, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M6 17h12M8 21h8" stroke="rgba(44, 224, 191, 0.5)" strokeWidth="2" strokeLinecap="round" />
                   </g>
                   {/* Hard Drive icon - left */}
-                  <g className="cloud-resource-icon icon-harddrive" transform="translate(51, 25) scale(0.22)">
+                  <g className="cloud-resource-icon icon-harddrive" transform="translate(51, 25) scale(0.264)">
                     <path d="M22 12H2l2-7h16l2 7zM2 12v8a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-8"
                           stroke="rgba(44, 224, 191, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     <circle cx="6" cy="16" r="1" fill="rgba(4, 159, 154, 0.6)" />
                   </g>
                   {/* Settings icon - right */}
-                  <g className="cloud-resource-icon icon-settings" transform="translate(69, 25) scale(0.22)">
+                  <g className="cloud-resource-icon icon-settings" transform="translate(69, 25) scale(0.264)">
                     <circle cx="12" cy="12" r="3" stroke="rgba(4, 159, 154, 0.6)" strokeWidth="2" fill="none" />
                     <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"
                           stroke="rgba(44, 224, 191, 0.6)" strokeWidth="2" strokeLinecap="round" />
@@ -283,25 +283,25 @@ export default function Home() {
                     <circle cx="60" cy="15" r="0.4" fill="rgba(244, 114, 182, 0.2)" />
                   </g>
                   {/* CPU icon - top left */}
-                  <g className="cloud-resource-icon icon-cpu" transform="translate(54, 20) scale(0.22)">
+                  <g className="cloud-resource-icon icon-cpu" transform="translate(54, 20) scale(0.264)">
                     <rect x="4" y="4" width="16" height="16" rx="2" stroke="rgba(244, 114, 182, 0.6)" strokeWidth="2" fill="none" />
                     <path d="M9 9h6v6H9zM9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"
                           stroke="rgba(236, 72, 153, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                   </g>
                   {/* Container/Docker icon - top right */}
-                  <g className="cloud-resource-icon icon-docker" transform="translate(66, 20) scale(0.22)">
+                  <g className="cloud-resource-icon icon-docker" transform="translate(66, 20) scale(0.264)">
                     <path d="M22 7.7c-.3-.2-.8-.2-1.2-.2-1.6 0-2.8.9-3.6 1.9-.6-.2-1.2-.3-1.9-.3-3.4 0-6.1 2.7-6.1 6.1 0 .3 0 .7.1 1C5.9 17.4 3 20.5 3 24h18c3.3 0 6-2.7 6-6 0-2.8-1.9-5.2-4.6-5.9l-.4-.1v-.4c0-1.5-.7-2.9-1.8-3.9z"
                           stroke="rgba(236, 72, 153, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M6 17h12M8 21h8" stroke="rgba(244, 114, 182, 0.5)" strokeWidth="2" strokeLinecap="round" />
                   </g>
                   {/* Hard Drive icon - left */}
-                  <g className="cloud-resource-icon icon-harddrive" transform="translate(51, 25) scale(0.22)">
+                  <g className="cloud-resource-icon icon-harddrive" transform="translate(51, 25) scale(0.264)">
                     <path d="M22 12H2l2-7h16l2 7zM2 12v8a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-8"
                           stroke="rgba(244, 114, 182, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     <circle cx="6" cy="16" r="1" fill="rgba(236, 72, 153, 0.6)" />
                   </g>
                   {/* Settings icon - right */}
-                  <g className="cloud-resource-icon icon-settings" transform="translate(69, 25) scale(0.22)">
+                  <g className="cloud-resource-icon icon-settings" transform="translate(69, 25) scale(0.264)">
                     <circle cx="12" cy="12" r="3" stroke="rgba(236, 72, 153, 0.6)" strokeWidth="2" fill="none" />
                     <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"
                           stroke="rgba(244, 114, 182, 0.6)" strokeWidth="2" strokeLinecap="round" />
@@ -351,30 +351,30 @@ export default function Home() {
                     <circle cx="60" cy="15" r="0.4" fill="rgba(251, 146, 60, 0.2)" />
                   </g>
                   {/* CPU icon - top left */}
-                  <g className="cloud-resource-icon icon-cpu" transform="translate(54, 20) scale(0.22)">
+                  <g className="cloud-resource-icon icon-cpu" transform="translate(54, 20) scale(0.264)">
                     <rect x="4" y="4" width="16" height="16" rx="2" stroke="rgba(251, 146, 60, 0.6)" strokeWidth="2" fill="none" />
                     <path d="M9 9h6v6H9zM9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"
                           stroke="rgba(249, 115, 22, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                   </g>
                   {/* User icon - top right */}
-                  <g className="cloud-resource-icon icon-user" transform="translate(66, 20) scale(0.22)">
+                  <g className="cloud-resource-icon icon-user" transform="translate(66, 20) scale(0.264)">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"
                           stroke="rgba(253, 186, 116, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                   </g>
                   {/* Container/Docker icon - left */}
-                  <g className="cloud-resource-icon icon-docker" transform="translate(51, 25) scale(0.22)">
+                  <g className="cloud-resource-icon icon-docker" transform="translate(51, 25) scale(0.264)">
                     <path d="M22 7.7c-.3-.2-.8-.2-1.2-.2-1.6 0-2.8.9-3.6 1.9-.6-.2-1.2-.3-1.9-.3-3.4 0-6.1 2.7-6.1 6.1 0 .3 0 .7.1 1C5.9 17.4 3 20.5 3 24h18c3.3 0 6-2.7 6-6 0-2.8-1.9-5.2-4.6-5.9l-.4-.1v-.4c0-1.5-.7-2.9-1.8-3.9z"
                           stroke="rgba(249, 115, 22, 0.6)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M6 17h12M8 21h8" stroke="rgba(251, 146, 60, 0.5)" strokeWidth="2" strokeLinecap="round" />
                   </g>
                   {/* Memory/RAM icon - right */}
-                  <g className="cloud-resource-icon icon-memory" transform="translate(69, 25) scale(0.22)">
+                  <g className="cloud-resource-icon icon-memory" transform="translate(69, 25) scale(0.264)">
                     <rect x="2" y="7" width="20" height="10" rx="2" stroke="rgba(251, 146, 60, 0.6)" strokeWidth="2" fill="none" />
                     <path d="M6 7V4M10 7V4M14 7V4M18 7V4M6 17v3M10 17v3M14 17v3M18 17v3"
                           stroke="rgba(249, 115, 22, 0.6)" strokeWidth="2" strokeLinecap="round" />
                   </g>
                   {/* Globe/Network icon - bottom center */}
-                  <g className="cloud-resource-icon icon-globe" transform="translate(60, 30) scale(0.22)">
+                  <g className="cloud-resource-icon icon-globe" transform="translate(60, 30) scale(0.264)">
                     <circle cx="12" cy="12" r="10" stroke="rgba(253, 186, 116, 0.6)" strokeWidth="2" fill="none" />
                     <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
                           stroke="rgba(249, 115, 22, 0.6)" strokeWidth="2" fill="none" />

@@ -1533,8 +1533,8 @@ article[data-role="enduser"] {
 /* ===== Cloud Projection - Cutting Edge Animation ===== */
 .cp-cloud-projection {
   position: absolute;
-  width: 303.6px;
-  height: 212.52px;
+  width: 364.32px;
+  height: 255.024px;
   z-index: 10;
   opacity: 0;
   pointer-events: none;
@@ -1548,8 +1548,8 @@ article[data-role="enduser"] {
 }
 
 .cp-cloud-1 {
-  bottom: 17%;
-  left: -10%;
+  bottom: 14%;
+  left: -18%;
   transition-delay: 0.8s;
 }
 
@@ -1558,8 +1558,8 @@ article[data-role="enduser"] {
 }
 
 .cp-cloud-2-1 {
-  bottom: 52%;
-  left: 12%;
+  bottom: 47%;
+  left: 7%;
   transition-delay: 1s;
 }
 
@@ -1568,8 +1568,8 @@ article[data-role="enduser"] {
 }
 
 .cp-cloud-2-2 {
-  bottom: 52%;
-  left: 30%;
+  bottom: 47%;
+  left: 28%;
   transition-delay: 1.2s;
 }
 
@@ -1578,8 +1578,8 @@ article[data-role="enduser"] {
 }
 
 .cp-cloud-3 {
-  bottom: 20%;
-  right: -15%;
+  bottom: 17%;
+  right: -23%;
   transition-delay: 1.4s;
 }
 
@@ -1800,8 +1800,8 @@ article[data-role="enduser"] {
 
 @media (max-width: 768px) {
   .cp-cloud-projection {
-    width: 242.88px;
-    height: 170.016px;
+    width: 303.6px;
+    height: 212.52px;
   }
 
   .flying-cp {
@@ -1844,21 +1844,21 @@ article[data-role="enduser"] {
 
   /* Cloud 1 above CP1 */
   .cp-cloud-1 {
-    bottom: 18%;
-    left: 8%;
+    bottom: 12%;
+    left: 2%;
   }
 
   /* Cloud 2-1 (left cloud above CP2) */
   .cp-cloud-2-1 {
-    bottom: 44%;
-    right: 12%;
+    bottom: 38%;
+    right: 6%;
     left: auto;
   }
 
   /* Cloud 2-2 (right cloud above CP2) */
   .cp-cloud-2-2 {
-    bottom: 44%;
-    right: -2%;
+    bottom: 38%;
+    right: -8%;
     left: auto;
   }
 }
