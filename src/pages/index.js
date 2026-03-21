@@ -45,32 +45,28 @@ export default function Home() {
       const rect = section.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Calculate how far through the section we've scrolled
-      const sectionVisible = windowHeight - rect.top;
-      const sectionTotalScroll = windowHeight + rect.height;
-      const progress = Math.max(0, Math.min(1, sectionVisible / sectionTotalScroll));
+      // Start when text content becomes visible (section top reaches 60% of viewport)
+      // End when titles are no longer visible (section top reaches -30% of viewport)
+      const startPoint = windowHeight * 0.6;
+      const endPoint = -windowHeight * 0.3;
 
-      // Different thresholds for mobile vs desktop
-      const isMobile = window.innerWidth <= 768;
+      // Only calculate when section is in the active scroll range
+      if (rect.top > startPoint || rect.top < endPoint) {
+        return;
+      }
 
-      if (isMobile) {
-        // Mobile: quicker transitions since sections are stacked vertically
-        if (progress < 0.2) {
-          setActiveFeature(0);
-        } else if (progress < 0.4) {
-          setActiveFeature(1);
-        } else {
-          setActiveFeature(2);
-        }
+      // Calculate progress from when text is visible to when title exits
+      const scrollRange = startPoint - endPoint;
+      const scrollProgress = startPoint - rect.top;
+      const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
+
+      // Divide into 3 features evenly across the scroll range
+      if (progress < 0.33) {
+        setActiveFeature(0);
+      } else if (progress < 0.66) {
+        setActiveFeature(1);
       } else {
-        // Desktop: original thresholds
-        if (progress < 0.25) {
-          setActiveFeature(0);
-        } else if (progress < 0.45) {
-          setActiveFeature(1);
-        } else {
-          setActiveFeature(2);
-        }
+        setActiveFeature(2);
       }
     };
 
@@ -88,28 +84,24 @@ export default function Home() {
       const rect = section.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      const sectionVisible = windowHeight - rect.top;
-      const sectionTotalScroll = windowHeight + rect.height;
-      const progress = Math.max(0, Math.min(1, sectionVisible / sectionTotalScroll));
+      // Start when text content becomes visible
+      const startPoint = windowHeight * 0.6;
+      const endPoint = -windowHeight * 0.3;
 
-      const isMobile = window.innerWidth <= 768;
+      if (rect.top > startPoint || rect.top < endPoint) {
+        return;
+      }
 
-      if (isMobile) {
-        if (progress < 0.2) {
-          setActiveProviderFeature(0);
-        } else if (progress < 0.4) {
-          setActiveProviderFeature(1);
-        } else {
-          setActiveProviderFeature(2);
-        }
+      const scrollRange = startPoint - endPoint;
+      const scrollProgress = startPoint - rect.top;
+      const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
+
+      if (progress < 0.33) {
+        setActiveProviderFeature(0);
+      } else if (progress < 0.66) {
+        setActiveProviderFeature(1);
       } else {
-        if (progress < 0.25) {
-          setActiveProviderFeature(0);
-        } else if (progress < 0.45) {
-          setActiveProviderFeature(1);
-        } else {
-          setActiveProviderFeature(2);
-        }
+        setActiveProviderFeature(2);
       }
     };
 
@@ -127,28 +119,24 @@ export default function Home() {
       const rect = section.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      const sectionVisible = windowHeight - rect.top;
-      const sectionTotalScroll = windowHeight + rect.height;
-      const progress = Math.max(0, Math.min(1, sectionVisible / sectionTotalScroll));
+      // Start when text content becomes visible
+      const startPoint = windowHeight * 0.6;
+      const endPoint = -windowHeight * 0.3;
 
-      const isMobile = window.innerWidth <= 768;
+      if (rect.top > startPoint || rect.top < endPoint) {
+        return;
+      }
 
-      if (isMobile) {
-        if (progress < 0.2) {
-          setActiveAnywhereFeature(0);
-        } else if (progress < 0.4) {
-          setActiveAnywhereFeature(1);
-        } else {
-          setActiveAnywhereFeature(2);
-        }
+      const scrollRange = startPoint - endPoint;
+      const scrollProgress = startPoint - rect.top;
+      const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
+
+      if (progress < 0.33) {
+        setActiveAnywhereFeature(0);
+      } else if (progress < 0.66) {
+        setActiveAnywhereFeature(1);
       } else {
-        if (progress < 0.25) {
-          setActiveAnywhereFeature(0);
-        } else if (progress < 0.45) {
-          setActiveAnywhereFeature(1);
-        } else {
-          setActiveAnywhereFeature(2);
-        }
+        setActiveAnywhereFeature(2);
       }
     };
 
@@ -640,65 +628,44 @@ export default function Home() {
         </section>
 
         <section className="essentials-section" ref={section1Ref}>
-          <div className="essentials-container">
-            <div className="essentials-unified">
-              {/* Left side - buttons and content */}
-              <div className="essentials-sidebar">
-                <h2 className="essentials-title">Cloud Orchestration power to your engineering teams</h2>
-                <Link className="section-cta-link" to="/users">Read end user guides</Link>
-
-                <div className="essentials-buttons">
+          <div className="container">
+            {/* Full-width title header */}
+            <div className="section-header">
+              <div className="section-header-content">
+                <h2 className="section-main-title">EMPOWER YOUR ENGINEERS</h2>
+                <p className="section-subtitle">Control Planes hold everything they need to orchestrate cloud landscapes</p>
+                {/* Subsection navigation */}
+                <div className="section-nav-dots">
                   <button
-                    className={`essentials-nav-button ${activeFeature === 0 ? 'active' : ''}`}
+                    className={`nav-dot ${activeFeature === 0 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(0)}
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="16 18 22 12 16 6" />
-                      <polyline points="8 6 2 12 8 18" />
-                    </svg>
-                    <span>Declarative API</span>
+                    Declarative API
                   </button>
                   <button
-                    className={`essentials-nav-button ${activeFeature === 1 ? 'active' : ''}`}
+                    className={`nav-dot ${activeFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(1)}
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                      <polyline points="22 4 12 14.01 9 11.01" />
-                    </svg>
-                    <span>Self-healing landscapes</span>
+                    Self-healing landscapes
                   </button>
                   <button
-                    className={`essentials-nav-button ${activeFeature === 2 ? 'active' : ''}`}
+                    className={`nav-dot ${activeFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(2)}
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                      <circle cx="12" cy="17" r="0.5" fill="currentColor" />
-                    </svg>
-                    <span>GitOps</span>
+                    GitOps
                   </button>
                 </div>
-
-                <div className="essentials-content-flip">
-                  <div className={`essentials-content-item ${activeFeature === 0 ? 'active' : ''}`}>
-                    <h3>Declarative API everywhere</h3>
-                    <p>Define your infrastructure as declarative YAML. The control plane reconciles your desired state with reality—creating, updating, and managing cloud resources automatically.</p>
-                  </div>
-                  <div className={`essentials-content-item ${activeFeature === 1 ? 'active' : ''}`}>
-                    <h3>Self-healing</h3>
-                    <p>The control plane continuously monitors your resources and automatically corrects drift, recovers from failures, and ensures your infrastructure matches the desired state at all times—powered by Crossplane.</p>
-                  </div>
-                  <div className={`essentials-content-item ${activeFeature === 2 ? 'active' : ''}`}>
-                    <h3>GitOps</h3>
-                    <p>GitOps enables easy replication across environments, reviewed rollouts with version control, and leverages industry-standard tools like Git, CI/CD, and Flux—perfectly integrated by design.</p>
-                  </div>
-                </div>
               </div>
+              <div className="section-header-right-col">
+                <Link className="section-header-cta" to="/users/getting-started">Read end user guides →</Link>
+                <Link className="section-header-cta" to="/developers/serviceprovider/service-providers">Contribute ServiceProvider →</Link>
+              </div>
+            </div>
 
-              {/* Right side - visual area */}
-              <div className="essentials-visual-unified">
+            {/* Visual and buttons */}
+            <div className="unified">
+              {/* Visual area */}
+              <div className="visual">
                 {/* Feature 0: Declarative API - use cp2.png */}
                 <img
                   className={`unified-cp unified-cp-declarative ${activeFeature === 0 ? 'active' : ''}`}
@@ -898,14 +865,62 @@ spec:
               </div>
             </div>
 
+            {/* Centered text content below */}
+            <div className="section-text-content">
+              <div className={`section-text-item ${activeFeature === 0 ? 'active' : ''}`}>
+                <h3>Declarative API everywhere</h3>
+                <p>Define your infrastructure as declarative YAML. The control plane reconciles your desired state with reality—creating, updating, and managing cloud resources automatically.</p>
+              </div>
+              <div className={`section-text-item ${activeFeature === 1 ? 'active' : ''}`}>
+                <h3>Self-healing</h3>
+                <p>The control plane continuously monitors your resources and automatically corrects drift, recovers from failures, and ensures your infrastructure matches the desired state at all times—powered by Crossplane.</p>
+              </div>
+              <div className={`section-text-item ${activeFeature === 2 ? 'active' : ''}`}>
+                <h3>GitOps</h3>
+                <p>GitOps enables easy replication across environments, reviewed rollouts with version control, and leverages industry-standard tools like Git, CI/CD, and Flux—perfectly integrated by design.</p>
+              </div>
+            </div>
           </div>
         </section>
 
         <section className="providers-section" ref={section2Ref}>
-          <div className="providers-container">
-            <div className="providers-unified">
-              {/* Left side - visual area */}
-              <div className="providers-visual-unified">
+          <div className="container">
+            {/* Full-width title header */}
+            <div className="section-header section-header-right">
+              <div className="section-header-content">
+                <h2 className="section-main-title"><i>READY-TO-USE</i> CONTROL PLANES</h2>
+                <p className="section-subtitle">Provision, manage, secure all instances on open control plane platform</p>
+                {/* Subsection navigation */}
+                <div className="section-nav-dots">
+                  <button
+                    className={`nav-dot ${activeProviderFeature === 0 ? 'active' : ''}`}
+                    onClick={() => handleProviderFeatureClick(0)}
+                  >
+                    Central onboarding API
+                  </button>
+                  <button
+                    className={`nav-dot ${activeProviderFeature === 1 ? 'active' : ''}`}
+                    onClick={() => handleProviderFeatureClick(1)}
+                  >
+                    Shared tooling
+                  </button>
+                  <button
+                    className={`nav-dot ${activeProviderFeature === 2 ? 'active' : ''}`}
+                    onClick={() => handleProviderFeatureClick(2)}
+                  >
+                    Bring own observability stack
+                  </button>
+                </div>
+              </div>
+              <div className="section-header-right-col">
+                <Link className="section-header-cta" to="/operators/overview">Read operator guides →</Link>
+                <Link className="section-header-cta" to="/developers">Contribute PlatformProvider →</Link>
+              </div>
+            </div>
+
+            <div className="unified">
+              {/* Visual area */}
+              <div className="visual">
                 {/* Three control planes in triangle formation */}
                 <img
                   className={`providers-cp providers-cp-top providers-cp-1 ${activeProviderFeature === 0 ? 'pos-onboarding-1' : ''} ${activeProviderFeature === 1 ? 'pos-tooling-1' : ''} ${activeProviderFeature === 2 ? 'pos-obs-1' : ''}`}
@@ -943,24 +958,30 @@ spec:
                   </svg>
                 </div>
 
-                {/* Shared tooling feature - central tooling icon connected to all three CPs */}
+                {/* Shared tooling feature - Vault in center connecting to 3 CPs */}
                 <div className={`providers-tooling-container ${activeProviderFeature === 1 ? 'animate' : ''}`}>
-                  <svg className="providers-tooling-icon" width="70" height="70" viewBox="0 0 24 24">
+                  {/* Central Vault icon */}
+                  <svg className="providers-vault-icon" width="80" height="80" viewBox="0 0 24 24">
                     <defs>
-                      <linearGradient id="toolingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <linearGradient id="vaultGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stopColor="rgba(147, 51, 234, 0.9)" />
                         <stop offset="100%" stopColor="rgba(168, 85, 247, 0.6)" />
                       </linearGradient>
                     </defs>
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" fill="none" stroke="url(#toolingGradient)" strokeWidth="2" />
-                    <circle cx="8.5" cy="8.5" r="1.5" fill="url(#toolingGradient)" />
-                    <polyline points="21 15 16 10 5 21" fill="none" stroke="url(#toolingGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    {/* Vault/Storage hexagon icon */}
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                          fill="none" stroke="url(#vaultGradient)" strokeWidth="2" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"
+                              fill="none" stroke="url(#vaultGradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="12" y1="22.08" x2="12" y2="12"
+                          fill="none" stroke="url(#vaultGradient)" strokeWidth="2" strokeLinecap="round" />
                   </svg>
 
-                  <svg className="providers-tooling-connections" width="100%" height="100%">
-                    <line className="providers-tooling-line providers-tooling-line-top" x1="50%" y1="50%" x2="50%" y2="23%" />
-                    <line className="providers-tooling-line providers-tooling-line-bl" x1="50%" y1="50%" x2="27%" y2="77%" />
-                    <line className="providers-tooling-line providers-tooling-line-br" x1="50%" y1="50%" x2="73%" y2="77%" />
+                  {/* Connection lines from vault to each CP */}
+                  <svg className="providers-vault-connections" width="100%" height="100%">
+                    <line className="providers-vault-line providers-vault-line-top" x1="50%" y1="50%" x2="50%" y2="23%" />
+                    <line className="providers-vault-line providers-vault-line-bl" x1="50%" y1="50%" x2="27%" y2="77%" />
+                    <line className="providers-vault-line providers-vault-line-br" x1="50%" y1="50%" x2="73%" y2="77%" />
                   </svg>
                 </div>
 
@@ -969,119 +990,169 @@ spec:
                   {/* Placeholder for observability visualization */}
                 </div>
               </div>
+            </div>
 
-              {/* Right side - buttons and content */}
-              <div className="providers-sidebar">
-                <h2 className="providers-title">On control planes provided by OpenControlPlane</h2>
-                <Link className="section-cta-link providers-cta-link" to="/operators">Read operator guides</Link>
-
-                <div className="providers-buttons">
-                  <button
-                    className={`providers-nav-button ${activeProviderFeature === 0 ? 'active' : ''}`}
-                    onClick={() => handleProviderFeatureClick(0)}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M16 12l-4-4-4 4M12 16V8" />
-                    </svg>
-                    <span>Central onboarding API</span>
-                  </button>
-                  <button
-                    className={`providers-nav-button ${activeProviderFeature === 1 ? 'active' : ''}`}
-                    onClick={() => handleProviderFeatureClick(1)}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                      <circle cx="8.5" cy="8.5" r="1.5" />
-                      <polyline points="21 15 16 10 5 21" />
-                    </svg>
-                    <span>Shared tooling</span>
-                  </button>
-                  <button
-                    className={`providers-nav-button ${activeProviderFeature === 2 ? 'active' : ''}`}
-                    onClick={() => handleProviderFeatureClick(2)}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                    </svg>
-                    <span>Bring own observability stack</span>
-                  </button>
-                </div>
-
-                <div className="providers-content-flip">
-                  <div className={`providers-content-item ${activeProviderFeature === 0 ? 'active' : ''}`}>
-                    <h3>Central onboarding API</h3>
-                    <p>As an operator, provide a central onboarding API where end users can order control planes with standardized configurations. Streamline provisioning and ensure consistency across your organization.</p>
-                  </div>
-                  <div className={`providers-content-item ${activeProviderFeature === 1 ? 'active' : ''}`}>
-                    <h3>Shared tooling</h3>
-                    <p>Share common tools across all control planes including Vault for secrets management, Kyverno for policy enforcement, custom IDPs for authentication, and GitHub registries for container images.</p>
-                  </div>
-                  <div className={`providers-content-item ${activeProviderFeature === 2 ? 'active' : ''}`}>
-                    <h3>Bring own observability stack</h3>
-                    <p>Integrate your preferred monitoring and observability tools seamlessly with your control planes.</p>
-                  </div>
-                </div>
+            {/* Centered text content below */}
+            <div className="section-text-content">
+              <div className={`section-text-item ${activeProviderFeature === 0 ? 'active' : ''}`}>
+                <h3>Central onboarding API</h3>
+                <p>As an operator, provide a central onboarding API where end users can order control planes with standardized configurations. Streamline provisioning and ensure consistency across your organization.</p>
+              </div>
+              <div className={`section-text-item ${activeProviderFeature === 1 ? 'active' : ''}`}>
+                <h3>Shared tooling</h3>
+                <p>Share common tools across all control planes including Vault for secrets management, Kyverno for policy enforcement, custom IDPs for authentication, and GitHub registries for container images.</p>
+              </div>
+              <div className={`section-text-item ${activeProviderFeature === 2 ? 'active' : ''}`}>
+                <h3>Bring own observability stack</h3>
+                <p>Integrate your preferred monitoring and observability tools seamlessly with your control planes.</p>
               </div>
             </div>
           </div>
         </section>
 
         <section className="anywhere-section" ref={section3Ref}>
-          <div className="anywhere-container">
-            <div className="anywhere-unified">
-              {/* Left side - buttons and content */}
-              <div className="anywhere-sidebar">
-                <h2 className="anywhere-title">Runs everywhere</h2>
-                <Link className="section-cta-link" to="/operators">Read operator guides</Link>
-
-                <div className="anywhere-content-horizontal">
-                  <div className={`anywhere-content-card ${activeAnywhereFeature === 0 ? 'active' : ''}`}>
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10" />
-                      <line x1="2" y1="12" x2="22" y2="12" />
-                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                    </svg>
-                    <h3>Anywhere</h3>
-                    <p>Deploy control planes anywhere—fully compatible with open source <Link to="https://github.com/gardener/gardener" target="_blank" rel="noopener noreferrer">Gardener</Link> on any Kubernetes cluster.</p>
-                  </div>
-                  <div className={`anywhere-content-card ${activeAnywhereFeature === 1 ? 'active' : ''}`}>
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 9.9-1" />
-                    </svg>
-                    <h3>Sovereign clouds</h3>
-                    <p>Meet strict data residency and compliance requirements.</p>
-                  </div>
-                  <div className={`anywhere-content-card ${activeAnywhereFeature === 2 ? 'active' : ''}`}>
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="16 18 22 12 16 6" />
-                      <polyline points="8 6 2 12 8 18" />
-                    </svg>
-                    <h3>Kind <span className="new-badge-inline">New</span></h3>
-                    <p>Develop and test locally using Kind clusters.</p>
-                  </div>
+          <div className="container">
+            {/* Full-width title header */}
+            <div className="section-header">
+              <div className="section-header-content">
+                <h2 className="section-main-title">RUNS EVERYWHERE</h2>
+                <p className="section-subtitle">Open Control Plane can be installed wherever Kubernetes is available.</p>
+                {/* Subsection navigation */}
+                <div className="section-nav-dots">
+                  <button
+                    className={`nav-dot ${activeAnywhereFeature === 0 ? 'active' : ''}`}
+                    onClick={() => handleAnywhereFeatureClick(0)}
+                  >
+                    Anywhere
+                  </button>
+                  <button
+                    className={`nav-dot ${activeAnywhereFeature === 1 ? 'active' : ''}`}
+                    onClick={() => handleAnywhereFeatureClick(1)}
+                  >
+                    Sovereign clouds
+                  </button>
+                  <button
+                    className={`nav-dot ${activeAnywhereFeature === 2 ? 'active' : ''}`}
+                    onClick={() => handleAnywhereFeatureClick(2)}
+                  >
+                    Kind
+                  </button>
                 </div>
               </div>
+              <div className="section-header-right-col">
+                <Link className="section-header-cta" to="/operators/overview">Read operator guides →</Link>
+                <Link className="section-header-cta" to="/developers">Contribute ClusterProvider →</Link>
+              </div>
+            </div>
 
-              {/* Right side - visual area */}
-              <div className="anywhere-visual-unified">
-                {/* Three control planes that fade in */}
-                <img
-                  className="anywhere-cp anywhere-cp-1"
-                  src={require("/img/cp2.png").default}
-                  alt="Control Plane 1"
-                />
-                <img
-                  className="anywhere-cp anywhere-cp-2"
-                  src={require("/img/cp3.png").default}
-                  alt="Control Plane 2"
-                />
-                <img
-                  className="anywhere-cp anywhere-cp-3"
-                  src={require("/img/cp4.png").default}
-                  alt="Control Plane 3"
-                />
+            <div className="unified">
+              {/* Visual area */}
+              <div className="visual">
+
+                {/* Feature 0: Anywhere - gardener with cloud provider badges */}
+                <div className={`anywhere-feature-container ${activeAnywhereFeature === 0 ? 'active' : ''}`}>
+                  <img
+                    className="anywhere-hangar-gardener"
+                    src={require("/img/platform/hangar_gardener.png").default}
+                    alt="Gardener"
+                  />
+
+                  {/* Flying control planes - reduced to 2 */}
+                  <img
+                    className="anywhere-flying-cp anywhere-flying-cp-1"
+                    src={require("/img/cp2.png").default}
+                    alt="Flying CP"
+                  />
+                  <img
+                    className="anywhere-flying-cp anywhere-flying-cp-2"
+                    src={require("/img/cp3.png").default}
+                    alt="Flying CP"
+                  />
+
+                  {/* Cloud provider badges */}
+                  <div className="anywhere-badge anywhere-badge-aws">AWS</div>
+                  <div className="anywhere-badge anywhere-badge-azure">Azure</div>
+                  <div className="anywhere-badge anywhere-badge-gcp">GCP</div>
+                  <div className="anywhere-badge anywhere-badge-other">...</div>
+
+                  {/* Connection lines from hangar to badges - tree structure */}
+                  <svg className="anywhere-connections" width="100%" height="100%">
+                    <line className="anywhere-conn-line anywhere-conn-aws" x1="50%" y1="38%" x2="20%" y2="78%" />
+                    <line className="anywhere-conn-line anywhere-conn-azure" x1="50%" y1="38%" x2="40%" y2="78%" />
+                    <line className="anywhere-conn-line anywhere-conn-gcp" x1="50%" y1="38%" x2="60%" y2="78%" />
+                    <line className="anywhere-conn-line anywhere-conn-other" x1="50%" y1="38%" x2="80%" y2="78%" />
+                  </svg>
+                </div>
+
+                {/* Feature 1: Sovereign clouds - gardener with EU badges */}
+                <div className={`anywhere-feature-container ${activeAnywhereFeature === 1 ? 'active' : ''}`}>
+                  <img
+                    className="anywhere-hangar-gardener"
+                    src={require("/img/platform/hangar_gardener.png").default}
+                    alt="Gardener"
+                  />
+
+                  {/* Flying control planes - reduced to 2 */}
+                  <img
+                    className="anywhere-flying-cp anywhere-flying-cp-1"
+                    src={require("/img/cp2.png").default}
+                    alt="Flying CP"
+                  />
+                  <img
+                    className="anywhere-flying-cp anywhere-flying-cp-2"
+                    src={require("/img/cp3.png").default}
+                    alt="Flying CP"
+                  />
+
+                  {/* Sovereign cloud badges */}
+                  <div className="anywhere-badge anywhere-badge-eu-pub-dev">EU-pub-dev</div>
+                  <div className="anywhere-badge anywhere-badge-eu-pub-live">EU-pub-live</div>
+                  <div className="anywhere-badge anywhere-badge-eu-gov-live">EU-gov-live</div>
+
+                  {/* Connection lines from hangar to badges - tree structure */}
+                  <svg className="anywhere-connections" width="100%" height="100%">
+                    <line className="anywhere-conn-line anywhere-conn-eu-1" x1="50%" y1="38%" x2="25%" y2="78%" />
+                    <line className="anywhere-conn-line anywhere-conn-eu-2" x1="50%" y1="38%" x2="50%" y2="78%" />
+                    <line className="anywhere-conn-line anywhere-conn-eu-3" x1="50%" y1="38%" x2="75%" y2="78%" />
+                  </svg>
+                </div>
+
+                {/* Feature 2: Kind */}
+                <div className={`anywhere-feature-container ${activeAnywhereFeature === 2 ? 'active' : ''}`}>
+                  <img
+                    className="anywhere-hangar-kind"
+                    src={require("/img/platform/hangar_kind.png").default}
+                    alt="Kind"
+                  />
+
+                  {/* Kind dev mode - 2 control planes that stay and move around */}
+                  <img
+                    className="kind-cp kind-cp-1"
+                    src={require("/img/cp2.png").default}
+                    alt="Kind CP 1"
+                  />
+                  <img
+                    className="kind-cp kind-cp-2"
+                    src={require("/img/cp3.png").default}
+                    alt="Kind CP 2"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Centered text content below */}
+            <div className="section-text-content">
+              <div className={`section-text-item ${activeAnywhereFeature === 0 ? 'active' : ''}`}>
+                <h3>Anywhere</h3>
+                <p>Deploy control planes anywhere—fully compatible with open source <Link to="https://github.com/gardener/gardener" target="_blank" rel="noopener noreferrer">Gardener</Link> on any Kubernetes cluster.</p>
+              </div>
+              <div className={`section-text-item ${activeAnywhereFeature === 1 ? 'active' : ''}`}>
+                <h3>Sovereign clouds</h3>
+                <p>Meet strict data residency and compliance requirements.</p>
+              </div>
+              <div className={`section-text-item ${activeAnywhereFeature === 2 ? 'active' : ''}`}>
+                <h3>Kind <span className="new-badge-inline">New</span></h3>
+                <p>Develop and test locally using Kind clusters.</p>
               </div>
             </div>
           </div>
