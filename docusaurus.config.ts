@@ -107,6 +107,12 @@ const config: Config = {
           label: 'Community',
         },
         {
+          type: 'docSidebar',
+          sidebarId: 'referenceSidebar',
+          position: 'right',
+          label: 'CRD Browser',
+        },
+        {
           href: 'https://github.com/openmcp-project/docs',
           label: 'GitHub',
           position: 'right',

@@ -6,6 +6,10 @@ sidebar_position: 1
 
 This guide walks you through creating the foundational resources for your OpenControlPlane setup: Project, Workspace, and ControlPlane.
 
+:::info Prerequisites
+Requires a deployed OpenControlPlane platform. Operators: see [setup guide](/operators/setup) → [verify setup](/operators/verify-setup).
+:::
+
 ## Understanding the Hierarchy
 
 OpenControlPlane organizes resources in a three-level hierarchy:

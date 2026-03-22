@@ -2,6 +2,9 @@
 sidebar_position: 3
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # 3. Configure
 
 This guide shows you how to install managed services in your ControlPlane to extend its functionality.
@@ -10,7 +13,8 @@ This guide shows you how to install managed services in your ControlPlane to ext
 
 You can install managed services in your ControlPlane to add capabilities like infrastructure management and workload orchestration.
 
-### Crossplane
+<Tabs>
+<TabItem value="crossplane" label="Crossplane" default>
 
 [Crossplane](https://www.crossplane.io/) enables you to manage cloud infrastructure using Kubernetes-style declarative configuration.
 
@@ -35,7 +39,8 @@ The `name` must match your ControlPlane name.
 kubectl apply -f crossplane.yaml
 ```
 
-### Landscaper
+</TabItem>
+<TabItem value="landscaper" label="Landscaper">
 
 [Landscaper](https://github.com/gardener/landscaper) manages the installation, updates, and uninstallation of cloud-native workloads with complex dependency chains.
 
@@ -54,6 +59,9 @@ spec:
 ```bash
 kubectl apply -f landscaper.yaml
 ```
+
+</TabItem>
+</Tabs>
 
 ---
 
