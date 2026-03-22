@@ -45,6 +45,8 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           editUrl:
             'https://github.com/openmcp-project/docs/tree/main/',
+          sidebarCollapsible: true,
+          sidebarCollapsed: true,
         },
         blog: {
           routeBasePath: "adrs",

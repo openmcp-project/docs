@@ -12,6 +12,9 @@ export default function Home() {
   const [activeFeature, setActiveFeature] = useState(0);
   const [activeProviderFeature, setActiveProviderFeature] = useState(0);
   const [activeAnywhereFeature, setActiveAnywhereFeature] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [providerScrollProgress, setProviderScrollProgress] = useState(0);
+  const [anywhereScrollProgress, setAnywhereScrollProgress] = useState(0);
   const section1Ref = useRef(null);
   const section2Ref = useRef(null);
   const section3Ref = useRef(null);
@@ -45,25 +48,34 @@ export default function Home() {
       const rect = section.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Start when text content becomes visible (section top reaches 60% of viewport)
-      // End when titles are no longer visible (section top reaches -30% of viewport)
-      const startPoint = windowHeight * 0.6;
-      const endPoint = -windowHeight * 0.3;
+      const sectionBottom = rect.bottom;
+      const sectionTop = rect.top;
 
-      // Only calculate when section is in the active scroll range
-      if (rect.top > startPoint || rect.top < endPoint) {
+      // Start when bottom is visible and end when content is still visible
+      // We need a range where the visual content (images) is fully in view
+
+      // Start: section top at 50% viewport (content becoming centered)
+      // End: section top at -40% viewport (top exiting but bottom still visible)
+      const startThreshold = windowHeight * 0.5;
+      const endThreshold = -windowHeight * 0.4;
+
+      // Only track when section is in the active range
+      if (sectionTop > startThreshold || sectionTop < endThreshold) {
         return;
       }
 
-      // Calculate progress from when text is visible to when title exits
-      const scrollRange = startPoint - endPoint;
-      const scrollProgress = startPoint - rect.top;
+      // Calculate progress through the visible range
+      const scrollRange = startThreshold - endThreshold;
+      const scrollProgress = startThreshold - sectionTop;
       const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
 
-      // Divide into 3 features evenly across the scroll range
-      if (progress < 0.33) {
+      // Update scroll progress for visual indicator
+      setScrollProgress(progress);
+
+      // Feature 1: 30%, Feature 2: 30%, Feature 3: 40%
+      if (progress < 0.30) {
         setActiveFeature(0);
-      } else if (progress < 0.66) {
+      } else if (progress < 0.60) {
         setActiveFeature(1);
       } else {
         setActiveFeature(2);
@@ -84,21 +96,28 @@ export default function Home() {
       const rect = section.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Start when text content becomes visible
-      const startPoint = windowHeight * 0.6;
-      const endPoint = -windowHeight * 0.3;
+      const sectionTop = rect.top;
 
-      if (rect.top > startPoint || rect.top < endPoint) {
+      // Start: section top at 50% viewport (content becoming centered)
+      // End: section top at -40% viewport (top exiting but bottom still visible)
+      const startThreshold = windowHeight * 0.5;
+      const endThreshold = -windowHeight * 0.4;
+
+      if (sectionTop > startThreshold || sectionTop < endThreshold) {
         return;
       }
 
-      const scrollRange = startPoint - endPoint;
-      const scrollProgress = startPoint - rect.top;
+      const scrollRange = startThreshold - endThreshold;
+      const scrollProgress = startThreshold - sectionTop;
       const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
 
-      if (progress < 0.33) {
+      // Update scroll progress for visual indicator
+      setProviderScrollProgress(progress);
+
+      // Feature 1: 30%, Feature 2: 30%, Feature 3: 40%
+      if (progress < 0.30) {
         setActiveProviderFeature(0);
-      } else if (progress < 0.66) {
+      } else if (progress < 0.60) {
         setActiveProviderFeature(1);
       } else {
         setActiveProviderFeature(2);
@@ -119,21 +138,28 @@ export default function Home() {
       const rect = section.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Start when text content becomes visible
-      const startPoint = windowHeight * 0.6;
-      const endPoint = -windowHeight * 0.3;
+      const sectionTop = rect.top;
 
-      if (rect.top > startPoint || rect.top < endPoint) {
+      // Start: section top at 50% viewport (content becoming centered)
+      // End: section top at -40% viewport (top exiting but bottom still visible)
+      const startThreshold = windowHeight * 0.5;
+      const endThreshold = -windowHeight * 0.4;
+
+      if (sectionTop > startThreshold || sectionTop < endThreshold) {
         return;
       }
 
-      const scrollRange = startPoint - endPoint;
-      const scrollProgress = startPoint - rect.top;
+      const scrollRange = startThreshold - endThreshold;
+      const scrollProgress = startThreshold - sectionTop;
       const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
 
-      if (progress < 0.33) {
+      // Update scroll progress for visual indicator
+      setAnywhereScrollProgress(progress);
+
+      // Feature 1: 30%, Feature 2: 30%, Feature 3: 40%
+      if (progress < 0.30) {
         setActiveAnywhereFeature(0);
-      } else if (progress < 0.66) {
+      } else if (progress < 0.60) {
         setActiveAnywhereFeature(1);
       } else {
         setActiveAnywhereFeature(2);
@@ -641,24 +667,43 @@ export default function Home() {
                     onClick={() => handleFeatureClick(0)}
                   >
                     Declarative API
+                    <span className="nav-dot-progress" style={{ width: activeFeature === 0 ? `${(scrollProgress / 0.30) * 100}%` : (activeFeature > 0 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(1)}
                   >
                     Self-healing landscapes
+                    <span className="nav-dot-progress" style={{ width: activeFeature === 1 ? `${((scrollProgress - 0.30) / 0.30) * 100}%` : (activeFeature > 1 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(2)}
                   >
                     GitOps
+                    <span className="nav-dot-progress" style={{ width: activeFeature === 2 ? `${((scrollProgress - 0.60) / 0.40) * 100}%` : (activeFeature > 2 ? '100%' : '0%') }}></span>
                   </button>
                 </div>
               </div>
               <div className="section-header-right-col">
                 <Link className="section-header-cta" to="/users/getting-started">Read end user guides →</Link>
                 <Link className="section-header-cta" to="/developers/serviceprovider/service-providers">Contribute ServiceProvider →</Link>
+              </div>
+            </div>
+
+            {/* Centered text content above visual */}
+            <div className="section-text-content">
+              <div className={`section-text-item ${activeFeature === 0 ? 'active' : ''}`}>
+                <h3>Declarative API everywhere</h3>
+                <p>Define your infrastructure as declarative YAML. The control plane reconciles your desired state with reality—creating, updating, and managing cloud resources automatically.</p>
+              </div>
+              <div className={`section-text-item ${activeFeature === 1 ? 'active' : ''}`}>
+                <h3>Self-healing</h3>
+                <p>The control plane continuously monitors your resources and automatically corrects drift, recovers from failures, and ensures your infrastructure matches the desired state at all times—powered by Crossplane.</p>
+              </div>
+              <div className={`section-text-item ${activeFeature === 2 ? 'active' : ''}`}>
+                <h3>GitOps</h3>
+                <p>Store your control plane configurations in Git. Flux automatically syncs changes from your repository to live environments, providing audit trails, rollback capabilities, and declarative infrastructure management.</p>
               </div>
             </div>
 
@@ -864,22 +909,6 @@ spec:
                 </div>
               </div>
             </div>
-
-            {/* Centered text content below */}
-            <div className="section-text-content">
-              <div className={`section-text-item ${activeFeature === 0 ? 'active' : ''}`}>
-                <h3>Declarative API everywhere</h3>
-                <p>Define your infrastructure as declarative YAML. The control plane reconciles your desired state with reality—creating, updating, and managing cloud resources automatically.</p>
-              </div>
-              <div className={`section-text-item ${activeFeature === 1 ? 'active' : ''}`}>
-                <h3>Self-healing</h3>
-                <p>The control plane continuously monitors your resources and automatically corrects drift, recovers from failures, and ensures your infrastructure matches the desired state at all times—powered by Crossplane.</p>
-              </div>
-              <div className={`section-text-item ${activeFeature === 2 ? 'active' : ''}`}>
-                <h3>GitOps</h3>
-                <p>GitOps enables easy replication across environments, reviewed rollouts with version control, and leverages industry-standard tools like Git, CI/CD, and Flux—perfectly integrated by design.</p>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -897,24 +926,43 @@ spec:
                     onClick={() => handleProviderFeatureClick(0)}
                   >
                     Central onboarding API
+                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 0 ? `${(providerScrollProgress / 0.30) * 100}%` : (activeProviderFeature > 0 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeProviderFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleProviderFeatureClick(1)}
                   >
                     Shared tooling
+                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 1 ? `${((providerScrollProgress - 0.30) / 0.30) * 100}%` : (activeProviderFeature > 1 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeProviderFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleProviderFeatureClick(2)}
                   >
                     Bring own observability stack
+                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 2 ? `${((providerScrollProgress - 0.60) / 0.40) * 100}%` : (activeProviderFeature > 2 ? '100%' : '0%') }}></span>
                   </button>
                 </div>
               </div>
               <div className="section-header-right-col">
                 <Link className="section-header-cta" to="/operators/overview">Read operator guides →</Link>
                 <Link className="section-header-cta" to="/developers">Contribute PlatformProvider →</Link>
+              </div>
+            </div>
+
+            {/* Centered text content above visual */}
+            <div className="section-text-content section-text-content-right">
+              <div className={`section-text-item ${activeProviderFeature === 0 ? 'active' : ''}`}>
+                <h3>Central onboarding API</h3>
+                <p>As an operator, provide a central onboarding API where end users can order control planes with standardized configurations. Streamline provisioning and ensure consistency across your organization.</p>
+              </div>
+              <div className={`section-text-item ${activeProviderFeature === 1 ? 'active' : ''}`}>
+                <h3>Shared tooling</h3>
+                <p>Share common tools across all control planes including Vault for secrets management, Kyverno for policy enforcement, custom IDPs for authentication, and GitHub registries for container images.</p>
+              </div>
+              <div className={`section-text-item ${activeProviderFeature === 2 ? 'active' : ''}`}>
+                <h3>Bring own observability stack</h3>
+                <p>Integrate your preferred monitoring and observability tools seamlessly with your control planes.</p>
               </div>
             </div>
 
@@ -991,22 +1039,6 @@ spec:
                 </div>
               </div>
             </div>
-
-            {/* Centered text content below */}
-            <div className="section-text-content">
-              <div className={`section-text-item ${activeProviderFeature === 0 ? 'active' : ''}`}>
-                <h3>Central onboarding API</h3>
-                <p>As an operator, provide a central onboarding API where end users can order control planes with standardized configurations. Streamline provisioning and ensure consistency across your organization.</p>
-              </div>
-              <div className={`section-text-item ${activeProviderFeature === 1 ? 'active' : ''}`}>
-                <h3>Shared tooling</h3>
-                <p>Share common tools across all control planes including Vault for secrets management, Kyverno for policy enforcement, custom IDPs for authentication, and GitHub registries for container images.</p>
-              </div>
-              <div className={`section-text-item ${activeProviderFeature === 2 ? 'active' : ''}`}>
-                <h3>Bring own observability stack</h3>
-                <p>Integrate your preferred monitoring and observability tools seamlessly with your control planes.</p>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -1024,24 +1056,43 @@ spec:
                     onClick={() => handleAnywhereFeatureClick(0)}
                   >
                     Anywhere
+                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 0 ? `${(anywhereScrollProgress / 0.30) * 100}%` : (activeAnywhereFeature > 0 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeAnywhereFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleAnywhereFeatureClick(1)}
                   >
                     Sovereign clouds
+                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 1 ? `${((anywhereScrollProgress - 0.30) / 0.30) * 100}%` : (activeAnywhereFeature > 1 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeAnywhereFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleAnywhereFeatureClick(2)}
                   >
                     Kind
+                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 2 ? `${((anywhereScrollProgress - 0.60) / 0.40) * 100}%` : (activeAnywhereFeature > 2 ? '100%' : '0%') }}></span>
                   </button>
                 </div>
               </div>
               <div className="section-header-right-col">
                 <Link className="section-header-cta" to="/operators/overview">Read operator guides →</Link>
                 <Link className="section-header-cta" to="/developers">Contribute ClusterProvider →</Link>
+              </div>
+            </div>
+
+            {/* Centered text content above visual */}
+            <div className="section-text-content">
+              <div className={`section-text-item ${activeAnywhereFeature === 0 ? 'active' : ''}`}>
+                <h3>Anywhere</h3>
+                <p>Deploy control planes anywhere—fully compatible with open source <Link to="https://github.com/gardener/gardener" target="_blank" rel="noopener noreferrer">Gardener</Link> on any Kubernetes cluster.</p>
+              </div>
+              <div className={`section-text-item ${activeAnywhereFeature === 1 ? 'active' : ''}`}>
+                <h3>Sovereign clouds</h3>
+                <p>Meet strict data residency and compliance requirements.</p>
+              </div>
+              <div className={`section-text-item ${activeAnywhereFeature === 2 ? 'active' : ''}`}>
+                <h3>Kind <span className="new-badge-inline">New</span></h3>
+                <p>Develop and test locally using Kind clusters.</p>
               </div>
             </div>
 
@@ -1137,22 +1188,6 @@ spec:
                     alt="Kind CP 2"
                   />
                 </div>
-              </div>
-            </div>
-
-            {/* Centered text content below */}
-            <div className="section-text-content">
-              <div className={`section-text-item ${activeAnywhereFeature === 0 ? 'active' : ''}`}>
-                <h3>Anywhere</h3>
-                <p>Deploy control planes anywhere—fully compatible with open source <Link to="https://github.com/gardener/gardener" target="_blank" rel="noopener noreferrer">Gardener</Link> on any Kubernetes cluster.</p>
-              </div>
-              <div className={`section-text-item ${activeAnywhereFeature === 1 ? 'active' : ''}`}>
-                <h3>Sovereign clouds</h3>
-                <p>Meet strict data residency and compliance requirements.</p>
-              </div>
-              <div className={`section-text-item ${activeAnywhereFeature === 2 ? 'active' : ''}`}>
-                <h3>Kind <span className="new-badge-inline">New</span></h3>
-                <p>Develop and test locally using Kind clusters.</p>
               </div>
             </div>
           </div>

@@ -38,9 +38,8 @@ OpenControlPlane is built on top of amazing open-source projects from the cloud 
     <div className="cloud-providers-label">We endorse using these Crossplane providers:</div>
     <div className="cloud-providers-list">
       <a href="https://github.com/crossplane-contrib/provider-aws" className="provider-badge" target="_blank" rel="noopener noreferrer">AWS</a>
-      <a href="https://github.com/crossplane-contrib/provider-azure" className="provider-badge" target="_blank" rel="noopener noreferrer">Azure</a>
-      <a href="https://github.com/crossplane-contrib/provider-gcp" className="provider-badge" target="_blank" rel="noopener noreferrer">GCP</a>
-      <a href="https://github.com/crossplane-contrib/provider-ibm-cloud" className="provider-badge" target="_blank" rel="noopener noreferrer">IBM Cloud</a>
+      <a href="https://github.com/crossplane-contrib/provider-upjet-azure" className="provider-badge" target="_blank" rel="noopener noreferrer">Azure</a>
+      <a href="https://github.com/crossplane-contrib/provider-upjet-gcp" className="provider-badge" target="_blank" rel="noopener noreferrer">GCP</a>
       <a href="https://sap.github.io/crossplane-provider-docs/" className="provider-badge" target="_blank" rel="noopener noreferrer">SAP BTP</a>
     </div>
   </div>
