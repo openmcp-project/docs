@@ -152,6 +152,7 @@
 /* ===== Navbar: transparent-on-top effect (landing page) ===== */
 .navbar {
   transition: background-color 0.5s, border-bottom-color 0.5s, box-shadow 0.5s;
+  z-index: 200 !important;
 }
 
 .navbar--transparent {
@@ -174,6 +175,8 @@
   background-color: var(--ifm-background-color);
   min-height: 10vh;
   gap: 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .lp-home .container {
@@ -267,7 +270,7 @@
   position: relative;
   width: 450px;
   height: 450px;
-  margin: 0 auto;
+  margin: 60px auto 0;
 }
 
 .lp-home .image-bg {
