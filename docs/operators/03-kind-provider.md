@@ -348,4 +348,4 @@ The `resources` folder contains the base resources that are used by the Kustomiz
 
 ## Next Steps
 
-Continue to [Verify Setup](./04-verify-setup) to inspect the Kustomizations and deployed components.
+Continue to [Verify Setup](./verify-setup) to inspect the Kustomizations and deployed components.
