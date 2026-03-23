@@ -1686,7 +1686,7 @@ body[class*="docs-doc-id-reference"] .row {
 }
 
 .crd-header-icon-custom {
-  width: 120px;
+  width: 220px;
   height: 120px;
   flex-shrink: 0;
   position: relative;
@@ -1697,60 +1697,89 @@ body[class*="docs-doc-id-reference"] .row {
 }
 
 /* Workspace icon in CRD header */
-.crd-header-icon-custom .reference-icon-group-workspace {
-  width: 80px;
-  height: 80px;
+.crd-header-icon-custom .reference-icon-group {
+  width: 160px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid var(--teal-7);
+  background: transparent;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.crd-header-icon-custom .reference-icon-group-workspace .reference-icon-medium {
+[data-theme='dark'] .crd-header-icon-custom .reference-icon-group {
+  border-color: var(--teal-6);
+}
+
+.crd-header-icon-custom .reference-icon-group .reference-icon-medium {
   width: 50px !important;
   height: 50px !important;
 }
 
-.crd-header-icon-custom .reference-icon-group-workspace .reference-icon-left {
-  left: 5px;
+.crd-header-icon-custom .reference-icon-group .reference-icon-left {
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.crd-header-icon-custom .reference-icon-group-workspace .reference-icon-right {
-  right: 5px;
+.crd-header-icon-custom .reference-icon-group .reference-icon-right {
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .crd-header-icon-custom .reference-icon-label {
-  bottom: -20px;
   font-size: 11px;
+  margin-top: 8px;
 }
 
 /* Project icon in CRD header */
-.crd-header-icon-custom .reference-icon-project-container {
-  width: 100px;
-  height: 80px;
+.crd-header-icon-project {
+  flex-shrink: 0;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 12px rgba(4, 159, 154, 0.2));
 }
 
-.crd-header-icon-custom .reference-icon-workspace-mini {
-  width: 45px;
-  height: 45px;
+.crd-header-icon-project .reference-icon-label {
+  margin-top: 0;
+  font-family: var(--ifm-font-family-base);
+  font-size: 13px;
 }
 
-.crd-header-icon-custom .reference-icon-workspace-mini .reference-icon-small {
-  width: 20px !important;
-  height: 20px !important;
+/* Project icon in CRD header */
+.crd-header-icon-project {
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 12px rgba(4, 159, 154, 0.2));
 }
 
-.crd-header-icon-custom .reference-icon-workspace-dev {
-  top: 0;
-  left: 0;
+.crd-header-icon-project .reference-icon-label {
+  margin-top: 0;
+  font-family: var(--ifm-font-family-base);
+  font-size: 13px;
 }
 
-.crd-header-icon-custom .reference-icon-workspace-prod {
-  top: 0;
-  right: 0;
+.reference-icon-project-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--teal-7);
+  text-align: center;
+  font-family: var(--ifm-font-family-base);
+  margin-top: 4px;
 }
 
-.crd-header-icon-custom .reference-icon-label-mini {
-  font-size: 8px;
-  bottom: -12px;
+[data-theme='dark'] .reference-icon-project-label {
+  color: var(--teal-5);
 }
 
 .crd-header-text {
@@ -2174,9 +2203,18 @@ body[class*="docs-doc-id-reference"] .row {
 /* Project container with two workspaces */
 .reference-icon-project-container {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   align-items: flex-end;
   margin-bottom: 8px;
+  padding: 12px 16px;
+  background: rgba(4, 159, 154, 0.08);
+  border: 3px solid rgba(4, 159, 154, 0.4);
+  border-radius: 12px;
+}
+
+[data-theme='dark'] .reference-icon-project-container {
+  background: rgba(4, 159, 154, 0.12);
+  border-color: rgba(4, 159, 154, 0.5);
 }
 
 .reference-icon-workspace-mini {
@@ -2224,8 +2262,8 @@ body[class*="docs-doc-id-reference"] .row {
 }
 
 .reference-icon-small {
-  width: 38px !important;
-  height: 38px !important;
+  width: 30px !important;
+  height: 30px !important;
   object-fit: contain !important;
   position: absolute;
   filter: brightness(0.9);
@@ -2240,19 +2278,19 @@ body[class*="docs-doc-id-reference"] .row {
 /* Side-by-side positioning for small CPs in mini workspaces */
 .reference-icon-workspace-mini .reference-icon-left {
   top: 50%;
-  left: 8px;
+  left: 10px;
   transform: translateY(-50%);
 }
 
 .reference-icon-workspace-mini .reference-icon-right {
   top: 50%;
-  right: 8px;
+  right: 10px;
   transform: translateY(-50%);
 }
 
 /* Single workspace group */
 .reference-icon-group {
-  width: 120px;
+  width: 160px;
   height: 120px;
   position: relative;
   display: flex;
@@ -2272,8 +2310,8 @@ body[class*="docs-doc-id-reference"] .row {
 }
 
 .reference-icon-medium {
-  width: 61px !important;
-  height: 61px !important;
+  width: 50px !important;
+  height: 50px !important;
   object-fit: contain !important;
   position: absolute;
   filter: brightness(0.9);
@@ -2288,13 +2326,13 @@ body[class*="docs-doc-id-reference"] .row {
 /* Side-by-side positioning for medium CPs */
 .reference-icon-group .reference-icon-left {
   top: 50%;
-  left: 10px;
+  left: 15px;
   transform: translateY(-50%);
 }
 
 .reference-icon-group .reference-icon-right {
   top: 50%;
-  right: 10px;
+  right: 15px;
   transform: translateY(-50%);
 }
 

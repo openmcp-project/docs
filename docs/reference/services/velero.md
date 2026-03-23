@@ -6,7 +6,12 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 
 # Velero
 
-Delivers Velero as a service for backup and disaster recovery within ManagedControlPlanes.
+<div className="crd-header-container">
+  <img src="/docs/img/platform/tower_velero.png" alt="Velero" className="crd-header-icon" />
+  <div className="crd-header-text">
+    <p>Delivers Velero as a service for backup and disaster recovery within ManagedControlPlanes.</p>
+  </div>
+</div>
 
 **API Group:** `velero.services.openmcp.cloud`
 **API Version:** `v1alpha1`

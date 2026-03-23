@@ -82,12 +82,18 @@ Available service providers that can be deployed within control planes.
 </div>
 
 <div className="reference-card">
+  <div className="reference-icon-container reference-icon-container-standard">
+    <img src="/docs/img/platform/tower_landscaper.png" alt="Landscaper" className="reference-icon-large" />
+  </div>
   <h3>Landscaper</h3>
   <p>Declarative deployment orchestration service using Landscaper.</p>
   <a href="/docs/reference/services/landscaper" className="reference-link">View CRD →</a>
 </div>
 
 <div className="reference-card">
+  <div className="reference-icon-container reference-icon-container-standard">
+    <img src="/docs/img/platform/tower_velero.png" alt="Velero" className="reference-icon-large" />
+  </div>
   <h3>Velero</h3>
   <p>Backup and disaster recovery service using Velero.</p>
   <a href="/docs/reference/services/velero" className="reference-link">View CRD →</a>

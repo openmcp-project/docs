@@ -7,7 +7,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 # Project
 
 <div className="crd-header-container">
-  <div className="crd-header-icon-custom">
+  <div className="crd-header-icon-project">
     <div className="reference-icon-project-container">
       <div className="reference-icon-workspace-mini reference-icon-workspace-dev">
         <img src="/docs/img/cp1.png" alt="" className="reference-icon-small reference-icon-left" />

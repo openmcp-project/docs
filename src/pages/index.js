@@ -1205,27 +1205,12 @@ spec:
                 style={{ maxWidth: "100%", marginBottom: "24px" }}
               />
               <p>
-                Through technical <b>providers</b>, we request, update and delete the cloud resources we want to
-                orchestrate. They <b>allow us to describe environments in code</b>. Most SAP cloud services do not
-                offer providers and are therefore not orchestrable yet. Since their APIs are public, we can build those
-                ourselves.
-                <br />
-                <br />
-                We truly believe in open standards — our solutions are based on the{" "}
-                <b>
-                  open-source project <Link to="https://crossplane.io/">Crossplane</Link>
-                </b>
-                . Crossplane is recommended by the{" "}
-                <b>
-                  Cloud Native Computing Foundation <Link to="https://www.cncf.io/projects/crossplane/">(CNCF)</Link>
-                </b>
-                .
+                This project started as an inner-source initiative within SAP. Thanks to <b>NeonEphos</b>, it now operates 100% publicly and has been donated to the <Link to="https://github.com/openmcp-project" target="_blank" rel="noopener noreferrer">OpenControlPlane organization</Link>.
                 <br />
                 <br />
                 <b>
-                  We believe that no single team can achieve a fully orchestrated environment by writing providers on
-                  their own.
-                  <br /> Only through collaboration we can make SAP's cloud services 100% orchestratable for everyone.
+                  We believe that no single team can achieve a fully orchestrated environment on their own.
+                  <br /> Only through collaboration we can make Europe's cloud services 100% orchestratable for everyone.
                 </b>
                 <br />
                 <br />
