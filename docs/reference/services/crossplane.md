@@ -6,7 +6,12 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 
 # Crossplane
 
-Delivers Crossplane as a service within ManagedControlPlanes, enabling infrastructure provisioning through composition.
+<div className="crd-header-container">
+  <img src="/docs/img/platform/tower_crossplane.png" alt="Crossplane" className="crd-header-icon" />
+  <div className="crd-header-text">
+    <p>Delivers Crossplane as a service within ManagedControlPlanes, enabling infrastructure provisioning through composition.</p>
+  </div>
+</div>
 
 **API Group:** `crossplane.services.openmcp.cloud`
 **API Version:** `v1alpha1`

@@ -1630,56 +1630,220 @@ img[alt="Landscaper"] {
   margin: 24px 0;
 }
 
+/* Hide table of contents on reference/CRD pages */
+body[class*="docs-doc-id-reference"] .col--3:last-child {
+  display: none !important;
+}
+
+body[class*="docs-doc-id-reference"] .col--9 {
+  --ifm-col-width: 100% !important;
+  flex-basis: 100% !important;
+  max-width: 100% !important;
+}
+
+body[class*="docs-doc-id-reference"] .docMainContainer_TBSr .container {
+  max-width: 100% !important;
+  padding: 0 40px !important;
+}
+
+body[class*="docs-doc-id-reference"] article {
+  max-width: 100% !important;
+}
+
+body[class*="docs-doc-id-reference"] .container {
+  max-width: 100% !important;
+}
+
+body[class*="docs-doc-id-reference"] .row {
+  max-width: 100% !important;
+}
+
+/* CRD Header with Icon */
+.crd-header-container {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 24px 0 32px 0;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(4, 159, 154, 0.03) 0%, rgba(10, 125, 121, 0.05) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(4, 159, 154, 0.15);
+}
+
+[data-theme='dark'] .crd-header-container {
+  background: linear-gradient(135deg, rgba(4, 159, 154, 0.08) 0%, rgba(10, 125, 121, 0.12) 100%);
+  border-color: rgba(4, 159, 154, 0.25);
+}
+
+.crd-header-icon {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 12px rgba(4, 159, 154, 0.3));
+}
+
+.crd-header-icon-custom {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 12px rgba(4, 159, 154, 0.3));
+}
+
+/* Workspace icon in CRD header */
+.crd-header-icon-custom .reference-icon-group-workspace {
+  width: 80px;
+  height: 80px;
+  position: relative;
+}
+
+.crd-header-icon-custom .reference-icon-group-workspace .reference-icon-medium {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+.crd-header-icon-custom .reference-icon-group-workspace .reference-icon-left {
+  left: 5px;
+}
+
+.crd-header-icon-custom .reference-icon-group-workspace .reference-icon-right {
+  right: 5px;
+}
+
+.crd-header-icon-custom .reference-icon-label {
+  bottom: -20px;
+  font-size: 11px;
+}
+
+/* Project icon in CRD header */
+.crd-header-icon-custom .reference-icon-project-container {
+  width: 100px;
+  height: 80px;
+  position: relative;
+}
+
+.crd-header-icon-custom .reference-icon-workspace-mini {
+  width: 45px;
+  height: 45px;
+}
+
+.crd-header-icon-custom .reference-icon-workspace-mini .reference-icon-small {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.crd-header-icon-custom .reference-icon-workspace-dev {
+  top: 0;
+  left: 0;
+}
+
+.crd-header-icon-custom .reference-icon-workspace-prod {
+  top: 0;
+  right: 0;
+}
+
+.crd-header-icon-custom .reference-icon-label-mini {
+  font-size: 8px;
+  bottom: -12px;
+}
+
+.crd-header-text {
+  flex: 1;
+}
+
+.crd-header-text p {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--ifm-color-emphasis-800);
+}
+
+[data-theme='dark'] .crd-header-text p {
+  color: var(--ifm-color-emphasis-700);
+}
+
 .schema-search-container {
-  padding: 16px;
-  background: var(--ifm-color-emphasis-100);
-  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(4, 159, 154, 0.03) 0%, rgba(10, 125, 121, 0.05) 100%);
+  border-bottom: 1px solid rgba(4, 159, 154, 0.15);
+  backdrop-filter: blur(10px);
 }
 
 [data-theme='dark'] .schema-search-container {
-  background: rgba(255, 255, 255, 0.05);
-  border-bottom-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(4, 159, 154, 0.08) 0%, rgba(10, 125, 121, 0.12) 100%);
+  border-bottom-color: rgba(4, 159, 154, 0.25);
+}
+
+.schema-search-wrapper {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.schema-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--teal-6);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+[data-theme='dark'] .schema-search-icon {
+  color: var(--teal-5);
 }
 
 .schema-search-input {
   width: 100%;
-  padding: 10px 16px;
+  padding: 12px 16px 12px 44px;
   font-size: 0.95rem;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 8px;
-  background: var(--ifm-background-color);
-  color: var(--ifm-font-color-base);
-  transition: border-color 0.2s ease;
+  border: 1px solid rgba(4, 159, 154, 0.25);
+  border-radius: 12px;
+  background: white;
+  color: #1c1e21;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(4, 159, 154, 0.08);
 }
 
 .schema-search-input:focus {
   outline: none;
   border-color: var(--teal-6);
+  box-shadow: 0 4px 16px rgba(4, 159, 154, 0.2);
+  transform: translateY(-1px);
 }
 
 [data-theme='dark'] .schema-search-input {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  color: #1c1e21;
+  border-color: rgba(4, 159, 154, 0.3);
 }
 
 .schema-tree {
-  padding: 16px;
+  padding: 24px 20px;
 }
 
 .schema-field {
-  margin: 8px 0;
-  padding: 8px;
-  border-left: 2px solid transparent;
-  transition: all 0.2s ease;
+  margin: 4px 0;
+  padding: 12px 16px;
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
 }
 
 .schema-field:hover {
-  background: var(--ifm-color-emphasis-100);
+  background: linear-gradient(90deg, rgba(4, 159, 154, 0.05) 0%, transparent 100%);
   border-left-color: var(--teal-6);
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(4, 159, 154, 0.08);
 }
 
 [data-theme='dark'] .schema-field:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: linear-gradient(90deg, rgba(4, 159, 154, 0.12) 0%, transparent 100%);
 }
 
 .schema-field-depth-1 {
@@ -1728,16 +1892,20 @@ img[alt="Landscaper"] {
 }
 
 .schema-field-type {
-  font-size: 0.85rem;
-  padding: 2px 8px;
-  background: var(--teal-6);
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, var(--teal-6) 0%, var(--teal-7) 100%);
   color: white;
-  border-radius: 4px;
+  border-radius: 6px;
   font-weight: 600;
+  box-shadow: 0 2px 6px rgba(4, 159, 154, 0.25);
+  text-transform: lowercase;
+  letter-spacing: 0.3px;
 }
 
 [data-theme='dark'] .schema-field-type {
-  background: var(--teal-7);
+  background: linear-gradient(135deg, var(--teal-7) 0%, var(--teal-8) 100%);
+  box-shadow: 0 2px 6px rgba(4, 159, 154, 0.4);
 }
 
 .schema-field-required {

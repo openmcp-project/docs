@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import { Search } from 'lucide-react';
 import yaml from 'js-yaml';
 
 const SchemaField = ({ field, depth = 0, searchTerm }) => {
@@ -180,13 +181,16 @@ export default function CRDViewerCompact({ crdUrl, name, description, exampleUrl
       <Tabs>
         <TabItem value="schema" label="Schema" default>
           <div className="schema-search-container">
-            <input
-              type="text"
-              placeholder="Search fields..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="schema-search-input"
-            />
+            <div className="schema-search-wrapper">
+              <Search size={18} className="schema-search-icon" />
+              <input
+                type="text"
+                placeholder="Search fields..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="schema-search-input"
+              />
+            </div>
           </div>
           <div className="schema-tree">
             {schema.map((field, idx) => (

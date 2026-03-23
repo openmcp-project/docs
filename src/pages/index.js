@@ -946,7 +946,7 @@ spec:
               </div>
               <div className="section-header-right-col">
                 <Link className="section-header-cta" to="/operators/overview">Read operator guides →</Link>
-                <Link className="section-header-cta" to="/developers">Contribute PlatformProvider →</Link>
+                <Link className="section-header-cta" to="/developers/general">Contribute PlatformProvider →</Link>
               </div>
             </div>
 
@@ -1076,7 +1076,7 @@ spec:
               </div>
               <div className="section-header-right-col">
                 <Link className="section-header-cta" to="/operators/overview">Read operator guides →</Link>
-                <Link className="section-header-cta" to="/developers">Contribute ClusterProvider →</Link>
+                <Link className="section-header-cta" to="/developers/clusterprovider/clusterproviders">Contribute ClusterProvider →</Link>
               </div>
             </div>
 

@@ -6,7 +6,12 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 
 # PlatformService
 
-Delivers complete platform capabilities and services. Provides comprehensive platform functionality for OpenControlPlane deployments.
+<div className="crd-header-container">
+  <img src="/docs/img/platform/main.png" alt="PlatformService" className="crd-header-icon" />
+  <div className="crd-header-text">
+    <p>Delivers complete platform capabilities and services. Provides comprehensive platform functionality for OpenControlPlane deployments.</p>
+  </div>
+</div>
 
 **API Group:** `openmcp.cloud`
 **API Version:** `v1alpha1`

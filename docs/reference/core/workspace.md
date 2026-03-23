@@ -6,7 +6,18 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 
 # Workspace
 
-Isolated environment within a project for deploying and managing applications. Workspaces provide dedicated namespaces and resource quotas.
+<div className="crd-header-container">
+  <div className="crd-header-icon-custom">
+    <div className="reference-icon-group reference-icon-group-workspace">
+      <img src="/docs/img/cp2.png" alt="" className="reference-icon-medium reference-icon-left" />
+      <img src="/docs/img/cp3.png" alt="" className="reference-icon-medium reference-icon-right" />
+    </div>
+    <div className="reference-icon-label">dev</div>
+  </div>
+  <div className="crd-header-text">
+    <p>Isolated environment within a project for deploying and managing applications. Workspaces provide dedicated namespaces and resource quotas.</p>
+  </div>
+</div>
 
 **API Group:** `core.openmcp.cloud`
 **API Version:** `v1alpha1`

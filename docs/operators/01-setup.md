@@ -40,5 +40,5 @@ docker pull ghcr.io/openmcp-project/images/openmcp-bootstrapper:${OPENMCP_BOOTST
 ## Next Steps
 
 Choose your cluster provider to continue:
-- [Kind Provider](./01-kind-provider.md) - For local testing and development
-- [Gardener Provider](./02-gardener-provider.md) - For production Gardener-based landscapes
+- [Kind Provider](./03-kind-provider) - For local testing and development
+- [Gardener Provider](./02-gardener-provider) - For production Gardener-based landscapes

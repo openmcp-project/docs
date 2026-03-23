@@ -6,7 +6,26 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 
 # Project
 
-Organizational unit for grouping workspaces and managing resources across teams. Projects provide multi-tenancy and resource isolation.
+<div className="crd-header-container">
+  <div className="crd-header-icon-custom">
+    <div className="reference-icon-project-container">
+      <div className="reference-icon-workspace-mini reference-icon-workspace-dev">
+        <img src="/docs/img/cp1.png" alt="" className="reference-icon-small reference-icon-left" />
+        <img src="/docs/img/cp2.png" alt="" className="reference-icon-small reference-icon-right" />
+        <div className="reference-icon-label-mini">dev</div>
+      </div>
+      <div className="reference-icon-workspace-mini reference-icon-workspace-prod">
+        <img src="/docs/img/cp3.png" alt="" className="reference-icon-small reference-icon-left" />
+        <img src="/docs/img/cp4.png" alt="" className="reference-icon-small reference-icon-right" />
+        <div className="reference-icon-label-mini">prod</div>
+      </div>
+    </div>
+    <div className="reference-icon-label">team-project</div>
+  </div>
+  <div className="crd-header-text">
+    <p>Organizational unit for grouping workspaces and managing resources across teams. Projects provide multi-tenancy and resource isolation.</p>
+  </div>
+</div>
 
 **API Group:** `core.openmcp.cloud`
 **API Version:** `v1alpha1`

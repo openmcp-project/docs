@@ -6,7 +6,12 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 
 # ManagedControlPlaneV2
 
-The primary resource for creating and managing control planes in OpenControlPlane. Supports IAM configuration with OIDC and token-based authentication.
+<div className="crd-header-container">
+  <img src="/docs/img/cp2.png" alt="ManagedControlPlane" className="crd-header-icon" />
+  <div className="crd-header-text">
+    <p>The primary resource for creating and managing control planes in OpenControlPlane. Supports IAM configuration with OIDC and token-based authentication.</p>
+  </div>
+</div>
 
 **API Group:** `core.openmcp.cloud`
 **API Version:** `v2alpha1`
