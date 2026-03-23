@@ -45,4 +45,4 @@ openMCP is a platform built on top of amazing open-source projects. The major on
 [^fluxcd]: https://fluxcd.io/
 [^kyverno]: https://kyverno.io/
 [^externalsecrets]: https://external-secrets.io/latest/
-[^landscaper]: https://github.com/gardener/landscaper/blob/master/README.md
+[^landscaper]: https://github.com/openmcp-project/landscaper/blob/master/README.md
