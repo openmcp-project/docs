@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Open Managed Control Plane (openMCP)',
+  title: 'Open Control Plane',
   tagline: 'Part of ApeiroRA and NeoNephos.',
   favicon: 'img/favicon.ico',
 
@@ -45,6 +45,8 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           editUrl:
             'https://github.com/openmcp-project/docs/tree/main/',
+          sidebarCollapsible: true,
+          sidebarCollapsed: true,
         },
         blog: {
           routeBasePath: "adrs",
@@ -72,39 +74,44 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/co_axolotl.png',
     navbar: {
-      title: 'Open Managed Control Plane (openMCP)',
+      title: 'Open Control Plane',
       logo: {
-        alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        alt: 'Open Control Plane Logo',
+        src: 'img/co_axolotl_mirrored.png',
       },
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'about',
-          position: 'left',
-          label: 'About OpenMCP',
-        },
-        {
-          type: 'docSidebar',
           sidebarId: 'userDocs',
           position: 'left',
-          label: 'End-users',
+          label: 'Get Started',
         },
         {
           type: 'docSidebar',
           sidebarId: 'operatorDocs',
           position: 'left',
-          label: 'Operators',
+          label: 'Run Your Platform',
         },
         {
           type: 'docSidebar',
           sidebarId: 'developerDocs',
           position: 'left',
-          label: 'Developers',
+          label: 'Build Together',
         },
-        {to: '/adrs', label: 'ADRs', position: 'left'},
+        {
+          type: 'docSidebar',
+          sidebarId: 'communitySidebar',
+          position: 'right',
+          label: 'Community',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'referenceSidebar',
+          position: 'right',
+          label: 'CRD Browser',
+        },
         {
           href: 'https://github.com/openmcp-project/docs',
           label: 'GitHub',
@@ -135,6 +142,10 @@ const config: Config = {
               label: 'NeoNephos',
               href: 'https://neonephos.org/',
             },
+                        {
+              label: 'Crossplane Provider Community @ SAP',
+              href: 'https://github.com/SAP/crossplane-provider-docs',
+            },
           ],
         },
         {
@@ -156,7 +167,7 @@ const config: Config = {
         },
       ],
       copyright: `
-        Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company and openMCP contributors.
+        Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company and openControlPlane contributors.
         <br>
         This site is hosted by <a href="https://pages.github.com/">GitHub Pages</a>.
         Please see the <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement">GitHub Privacy Statement</a> for any information how GitHub processes your personal data.

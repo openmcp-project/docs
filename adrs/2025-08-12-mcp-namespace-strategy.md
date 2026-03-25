@@ -7,7 +7,7 @@ authors:
 
 ## Context and Problem Statement
 
-In the openMCP platform, we need to determine how to organize resources in the Platform Cluster that belong to Managed Control Planes (MCPs). Each MCP represents a separate tenant or customer environment that needs to be isolated and managed independently. The key question is: Should every MCP on the Platform Cluster have its own Namespace to ensure proper isolation, resource management, and security boundaries?
+In the OpenControlPlane platform, we need to determine how to organize resources in the Platform Cluster that belong to Managed Control Planes (MCPs). Each MCP represents a separate tenant or customer environment that needs to be isolated and managed independently. The key question is: Should every MCP on the Platform Cluster have its own Namespace to ensure proper isolation, resource management, and security boundaries?
 
 Without proper namespace isolation, MCPs could interfere with each other, leading to security vulnerabilities, resource conflicts, and operational complexity.
 
