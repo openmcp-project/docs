@@ -257,7 +257,7 @@ spec:
         <div className="flex-container">
           <div className="main">
             <h1 className="heading">
-              <span className="name clip">open control plane docs</span>
+              <span className="name clip">Open Control Plane docs</span>
               <span className="text">Give your teams the power to run robust, secure, compliant clouds. <br/> 
               <i>Public, Private, Sovereign</i>.</span>
             </h1>
