@@ -6,6 +6,8 @@ import ThemedImage from "@theme/ThemedImage";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Link from "@docusaurus/Link";
 import useBaseUrl from "@docusaurus/useBaseUrl";
+import { useScrollProgress } from "@site/src/components/hooks/useScrollProgress";
+import { SelfHealingAnimation } from "@site/src/components/SelfHealingAnimation";
 
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
@@ -40,140 +42,17 @@ export default function Home() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Handle scroll-based feature switching based on main page scroll
-  useEffect(() => {
-    const handleMainScroll = () => {
-      const section = section1Ref.current;
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      const sectionBottom = rect.bottom;
-      const sectionTop = rect.top;
-
-      // Start when bottom is visible and end when content is still visible
-      // We need a range where the visual content (images) is fully in view
-
-      // Start: section top at 70% viewport (triggers earlier when section enters)
-      // End: section top at -20% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.7;
-      const endThreshold = -windowHeight * 0.2;
-
-      // Only track when section is in the active range
-      if (sectionTop > startThreshold || sectionTop < endThreshold) {
-        return;
-      }
-
-      // Reset manual click when scrolling
-      setManualClick(false);
-
-      // Calculate progress through the visible range
-      const scrollRange = startThreshold - endThreshold;
-      const scrollProgress = startThreshold - sectionTop;
-      const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
-
-      // Update scroll progress for visual indicator
-      setScrollProgress(progress);
-
-      // Feature 1: 30%, Feature 2: 30%, Feature 3: 40%
-      if (progress < 0.30) {
-        setActiveFeature(0);
-      } else if (progress < 0.60) {
-        setActiveFeature(1);
-      } else {
-        setActiveFeature(2);
-      }
-    };
-
-    window.addEventListener('scroll', handleMainScroll, { passive: true });
-    handleMainScroll();
-    return () => window.removeEventListener('scroll', handleMainScroll);
-  }, []);
+  // Handle scroll-based feature switching - using custom hook
+  useScrollProgress(section1Ref, setScrollProgress, (index) => {
+    setActiveFeature(index);
+    setManualClick(false);
+  });
 
   // Handle scroll-based feature switching for providers section
-  useEffect(() => {
-    const handleProviderScroll = () => {
-      const section = section2Ref.current;
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      const sectionTop = rect.top;
-
-      // Start: section top at 70% viewport (triggers earlier when section enters)
-      // End: section top at -20% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.7;
-      const endThreshold = -windowHeight * 0.2;
-
-      if (sectionTop > startThreshold || sectionTop < endThreshold) {
-        return;
-      }
-
-      const scrollRange = startThreshold - endThreshold;
-      const scrollProgress = startThreshold - sectionTop;
-      const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
-
-      // Update scroll progress for visual indicator
-      setProviderScrollProgress(progress);
-
-      // Feature 1: 30%, Feature 2: 30%, Feature 3: 40%
-      if (progress < 0.30) {
-        setActiveProviderFeature(0);
-      } else if (progress < 0.60) {
-        setActiveProviderFeature(1);
-      } else {
-        setActiveProviderFeature(2);
-      }
-    };
-
-    window.addEventListener('scroll', handleProviderScroll, { passive: true });
-    handleProviderScroll();
-    return () => window.removeEventListener('scroll', handleProviderScroll);
-  }, []);
+  useScrollProgress(section2Ref, setProviderScrollProgress, setActiveProviderFeature);
 
   // Handle scroll-based feature switching for anywhere section
-  useEffect(() => {
-    const handleAnywhereScroll = () => {
-      const section = section3Ref.current;
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      const sectionTop = rect.top;
-
-      // Start: section top at 70% viewport (triggers earlier when section enters)
-      // End: section top at -20% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.7;
-      const endThreshold = -windowHeight * 0.2;
-
-      if (sectionTop > startThreshold || sectionTop < endThreshold) {
-        return;
-      }
-
-      const scrollRange = startThreshold - endThreshold;
-      const scrollProgress = startThreshold - sectionTop;
-      const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
-
-      // Update scroll progress for visual indicator
-      setAnywhereScrollProgress(progress);
-
-      // Feature 1: 30%, Feature 2: 30%, Feature 3: 40%
-      if (progress < 0.30) {
-        setActiveAnywhereFeature(0);
-      } else if (progress < 0.60) {
-        setActiveAnywhereFeature(1);
-      } else {
-        setActiveAnywhereFeature(2);
-      }
-    };
-
-    window.addEventListener('scroll', handleAnywhereScroll, { passive: true });
-    handleAnywhereScroll();
-    return () => window.removeEventListener('scroll', handleAnywhereScroll);
-  }, []);
+  useScrollProgress(section3Ref, setAnywhereScrollProgress, setActiveAnywhereFeature);
 
   // Handle button clicks
   const handleFeatureClick = (featureIndex) => {
@@ -193,6 +72,7 @@ export default function Home() {
   };
 
   // Typewriter animation for Declarative API
+  // Reset and restart whenever activeFeature becomes 0
   useEffect(() => {
     if (activeFeature !== 0) return;
 
@@ -782,21 +662,21 @@ spec:
                     onClick={() => handleFeatureClick(0)}
                   >
                     Declarative API
-                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 0 ? `${Math.min(Math.max((scrollProgress / 0.30) * 100, 0), 100)}%` : (activeFeature > 0 ? '100%' : '0%')) }}></span>
+                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 0 ? `${Math.min(Math.max((scrollProgress / 0.65) * 100, 0), 100)}%` : (activeFeature > 0 ? '100%' : '0%')) }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(1)}
                   >
                     Self-healing landscapes
-                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 1 ? `${Math.min(Math.max(((scrollProgress - 0.30) / 0.30) * 100, 0), 100)}%` : (activeFeature > 1 ? '100%' : '0%')) }}></span>
+                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 1 ? `${Math.min(Math.max(((scrollProgress - 0.65) / 0.175) * 100, 0), 100)}%` : (activeFeature > 1 ? '100%' : '0%')) }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(2)}
                   >
                     GitOps
-                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 2 ? `${Math.min(Math.max(((scrollProgress - 0.60) / 0.40) * 100, 0), 100)}%` : (activeFeature > 2 ? '100%' : '0%')) }}></span>
+                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 2 ? `${Math.min(Math.max(((scrollProgress - 0.825) / 0.175) * 100, 0), 100)}%` : (activeFeature > 2 ? '100%' : '0%')) }}></span>
                   </button>
                 </div>
               </div>
@@ -888,61 +768,7 @@ spec:
 
                 {/* Feature 1: Self-healing - 4 resource icons rotating around CP */}
                 <div className={`essentials-visual-content ${activeFeature === 1 ? 'active' : ''}`}>
-                  <div className="selfhealing-animation-area">
-                    {/* Pulse rings from CP */}
-                    <svg className="cp-pulse-container" width="100%" height="100%" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', zIndex: 1 }}>
-                      <circle cx="50%" cy="50%" r="60" className={`cp-pulse-ring ${activeFeature === 1 ? 'animate' : ''}`} fill="none" stroke="rgba(4, 159, 154, 0.4)" strokeWidth="2" />
-                      <circle cx="50%" cy="50%" r="60" className={`cp-pulse-ring cp-pulse-ring-2 ${activeFeature === 1 ? 'animate' : ''}`} fill="none" stroke="rgba(4, 159, 154, 0.4)" strokeWidth="2" />
-                      <circle cx="50%" cy="50%" r="60" className={`cp-pulse-ring cp-pulse-ring-3 ${activeFeature === 1 ? 'animate' : ''}`} fill="none" stroke="rgba(4, 159, 154, 0.4)" strokeWidth="2" />
-                    </svg>
-
-                    {/* Rotating orbit path */}
-                    <div className={`healing-orbit ${activeFeature === 1 ? 'rotating' : ''}`}>
-                      {/* Database - position 1 (top) */}
-                      <div className={`healing-resource healing-resource-1 ${activeFeature === 1 ? 'animate' : ''}`}>
-                        <div className="healing-resource-icon">
-                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <ellipse cx="12" cy="5" rx="9" ry="3" className="resource-icon-stroke" strokeWidth="2" fill="none" />
-                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
-                                  className="resource-icon-stroke" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </div>
-                      </div>
-
-                      {/* User - position 2 (right) */}
-                      <div className={`healing-resource healing-resource-2 ${activeFeature === 1 ? 'animate' : ''}`}>
-                        <div className="healing-resource-icon">
-                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            <circle cx="12" cy="7" r="4" className="resource-icon-stroke" strokeWidth="2" />
-                          </svg>
-                        </div>
-                      </div>
-
-                      {/* Server - position 3 (bottom) */}
-                      <div className={`healing-resource healing-resource-3 ${activeFeature === 1 ? 'animate' : ''}`}>
-                        <div className="healing-resource-icon">
-                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2" className="resource-icon-stroke" strokeWidth="2" />
-                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2" className="resource-icon-stroke" strokeWidth="2" />
-                            <line x1="6" y1="6" x2="6.01" y2="6" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
-                            <line x1="6" y1="18" x2="6.01" y2="18" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
-                          </svg>
-                        </div>
-                      </div>
-
-                      {/* Storage - position 4 (left) */}
-                      <div className={`healing-resource healing-resource-4 ${activeFeature === 1 ? 'animate' : ''}`}>
-                        <div className="healing-resource-icon">
-                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" className="resource-icon-stroke" strokeWidth="2" />
-                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            <line x1="12" y1="22.08" x2="12" y2="12" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <SelfHealingAnimation isActive={activeFeature === 1} />
                 </div>
 
                 {/* Feature 2: GitOps - clouds split with badges */}
@@ -1018,21 +844,21 @@ spec:
                     onClick={() => handleProviderFeatureClick(0)}
                   >
                     Central onboarding API
-                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 0 ? `${(providerScrollProgress / 0.30) * 100}%` : (activeProviderFeature > 0 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 0 ? `${(providerScrollProgress / 0.65) * 100}%` : (activeProviderFeature > 0 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeProviderFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleProviderFeatureClick(1)}
                   >
                     Shared tooling
-                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 1 ? `${((providerScrollProgress - 0.30) / 0.30) * 100}%` : (activeProviderFeature > 1 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 1 ? `${((providerScrollProgress - 0.65) / 0.175) * 100}%` : (activeProviderFeature > 1 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeProviderFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleProviderFeatureClick(2)}
                   >
                     Bring own observability stack
-                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 2 ? `${((providerScrollProgress - 0.60) / 0.40) * 100}%` : (activeProviderFeature > 2 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 2 ? `${((providerScrollProgress - 0.825) / 0.175) * 100}%` : (activeProviderFeature > 2 ? '100%' : '0%') }}></span>
                   </button>
                 </div>
               </div>
@@ -1148,21 +974,21 @@ spec:
                     onClick={() => handleAnywhereFeatureClick(0)}
                   >
                     Anywhere
-                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 0 ? `${(anywhereScrollProgress / 0.30) * 100}%` : (activeAnywhereFeature > 0 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 0 ? `${(anywhereScrollProgress / 0.65) * 100}%` : (activeAnywhereFeature > 0 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeAnywhereFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleAnywhereFeatureClick(1)}
                   >
                     Sovereign clouds
-                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 1 ? `${((anywhereScrollProgress - 0.30) / 0.30) * 100}%` : (activeAnywhereFeature > 1 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 1 ? `${((anywhereScrollProgress - 0.65) / 0.175) * 100}%` : (activeAnywhereFeature > 1 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeAnywhereFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleAnywhereFeatureClick(2)}
                   >
                     Kind
-                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 2 ? `${((anywhereScrollProgress - 0.60) / 0.40) * 100}%` : (activeAnywhereFeature > 2 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 2 ? `${((anywhereScrollProgress - 0.825) / 0.175) * 100}%` : (activeAnywhereFeature > 2 ? '100%' : '0%') }}></span>
                   </button>
                 </div>
               </div>

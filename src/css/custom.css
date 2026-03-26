@@ -4494,7 +4494,7 @@ article[data-role="enduser"] {
 }
 
 .healing-orbit.rotating .healing-resource-1.animate {
-  animation: counter-rotate-1 20s linear infinite, resource-heal-1 6s ease-in-out 3s infinite;
+  animation: counter-rotate-1 20s linear infinite, resource-heal 6s ease-in-out 3s infinite;
 }
 
 .healing-orbit.rotating .healing-resource-2 {
@@ -4502,7 +4502,7 @@ article[data-role="enduser"] {
 }
 
 .healing-orbit.rotating .healing-resource-2.animate {
-  animation: counter-rotate-2 20s linear infinite, resource-heal-2 6s ease-in-out 3.3s infinite;
+  animation: counter-rotate-2 20s linear infinite, resource-heal 6s ease-in-out 3.3s infinite;
 }
 
 .healing-orbit.rotating .healing-resource-3 {
@@ -4510,7 +4510,7 @@ article[data-role="enduser"] {
 }
 
 .healing-orbit.rotating .healing-resource-3.animate {
-  animation: counter-rotate-3 20s linear infinite, resource-heal-3 6s ease-in-out 3.6s infinite;
+  animation: counter-rotate-3 20s linear infinite, resource-heal 6s ease-in-out 3.6s infinite;
 }
 
 .healing-orbit.rotating .healing-resource-4 {
@@ -4518,7 +4518,7 @@ article[data-role="enduser"] {
 }
 
 .healing-orbit.rotating .healing-resource-4.animate {
-  animation: counter-rotate-4 20s linear infinite, resource-heal-4 6s ease-in-out 3.9s infinite;
+  animation: counter-rotate-4 20s linear infinite, resource-heal 6s ease-in-out 3.9s infinite;
 }
 
 @keyframes counter-rotate-1 {
@@ -4557,44 +4557,8 @@ article[data-role="enduser"] {
   }
 }
 
-/* Healing animations - turn red, then green */
-@keyframes resource-heal-1 {
-  0%, 100% {
-    filter: none;
-  }
-  20% {
-    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
-  }
-  40% {
-    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8));
-  }
-}
-
-@keyframes resource-heal-2 {
-  0%, 100% {
-    filter: none;
-  }
-  20% {
-    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
-  }
-  40% {
-    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8));
-  }
-}
-
-@keyframes resource-heal-3 {
-  0%, 100% {
-    filter: none;
-  }
-  20% {
-    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
-  }
-  40% {
-    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8));
-  }
-}
-
-@keyframes resource-heal-4 {
+/* Healing animations - turn red, then green (consolidated single animation) */
+@keyframes resource-heal {
   0%, 100% {
     filter: none;
   }
