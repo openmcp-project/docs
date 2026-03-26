@@ -4,7 +4,9 @@ sidebar_position: 2
 
 # Ecosystem
 
-OpenControlPlane is built on top of amazing open-source projects from the cloud native ecosystem. Here are the key projects that power our platform.
+OpenControlPlane is built on top of amazing open-source projects from the cloud native ecosystem. 
+
+Here are the **key projects** that **power our platform** or **end-users' cloud scenarios**.
 
 <div className="ecosystem-grid">
 

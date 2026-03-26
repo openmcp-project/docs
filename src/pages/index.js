@@ -15,6 +15,7 @@ export default function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [providerScrollProgress, setProviderScrollProgress] = useState(0);
   const [anywhereScrollProgress, setAnywhereScrollProgress] = useState(0);
+  const [manualClick, setManualClick] = useState(false);
   const section1Ref = useRef(null);
   const section2Ref = useRef(null);
   const section3Ref = useRef(null);
@@ -63,6 +64,9 @@ export default function Home() {
       if (sectionTop > startThreshold || sectionTop < endThreshold) {
         return;
       }
+
+      // Reset manual click when scrolling
+      setManualClick(false);
 
       // Calculate progress through the visible range
       const scrollRange = startThreshold - endThreshold;
@@ -174,6 +178,8 @@ export default function Home() {
   // Handle button clicks
   const handleFeatureClick = (featureIndex) => {
     setActiveFeature(featureIndex);
+    setManualClick(true);
+    // Don't reset manualClick - let scroll handling do it
   };
 
   // Handle provider button clicks
@@ -558,7 +564,6 @@ export default function Home() {
       <main>
         <section className="features-section" style={{ background: "var(--lp-c-bg-elv)", padding: "48px 24px" }}>
           <div className="container">
-            <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '48px', fontSize: '2.5rem', fontWeight: '700' }}>How it works</h2>
             <div className="lp-features">
               <FeatureCard>
                 <ThemedImage
@@ -639,21 +644,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="get-started-section gray-white">
-          <Link
-            className="button button--primary button--lg"
-            to="/developers/getting-started"
-          >
-            Start contributing
-          </Link>
-          <span>
-            or explore{" "}
-            <Link to="/users/ecosystem">
-              our cloud native ecosystem
-            </Link>
-          </span>
-        </section>
-
         <section className="essentials-section" ref={section1Ref}>
           <div className="container">
             {/* Full-width title header */}
@@ -668,21 +658,21 @@ export default function Home() {
                     onClick={() => handleFeatureClick(0)}
                   >
                     Declarative API
-                    <span className="nav-dot-progress" style={{ width: activeFeature === 0 ? `${(scrollProgress / 0.30) * 100}%` : (activeFeature > 0 ? '100%' : '0%') }}></span>
+                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 0 ? `${Math.min(Math.max((scrollProgress / 0.30) * 100, 0), 100)}%` : (activeFeature > 0 ? '100%' : '0%')) }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(1)}
                   >
                     Self-healing landscapes
-                    <span className="nav-dot-progress" style={{ width: activeFeature === 1 ? `${((scrollProgress - 0.30) / 0.30) * 100}%` : (activeFeature > 1 ? '100%' : '0%') }}></span>
+                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 1 ? `${Math.min(Math.max(((scrollProgress - 0.30) / 0.30) * 100, 0), 100)}%` : (activeFeature > 1 ? '100%' : '0%')) }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(2)}
                   >
                     GitOps
-                    <span className="nav-dot-progress" style={{ width: activeFeature === 2 ? `${((scrollProgress - 0.60) / 0.40) * 100}%` : (activeFeature > 2 ? '100%' : '0%') }}></span>
+                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 2 ? `${Math.min(Math.max(((scrollProgress - 0.60) / 0.40) * 100, 0), 100)}%` : (activeFeature > 2 ? '100%' : '0%')) }}></span>
                   </button>
                 </div>
               </div>
@@ -1129,10 +1119,10 @@ spec:
 
                   {/* Connection lines from hangar to badges - tree structure */}
                   <svg className="anywhere-connections" width="100%" height="100%">
-                    <line className="anywhere-conn-line anywhere-conn-aws" x1="50%" y1="38%" x2="20%" y2="78%" />
-                    <line className="anywhere-conn-line anywhere-conn-azure" x1="50%" y1="38%" x2="40%" y2="78%" />
-                    <line className="anywhere-conn-line anywhere-conn-gcp" x1="50%" y1="38%" x2="60%" y2="78%" />
-                    <line className="anywhere-conn-line anywhere-conn-other" x1="50%" y1="38%" x2="80%" y2="78%" />
+                    <line className="anywhere-conn-line anywhere-conn-aws" x1="50%" y1="30%" x2="20%" y2="80%" />
+                    <line className="anywhere-conn-line anywhere-conn-azure" x1="50%" y1="30%" x2="40%" y2="80%" />
+                    <line className="anywhere-conn-line anywhere-conn-gcp" x1="50%" y1="30%" x2="60%" y2="80%" />
+                    <line className="anywhere-conn-line anywhere-conn-other" x1="50%" y1="30%" x2="80%" y2="80%" />
                   </svg>
                 </div>
 
@@ -1163,9 +1153,9 @@ spec:
 
                   {/* Connection lines from hangar to badges - tree structure */}
                   <svg className="anywhere-connections" width="100%" height="100%">
-                    <line className="anywhere-conn-line anywhere-conn-eu-1" x1="50%" y1="38%" x2="25%" y2="78%" />
-                    <line className="anywhere-conn-line anywhere-conn-eu-2" x1="50%" y1="38%" x2="50%" y2="78%" />
-                    <line className="anywhere-conn-line anywhere-conn-eu-3" x1="50%" y1="38%" x2="75%" y2="78%" />
+                    <line className="anywhere-conn-line anywhere-conn-eu-1" x1="50%" y1="30%" x2="25%" y2="80%" />
+                    <line className="anywhere-conn-line anywhere-conn-eu-2" x1="50%" y1="30%" x2="50%" y2="80%" />
+                    <line className="anywhere-conn-line anywhere-conn-eu-3" x1="50%" y1="30%" x2="75%" y2="80%" />
                   </svg>
                 </div>
 

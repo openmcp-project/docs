@@ -1991,6 +1991,105 @@ body[class*="docs-doc-id-reference"] .row {
   margin-top: 8px;
 }
 
+/* ===== Role Cards ===== */
+.role-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 2rem 0;
+}
+
+.role-card {
+  text-align: center;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.role-card .project-card-header {
+  border-bottom: none;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 0;
+}
+
+.role-card .project-card-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.role-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.role-card-description {
+  margin-top: 16px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-900);
+}
+
+.role-card-subtitle {
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+  flex: 1;
+}
+
+.role-card .button {
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* End User role styling */
+.role-card-enduser {
+  border-color: var(--role-enduser-primary);
+}
+
+.role-card-enduser svg {
+  color: var(--role-enduser-primary);
+}
+
+.role-card-enduser .button {
+  background: var(--role-enduser-primary);
+  border-color: var(--role-enduser-primary);
+}
+
+/* Operator role styling */
+.role-card-operator {
+  border-color: var(--role-operator-primary);
+}
+
+.role-card-operator svg {
+  color: var(--role-operator-primary);
+}
+
+.role-card-operator .button {
+  background: var(--role-operator-primary);
+  border-color: var(--role-operator-primary);
+  white-space: normal;
+  padding: 0.75rem 1rem;
+  line-height: 1.3;
+}
+
+/* Contributor role styling */
+.role-card-contributor {
+  border-color: #000;
+}
+
+.role-card-contributor svg {
+  color: #000;
+}
+
+.role-card-contributor-button {
+  background: #000 !important;
+  border-color: #000 !important;
+  color: #fff !important;
+}
+
 /* ===== Reference Grid ===== */
 .reference-grid {
   display: grid;
@@ -4403,39 +4502,39 @@ article[data-role="enduser"] {
 
 /* Resource 3 fails and recovers */
 .healing-resource-3.animate .resource-icon-stroke {
-  animation: resource-failure 13s ease-in-out 3s infinite;
+  animation: resource-failure 10s ease-in-out 0s infinite;
 }
 
 .healing-resource-3.animate .healing-conn-simple {
-  animation: line-draw 1s ease-out 0.5s forwards, line-failure 13s ease-in-out 3s infinite;
+  animation: line-draw 1s ease-out 0.5s forwards, line-failure 10s ease-in-out 0s infinite;
 }
 
 @keyframes resource-failure {
-  0%, 25% {
+  0%, 20% {
     stroke: var(--lp-c-brand-2);
   }
-  30%, 50% {
+  25%, 50% {
     stroke: #ef4444;
   }
-  55%, 65% {
+  55%, 70% {
     stroke: #22c55e;
   }
-  70%, 100% {
+  75%, 100% {
     stroke: var(--lp-c-brand-2);
   }
 }
 
 @keyframes line-failure {
-  0%, 25% {
+  0%, 20% {
     stroke: rgba(44, 224, 191, 0.5);
   }
-  30%, 50% {
+  25%, 50% {
     stroke: rgba(239, 68, 68, 0.7);
   }
-  55%, 65% {
+  55%, 70% {
     stroke: rgba(34, 197, 94, 0.7);
   }
-  70%, 100% {
+  75%, 100% {
     stroke: rgba(44, 224, 191, 0.5);
   }
 }
@@ -5499,6 +5598,7 @@ article[data-role="enduser"] {
   white-space: nowrap;
   font-weight: 400;
   position: relative;
+  overflow: hidden;
 }
 
 .nav-dot-progress {
@@ -5509,6 +5609,13 @@ article[data-role="enduser"] {
   background: var(--teal-7);
   transition: width 0.05s linear;
   pointer-events: none;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Disable transition on manual click to prevent animation jitter */
+.nav-dot-progress.manual-click {
+  transition: none;
 }
 
 .nav-dot::after {
@@ -6193,7 +6300,7 @@ article[data-role="enduser"] {
 
 /* Anywhere section - same as providers but potentially different color */
 .anywhere-section {
-  padding: 96px 0 48px 0;
+  padding: 48px 0 24px 0;
   background: linear-gradient(180deg, rgba(135, 206, 235, 0.1) 0%, rgba(7, 131, 143, 0.08) 30%, rgba(14, 89, 99, 0.12) 70%, rgba(2, 65, 76, 0.15) 100%);
 }
 
@@ -6211,7 +6318,7 @@ article[data-role="enduser"] {
   display: grid;
   grid-template-columns: 350px 1fr;
   gap: 40px;
-  min-height: 600px;
+  min-height: 300px;
 }
 
 .anywhere-sidebar {
@@ -6391,24 +6498,25 @@ article[data-role="enduser"] {
 
 .anywhere-visual-unified {
   position: relative;
-  min-height: 440px;
+  min-height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 16px;
-  padding: 48px 32px;
+  padding: 20px;
+  background: rgba(4, 159, 154, 0.02);
 }
 
 [data-theme='dark'] .anywhere-visual-unified {
-  background: transparent;
+  background: rgba(44, 224, 191, 0.03);
 }
 
 .anywhere-cp {
   position: absolute;
-  width: 200px;
+  width: 160px;
   height: auto;
   opacity: 0;
-  filter: drop-shadow(0 6px 24px rgba(14, 89, 99, 0.4));
+  filter: drop-shadow(0 4px 16px rgba(14, 89, 99, 0.4));
   transition: opacity 0.5s ease;
   left: 50%;
   top: 50%;
@@ -6450,26 +6558,29 @@ article[data-role="enduser"] {
 .anywhere-hangar-gardener {
   position: absolute;
   left: 50%;
-  top: 25%;
-  transform: translate(-50%, -20%);
-
-  height: 154px !important;
-  filter: drop-shadow(0 6px 24px rgba(14, 89, 99, 0.4));
+  top: 30%;
+  transform: translate(-50%, -50%);
+  width: 160px;
+  height: auto;
+  filter: drop-shadow(0 4px 16px rgba(14, 89, 99, 0.4));
+  z-index: 10;
 }
 
 .anywhere-hangar-kind {
   position: absolute;
   left: 50%;
-  top: 35%;
-  transform: translate(-50%, -30%);
-  height: 174px !important;
-  filter: drop-shadow(0 6px 24px rgba(14, 89, 99, 0.4));
+  top: 30%;
+  transform: translate(-50%, -50%);
+  width: 160px;
+  height: auto;
+  filter: drop-shadow(0 4px 16px rgba(14, 89, 99, 0.4));
+  z-index: 10;
 }
 
 /* Badge styles */
 .anywhere-badge {
   position: absolute;
-  padding: 8px 18px;
+  padding: 8px 16px;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 700;
@@ -6478,6 +6589,7 @@ article[data-role="enduser"] {
   animation: badge-pop-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
   opacity: 0;
   transition: transform 0.2s ease;
+  z-index: 10;
 }
 
 .anywhere-badge:hover {
@@ -6499,7 +6611,7 @@ article[data-role="enduser"] {
 /* AWS - orange */
 .anywhere-badge-aws {
   background: linear-gradient(135deg, #FF9900 0%, #FF7700 100%);
-  bottom: 8%;
+  bottom: 20%;
   left: 15%;
   animation-delay: 0.2s;
 }
@@ -6507,7 +6619,7 @@ article[data-role="enduser"] {
 /* Azure - blue */
 .anywhere-badge-azure {
   background: linear-gradient(135deg, #0078D4 0%, #0063B1 100%);
-  bottom: 8%;
+  bottom: 20%;
   left: 35%;
   animation-delay: 0.3s;
 }
@@ -6517,7 +6629,7 @@ article[data-role="enduser"] {
   background: linear-gradient(135deg, #4285F4 0%, #5A9FED 100%);
   color: white;
   box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
-  bottom: 8%;
+  bottom: 20%;
   left: 55%;
   animation-delay: 0.4s;
 }
@@ -6525,7 +6637,7 @@ article[data-role="enduser"] {
 /* Other - gray */
 .anywhere-badge-other {
   background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
-  bottom: 8%;
+  bottom: 20%;
   left: 75%;
   animation-delay: 0.5s;
 }
@@ -6533,7 +6645,7 @@ article[data-role="enduser"] {
 /* EU badges */
 .anywhere-badge-eu-pub-dev {
   background: linear-gradient(135deg, #003399 0%, #002266 100%);
-  bottom: 8%;
+  bottom: 20%;
   left: 20%;
   animation-delay: 0.2s;
 }
@@ -6541,14 +6653,14 @@ article[data-role="enduser"] {
 .anywhere-badge-eu-pub-live {
   background: linear-gradient(135deg, #87CEEB 0%, #5DADE2 100%);
   color: #003399;
-  bottom: 8%;
+  bottom: 20%;
   left: 45%;
   animation-delay: 0.3s;
 }
 
 .anywhere-badge-eu-gov-live {
   background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-  bottom: 8%;
+  bottom: 20%;
   left: 70%;
   animation-delay: 0.4s;
 }
@@ -6561,11 +6673,12 @@ article[data-role="enduser"] {
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 1;
 }
 
 .anywhere-conn-line {
-  stroke: rgba(7, 131, 143, 0.2);
-  stroke-width: 1.5;
+  stroke: rgba(7, 131, 143, 0.5);
+  stroke-width: 2;
   stroke-linecap: round;
   animation: line-subtle-flow 3s ease-in-out infinite;
   stroke-dasharray: 8, 8;
@@ -6574,11 +6687,11 @@ article[data-role="enduser"] {
 
 @keyframes line-subtle-flow {
   0%, 100% {
-    opacity: 0.3;
+    opacity: 0.6;
     stroke-dashoffset: 0;
   }
   50% {
-    opacity: 0.6;
+    opacity: 0.9;
     stroke-dashoffset: 16;
   }
 }
@@ -6614,41 +6727,37 @@ article[data-role="enduser"] {
 /* Flying control planes */
 .anywhere-flying-cp {
   position: absolute;
-  width: 150px;
+  width: 100px;
   height: auto;
   opacity: 0;
   left: 50%;
-  top: 28%;
+  top: 30%;
   transform: translateX(-50%);
-  filter: drop-shadow(0 4px 12px rgba(14, 89, 99, 0.3));
+  filter: drop-shadow(0 2px 8px rgba(14, 89, 99, 0.3));
   pointer-events: none;
+  z-index: 10;
 }
 
 @keyframes fly-out {
   0% {
     opacity: 0;
-    top: 28%;
-    transform: translate(-50%, 0) scale(0.4) rotate(0deg);
+    top: 33%;
+    transform: translate(-50%, 0) scale(0.6) rotate(0deg);
   }
-  10% {
+  25% {
     opacity: 1;
-    top: 22%;
-    transform: translate(-50%, 0) scale(0.6) rotate(-2deg);
-  }
-  30% {
-    opacity: 1;
-    top: 12%;
-    transform: translate(-50%, 0) scale(0.8) rotate(2deg);
+    top: 20%;
+    transform: translate(-50%, 0) scale(0.8) rotate(-2deg);
   }
   60% {
     opacity: 0.8;
-    top: -3%;
-    transform: translate(-50%, 0) scale(1) rotate(-1deg);
+    top: 8%;
+    transform: translate(-50%, 0) scale(1) rotate(2deg);
   }
   100% {
     opacity: 0;
-    top: -20%;
-    transform: translate(-50%, 0) scale(1.2) rotate(0deg);
+    top: 0%;
+    transform: translate(-50%, 0) scale(1.1) rotate(0deg);
   }
 }
 
@@ -6667,7 +6776,7 @@ article[data-role="enduser"] {
 /* Kind control planes - stay and move around */
 .kind-cp {
   position: absolute;
-  width: 120px;
+  width: 70px;
   height: auto;
   opacity: 0;
   filter: drop-shadow(0 4px 12px rgba(14, 89, 99, 0.3));
