@@ -4373,7 +4373,7 @@ article[data-role="enduser"] {
   color: var(--teal-3);
 }
 
-/* Self-healing view - many clouds popping up */
+/* Self-healing view - rotating resources around CP */
 .selfhealing-animation-area {
   position: absolute;
   top: 0;
@@ -4385,16 +4385,225 @@ article[data-role="enduser"] {
   justify-content: center;
 }
 
-/* Self-healing resource icons */
+/* CP pulse rings */
+.cp-pulse-ring {
+  opacity: 0;
+  transform-origin: center;
+}
+
+.cp-pulse-ring.animate {
+  animation: pulse-out 3s ease-out infinite;
+}
+
+.cp-pulse-ring-2.animate {
+  animation: pulse-out 3s ease-out infinite 1s;
+}
+
+.cp-pulse-ring-3.animate {
+  animation: pulse-out 3s ease-out infinite 2s;
+}
+
+@keyframes pulse-out {
+  0% {
+    opacity: 0.6;
+    r: 60;
+  }
+  100% {
+    opacity: 0;
+    r: 140;
+  }
+}
+
+/* Connection lines with dash animation */
+.healing-conn-line {
+  animation: dash-flow 2s linear infinite;
+}
+
+.healing-conn-1 {
+  animation-delay: 0s;
+}
+
+.healing-conn-2 {
+  animation-delay: 0.5s;
+}
+
+.healing-conn-3 {
+  animation-delay: 1s;
+}
+
+.healing-conn-4 {
+  animation-delay: 1.5s;
+}
+
+/* Rotating orbit container - REDUCED radius to stay in view */
+.healing-orbit {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.healing-orbit.rotating {
+  animation: orbit-rotate 20s linear infinite;
+}
+
+@keyframes orbit-rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Self-healing resource icons - positioned on orbit */
 .healing-resource {
   position: absolute;
   display: flex;
   align-items: center;
-  opacity: 0;
+  justify-content: center;
+  opacity: 1;
 }
 
-.healing-resource.animate {
-  animation: resource-popup 1.5s ease-out forwards;
+/* Position resources evenly around center (90deg apart) */
+.healing-resource-1 {
+  top: 0;
+  left: 50%;
+}
+
+.healing-resource-2 {
+  top: 50%;
+  right: 0;
+}
+
+.healing-resource-3 {
+  bottom: 0;
+  left: 50%;
+}
+
+.healing-resource-4 {
+  top: 50%;
+  left: 0;
+}
+
+/* Counter-rotate icons so they stay upright - each with heal animation */
+.healing-orbit.rotating .healing-resource-1 {
+  animation: counter-rotate-1 20s linear infinite;
+}
+
+.healing-orbit.rotating .healing-resource-1.animate {
+  animation: counter-rotate-1 20s linear infinite, resource-heal-1 6s ease-in-out 3s infinite;
+}
+
+.healing-orbit.rotating .healing-resource-2 {
+  animation: counter-rotate-2 20s linear infinite;
+}
+
+.healing-orbit.rotating .healing-resource-2.animate {
+  animation: counter-rotate-2 20s linear infinite, resource-heal-2 6s ease-in-out 3.3s infinite;
+}
+
+.healing-orbit.rotating .healing-resource-3 {
+  animation: counter-rotate-3 20s linear infinite;
+}
+
+.healing-orbit.rotating .healing-resource-3.animate {
+  animation: counter-rotate-3 20s linear infinite, resource-heal-3 6s ease-in-out 3.6s infinite;
+}
+
+.healing-orbit.rotating .healing-resource-4 {
+  animation: counter-rotate-4 20s linear infinite;
+}
+
+.healing-orbit.rotating .healing-resource-4.animate {
+  animation: counter-rotate-4 20s linear infinite, resource-heal-4 6s ease-in-out 3.9s infinite;
+}
+
+@keyframes counter-rotate-1 {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+@keyframes counter-rotate-2 {
+  from {
+    transform: translate(50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(50%, -50%) rotate(-360deg);
+  }
+}
+
+@keyframes counter-rotate-3 {
+  from {
+    transform: translate(-50%, 50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, 50%) rotate(-360deg);
+  }
+}
+
+@keyframes counter-rotate-4 {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+/* Healing animations - turn red, then green */
+@keyframes resource-heal-1 {
+  0%, 100% {
+    filter: none;
+  }
+  20% {
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
+  }
+  40% {
+    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8));
+  }
+}
+
+@keyframes resource-heal-2 {
+  0%, 100% {
+    filter: none;
+  }
+  20% {
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
+  }
+  40% {
+    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8));
+  }
+}
+
+@keyframes resource-heal-3 {
+  0%, 100% {
+    filter: none;
+  }
+  20% {
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
+  }
+  40% {
+    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8));
+  }
+}
+
+@keyframes resource-heal-4 {
+  0%, 100% {
+    filter: none;
+  }
+  20% {
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
+  }
+  40% {
+    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8));
+  }
 }
 
 @keyframes resource-popup {
@@ -4430,57 +4639,19 @@ article[data-role="enduser"] {
   stroke: var(--lp-c-brand-2);
 }
 
-/* Position resources around CP */
-.healing-resource-1 {
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  flex-direction: column;
-  animation-delay: 0s;
+/* Add teal glow to resource icons */
+.healing-resource-icon svg .resource-icon-stroke {
+  transition: stroke 0.3s ease;
 }
 
-.healing-resource-2 {
-  top: 50%;
-  right: 8%;
-  transform: translateY(-50%);
-  flex-direction: row-reverse;
-  animation-delay: 0.3s;
+[data-theme='dark'] .resource-icon-stroke {
+  stroke: var(--lp-c-brand-1);
 }
 
-.healing-resource-3 {
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  flex-direction: column-reverse;
-  animation-delay: 0.6s;
-}
-
-.healing-resource-4 {
-  top: 50%;
-  left: 8%;
-  transform: translateY(-50%);
-  flex-direction: row;
-  animation-delay: 0.9s;
-}
-
-/* Connection lines */
-.healing-conn-line-simple {
-  display: block;
-}
-
-.healing-conn-simple {
-  stroke: rgba(147, 51, 234, 0.2);
-  stroke-width: 2;
-  stroke-dasharray: 3, 3;
-  stroke-dashoffset: 0;
-}
-
-.healing-resource.animate .healing-conn-simple {
-  animation: connection-pulse 3s ease-in-out 1.5s infinite;
-}
-
-[data-theme='dark'] .healing-conn-simple {
-  stroke: rgba(44, 224, 191, 0.3);
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -16;
+  }
 }
 
 @keyframes line-draw {

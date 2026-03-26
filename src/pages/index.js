@@ -886,63 +886,61 @@ spec:
                   </div>
                 </div>
 
-                {/* Feature 1: Self-healing - 4 resource icons around CP */}
+                {/* Feature 1: Self-healing - 4 resource icons rotating around CP */}
                 <div className={`essentials-visual-content ${activeFeature === 1 ? 'active' : ''}`}>
                   <div className="selfhealing-animation-area">
-                    {/* Database - top */}
-                    <div className={`healing-resource healing-resource-1 ${activeFeature === 1 ? 'animate' : ''}`}>
-                      <div className="healing-resource-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <ellipse cx="12" cy="5" rx="9" ry="3" className="resource-icon-stroke" strokeWidth="2" fill="none" />
-                          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
-                                className="resource-icon-stroke" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <svg className="healing-conn-line-simple" width="3" height="80" viewBox="0 0 3 80">
-                        <line x1="1.5" y1="0" x2="1.5" y2="80" className="healing-conn-simple" strokeWidth="3" />
-                      </svg>
-                    </div>
+                    {/* Pulse rings from CP */}
+                    <svg className="cp-pulse-container" width="100%" height="100%" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', zIndex: 1 }}>
+                      <circle cx="50%" cy="50%" r="60" className={`cp-pulse-ring ${activeFeature === 1 ? 'animate' : ''}`} fill="none" stroke="rgba(4, 159, 154, 0.4)" strokeWidth="2" />
+                      <circle cx="50%" cy="50%" r="60" className={`cp-pulse-ring cp-pulse-ring-2 ${activeFeature === 1 ? 'animate' : ''}`} fill="none" stroke="rgba(4, 159, 154, 0.4)" strokeWidth="2" />
+                      <circle cx="50%" cy="50%" r="60" className={`cp-pulse-ring cp-pulse-ring-3 ${activeFeature === 1 ? 'animate' : ''}`} fill="none" stroke="rgba(4, 159, 154, 0.4)" strokeWidth="2" />
+                    </svg>
 
-                    {/* User - right */}
-                    <div className={`healing-resource healing-resource-2 ${activeFeature === 1 ? 'animate' : ''}`}>
-                      <div className="healing-resource-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <circle cx="12" cy="7" r="4" className="resource-icon-stroke" strokeWidth="2" />
-                        </svg>
+                    {/* Rotating orbit path */}
+                    <div className={`healing-orbit ${activeFeature === 1 ? 'rotating' : ''}`}>
+                      {/* Database - position 1 (top) */}
+                      <div className={`healing-resource healing-resource-1 ${activeFeature === 1 ? 'animate' : ''}`}>
+                        <div className="healing-resource-icon">
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="12" cy="5" rx="9" ry="3" className="resource-icon-stroke" strokeWidth="2" fill="none" />
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
+                                  className="resource-icon-stroke" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </div>
                       </div>
-                      <svg className="healing-conn-line-simple" width="80" height="3" viewBox="0 0 80 3">
-                        <line x1="0" y1="1.5" x2="80" y2="1.5" className="healing-conn-simple" strokeWidth="3" />
-                      </svg>
-                    </div>
 
-                    {/* Server - bottom */}
-                    <div className={`healing-resource healing-resource-3 ${activeFeature === 1 ? 'animate' : ''}`}>
-                      <div className="healing-resource-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <rect x="2" y="2" width="20" height="8" rx="2" ry="2" className="resource-icon-stroke" strokeWidth="2" />
-                          <rect x="2" y="14" width="20" height="8" rx="2" ry="2" className="resource-icon-stroke" strokeWidth="2" />
-                          <line x1="6" y1="6" x2="6.01" y2="6" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
-                          <line x1="6" y1="18" x2="6.01" y2="18" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
+                      {/* User - position 2 (right) */}
+                      <div className={`healing-resource healing-resource-2 ${activeFeature === 1 ? 'animate' : ''}`}>
+                        <div className="healing-resource-icon">
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <circle cx="12" cy="7" r="4" className="resource-icon-stroke" strokeWidth="2" />
+                          </svg>
+                        </div>
                       </div>
-                      <svg className="healing-conn-line-simple" width="3" height="80" viewBox="0 0 3 80">
-                        <line x1="1.5" y1="0" x2="1.5" y2="80" className="healing-conn-simple" strokeWidth="3" />
-                      </svg>
-                    </div>
 
-                    {/* Storage - left */}
-                    <div className={`healing-resource healing-resource-4 ${activeFeature === 1 ? 'animate' : ''}`}>
-                      <div className="healing-resource-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" className="resource-icon-stroke" strokeWidth="2" />
-                          <polyline points="3.27 6.96 12 12.01 20.73 6.96" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <line x1="12" y1="22.08" x2="12" y2="12" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
+                      {/* Server - position 3 (bottom) */}
+                      <div className={`healing-resource healing-resource-3 ${activeFeature === 1 ? 'animate' : ''}`}>
+                        <div className="healing-resource-icon">
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2" className="resource-icon-stroke" strokeWidth="2" />
+                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2" className="resource-icon-stroke" strokeWidth="2" />
+                            <line x1="6" y1="6" x2="6.01" y2="6" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
+                            <line x1="6" y1="18" x2="6.01" y2="18" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
+                          </svg>
+                        </div>
                       </div>
-                      <svg className="healing-conn-line-simple" width="80" height="3" viewBox="0 0 80 3">
-                        <line x1="0" y1="1.5" x2="80" y2="1.5" className="healing-conn-simple" strokeWidth="3" />
-                      </svg>
+
+                      {/* Storage - position 4 (left) */}
+                      <div className={`healing-resource healing-resource-4 ${activeFeature === 1 ? 'animate' : ''}`}>
+                        <div className="healing-resource-icon">
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" className="resource-icon-stroke" strokeWidth="2" />
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <line x1="12" y1="22.08" x2="12" y2="12" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
