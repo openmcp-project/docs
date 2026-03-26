@@ -92,6 +92,12 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'operatorDocs',
           position: 'left',
+          label: 'Use Platform',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'operatorSetupDocs',
+          position: 'left',
           label: 'Run Your Platform',
         },
         {

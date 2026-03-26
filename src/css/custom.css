@@ -440,33 +440,39 @@
 }
 
 /* Role-specific hero button colors - MUST come after generic .action.alt a */
+/* Operators general (Run Your Platform) - darker color */
+.lp-home .action.alt a[href*="/operators/setup/"],
+.lp-home .action a[href*="/operators/setup/"] {
+  background: var(--role-operator-primary) !important;
+  color: white !important;
+  border-color: transparent;
+}
+
+.lp-home .action.alt a[href*="/operators/setup/"]:hover,
+.lp-home .action a[href*="/operators/setup/"]:hover {
+  background: var(--role-operator-secondary) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(2, 65, 76, 0.4);
+  color: white !important;
+}
+
+/* End users (Use Platform) - lighter teal */
 .lp-home .action.alt a[href*="/users/"],
-.lp-home .action a[href*="/users/"] {
+.lp-home .action a[href*="/users/"],
+.lp-home .action.alt a[href*="/operators/use/"],
+.lp-home .action a[href*="/operators/use/"] {
   background: var(--role-enduser-primary) !important;
   color: white !important;
   border-color: transparent;
 }
 
 .lp-home .action.alt a[href*="/users/"]:hover,
-.lp-home .action a[href*="/users/"]:hover {
+.lp-home .action a[href*="/users/"]:hover,
+.lp-home .action.alt a[href*="/operators/use/"]:hover,
+.lp-home .action a[href*="/operators/use/"]:hover {
   background: var(--role-enduser-secondary) !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(7, 131, 143, 0.4);
-  color: white !important;
-}
-
-.lp-home .action.alt a[href*="/operators/"],
-.lp-home .action a[href*="/operators/"] {
-  background: var(--role-operator-primary) !important;
-  color: white !important;
-  border-color: transparent;
-}
-
-.lp-home .action.alt a[href*="/operators/"]:hover,
-.lp-home .action a[href*="/operators/"]:hover {
-  background: var(--role-operator-secondary) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(2, 65, 76, 0.4);
   color: white !important;
 }
 
@@ -744,27 +750,33 @@ html[data-theme="light"] .lp-home .image-bg {
 }
 
 /* Light theme: override for button colors */
+/* Operators general (Run Your Platform) - darker color */
+html[data-theme="light"] .lp-home .action.alt a[href*="/operators/setup/"],
+html[data-theme="light"] .lp-home .action a[href*="/operators/setup/"] {
+  background: var(--role-operator-primary) !important;
+  color: white !important;
+}
+
+html[data-theme="light"] .lp-home .action.alt a[href*="/operators/setup/"]:hover,
+html[data-theme="light"] .lp-home .action a[href*="/operators/setup/"]:hover {
+  background: var(--role-operator-secondary) !important;
+  color: white !important;
+}
+
+/* End users (Use Platform) - lighter teal */
 html[data-theme="light"] .lp-home .action.alt a[href*="/users/"],
-html[data-theme="light"] .lp-home .action a[href*="/users/"] {
+html[data-theme="light"] .lp-home .action a[href*="/users/"],
+html[data-theme="light"] .lp-home .action.alt a[href*="/operators/use/"],
+html[data-theme="light"] .lp-home .action a[href*="/operators/use/"] {
   background: var(--role-enduser-primary) !important;
   color: white !important;
 }
 
 html[data-theme="light"] .lp-home .action.alt a[href*="/users/"]:hover,
-html[data-theme="light"] .lp-home .action a[href*="/users/"]:hover {
+html[data-theme="light"] .lp-home .action a[href*="/users/"]:hover,
+html[data-theme="light"] .lp-home .action.alt a[href*="/operators/use/"]:hover,
+html[data-theme="light"] .lp-home .action a[href*="/operators/use/"]:hover {
   background: var(--role-enduser-secondary) !important;
-  color: white !important;
-}
-
-html[data-theme="light"] .lp-home .action.alt a[href*="/operators/"],
-html[data-theme="light"] .lp-home .action a[href*="/operators/"] {
-  background: var(--role-operator-primary) !important;
-  color: white !important;
-}
-
-html[data-theme="light"] .lp-home .action.alt a[href*="/operators/"]:hover,
-html[data-theme="light"] .lp-home .action a[href*="/operators/"]:hover {
-  background: var(--role-operator-secondary) !important;
   color: white !important;
 }
 
@@ -845,27 +857,33 @@ html[data-theme="dark"] .get-started-section a:not(.button) {
 }
 
 /* Dark mode: ensure role button colors are visible */
+/* Operators general (Run Your Platform) - darker color */
+html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/setup/"],
+html[data-theme="dark"] .lp-home .action a[href*="/operators/setup/"] {
+  background: var(--role-operator-primary) !important;
+  color: white !important;
+}
+
+html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/setup/"]:hover,
+html[data-theme="dark"] .lp-home .action a[href*="/operators/setup/"]:hover {
+  background: var(--role-operator-secondary) !important;
+  color: white !important;
+}
+
+/* End users (Use Platform) - lighter teal */
 html[data-theme="dark"] .lp-home .action.alt a[href*="/users/"],
-html[data-theme="dark"] .lp-home .action a[href*="/users/"] {
+html[data-theme="dark"] .lp-home .action a[href*="/users/"],
+html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/use/"],
+html[data-theme="dark"] .lp-home .action a[href*="/operators/use/"] {
   background: var(--role-enduser-primary) !important;
   color: white !important;
 }
 
 html[data-theme="dark"] .lp-home .action.alt a[href*="/users/"]:hover,
-html[data-theme="dark"] .lp-home .action a[href*="/users/"]:hover {
+html[data-theme="dark"] .lp-home .action a[href*="/users/"]:hover,
+html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/use/"]:hover,
+html[data-theme="dark"] .lp-home .action a[href*="/operators/use/"]:hover {
   background: var(--role-enduser-secondary) !important;
-  color: white !important;
-}
-
-html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/"],
-html[data-theme="dark"] .lp-home .action a[href*="/operators/"] {
-  background: var(--role-operator-primary) !important;
-  color: white !important;
-}
-
-html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/"]:hover,
-html[data-theme="dark"] .lp-home .action a[href*="/operators/"]:hover {
-  background: var(--role-operator-secondary) !important;
   color: white !important;
 }
 

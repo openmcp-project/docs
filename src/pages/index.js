@@ -248,15 +248,16 @@ export default function Home() {
           <div className="main">
             <h1 className="heading">
               <span className="name clip">open control plane docs</span>
-              <span className="text">Give your teams the power to run robust, compliant clouds. Public, private, or Sovereign.</span>
+              <span className="text">Give your teams the power to run robust, secure, compliant clouds. <br/> 
+              <i>Public, Private, Sovereign</i>.</span>
             </h1>
             <div className="container" style={{ padding: "0" }}>
               <div className="actions">
-                <div className="action medium alt">
-                  <a href="/docs/users/getting-started">Get Started</a>
+                <div className="action medium">
+                  <a href="/docs/operators/use/overview">Use Platform</a>
                 </div>
                 <div className="action medium alt">
-                  <a href="/docs/operators/getting-started">Run Your Platform</a>
+                  <a href="/docs/operators/setup/overview">Run Your Platform</a>
                 </div>
                 <div className="action medium alt">
                   <a href="/docs/developers/getting-started">Build Together</a>
@@ -1200,7 +1201,7 @@ spec:
                 <div className="typing-open-source">100% open-source</div>
               </div>
               <p>
-                This project started as an inner-source initiative within SAP. Thanks to <b>NeonEphos</b>, it now operates 100% publicly and has been donated to the <Link to="https://github.com/openmcp-project" target="_blank" rel="noopener noreferrer">OpenControlPlane organization</Link>.
+                This project started as an inner-source initiative within SAP. Thanks to <b><Link to="https://neonephos.org/" target="_blank" rel="noopener noreferrer">NeoNephos</Link></b>, it now operates 100% publicly.
                 <br />
                 <br />
                 <b>
@@ -1210,20 +1211,6 @@ spec:
                 <br />
                 <br />
               </p>
-              <Link
-                className="button button--primary button--lg"
-                to="https://github.com/openmcp-project"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                💪 See our projects
-              </Link>
-              <br />
-              <span>
-                and learn <Link to="/developers/getting-started">how to contribute</Link>
-              </span>
-              <br />
-              <br />
             </div>
           </div>
         </section>

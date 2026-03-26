@@ -68,7 +68,7 @@ sequenceDiagram
     %% messages
     usr->>sp: request domain service through ServiceProviderAPI
     sp->>ds: deploys
-    sp-->>usr: installs DomainServiceAPI in user MCP
+    sp-->>usr: installs DomainServiceAPI in user ManagedControlPlane
     usr->>ds: uses domain service through DomainServiceAPI
 ```
 
@@ -120,8 +120,8 @@ graph TD
         SPC[ServiceProviderConfig]
     end
 
-    %% MCP Cluster
-    subgraph MCPCluster
+    %% ManagedControlPlane Cluster
+    subgraph MCPCluster[ManagedControlPlane Cluster]
         DS[DomainService]
         DSAPI[DomainServiceAPI]
     end
@@ -144,8 +144,8 @@ graph TD
         Landscaper
     end
 
-    %% MCP Cluster
-    subgraph MCPCluster
+    %% ManagedControlPlane Cluster
+    subgraph MCPCluster[ManagedControlPlane Cluster]
         Crossplane
         Installation
         Bucket
@@ -192,7 +192,7 @@ The following table provides a simplified overview of the layers within a `Servi
 
 This section outlines the main functionality implemented within the runtime. Currently, the focus is on establishing consistency across `ServiceProvider` implementations. However, this section can be extended in the future to include more generic `ServiceProvider` concepts that are handled within the runtime.
 
-Main tasks towards MCP/Workload Clusters (based on watching the `ServiceProviderAPI`):
+Main tasks towards ManagedControlPlane/Workload Clusters (based on watching the `ServiceProviderAPI`):
 
 - Observe Service Deployment (Drift Detection) -> IN: context, apiObject, reconcileScope; OUT: bool[exists, drift], error
 - Create Service Deployment (Init Lifecycle) -> IN: context, apiObject, reconcileScope; OUT: error

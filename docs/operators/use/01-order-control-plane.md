@@ -2,12 +2,12 @@
 sidebar_position: 1
 ---
 
-# 1. Onboard
+# Order Control Plane
 
 This guide walks you through creating the foundational resources for your OpenControlPlane setup: Project, Workspace, and ControlPlane.
 
 :::info Prerequisites
-Requires a deployed OpenControlPlane platform. Operators: see [setup guide](/operators/setup) → [verify setup](/operators/verify-setup).
+Requires a deployed OpenControlPlane platform. Operators: see [setup guide](/operators/setup/overview) → [verify setup](/operators/setup/verify-setup).
 :::
 
 ## Understanding the Hierarchy
@@ -63,7 +63,7 @@ Before you begin, ensure you have:
 | **kubeconfig** | Configured to connect to the Onboarding API |
 
 :::tip Platform Access
-If you don't have access to an OpenControlPlane installation, contact your platform operator. Operators can follow the [Bootstrapping Guide](../../operators/00-overview.md) to set up a new environment.
+If you don't have access to an OpenControlPlane installation, contact your platform operator. Operators can follow the [Bootstrapping Guide](/operators/setup/overview) to set up a new environment.
 :::
 
 ---
