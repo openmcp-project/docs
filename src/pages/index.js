@@ -54,9 +54,9 @@ export default function Home() {
       // Start when bottom is visible and end when content is still visible
       // We need a range where the visual content (images) is fully in view
 
-      // Start: section top at 40% viewport (content becoming centered)
+      // Start: section top at 70% viewport (triggers earlier when section enters)
       // End: section top at -20% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.4;
+      const startThreshold = windowHeight * 0.7;
       const endThreshold = -windowHeight * 0.2;
 
       // Only track when section is in the active range
@@ -98,9 +98,9 @@ export default function Home() {
 
       const sectionTop = rect.top;
 
-      // Start: section top at 40% viewport (content becoming centered)
+      // Start: section top at 70% viewport (triggers earlier when section enters)
       // End: section top at -20% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.4;
+      const startThreshold = windowHeight * 0.7;
       const endThreshold = -windowHeight * 0.2;
 
       if (sectionTop > startThreshold || sectionTop < endThreshold) {
@@ -140,9 +140,9 @@ export default function Home() {
 
       const sectionTop = rect.top;
 
-      // Start: section top at 40% viewport (content becoming centered)
+      // Start: section top at 70% viewport (triggers earlier when section enters)
       // End: section top at -20% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.4;
+      const startThreshold = windowHeight * 0.7;
       const endThreshold = -windowHeight * 0.2;
 
       if (sectionTop > startThreshold || sectionTop < endThreshold) {
@@ -946,7 +946,7 @@ spec:
               </div>
               <div className="section-header-right-col">
                 <Link className="section-header-cta" to="/operators/overview">Read operator guides →</Link>
-                <Link className="section-header-cta" to="/developers/general">Contribute PlatformProvider →</Link>
+                <Link className="section-header-cta" to="/developers/general">Contribute Platform Services →</Link>
               </div>
             </div>
 
