@@ -3586,29 +3586,28 @@ article[data-role="enduser"] {
 }
 
 .yaml-cloud-right {
-  opacity: 0;
-  transform: translateX(-80px) scale(0.8);
-  transition: all 0.6s ease-out;
-}
-
-.yaml-cloud-right.animate {
   opacity: 1;
   transform: translateX(0) scale(1);
 }
 
-/* Icon turning green animations */
-.yaml-cloud-right.animate .yaml-cloud-icon-database ellipse,
-.yaml-cloud-right.animate .yaml-cloud-icon-database path {
-  animation: icon-turn-green 0.6s ease-out 1.5s forwards;
+/* Add smooth transitions for all animated elements */
+.yaml-cloud-shape {
+  transition: stroke 0.3s ease, fill 0.3s ease;
 }
 
-.yaml-cloud-right.animate .yaml-cloud-icon-account path,
-.yaml-cloud-right.animate .yaml-cloud-icon-account circle {
-  animation: icon-turn-green 0.6s ease-out 2.3s forwards;
+.yaml-line-animate {
+  transition: stroke 0.3s ease;
 }
 
-.yaml-cloud-right.animate .yaml-cloud-shape {
-  animation: cloud-turn-green 0.8s ease-out 3.1s forwards;
+.cp-cloud-connection {
+  transition: stroke 0.3s ease;
+}
+
+.yaml-cloud-icon-database ellipse,
+.yaml-cloud-icon-database path,
+.yaml-cloud-icon-account path,
+.yaml-cloud-icon-account circle {
+  transition: stroke 0.3s ease;
 }
 
 @keyframes icon-turn-green {

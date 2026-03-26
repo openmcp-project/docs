@@ -192,6 +192,130 @@ export default function Home() {
     setActiveAnywhereFeature(featureIndex);
   };
 
+  // Typewriter animation for Declarative API
+  useEffect(() => {
+    if (activeFeature !== 0) return;
+
+    const yamlElement = document.querySelector('.essentials-yaml-typewriter');
+    const cpElement = document.querySelector('.unified-cp-declarative');
+    const cloudShape = document.querySelector('.yaml-cloud-shape');
+    const cpCloudLine = document.querySelector('.cp-cloud-connection');
+    const dbIcon = document.querySelectorAll('.yaml-cloud-icon-database ellipse, .yaml-cloud-icon-database path');
+    const accountIcon = document.querySelectorAll('.yaml-cloud-icon-account path, .yaml-cloud-icon-account circle');
+
+    if (!yamlElement) return;
+
+    const yaml1 = `apiVersion: openmcp.cloud/v1alpha1
+kind: <strong>ManagedControlPlane</strong>
+metadata:
+  name: team-prod
+spec:
+  provider: gardener`;
+
+    const yaml2 = `
+
+---
+apiVersion: openmcp.cloud/v1alpha1
+kind: <strong>Database</strong>
+metadata:
+  name: prod-db
+spec:
+  engine: postgresql`;
+
+    const yaml3 = `
+
+---
+apiVersion: openmcp.cloud/v1alpha1
+kind: <strong>Subaccount</strong>
+metadata:
+  name: team-alpha
+spec:
+  region: eu-central-1`;
+
+    let index = 0;
+    let stage = 1;
+    let currentText = '';
+
+    const animate = () => {
+      // Stage 1: Type yaml1 (0.5s for ~100 chars = 5ms per char)
+      if (stage === 1) {
+        if (index < yaml1.length) {
+          currentText += yaml1[index];
+          yamlElement.innerHTML = currentText;
+          index++;
+          setTimeout(animate, 5);
+        } else {
+          // PAUSE: Show CP only - NO line or cloud yet
+          if (cpElement) cpElement.style.opacity = '1';
+          stage = 2;
+          index = 0;
+          setTimeout(animate, 1000); // 1 second pause so user sees CP appears from YAML
+        }
+      }
+      // Stage 2: Type yaml2 (0.5s)
+      else if (stage === 2) {
+        if (index < yaml2.length) {
+          currentText += yaml2[index];
+          yamlElement.innerHTML = currentText;
+          index++;
+          setTimeout(animate, 5);
+        } else {
+          // PAUSE: NOW show line, cloud and database icon together
+          if (cpCloudLine) cpCloudLine.style.stroke = 'rgba(147, 51, 234, 0.3)';
+          if (cloudShape) {
+            cloudShape.style.stroke = 'rgba(147, 51, 234, 0.5)';
+            cloudShape.style.fill = 'url(#yamlCloudGradient)';
+          }
+          dbIcon.forEach(el => el.style.stroke = 'rgba(147, 51, 234, 0.9)');
+          stage = 3;
+          index = 0;
+          setTimeout(animate, 1000); // 1 second pause so user sees DB icon appears from Database YAML
+        }
+      }
+      // Stage 3: Type yaml3 (0.5s)
+      else if (stage === 3) {
+        if (index < yaml3.length) {
+          currentText += yaml3[index];
+          yamlElement.innerHTML = currentText;
+          index++;
+          setTimeout(animate, 5);
+        } else {
+          // PAUSE: Show account icon - let user see account appears from Subaccount YAML
+          accountIcon.forEach(el => el.style.stroke = 'rgba(147, 51, 234, 0.9)');
+          setTimeout(() => {
+            // Turn everything green showing success
+            if (cloudShape) {
+              cloudShape.style.stroke = 'rgba(34, 197, 94, 0.5)';
+              cloudShape.style.fill = 'rgba(34, 197, 94, 0.15)';
+            }
+            if (cpCloudLine) cpCloudLine.style.stroke = 'rgba(34, 197, 94, 0.4)';
+            dbIcon.forEach(el => el.style.stroke = 'rgba(34, 197, 94, 0.9)');
+            accountIcon.forEach(el => el.style.stroke = 'rgba(34, 197, 94, 0.9)');
+          }, 1000); // 1 second pause then turn green
+          stage = 4;
+        }
+      }
+    };
+
+    // Reset and start animation
+    yamlElement.innerHTML = '';
+    currentText = '';
+    index = 0;
+    stage = 1;
+    if (cpElement) cpElement.style.opacity = '0';
+    if (cloudShape) {
+      cloudShape.style.stroke = 'rgba(147, 51, 234, 0)';
+      cloudShape.style.fill = 'none';
+    }
+    if (cpCloudLine) cpCloudLine.style.stroke = 'rgba(147, 51, 234, 0)';
+    dbIcon.forEach(el => el.style.stroke = 'rgba(147, 51, 234, 0)');
+    accountIcon.forEach(el => el.style.stroke = 'rgba(147, 51, 234, 0)');
+
+    const timer = setTimeout(animate, 200);
+
+    return () => clearTimeout(timer);
+  }, [activeFeature]);
+
   useEffect(() => {
     const navbar = document.querySelector(".navbar");
     const axolotl = document.querySelector(".image-src");
@@ -726,38 +850,17 @@ export default function Home() {
                 {/* Feature 0: Declarative API - YAML left, cloud right */}
                 <div className={`essentials-visual-content ${activeFeature === 0 ? 'active' : ''}`}>
                   <div className="yaml-left-container">
-                    <pre className="essentials-yaml-unified">
-{`apiVersion: openmcp.cloud/v1alpha1
-kind: ManagedControlPlane
-metadata:
-  name: team-prod
-spec:
-  provider: gardener
----
-apiVersion: openmcp.cloud/v1alpha1
-kind: Database
-metadata:
-  name: prod-db
-spec:
-  engine: postgresql
----
-apiVersion: openmcp.cloud/v1alpha1
-kind: Subaccount
-metadata:
-  name: team-alpha
-spec:
-  region: eu-central-1`}
-                    </pre>
+                    <pre className="essentials-yaml-unified essentials-yaml-typewriter"></pre>
                   </div>
 
-                  {/* Animated line connection - same style as hero */}
-                  <svg className={`yaml-connection-line ${activeFeature === 0 ? 'animate' : ''}`} style={{ position: 'absolute', right: '130px', top: '50%', transform: 'translateY(-50%)', width: '200px', height: '2px' }}>
-                    <line x1="0" y1="1" x2="200" y2="1" stroke="rgba(147, 51, 234, 0.2)" strokeWidth="2" strokeDasharray="3,3" />
+                  {/* Animated line from CP to cloud */}
+                  <svg className="cp-to-cloud-line" style={{ position: 'absolute', left: '0', top: '0', width: '100%', height: '100%', pointerEvents: 'none', zIndex: 5 }}>
+                    <line x1="50%" y1="50%" x2="calc(100% - 180px)" y2="50%" className="cp-cloud-connection" stroke="rgba(147, 51, 234, 0)" strokeWidth="2" strokeDasharray="4,4" />
                   </svg>
 
                   {/* Database and Account icons inside cloud */}
                   <div className="yaml-right-container">
-                    <svg className={`yaml-cloud-right ${activeFeature === 0 ? 'animate' : ''}`} width="400" height="300" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="yaml-cloud-right" width="400" height="300" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
                       <defs>
                         <linearGradient id="yamlCloudGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" style={{ stopColor: 'rgba(123, 97, 255, 0.12)' }} />
@@ -765,19 +868,19 @@ spec:
                         </linearGradient>
                       </defs>
                       <path className="yaml-cloud-shape" d="M 60 20 L 75 27.5 L 75 42.5 L 60 50 L 45 42.5 L 45 27.5 Z"
-                            fill="url(#yamlCloudGradient)" stroke="rgba(147, 51, 234, 0.5)" strokeWidth="2" />
+                            fill="url(#yamlCloudGradient)" stroke="rgba(147, 51, 234, 0)" strokeWidth="2" />
 
                       {/* Database icon - left side */}
-                      <g className="yaml-cloud-icon yaml-cloud-icon-database" transform="translate(50, 28) scale(0.22)">
-                        <ellipse cx="12" cy="5" rx="9" ry="3" stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" />
+                      <g className="yaml-cloud-icon yaml-cloud-icon-database" transform="translate(48, 28) scale(0.3)">
+                        <ellipse cx="12" cy="5" rx="9" ry="3" stroke="rgba(147, 51, 234, 0)" strokeWidth="2.5" fill="none" />
                         <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
-                              stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                              stroke="rgba(147, 51, 234, 0)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                       </g>
 
                       {/* Account/User icon - right side */}
-                      <g className="yaml-cloud-icon yaml-cloud-icon-account" transform="translate(64, 28) scale(0.22)">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                        <circle cx="12" cy="7" r="4" stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" />
+                      <g className="yaml-cloud-icon yaml-cloud-icon-account" transform="translate(66, 28) scale(0.3)">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="rgba(147, 51, 234, 0)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        <circle cx="12" cy="7" r="4" stroke="rgba(147, 51, 234, 0)" strokeWidth="2.5" fill="none" />
                       </g>
                     </svg>
                   </div>
