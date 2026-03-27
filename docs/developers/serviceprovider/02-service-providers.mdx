@@ -47,8 +47,8 @@ This test bootstraps a complete local openMCP installation with all required com
 
 - **The platform cluster** where your service provider is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator)
 - **The onboarding cluster** where end users request the domain service you provider offers.
-- **A managed control plane cluster (MCP)** where your service provider installs its [DomainServiceAPI](https://openmcp-project.github.io/docs/about/design/service-provider#api) and optionally its workload.
-- **An optional workload cluster**, provisioned when using the template flag `-w`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the MCP. This will result in another kind cluster.
+- **A managed control plane cluster** where your service provider installs its [DomainServiceAPI](https://openmcp-project.github.io/docs/about/design/service-provider#api) and optionally its workload.
+- **An optional workload cluster**, provisioned when using the template flag `-w`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the managed control plane. This will result in another kind cluster.
 
 :::info
 This means running the above command from the [Service Provider Template Usage](#service-provider-template-usage) section with `-w` like this:
@@ -238,7 +238,7 @@ Your `Reconciler` must implement two functions: `CreateOrUpdate` and `Delete`. T
 
 ### CreateOrUpdate Operation
 
-The template example contains a basic implementation that installs a CRD into the tenant MCP.
+The template example contains a basic implementation that installs a CRD into the tenant ManagedControlPlane.
 
 ```go
 // CreateOrUpdate is called on every add or update event
@@ -260,7 +260,7 @@ func (r *FooServiceReconciler) CreateOrUpdate(ctx context.Context, svcobj *apiv1
 }
 ```
 
-In a real world example like Velero, this step contains installing and reconciling every required resource, including CRDs, namespace(s), service account(s), deployments(s), etc. into the MCP and workload cluster.
+In a real world example like Velero, this step contains installing and reconciling every required resource, including CRDs, namespace(s), service account(s), deployments(s), etc. into the managed control plane and workload cluster.
 
 The `ClusterContext` provides access to all request specific clusters. This always includes the managed control plane and, when requested, the workload cluster associated with the current request.
 
@@ -535,9 +535,9 @@ In here, the values, for example, could come from the `ProviderConfig`. Or furth
 being created as a first step.
 
 Also notice the `KubeConfig` section. Your service provider controller is deployed in the Platform cluster. The target controller that your provider is deploying
-will run in either the MCP or the Workload cluster. This depends on your choice, however, it is recommended to deploy into the workload cluster as documented [here](https://openmcp-project.github.io/docs/about/design/service-provider/#non-goals).
+will run in either the managed control plane or the workload cluster. This depends on your choice, however, it is recommended to deploy into the workload cluster as documented [here](https://openmcp-project.github.io/docs/about/design/service-provider/#non-goals).
 
-This means that Flux will need a KubeConfig in order to deploy to the ManagedControlPlane cluster. And this is the KubeConfig that is given to Flux in this section.
+This means that Flux will need a KubeConfig in order to deploy to the managed control plane cluster. And this is the KubeConfig that is given to Flux in this section.
 
 :::info
 Note, that as of this writing, it's a bit difficult to obtain the KubeConfig for the Workload Cluster. MCPCluster KubeConfig is obtained via a AccessRequest. For an example,

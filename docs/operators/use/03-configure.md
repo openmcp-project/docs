@@ -5,7 +5,7 @@ sidebar_position: 3
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# 3. Configure
+# Configure
 
 This guide shows you how to install managed services in your ControlPlane to extend its functionality.
 

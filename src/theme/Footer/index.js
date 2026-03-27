@@ -43,7 +43,7 @@ export default function Footer() {
         <div className="ocp-footer__inner">
           <p>
             <strong>Copyright © Linux Foundation Europe.</strong>{' '}
-            Open Control Plane is a project of the Open Component Model Community. For
+            Open Control Plane is a project of the Open Control Plane Community. For
             applicable policies including privacy policy, terms of use and trademark usage
             guidelines, please see{' '}
             <a href="https://linuxfoundation.eu" target="_blank" rel="noopener noreferrer">

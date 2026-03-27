@@ -6,6 +6,8 @@ import ThemedImage from "@theme/ThemedImage";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Link from "@docusaurus/Link";
 import useBaseUrl from "@docusaurus/useBaseUrl";
+import { useScrollProgress } from "@site/src/components/hooks/useScrollProgress";
+import { SelfHealingAnimation } from "@site/src/components/SelfHealingAnimation";
 
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
@@ -15,6 +17,7 @@ export default function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [providerScrollProgress, setProviderScrollProgress] = useState(0);
   const [anywhereScrollProgress, setAnywhereScrollProgress] = useState(0);
+  const [manualClick, setManualClick] = useState(false);
   const section1Ref = useRef(null);
   const section2Ref = useRef(null);
   const section3Ref = useRef(null);
@@ -39,141 +42,23 @@ export default function Home() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Handle scroll-based feature switching based on main page scroll
-  useEffect(() => {
-    const handleMainScroll = () => {
-      const section = section1Ref.current;
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      const sectionBottom = rect.bottom;
-      const sectionTop = rect.top;
-
-      // Start when bottom is visible and end when content is still visible
-      // We need a range where the visual content (images) is fully in view
-
-      // Start: section top at 50% viewport (content becoming centered)
-      // End: section top at -40% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.5;
-      const endThreshold = -windowHeight * 0.4;
-
-      // Only track when section is in the active range
-      if (sectionTop > startThreshold || sectionTop < endThreshold) {
-        return;
-      }
-
-      // Calculate progress through the visible range
-      const scrollRange = startThreshold - endThreshold;
-      const scrollProgress = startThreshold - sectionTop;
-      const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
-
-      // Update scroll progress for visual indicator
-      setScrollProgress(progress);
-
-      // Feature 1: 30%, Feature 2: 30%, Feature 3: 40%
-      if (progress < 0.30) {
-        setActiveFeature(0);
-      } else if (progress < 0.60) {
-        setActiveFeature(1);
-      } else {
-        setActiveFeature(2);
-      }
-    };
-
-    window.addEventListener('scroll', handleMainScroll, { passive: true });
-    handleMainScroll();
-    return () => window.removeEventListener('scroll', handleMainScroll);
-  }, []);
+  // Handle scroll-based feature switching - using custom hook
+  useScrollProgress(section1Ref, setScrollProgress, (index) => {
+    setActiveFeature(index);
+    setManualClick(false);
+  });
 
   // Handle scroll-based feature switching for providers section
-  useEffect(() => {
-    const handleProviderScroll = () => {
-      const section = section2Ref.current;
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      const sectionTop = rect.top;
-
-      // Start: section top at 50% viewport (content becoming centered)
-      // End: section top at -40% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.5;
-      const endThreshold = -windowHeight * 0.4;
-
-      if (sectionTop > startThreshold || sectionTop < endThreshold) {
-        return;
-      }
-
-      const scrollRange = startThreshold - endThreshold;
-      const scrollProgress = startThreshold - sectionTop;
-      const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
-
-      // Update scroll progress for visual indicator
-      setProviderScrollProgress(progress);
-
-      // Feature 1: 30%, Feature 2: 30%, Feature 3: 40%
-      if (progress < 0.30) {
-        setActiveProviderFeature(0);
-      } else if (progress < 0.60) {
-        setActiveProviderFeature(1);
-      } else {
-        setActiveProviderFeature(2);
-      }
-    };
-
-    window.addEventListener('scroll', handleProviderScroll, { passive: true });
-    handleProviderScroll();
-    return () => window.removeEventListener('scroll', handleProviderScroll);
-  }, []);
+  useScrollProgress(section2Ref, setProviderScrollProgress, setActiveProviderFeature);
 
   // Handle scroll-based feature switching for anywhere section
-  useEffect(() => {
-    const handleAnywhereScroll = () => {
-      const section = section3Ref.current;
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      const sectionTop = rect.top;
-
-      // Start: section top at 50% viewport (content becoming centered)
-      // End: section top at -40% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.5;
-      const endThreshold = -windowHeight * 0.4;
-
-      if (sectionTop > startThreshold || sectionTop < endThreshold) {
-        return;
-      }
-
-      const scrollRange = startThreshold - endThreshold;
-      const scrollProgress = startThreshold - sectionTop;
-      const progress = Math.max(0, Math.min(1, scrollProgress / scrollRange));
-
-      // Update scroll progress for visual indicator
-      setAnywhereScrollProgress(progress);
-
-      // Feature 1: 30%, Feature 2: 30%, Feature 3: 40%
-      if (progress < 0.30) {
-        setActiveAnywhereFeature(0);
-      } else if (progress < 0.60) {
-        setActiveAnywhereFeature(1);
-      } else {
-        setActiveAnywhereFeature(2);
-      }
-    };
-
-    window.addEventListener('scroll', handleAnywhereScroll, { passive: true });
-    handleAnywhereScroll();
-    return () => window.removeEventListener('scroll', handleAnywhereScroll);
-  }, []);
+  useScrollProgress(section3Ref, setAnywhereScrollProgress, setActiveAnywhereFeature);
 
   // Handle button clicks
   const handleFeatureClick = (featureIndex) => {
     setActiveFeature(featureIndex);
+    setManualClick(true);
+    // Don't reset manualClick - let scroll handling do it
   };
 
   // Handle provider button clicks
@@ -185,6 +70,131 @@ export default function Home() {
   const handleAnywhereFeatureClick = (featureIndex) => {
     setActiveAnywhereFeature(featureIndex);
   };
+
+  // Typewriter animation for Declarative API
+  // Reset and restart whenever activeFeature becomes 0
+  useEffect(() => {
+    if (activeFeature !== 0) return;
+
+    const yamlElement = document.querySelector('.essentials-yaml-typewriter');
+    const cpElement = document.querySelector('.unified-cp-declarative');
+    const cloudShape = document.querySelector('.yaml-cloud-shape');
+    const cpCloudLine = document.querySelector('.cp-cloud-connection');
+    const dbIcon = document.querySelectorAll('.yaml-cloud-icon-database ellipse, .yaml-cloud-icon-database path');
+    const accountIcon = document.querySelectorAll('.yaml-cloud-icon-account path, .yaml-cloud-icon-account circle');
+
+    if (!yamlElement) return;
+
+    const yaml1 = `apiVersion: openmcp.cloud/v1alpha1
+kind: <strong>ManagedControlPlane</strong>
+metadata:
+  name: team-prod
+spec:
+  provider: gardener`;
+
+    const yaml2 = `
+
+---
+apiVersion: openmcp.cloud/v1alpha1
+kind: <strong>Database</strong>
+metadata:
+  name: prod-db
+spec:
+  engine: postgresql`;
+
+    const yaml3 = `
+
+---
+apiVersion: openmcp.cloud/v1alpha1
+kind: <strong>Subaccount</strong>
+metadata:
+  name: team-alpha
+spec:
+  region: eu-central-1`;
+
+    let index = 0;
+    let stage = 1;
+    let currentText = '';
+
+    const animate = () => {
+      // Stage 1: Type yaml1 (0.5s for ~100 chars = 5ms per char)
+      if (stage === 1) {
+        if (index < yaml1.length) {
+          currentText += yaml1[index];
+          yamlElement.innerHTML = currentText;
+          index++;
+          setTimeout(animate, 5);
+        } else {
+          // PAUSE: Show CP only - NO line or cloud yet
+          if (cpElement) cpElement.style.opacity = '1';
+          stage = 2;
+          index = 0;
+          setTimeout(animate, 1000); // 1 second pause so user sees CP appears from YAML
+        }
+      }
+      // Stage 2: Type yaml2 (0.5s)
+      else if (stage === 2) {
+        if (index < yaml2.length) {
+          currentText += yaml2[index];
+          yamlElement.innerHTML = currentText;
+          index++;
+          setTimeout(animate, 5);
+        } else {
+          // PAUSE: NOW show line, cloud and database icon together
+          if (cpCloudLine) cpCloudLine.style.stroke = 'rgba(147, 51, 234, 0.3)';
+          if (cloudShape) {
+            cloudShape.style.stroke = 'rgba(147, 51, 234, 0.5)';
+            cloudShape.style.fill = 'url(#yamlCloudGradient)';
+          }
+          dbIcon.forEach(el => el.style.stroke = 'rgba(147, 51, 234, 0.9)');
+          stage = 3;
+          index = 0;
+          setTimeout(animate, 1000); // 1 second pause so user sees DB icon appears from Database YAML
+        }
+      }
+      // Stage 3: Type yaml3 (0.5s)
+      else if (stage === 3) {
+        if (index < yaml3.length) {
+          currentText += yaml3[index];
+          yamlElement.innerHTML = currentText;
+          index++;
+          setTimeout(animate, 5);
+        } else {
+          // PAUSE: Show account icon - let user see account appears from Subaccount YAML
+          accountIcon.forEach(el => el.style.stroke = 'rgba(147, 51, 234, 0.9)');
+          setTimeout(() => {
+            // Turn everything green showing success
+            if (cloudShape) {
+              cloudShape.style.stroke = 'rgba(34, 197, 94, 0.5)';
+              cloudShape.style.fill = 'rgba(34, 197, 94, 0.15)';
+            }
+            if (cpCloudLine) cpCloudLine.style.stroke = 'rgba(34, 197, 94, 0.4)';
+            dbIcon.forEach(el => el.style.stroke = 'rgba(34, 197, 94, 0.9)');
+            accountIcon.forEach(el => el.style.stroke = 'rgba(34, 197, 94, 0.9)');
+          }, 1000); // 1 second pause then turn green
+          stage = 4;
+        }
+      }
+    };
+
+    // Reset and start animation
+    yamlElement.innerHTML = '';
+    currentText = '';
+    index = 0;
+    stage = 1;
+    if (cpElement) cpElement.style.opacity = '0';
+    if (cloudShape) {
+      cloudShape.style.stroke = 'rgba(147, 51, 234, 0)';
+      cloudShape.style.fill = 'none';
+    }
+    if (cpCloudLine) cpCloudLine.style.stroke = 'rgba(147, 51, 234, 0)';
+    dbIcon.forEach(el => el.style.stroke = 'rgba(147, 51, 234, 0)');
+    accountIcon.forEach(el => el.style.stroke = 'rgba(147, 51, 234, 0)');
+
+    const timer = setTimeout(animate, 200);
+
+    return () => clearTimeout(timer);
+  }, [activeFeature]);
 
   useEffect(() => {
     const navbar = document.querySelector(".navbar");
@@ -247,16 +257,17 @@ export default function Home() {
         <div className="flex-container">
           <div className="main">
             <h1 className="heading">
-              <span className="name clip">open control plane docs</span>
-              <span className="text">Give your teams the power to run robust, compliant clouds. Public, private, or Sovereign.</span>
+              <span className="name clip">Open Control Plane docs</span>
+              <span className="text">Give your teams the power to run robust, secure, compliant clouds. <br/> 
+              <i>Public, Private, Sovereign</i>.</span>
             </h1>
             <div className="container" style={{ padding: "0" }}>
               <div className="actions">
-                <div className="action medium alt">
-                  <a href="/docs/users/getting-started">Get Started</a>
+                <div className="action medium">
+                  <a href="/docs/operators/use/overview">Use Platform</a>
                 </div>
                 <div className="action medium alt">
-                  <a href="/docs/operators/getting-started">Run Your Platform</a>
+                  <a href="/docs/operators/setup/overview">Run Your Platform</a>
                 </div>
                 <div className="action medium alt">
                   <a href="/docs/developers/getting-started">Build Together</a>
@@ -557,7 +568,6 @@ export default function Home() {
       <main>
         <section className="features-section" style={{ background: "var(--lp-c-bg-elv)", padding: "48px 24px" }}>
           <div className="container">
-            <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '48px', fontSize: '2.5rem', fontWeight: '700' }}>How it works</h2>
             <div className="lp-features">
               <FeatureCard>
                 <ThemedImage
@@ -638,21 +648,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="get-started-section gray-white">
-          <Link
-            className="button button--primary button--lg"
-            to="/developers/getting-started"
-          >
-            Start contributing
-          </Link>
-          <span>
-            or explore{" "}
-            <Link to="/users/ecosystem">
-              our cloud native ecosystem
-            </Link>
-          </span>
-        </section>
-
         <section className="essentials-section" ref={section1Ref}>
           <div className="container">
             {/* Full-width title header */}
@@ -667,21 +662,21 @@ export default function Home() {
                     onClick={() => handleFeatureClick(0)}
                   >
                     Declarative API
-                    <span className="nav-dot-progress" style={{ width: activeFeature === 0 ? `${(scrollProgress / 0.30) * 100}%` : (activeFeature > 0 ? '100%' : '0%') }}></span>
+                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 0 ? `${Math.min(Math.max((scrollProgress / 0.65) * 100, 0), 100)}%` : (activeFeature > 0 ? '100%' : '0%')) }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(1)}
                   >
                     Self-healing landscapes
-                    <span className="nav-dot-progress" style={{ width: activeFeature === 1 ? `${((scrollProgress - 0.30) / 0.30) * 100}%` : (activeFeature > 1 ? '100%' : '0%') }}></span>
+                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 1 ? `${Math.min(Math.max(((scrollProgress - 0.65) / 0.175) * 100, 0), 100)}%` : (activeFeature > 1 ? '100%' : '0%')) }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleFeatureClick(2)}
                   >
                     GitOps
-                    <span className="nav-dot-progress" style={{ width: activeFeature === 2 ? `${((scrollProgress - 0.60) / 0.40) * 100}%` : (activeFeature > 2 ? '100%' : '0%') }}></span>
+                    <span className={`nav-dot-progress ${manualClick ? 'manual-click' : ''}`} style={{ width: manualClick ? '100%' : (activeFeature === 2 ? `${Math.min(Math.max(((scrollProgress - 0.825) / 0.175) * 100, 0), 100)}%` : (activeFeature > 2 ? '100%' : '0%')) }}></span>
                   </button>
                 </div>
               </div>
@@ -735,38 +730,17 @@ export default function Home() {
                 {/* Feature 0: Declarative API - YAML left, cloud right */}
                 <div className={`essentials-visual-content ${activeFeature === 0 ? 'active' : ''}`}>
                   <div className="yaml-left-container">
-                    <pre className="essentials-yaml-unified">
-{`apiVersion: openmcp.cloud/v1alpha1
-kind: ManagedControlPlane
-metadata:
-  name: team-prod
-spec:
-  provider: gardener
----
-apiVersion: openmcp.cloud/v1alpha1
-kind: Database
-metadata:
-  name: prod-db
-spec:
-  engine: postgresql
----
-apiVersion: openmcp.cloud/v1alpha1
-kind: Subaccount
-metadata:
-  name: team-alpha
-spec:
-  region: eu-central-1`}
-                    </pre>
+                    <pre className="essentials-yaml-unified essentials-yaml-typewriter"></pre>
                   </div>
 
-                  {/* Animated line connection - same style as hero */}
-                  <svg className={`yaml-connection-line ${activeFeature === 0 ? 'animate' : ''}`} style={{ position: 'absolute', right: '130px', top: '50%', transform: 'translateY(-50%)', width: '200px', height: '2px' }}>
-                    <line x1="0" y1="1" x2="200" y2="1" stroke="rgba(147, 51, 234, 0.2)" strokeWidth="2" strokeDasharray="3,3" />
+                  {/* Animated line from CP to cloud */}
+                  <svg className="cp-to-cloud-line" style={{ position: 'absolute', left: '0', top: '0', width: '100%', height: '100%', pointerEvents: 'none', zIndex: 5 }}>
+                    <line x1="50%" y1="50%" x2="calc(100% - 180px)" y2="50%" className="cp-cloud-connection" stroke="rgba(147, 51, 234, 0)" strokeWidth="2" strokeDasharray="4,4" />
                   </svg>
 
                   {/* Database and Account icons inside cloud */}
                   <div className="yaml-right-container">
-                    <svg className={`yaml-cloud-right ${activeFeature === 0 ? 'animate' : ''}`} width="400" height="300" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="yaml-cloud-right" width="400" height="300" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
                       <defs>
                         <linearGradient id="yamlCloudGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" style={{ stopColor: 'rgba(123, 97, 255, 0.12)' }} />
@@ -774,83 +748,27 @@ spec:
                         </linearGradient>
                       </defs>
                       <path className="yaml-cloud-shape" d="M 60 20 L 75 27.5 L 75 42.5 L 60 50 L 45 42.5 L 45 27.5 Z"
-                            fill="url(#yamlCloudGradient)" stroke="rgba(147, 51, 234, 0.5)" strokeWidth="2" />
+                            fill="url(#yamlCloudGradient)" stroke="rgba(147, 51, 234, 0)" strokeWidth="2" />
 
                       {/* Database icon - left side */}
-                      <g className="yaml-cloud-icon yaml-cloud-icon-database" transform="translate(50, 28) scale(0.22)">
-                        <ellipse cx="12" cy="5" rx="9" ry="3" stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" />
+                      <g className="yaml-cloud-icon yaml-cloud-icon-database" transform="translate(48, 28) scale(0.3)">
+                        <ellipse cx="12" cy="5" rx="9" ry="3" stroke="rgba(147, 51, 234, 0)" strokeWidth="2.5" fill="none" />
                         <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
-                              stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                              stroke="rgba(147, 51, 234, 0)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                       </g>
 
                       {/* Account/User icon - right side */}
-                      <g className="yaml-cloud-icon yaml-cloud-icon-account" transform="translate(64, 28) scale(0.22)">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                        <circle cx="12" cy="7" r="4" stroke="rgba(147, 51, 234, 0.9)" strokeWidth="2.5" fill="none" />
+                      <g className="yaml-cloud-icon yaml-cloud-icon-account" transform="translate(66, 28) scale(0.3)">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="rgba(147, 51, 234, 0)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        <circle cx="12" cy="7" r="4" stroke="rgba(147, 51, 234, 0)" strokeWidth="2.5" fill="none" />
                       </g>
                     </svg>
                   </div>
                 </div>
 
-                {/* Feature 1: Self-healing - 4 resource icons around CP */}
+                {/* Feature 1: Self-healing - 4 resource icons rotating around CP */}
                 <div className={`essentials-visual-content ${activeFeature === 1 ? 'active' : ''}`}>
-                  <div className="selfhealing-animation-area">
-                    {/* Database - top */}
-                    <div className={`healing-resource healing-resource-1 ${activeFeature === 1 ? 'animate' : ''}`}>
-                      <div className="healing-resource-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <ellipse cx="12" cy="5" rx="9" ry="3" className="resource-icon-stroke" strokeWidth="2" fill="none" />
-                          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"
-                                className="resource-icon-stroke" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <svg className="healing-conn-line-simple" width="3" height="80" viewBox="0 0 3 80">
-                        <line x1="1.5" y1="0" x2="1.5" y2="80" className="healing-conn-simple" strokeWidth="3" />
-                      </svg>
-                    </div>
-
-                    {/* User - right */}
-                    <div className={`healing-resource healing-resource-2 ${activeFeature === 1 ? 'animate' : ''}`}>
-                      <div className="healing-resource-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <circle cx="12" cy="7" r="4" className="resource-icon-stroke" strokeWidth="2" />
-                        </svg>
-                      </div>
-                      <svg className="healing-conn-line-simple" width="80" height="3" viewBox="0 0 80 3">
-                        <line x1="0" y1="1.5" x2="80" y2="1.5" className="healing-conn-simple" strokeWidth="3" />
-                      </svg>
-                    </div>
-
-                    {/* Server - bottom */}
-                    <div className={`healing-resource healing-resource-3 ${activeFeature === 1 ? 'animate' : ''}`}>
-                      <div className="healing-resource-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <rect x="2" y="2" width="20" height="8" rx="2" ry="2" className="resource-icon-stroke" strokeWidth="2" />
-                          <rect x="2" y="14" width="20" height="8" rx="2" ry="2" className="resource-icon-stroke" strokeWidth="2" />
-                          <line x1="6" y1="6" x2="6.01" y2="6" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
-                          <line x1="6" y1="18" x2="6.01" y2="18" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                      </div>
-                      <svg className="healing-conn-line-simple" width="3" height="80" viewBox="0 0 3 80">
-                        <line x1="1.5" y1="0" x2="1.5" y2="80" className="healing-conn-simple" strokeWidth="3" />
-                      </svg>
-                    </div>
-
-                    {/* Storage - left */}
-                    <div className={`healing-resource healing-resource-4 ${activeFeature === 1 ? 'animate' : ''}`}>
-                      <div className="healing-resource-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" className="resource-icon-stroke" strokeWidth="2" />
-                          <polyline points="3.27 6.96 12 12.01 20.73 6.96" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <line x1="12" y1="22.08" x2="12" y2="12" className="resource-icon-stroke" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                      </div>
-                      <svg className="healing-conn-line-simple" width="80" height="3" viewBox="0 0 80 3">
-                        <line x1="0" y1="1.5" x2="80" y2="1.5" className="healing-conn-simple" strokeWidth="3" />
-                      </svg>
-                    </div>
-                  </div>
+                  <SelfHealingAnimation isActive={activeFeature === 1} />
                 </div>
 
                 {/* Feature 2: GitOps - clouds split with badges */}
@@ -926,27 +844,27 @@ spec:
                     onClick={() => handleProviderFeatureClick(0)}
                   >
                     Central onboarding API
-                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 0 ? `${(providerScrollProgress / 0.30) * 100}%` : (activeProviderFeature > 0 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 0 ? `${(providerScrollProgress / 0.65) * 100}%` : (activeProviderFeature > 0 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeProviderFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleProviderFeatureClick(1)}
                   >
                     Shared tooling
-                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 1 ? `${((providerScrollProgress - 0.30) / 0.30) * 100}%` : (activeProviderFeature > 1 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 1 ? `${((providerScrollProgress - 0.65) / 0.175) * 100}%` : (activeProviderFeature > 1 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeProviderFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleProviderFeatureClick(2)}
                   >
                     Bring own observability stack
-                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 2 ? `${((providerScrollProgress - 0.60) / 0.40) * 100}%` : (activeProviderFeature > 2 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeProviderFeature === 2 ? `${((providerScrollProgress - 0.825) / 0.175) * 100}%` : (activeProviderFeature > 2 ? '100%' : '0%') }}></span>
                   </button>
                 </div>
               </div>
               <div className="section-header-right-col">
                 <Link className="section-header-cta" to="/operators/overview">Read operator guides →</Link>
-                <Link className="section-header-cta" to="/developers/general">Contribute PlatformProvider →</Link>
+                <Link className="section-header-cta" to="/developers/general">Contribute Platform Services →</Link>
               </div>
             </div>
 
@@ -1056,21 +974,21 @@ spec:
                     onClick={() => handleAnywhereFeatureClick(0)}
                   >
                     Anywhere
-                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 0 ? `${(anywhereScrollProgress / 0.30) * 100}%` : (activeAnywhereFeature > 0 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 0 ? `${(anywhereScrollProgress / 0.65) * 100}%` : (activeAnywhereFeature > 0 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeAnywhereFeature === 1 ? 'active' : ''}`}
                     onClick={() => handleAnywhereFeatureClick(1)}
                   >
                     Sovereign clouds
-                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 1 ? `${((anywhereScrollProgress - 0.30) / 0.30) * 100}%` : (activeAnywhereFeature > 1 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 1 ? `${((anywhereScrollProgress - 0.65) / 0.175) * 100}%` : (activeAnywhereFeature > 1 ? '100%' : '0%') }}></span>
                   </button>
                   <button
                     className={`nav-dot ${activeAnywhereFeature === 2 ? 'active' : ''}`}
                     onClick={() => handleAnywhereFeatureClick(2)}
                   >
                     Kind
-                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 2 ? `${((anywhereScrollProgress - 0.60) / 0.40) * 100}%` : (activeAnywhereFeature > 2 ? '100%' : '0%') }}></span>
+                    <span className="nav-dot-progress" style={{ width: activeAnywhereFeature === 2 ? `${((anywhereScrollProgress - 0.825) / 0.175) * 100}%` : (activeAnywhereFeature > 2 ? '100%' : '0%') }}></span>
                   </button>
                 </div>
               </div>
@@ -1128,10 +1046,10 @@ spec:
 
                   {/* Connection lines from hangar to badges - tree structure */}
                   <svg className="anywhere-connections" width="100%" height="100%">
-                    <line className="anywhere-conn-line anywhere-conn-aws" x1="50%" y1="38%" x2="20%" y2="78%" />
-                    <line className="anywhere-conn-line anywhere-conn-azure" x1="50%" y1="38%" x2="40%" y2="78%" />
-                    <line className="anywhere-conn-line anywhere-conn-gcp" x1="50%" y1="38%" x2="60%" y2="78%" />
-                    <line className="anywhere-conn-line anywhere-conn-other" x1="50%" y1="38%" x2="80%" y2="78%" />
+                    <line className="anywhere-conn-line anywhere-conn-aws" x1="50%" y1="30%" x2="20%" y2="80%" />
+                    <line className="anywhere-conn-line anywhere-conn-azure" x1="50%" y1="30%" x2="40%" y2="80%" />
+                    <line className="anywhere-conn-line anywhere-conn-gcp" x1="50%" y1="30%" x2="60%" y2="80%" />
+                    <line className="anywhere-conn-line anywhere-conn-other" x1="50%" y1="30%" x2="80%" y2="80%" />
                   </svg>
                 </div>
 
@@ -1162,9 +1080,9 @@ spec:
 
                   {/* Connection lines from hangar to badges - tree structure */}
                   <svg className="anywhere-connections" width="100%" height="100%">
-                    <line className="anywhere-conn-line anywhere-conn-eu-1" x1="50%" y1="38%" x2="25%" y2="78%" />
-                    <line className="anywhere-conn-line anywhere-conn-eu-2" x1="50%" y1="38%" x2="50%" y2="78%" />
-                    <line className="anywhere-conn-line anywhere-conn-eu-3" x1="50%" y1="38%" x2="75%" y2="78%" />
+                    <line className="anywhere-conn-line anywhere-conn-eu-1" x1="50%" y1="30%" x2="25%" y2="80%" />
+                    <line className="anywhere-conn-line anywhere-conn-eu-2" x1="50%" y1="30%" x2="50%" y2="80%" />
+                    <line className="anywhere-conn-line anywhere-conn-eu-3" x1="50%" y1="30%" x2="75%" y2="80%" />
                   </svg>
                 </div>
 
@@ -1200,7 +1118,7 @@ spec:
                 <div className="typing-open-source">100% open-source</div>
               </div>
               <p>
-                This project started as an inner-source initiative within SAP. Thanks to <b>NeonEphos</b>, it now operates 100% publicly and has been donated to the <Link to="https://github.com/openmcp-project" target="_blank" rel="noopener noreferrer">OpenControlPlane organization</Link>.
+                This project started as an inner-source initiative within SAP. Thanks to <b><Link to="https://neonephos.org/" target="_blank" rel="noopener noreferrer">NeoNephos</Link></b>, it now operates 100% publicly.
                 <br />
                 <br />
                 <b>
@@ -1210,20 +1128,6 @@ spec:
                 <br />
                 <br />
               </p>
-              <Link
-                className="button button--primary button--lg"
-                to="https://github.com/openmcp-project"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                💪 See our projects
-              </Link>
-              <br />
-              <span>
-                and learn <Link to="/developers/getting-started">how to contribute</Link>
-              </span>
-              <br />
-              <br />
             </div>
           </div>
         </section>

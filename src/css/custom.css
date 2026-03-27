@@ -440,33 +440,39 @@
 }
 
 /* Role-specific hero button colors - MUST come after generic .action.alt a */
+/* Operators general (Run Your Platform) - darker color */
+.lp-home .action.alt a[href*="/operators/setup/"],
+.lp-home .action a[href*="/operators/setup/"] {
+  background: var(--role-operator-primary) !important;
+  color: white !important;
+  border-color: transparent;
+}
+
+.lp-home .action.alt a[href*="/operators/setup/"]:hover,
+.lp-home .action a[href*="/operators/setup/"]:hover {
+  background: var(--role-operator-secondary) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(2, 65, 76, 0.4);
+  color: white !important;
+}
+
+/* End users (Use Platform) - lighter teal */
 .lp-home .action.alt a[href*="/users/"],
-.lp-home .action a[href*="/users/"] {
+.lp-home .action a[href*="/users/"],
+.lp-home .action.alt a[href*="/operators/use/"],
+.lp-home .action a[href*="/operators/use/"] {
   background: var(--role-enduser-primary) !important;
   color: white !important;
   border-color: transparent;
 }
 
 .lp-home .action.alt a[href*="/users/"]:hover,
-.lp-home .action a[href*="/users/"]:hover {
+.lp-home .action a[href*="/users/"]:hover,
+.lp-home .action.alt a[href*="/operators/use/"]:hover,
+.lp-home .action a[href*="/operators/use/"]:hover {
   background: var(--role-enduser-secondary) !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(7, 131, 143, 0.4);
-  color: white !important;
-}
-
-.lp-home .action.alt a[href*="/operators/"],
-.lp-home .action a[href*="/operators/"] {
-  background: var(--role-operator-primary) !important;
-  color: white !important;
-  border-color: transparent;
-}
-
-.lp-home .action.alt a[href*="/operators/"]:hover,
-.lp-home .action a[href*="/operators/"]:hover {
-  background: var(--role-operator-secondary) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(2, 65, 76, 0.4);
   color: white !important;
 }
 
@@ -744,27 +750,33 @@ html[data-theme="light"] .lp-home .image-bg {
 }
 
 /* Light theme: override for button colors */
+/* Operators general (Run Your Platform) - darker color */
+html[data-theme="light"] .lp-home .action.alt a[href*="/operators/setup/"],
+html[data-theme="light"] .lp-home .action a[href*="/operators/setup/"] {
+  background: var(--role-operator-primary) !important;
+  color: white !important;
+}
+
+html[data-theme="light"] .lp-home .action.alt a[href*="/operators/setup/"]:hover,
+html[data-theme="light"] .lp-home .action a[href*="/operators/setup/"]:hover {
+  background: var(--role-operator-secondary) !important;
+  color: white !important;
+}
+
+/* End users (Use Platform) - lighter teal */
 html[data-theme="light"] .lp-home .action.alt a[href*="/users/"],
-html[data-theme="light"] .lp-home .action a[href*="/users/"] {
+html[data-theme="light"] .lp-home .action a[href*="/users/"],
+html[data-theme="light"] .lp-home .action.alt a[href*="/operators/use/"],
+html[data-theme="light"] .lp-home .action a[href*="/operators/use/"] {
   background: var(--role-enduser-primary) !important;
   color: white !important;
 }
 
 html[data-theme="light"] .lp-home .action.alt a[href*="/users/"]:hover,
-html[data-theme="light"] .lp-home .action a[href*="/users/"]:hover {
+html[data-theme="light"] .lp-home .action a[href*="/users/"]:hover,
+html[data-theme="light"] .lp-home .action.alt a[href*="/operators/use/"]:hover,
+html[data-theme="light"] .lp-home .action a[href*="/operators/use/"]:hover {
   background: var(--role-enduser-secondary) !important;
-  color: white !important;
-}
-
-html[data-theme="light"] .lp-home .action.alt a[href*="/operators/"],
-html[data-theme="light"] .lp-home .action a[href*="/operators/"] {
-  background: var(--role-operator-primary) !important;
-  color: white !important;
-}
-
-html[data-theme="light"] .lp-home .action.alt a[href*="/operators/"]:hover,
-html[data-theme="light"] .lp-home .action a[href*="/operators/"]:hover {
-  background: var(--role-operator-secondary) !important;
   color: white !important;
 }
 
@@ -845,27 +857,33 @@ html[data-theme="dark"] .get-started-section a:not(.button) {
 }
 
 /* Dark mode: ensure role button colors are visible */
+/* Operators general (Run Your Platform) - darker color */
+html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/setup/"],
+html[data-theme="dark"] .lp-home .action a[href*="/operators/setup/"] {
+  background: var(--role-operator-primary) !important;
+  color: white !important;
+}
+
+html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/setup/"]:hover,
+html[data-theme="dark"] .lp-home .action a[href*="/operators/setup/"]:hover {
+  background: var(--role-operator-secondary) !important;
+  color: white !important;
+}
+
+/* End users (Use Platform) - lighter teal */
 html[data-theme="dark"] .lp-home .action.alt a[href*="/users/"],
-html[data-theme="dark"] .lp-home .action a[href*="/users/"] {
+html[data-theme="dark"] .lp-home .action a[href*="/users/"],
+html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/use/"],
+html[data-theme="dark"] .lp-home .action a[href*="/operators/use/"] {
   background: var(--role-enduser-primary) !important;
   color: white !important;
 }
 
 html[data-theme="dark"] .lp-home .action.alt a[href*="/users/"]:hover,
-html[data-theme="dark"] .lp-home .action a[href*="/users/"]:hover {
+html[data-theme="dark"] .lp-home .action a[href*="/users/"]:hover,
+html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/use/"]:hover,
+html[data-theme="dark"] .lp-home .action a[href*="/operators/use/"]:hover {
   background: var(--role-enduser-secondary) !important;
-  color: white !important;
-}
-
-html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/"],
-html[data-theme="dark"] .lp-home .action a[href*="/operators/"] {
-  background: var(--role-operator-primary) !important;
-  color: white !important;
-}
-
-html[data-theme="dark"] .lp-home .action.alt a[href*="/operators/"]:hover,
-html[data-theme="dark"] .lp-home .action a[href*="/operators/"]:hover {
-  background: var(--role-operator-secondary) !important;
   color: white !important;
 }
 
@@ -1971,6 +1989,105 @@ body[class*="docs-doc-id-reference"] .row {
 
 .schema-field-children {
   margin-top: 8px;
+}
+
+/* ===== Role Cards ===== */
+.role-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 2rem 0;
+}
+
+.role-card {
+  text-align: center;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.role-card .project-card-header {
+  border-bottom: none;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 0;
+}
+
+.role-card .project-card-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.role-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.role-card-description {
+  margin-top: 16px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-900);
+}
+
+.role-card-subtitle {
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+  flex: 1;
+}
+
+.role-card .button {
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* End User role styling */
+.role-card-enduser {
+  border-color: var(--role-enduser-primary);
+}
+
+.role-card-enduser svg {
+  color: var(--role-enduser-primary);
+}
+
+.role-card-enduser .button {
+  background: var(--role-enduser-primary);
+  border-color: var(--role-enduser-primary);
+}
+
+/* Operator role styling */
+.role-card-operator {
+  border-color: var(--role-operator-primary);
+}
+
+.role-card-operator svg {
+  color: var(--role-operator-primary);
+}
+
+.role-card-operator .button {
+  background: var(--role-operator-primary);
+  border-color: var(--role-operator-primary);
+  white-space: normal;
+  padding: 0.75rem 1rem;
+  line-height: 1.3;
+}
+
+/* Contributor role styling */
+.role-card-contributor {
+  border-color: #000;
+}
+
+.role-card-contributor svg {
+  color: #000;
+}
+
+.role-card-contributor-button {
+  background: #000 !important;
+  border-color: #000 !important;
+  color: #fff !important;
 }
 
 /* ===== Reference Grid ===== */
@@ -3469,29 +3586,28 @@ article[data-role="enduser"] {
 }
 
 .yaml-cloud-right {
-  opacity: 0;
-  transform: translateX(-80px) scale(0.8);
-  transition: all 0.6s ease-out;
-}
-
-.yaml-cloud-right.animate {
   opacity: 1;
   transform: translateX(0) scale(1);
 }
 
-/* Icon turning green animations */
-.yaml-cloud-right.animate .yaml-cloud-icon-database ellipse,
-.yaml-cloud-right.animate .yaml-cloud-icon-database path {
-  animation: icon-turn-green 0.6s ease-out 1.5s forwards;
+/* Add smooth transitions for all animated elements */
+.yaml-cloud-shape {
+  transition: stroke 0.3s ease, fill 0.3s ease;
 }
 
-.yaml-cloud-right.animate .yaml-cloud-icon-account path,
-.yaml-cloud-right.animate .yaml-cloud-icon-account circle {
-  animation: icon-turn-green 0.6s ease-out 2.3s forwards;
+.yaml-line-animate {
+  transition: stroke 0.3s ease;
 }
 
-.yaml-cloud-right.animate .yaml-cloud-shape {
-  animation: cloud-turn-green 0.8s ease-out 3.1s forwards;
+.cp-cloud-connection {
+  transition: stroke 0.3s ease;
+}
+
+.yaml-cloud-icon-database ellipse,
+.yaml-cloud-icon-database path,
+.yaml-cloud-icon-account path,
+.yaml-cloud-icon-account circle {
+  transition: stroke 0.3s ease;
 }
 
 @keyframes icon-turn-green {
@@ -4257,7 +4373,7 @@ article[data-role="enduser"] {
   color: var(--teal-3);
 }
 
-/* Self-healing view - many clouds popping up */
+/* Self-healing view - rotating resources around CP */
 .selfhealing-animation-area {
   position: absolute;
   top: 0;
@@ -4269,16 +4385,189 @@ article[data-role="enduser"] {
   justify-content: center;
 }
 
-/* Self-healing resource icons */
+/* CP pulse rings */
+.cp-pulse-ring {
+  opacity: 0;
+  transform-origin: center;
+}
+
+.cp-pulse-ring.animate {
+  animation: pulse-out 3s ease-out infinite;
+}
+
+.cp-pulse-ring-2.animate {
+  animation: pulse-out 3s ease-out infinite 1s;
+}
+
+.cp-pulse-ring-3.animate {
+  animation: pulse-out 3s ease-out infinite 2s;
+}
+
+@keyframes pulse-out {
+  0% {
+    opacity: 0.6;
+    r: 60;
+  }
+  100% {
+    opacity: 0;
+    r: 140;
+  }
+}
+
+/* Connection lines with dash animation */
+.healing-conn-line {
+  animation: dash-flow 2s linear infinite;
+}
+
+.healing-conn-1 {
+  animation-delay: 0s;
+}
+
+.healing-conn-2 {
+  animation-delay: 0.5s;
+}
+
+.healing-conn-3 {
+  animation-delay: 1s;
+}
+
+.healing-conn-4 {
+  animation-delay: 1.5s;
+}
+
+/* Rotating orbit container - REDUCED radius to stay in view */
+.healing-orbit {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.healing-orbit.rotating {
+  animation: orbit-rotate 20s linear infinite;
+}
+
+@keyframes orbit-rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Self-healing resource icons - positioned on orbit */
 .healing-resource {
   position: absolute;
   display: flex;
   align-items: center;
-  opacity: 0;
+  justify-content: center;
+  opacity: 1;
 }
 
-.healing-resource.animate {
-  animation: resource-popup 1.5s ease-out forwards;
+/* Position resources evenly around center (90deg apart) */
+.healing-resource-1 {
+  top: 0;
+  left: 50%;
+}
+
+.healing-resource-2 {
+  top: 50%;
+  right: 0;
+}
+
+.healing-resource-3 {
+  bottom: 0;
+  left: 50%;
+}
+
+.healing-resource-4 {
+  top: 50%;
+  left: 0;
+}
+
+/* Counter-rotate icons so they stay upright - each with heal animation */
+.healing-orbit.rotating .healing-resource-1 {
+  animation: counter-rotate-1 20s linear infinite;
+}
+
+.healing-orbit.rotating .healing-resource-1.animate {
+  animation: counter-rotate-1 20s linear infinite, resource-heal 6s ease-in-out 3s infinite;
+}
+
+.healing-orbit.rotating .healing-resource-2 {
+  animation: counter-rotate-2 20s linear infinite;
+}
+
+.healing-orbit.rotating .healing-resource-2.animate {
+  animation: counter-rotate-2 20s linear infinite, resource-heal 6s ease-in-out 3.3s infinite;
+}
+
+.healing-orbit.rotating .healing-resource-3 {
+  animation: counter-rotate-3 20s linear infinite;
+}
+
+.healing-orbit.rotating .healing-resource-3.animate {
+  animation: counter-rotate-3 20s linear infinite, resource-heal 6s ease-in-out 3.6s infinite;
+}
+
+.healing-orbit.rotating .healing-resource-4 {
+  animation: counter-rotate-4 20s linear infinite;
+}
+
+.healing-orbit.rotating .healing-resource-4.animate {
+  animation: counter-rotate-4 20s linear infinite, resource-heal 6s ease-in-out 3.9s infinite;
+}
+
+@keyframes counter-rotate-1 {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+@keyframes counter-rotate-2 {
+  from {
+    transform: translate(50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(50%, -50%) rotate(-360deg);
+  }
+}
+
+@keyframes counter-rotate-3 {
+  from {
+    transform: translate(-50%, 50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, 50%) rotate(-360deg);
+  }
+}
+
+@keyframes counter-rotate-4 {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+/* Healing animations - turn red, then green (consolidated single animation) */
+@keyframes resource-heal {
+  0%, 100% {
+    filter: none;
+  }
+  20% {
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
+  }
+  40% {
+    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8));
+  }
 }
 
 @keyframes resource-popup {
@@ -4314,57 +4603,19 @@ article[data-role="enduser"] {
   stroke: var(--lp-c-brand-2);
 }
 
-/* Position resources around CP */
-.healing-resource-1 {
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  flex-direction: column;
-  animation-delay: 0s;
+/* Add teal glow to resource icons */
+.healing-resource-icon svg .resource-icon-stroke {
+  transition: stroke 0.3s ease;
 }
 
-.healing-resource-2 {
-  top: 50%;
-  right: 8%;
-  transform: translateY(-50%);
-  flex-direction: row-reverse;
-  animation-delay: 0.3s;
+[data-theme='dark'] .resource-icon-stroke {
+  stroke: var(--lp-c-brand-1);
 }
 
-.healing-resource-3 {
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  flex-direction: column-reverse;
-  animation-delay: 0.6s;
-}
-
-.healing-resource-4 {
-  top: 50%;
-  left: 8%;
-  transform: translateY(-50%);
-  flex-direction: row;
-  animation-delay: 0.9s;
-}
-
-/* Connection lines */
-.healing-conn-line-simple {
-  display: block;
-}
-
-.healing-conn-simple {
-  stroke: rgba(147, 51, 234, 0.2);
-  stroke-width: 2;
-  stroke-dasharray: 3, 3;
-  stroke-dashoffset: 0;
-}
-
-.healing-resource.animate .healing-conn-simple {
-  animation: connection-pulse 3s ease-in-out 1.5s infinite;
-}
-
-[data-theme='dark'] .healing-conn-simple {
-  stroke: rgba(44, 224, 191, 0.3);
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -16;
+  }
 }
 
 @keyframes line-draw {
@@ -4385,39 +4636,39 @@ article[data-role="enduser"] {
 
 /* Resource 3 fails and recovers */
 .healing-resource-3.animate .resource-icon-stroke {
-  animation: resource-failure 13s ease-in-out 3s infinite;
+  animation: resource-failure 10s ease-in-out 0s infinite;
 }
 
 .healing-resource-3.animate .healing-conn-simple {
-  animation: line-draw 1s ease-out 0.5s forwards, line-failure 13s ease-in-out 3s infinite;
+  animation: line-draw 1s ease-out 0.5s forwards, line-failure 10s ease-in-out 0s infinite;
 }
 
 @keyframes resource-failure {
-  0%, 25% {
+  0%, 20% {
     stroke: var(--lp-c-brand-2);
   }
-  30%, 50% {
+  25%, 50% {
     stroke: #ef4444;
   }
-  55%, 65% {
+  55%, 70% {
     stroke: #22c55e;
   }
-  70%, 100% {
+  75%, 100% {
     stroke: var(--lp-c-brand-2);
   }
 }
 
 @keyframes line-failure {
-  0%, 25% {
+  0%, 20% {
     stroke: rgba(44, 224, 191, 0.5);
   }
-  30%, 50% {
+  25%, 50% {
     stroke: rgba(239, 68, 68, 0.7);
   }
-  55%, 65% {
+  55%, 70% {
     stroke: rgba(34, 197, 94, 0.7);
   }
-  70%, 100% {
+  75%, 100% {
     stroke: rgba(44, 224, 191, 0.5);
   }
 }
@@ -5481,6 +5732,7 @@ article[data-role="enduser"] {
   white-space: nowrap;
   font-weight: 400;
   position: relative;
+  overflow: hidden;
 }
 
 .nav-dot-progress {
@@ -5491,6 +5743,13 @@ article[data-role="enduser"] {
   background: var(--teal-7);
   transition: width 0.05s linear;
   pointer-events: none;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Disable transition on manual click to prevent animation jitter */
+.nav-dot-progress.manual-click {
+  transition: none;
 }
 
 .nav-dot::after {
@@ -6175,7 +6434,7 @@ article[data-role="enduser"] {
 
 /* Anywhere section - same as providers but potentially different color */
 .anywhere-section {
-  padding: 96px 0 48px 0;
+  padding: 48px 0 24px 0;
   background: linear-gradient(180deg, rgba(135, 206, 235, 0.1) 0%, rgba(7, 131, 143, 0.08) 30%, rgba(14, 89, 99, 0.12) 70%, rgba(2, 65, 76, 0.15) 100%);
 }
 
@@ -6193,7 +6452,7 @@ article[data-role="enduser"] {
   display: grid;
   grid-template-columns: 350px 1fr;
   gap: 40px;
-  min-height: 600px;
+  min-height: 300px;
 }
 
 .anywhere-sidebar {
@@ -6373,24 +6632,25 @@ article[data-role="enduser"] {
 
 .anywhere-visual-unified {
   position: relative;
-  min-height: 440px;
+  min-height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 16px;
-  padding: 48px 32px;
+  padding: 20px;
+  background: rgba(4, 159, 154, 0.02);
 }
 
 [data-theme='dark'] .anywhere-visual-unified {
-  background: transparent;
+  background: rgba(44, 224, 191, 0.03);
 }
 
 .anywhere-cp {
   position: absolute;
-  width: 200px;
+  width: 160px;
   height: auto;
   opacity: 0;
-  filter: drop-shadow(0 6px 24px rgba(14, 89, 99, 0.4));
+  filter: drop-shadow(0 4px 16px rgba(14, 89, 99, 0.4));
   transition: opacity 0.5s ease;
   left: 50%;
   top: 50%;
@@ -6432,26 +6692,29 @@ article[data-role="enduser"] {
 .anywhere-hangar-gardener {
   position: absolute;
   left: 50%;
-  top: 25%;
-  transform: translate(-50%, -20%);
-
-  height: 154px !important;
-  filter: drop-shadow(0 6px 24px rgba(14, 89, 99, 0.4));
+  top: 30%;
+  transform: translate(-50%, -50%);
+  width: 160px;
+  height: auto;
+  filter: drop-shadow(0 4px 16px rgba(14, 89, 99, 0.4));
+  z-index: 10;
 }
 
 .anywhere-hangar-kind {
   position: absolute;
   left: 50%;
-  top: 35%;
-  transform: translate(-50%, -30%);
-  height: 174px !important;
-  filter: drop-shadow(0 6px 24px rgba(14, 89, 99, 0.4));
+  top: 30%;
+  transform: translate(-50%, -50%);
+  width: 160px;
+  height: auto;
+  filter: drop-shadow(0 4px 16px rgba(14, 89, 99, 0.4));
+  z-index: 10;
 }
 
 /* Badge styles */
 .anywhere-badge {
   position: absolute;
-  padding: 8px 18px;
+  padding: 8px 16px;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 700;
@@ -6460,6 +6723,7 @@ article[data-role="enduser"] {
   animation: badge-pop-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
   opacity: 0;
   transition: transform 0.2s ease;
+  z-index: 10;
 }
 
 .anywhere-badge:hover {
@@ -6481,7 +6745,7 @@ article[data-role="enduser"] {
 /* AWS - orange */
 .anywhere-badge-aws {
   background: linear-gradient(135deg, #FF9900 0%, #FF7700 100%);
-  bottom: 8%;
+  bottom: 20%;
   left: 15%;
   animation-delay: 0.2s;
 }
@@ -6489,7 +6753,7 @@ article[data-role="enduser"] {
 /* Azure - blue */
 .anywhere-badge-azure {
   background: linear-gradient(135deg, #0078D4 0%, #0063B1 100%);
-  bottom: 8%;
+  bottom: 20%;
   left: 35%;
   animation-delay: 0.3s;
 }
@@ -6499,7 +6763,7 @@ article[data-role="enduser"] {
   background: linear-gradient(135deg, #4285F4 0%, #5A9FED 100%);
   color: white;
   box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
-  bottom: 8%;
+  bottom: 20%;
   left: 55%;
   animation-delay: 0.4s;
 }
@@ -6507,7 +6771,7 @@ article[data-role="enduser"] {
 /* Other - gray */
 .anywhere-badge-other {
   background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
-  bottom: 8%;
+  bottom: 20%;
   left: 75%;
   animation-delay: 0.5s;
 }
@@ -6515,7 +6779,7 @@ article[data-role="enduser"] {
 /* EU badges */
 .anywhere-badge-eu-pub-dev {
   background: linear-gradient(135deg, #003399 0%, #002266 100%);
-  bottom: 8%;
+  bottom: 20%;
   left: 20%;
   animation-delay: 0.2s;
 }
@@ -6523,14 +6787,14 @@ article[data-role="enduser"] {
 .anywhere-badge-eu-pub-live {
   background: linear-gradient(135deg, #87CEEB 0%, #5DADE2 100%);
   color: #003399;
-  bottom: 8%;
+  bottom: 20%;
   left: 45%;
   animation-delay: 0.3s;
 }
 
 .anywhere-badge-eu-gov-live {
   background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-  bottom: 8%;
+  bottom: 20%;
   left: 70%;
   animation-delay: 0.4s;
 }
@@ -6543,11 +6807,12 @@ article[data-role="enduser"] {
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 1;
 }
 
 .anywhere-conn-line {
-  stroke: rgba(7, 131, 143, 0.2);
-  stroke-width: 1.5;
+  stroke: rgba(7, 131, 143, 0.5);
+  stroke-width: 2;
   stroke-linecap: round;
   animation: line-subtle-flow 3s ease-in-out infinite;
   stroke-dasharray: 8, 8;
@@ -6556,11 +6821,11 @@ article[data-role="enduser"] {
 
 @keyframes line-subtle-flow {
   0%, 100% {
-    opacity: 0.3;
+    opacity: 0.6;
     stroke-dashoffset: 0;
   }
   50% {
-    opacity: 0.6;
+    opacity: 0.9;
     stroke-dashoffset: 16;
   }
 }
@@ -6596,41 +6861,37 @@ article[data-role="enduser"] {
 /* Flying control planes */
 .anywhere-flying-cp {
   position: absolute;
-  width: 150px;
+  width: 100px;
   height: auto;
   opacity: 0;
   left: 50%;
-  top: 28%;
+  top: 30%;
   transform: translateX(-50%);
-  filter: drop-shadow(0 4px 12px rgba(14, 89, 99, 0.3));
+  filter: drop-shadow(0 2px 8px rgba(14, 89, 99, 0.3));
   pointer-events: none;
+  z-index: 10;
 }
 
 @keyframes fly-out {
   0% {
     opacity: 0;
-    top: 28%;
-    transform: translate(-50%, 0) scale(0.4) rotate(0deg);
+    top: 33%;
+    transform: translate(-50%, 0) scale(0.6) rotate(0deg);
   }
-  10% {
+  25% {
     opacity: 1;
-    top: 22%;
-    transform: translate(-50%, 0) scale(0.6) rotate(-2deg);
-  }
-  30% {
-    opacity: 1;
-    top: 12%;
-    transform: translate(-50%, 0) scale(0.8) rotate(2deg);
+    top: 20%;
+    transform: translate(-50%, 0) scale(0.8) rotate(-2deg);
   }
   60% {
     opacity: 0.8;
-    top: -3%;
-    transform: translate(-50%, 0) scale(1) rotate(-1deg);
+    top: 8%;
+    transform: translate(-50%, 0) scale(1) rotate(2deg);
   }
   100% {
     opacity: 0;
-    top: -20%;
-    transform: translate(-50%, 0) scale(1.2) rotate(0deg);
+    top: 0%;
+    transform: translate(-50%, 0) scale(1.1) rotate(0deg);
   }
 }
 
@@ -6649,7 +6910,7 @@ article[data-role="enduser"] {
 /* Kind control planes - stay and move around */
 .kind-cp {
   position: absolute;
-  width: 120px;
+  width: 70px;
   height: auto;
   opacity: 0;
   filter: drop-shadow(0 4px 12px rgba(14, 89, 99, 0.3));
@@ -7296,24 +7557,16 @@ article[data-role="enduser"] {
 .provider-badge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 6px 12px;
   background: var(--ifm-color-emphasis-100);
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 6px;
   color: var(--ifm-color-emphasis-800);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 13px;
   font-weight: 500;
   transition: all 0.2s ease;
-  white-space: nowrap;
-  line-height: 1;
-  height: auto;
-  width: auto;
-  min-height: 0;
-  min-width: 0;
-  flex: 0 0 auto;
 }
 
 .provider-badge:hover {
@@ -7323,4 +7576,100 @@ article[data-role="enduser"] {
   transform: translateY(-1px);
   box-shadow: 0 2px 6px rgba(4, 159, 154, 0.15);
   text-decoration: none;
+}
+
+.provider-logo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.provider-badge p {
+  margin: 0;
+  line-height: 16px;
+}
+
+/* Brand-specific badge colors */
+.provider-badge-aws {
+  background: white;
+  border-color: #FF9900;
+  color: #232F3E;
+}
+
+.provider-badge-aws:hover {
+  background: #FFF5E6;
+  border-color: #FF9900;
+  color: #232F3E;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(255, 153, 0, 0.3);
+}
+
+.provider-badge-azure {
+  background: white;
+  border-color: #0078D4;
+  color: #0078D4;
+}
+
+.provider-badge-azure:hover {
+  background: #E6F2FA;
+  border-color: #0078D4;
+  color: #0078D4;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 120, 212, 0.3);
+}
+
+.provider-badge-gcp {
+  background: white;
+  border-color: #4285F4;
+  color: #4285F4;
+}
+
+.provider-badge-gcp:hover {
+  background: #E8F0FE;
+  border-color: #4285F4;
+  color: #4285F4;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(66, 133, 244, 0.3);
+}
+
+.provider-badge-sap {
+  background: white;
+  border-color: #0FAAFF;
+  color: #0FAAFF;
+}
+
+.provider-badge-sap:hover {
+  background: #E6F6FF;
+  border-color: #0FAAFF;
+  color: #0FAAFF;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(15, 170, 255, 0.3);
+}
+
+.provider-badge-ionos {
+  background: white;
+  border-color: #003D7A;
+  color: #003D7A;
+}
+
+.provider-badge-ionos:hover {
+  background: #E6EDF4;
+  border-color: #003D7A;
+  color: #003D7A;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 61, 122, 0.3);
+}
+
+.provider-badge-hetzner {
+  background: white;
+  border-color: #D50C2D;
+  color: #D50C2D;
+}
+
+.provider-badge-hetzner:hover {
+  background: #FDE7EB;
+  border-color: #D50C2D;
+  color: #D50C2D;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(213, 12, 45, 0.3);
 }

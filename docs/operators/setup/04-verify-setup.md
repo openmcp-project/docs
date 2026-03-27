@@ -162,7 +162,7 @@ status:
     status: "True"
     type: AllAccessReady
   - lastTransitionTime: "2025-09-16T13:03:55Z"
-    message: Cluster conditions have been synced to MCP
+    message: Cluster conditions have been synced to ManagedControlPlane
     observedGeneration: 1
     reason: ClusterConditionsSynced_True
     status: "True"

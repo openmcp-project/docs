@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# 2. Connect
+# Connect
 
 This guide shows you how to retrieve credentials and connect to your ControlPlane using kubectl.
 
