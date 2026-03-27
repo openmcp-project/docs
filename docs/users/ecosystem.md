@@ -39,10 +39,26 @@ Here are the **key projects** that **power our platform** or **end-users' cloud 
   <div className="cloud-providers">
     <div className="cloud-providers-label">We endorse these Crossplane providers:</div>
     <div className="cloud-providers-list">
-      <a href="https://github.com/crossplane-contrib/provider-aws" className="provider-badge" target="_blank" rel="noopener noreferrer">AWS</a>
-      <a href="https://github.com/crossplane-contrib/provider-upjet-azure" className="provider-badge" target="_blank" rel="noopener noreferrer">Azure</a>
-      <a href="https://github.com/crossplane-contrib/provider-upjet-gcp" className="provider-badge" target="_blank" rel="noopener noreferrer">GCP</a>
-      <a href="https://sap.github.io/crossplane-provider-docs/" className="provider-badge" target="_blank" rel="noopener noreferrer">SAP BTP</a>
+      <a href="https://github.com/crossplane-contrib/provider-aws" className="provider-badge provider-badge-aws" target="_blank" rel="noopener noreferrer">
+        <img src="/docs/img/logos/aws.svg" alt="AWS" className="provider-logo" />
+        AWS
+      </a>
+      <a href="https://github.com/crossplane-contrib/provider-upjet-azure" className="provider-badge provider-badge-azure" target="_blank" rel="noopener noreferrer">
+        <img src="/docs/img/logos/azure.svg" alt="Azure" className="provider-logo" />
+        Azure
+      </a>
+      <a href="https://github.com/crossplane-contrib/provider-upjet-gcp" className="provider-badge provider-badge-gcp" target="_blank" rel="noopener noreferrer">
+        <img src="/docs/img/logos/gcp.svg" alt="GCP" className="provider-logo" />
+        Google
+      </a>
+      <a href="https://sap.github.io/crossplane-provider-docs/" className="provider-badge provider-badge-sap" target="_blank" rel="noopener noreferrer">
+        <img src="/docs/img/logos/sap.svg" alt="SAP" className="provider-logo" />
+        SAP
+      </a>
+      <a href="https://github.com/ionos-cloud/crossplane-provider-ionoscloud" className="provider-badge provider-badge-ionos" target="_blank" rel="noopener noreferrer">
+        <img src="/docs/img/logos/ionos.svg" alt="IONOS" className="provider-logo" />
+        IONOS
+      </a>
     </div>
   </div>
 </div>

@@ -7557,24 +7557,16 @@ article[data-role="enduser"] {
 .provider-badge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 6px 12px;
   background: var(--ifm-color-emphasis-100);
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 6px;
   color: var(--ifm-color-emphasis-800);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 13px;
   font-weight: 500;
   transition: all 0.2s ease;
-  white-space: nowrap;
-  line-height: 1;
-  height: auto;
-  width: auto;
-  min-height: 0;
-  min-width: 0;
-  flex: 0 0 auto;
 }
 
 .provider-badge:hover {
@@ -7584,4 +7576,100 @@ article[data-role="enduser"] {
   transform: translateY(-1px);
   box-shadow: 0 2px 6px rgba(4, 159, 154, 0.15);
   text-decoration: none;
+}
+
+.provider-logo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.provider-badge p {
+  margin: 0;
+  line-height: 16px;
+}
+
+/* Brand-specific badge colors */
+.provider-badge-aws {
+  background: white;
+  border-color: #FF9900;
+  color: #232F3E;
+}
+
+.provider-badge-aws:hover {
+  background: #FFF5E6;
+  border-color: #FF9900;
+  color: #232F3E;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(255, 153, 0, 0.3);
+}
+
+.provider-badge-azure {
+  background: white;
+  border-color: #0078D4;
+  color: #0078D4;
+}
+
+.provider-badge-azure:hover {
+  background: #E6F2FA;
+  border-color: #0078D4;
+  color: #0078D4;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 120, 212, 0.3);
+}
+
+.provider-badge-gcp {
+  background: white;
+  border-color: #4285F4;
+  color: #4285F4;
+}
+
+.provider-badge-gcp:hover {
+  background: #E8F0FE;
+  border-color: #4285F4;
+  color: #4285F4;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(66, 133, 244, 0.3);
+}
+
+.provider-badge-sap {
+  background: white;
+  border-color: #0FAAFF;
+  color: #0FAAFF;
+}
+
+.provider-badge-sap:hover {
+  background: #E6F6FF;
+  border-color: #0FAAFF;
+  color: #0FAAFF;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(15, 170, 255, 0.3);
+}
+
+.provider-badge-ionos {
+  background: white;
+  border-color: #003D7A;
+  color: #003D7A;
+}
+
+.provider-badge-ionos:hover {
+  background: #E6EDF4;
+  border-color: #003D7A;
+  color: #003D7A;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 61, 122, 0.3);
+}
+
+.provider-badge-hetzner {
+  background: white;
+  border-color: #D50C2D;
+  color: #D50C2D;
+}
+
+.provider-badge-hetzner:hover {
+  background: #FDE7EB;
+  border-color: #D50C2D;
+  color: #D50C2D;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(213, 12, 45, 0.3);
 }
