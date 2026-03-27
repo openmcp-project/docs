@@ -1699,7 +1699,11 @@ body[class*="docs-doc-id-reference"] .row {
 .crd-header-icon {
   width: 80px;
   height: 80px;
+  max-width: 80px;
+  max-height: 80px;
   flex-shrink: 0;
+  object-fit: contain;
+  object-position: center;
   filter: drop-shadow(0 4px 12px rgba(4, 159, 154, 0.3));
 }
 
@@ -2309,8 +2313,20 @@ body[class*="docs-doc-id-reference"] .row {
 .reference-icon-large {
   width: 120px !important;
   height: 120px !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
   object-fit: contain !important;
+  object-position: center !important;
   filter: brightness(0.95);
+}
+
+.reference-grid .reference-icon-container-standard {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 [data-theme='dark'] .reference-icon-large {
@@ -2525,12 +2541,37 @@ body[class*="docs-doc-id-reference"] .row {
   color: var(--teal-6);
 }
 
+.reference-link-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ifm-color-emphasis-600);
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 0.85rem;
+  transition: gap 0.2s ease;
+  margin-right: 12px;
+}
+
+.reference-link-secondary:hover {
+  gap: 8px;
+  color: var(--teal-7);
+}
+
 [data-theme='dark'] .reference-link {
   color: var(--teal-4);
 }
 
 [data-theme='dark'] .reference-link:hover {
   color: var(--teal-2);
+}
+
+[data-theme='dark'] .reference-link-secondary {
+  color: var(--ifm-color-emphasis-500);
+}
+
+[data-theme='dark'] .reference-link-secondary:hover {
+  color: var(--teal-4);
 }
 
 
@@ -2545,6 +2586,38 @@ body[class*="docs-doc-id-reference"] .row {
 article[data-role="enduser"] {
   border-top: 4px solid var(--role-enduser-primary);
   padding-top: 1rem;
+}
+
+article[data-role="operator"] {
+  border-top: 4px solid var(--role-operator-primary);
+  padding-top: 1rem;
+}
+
+/* Role badges for concept pages - using path-based selectors */
+[data-path*="concepts/managed-control-plane"] h1:first-of-type::after {
+  content: "End User";
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 12px;
+  background: var(--role-enduser-primary);
+  color: white;
+}
+
+[data-path*="concepts/service-provider"] h1:first-of-type::after,
+[data-path*="concepts/platform-service"] h1:first-of-type::after,
+[data-path*="concepts/cluster-provider"] h1:first-of-type::after {
+  content: "Operator";
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 12px;
+  background: var(--role-operator-primary);
+  color: white;
 }
 
 /* ===== CRITICAL: Force project logo sizes ===== */

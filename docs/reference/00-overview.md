@@ -19,6 +19,7 @@ Resources that end users interact with to consume platform capabilities.
   <h3>ManagedControlPlaneV2</h3>
   <p>The primary resource for creating and managing control planes in OpenControlPlane.</p>
   <a href="/docs/reference/core/managedcontrolplane" className="reference-link">View CRD →</a>
+  <a href="/docs/users/concepts/managed-control-plane" className="reference-link-secondary">Learn Concept</a>
 </div>
 
 <div className="reference-card">
@@ -32,6 +33,7 @@ Resources that end users interact with to consume platform capabilities.
   <h3>Workspace</h3>
   <p>Isolated environment within a project for deploying and managing applications.</p>
   <a href="/docs/reference/core/workspace" className="reference-link">View CRD →</a>
+  <a href="/docs/users/concepts/managed-control-plane#workspace" className="reference-link-secondary">Learn Concept</a>
 </div>
 
 <div className="reference-card">
@@ -53,6 +55,7 @@ Resources that end users interact with to consume platform capabilities.
   <h3>Project</h3>
   <p>Organizational unit for grouping workspaces and managing resources across teams.</p>
   <a href="/docs/reference/core/project" className="reference-link">View CRD →</a>
+  <a href="/docs/users/concepts/managed-control-plane#project" className="reference-link-secondary">Learn Concept</a>
 </div>
 
 <div className="reference-card">
@@ -62,6 +65,7 @@ Resources that end users interact with to consume platform capabilities.
   <h3>ServiceProvider</h3>
   <p>Delivers consumable services to customers via ManagedControlPlanes.</p>
   <a href="/docs/reference/operator/providers/serviceprovider" className="reference-link">View CRD →</a>
+  <a href="/docs/users/concepts/service-provider" className="reference-link-secondary">Learn Concept</a>
 </div>
 
 </div>
@@ -116,6 +120,7 @@ Resources that platform operators use to configure and manage the platform infra
   <h3>ClusterProvider</h3>
   <p>Manages Kubernetes clusters and provides access within the ecosystem.</p>
   <a href="/docs/reference/operator/providers/clusterprovider" className="reference-link">View CRD →</a>
+  <a href="/docs/users/concepts/cluster-provider" className="reference-link-secondary">Learn Concept</a>
 </div>
 
 <div className="reference-card">
@@ -125,6 +130,7 @@ Resources that platform operators use to configure and manage the platform infra
   <h3>PlatformService</h3>
   <p>Delivers complete platform capabilities and services.</p>
   <a href="/docs/reference/operator/providers/platformservice" className="reference-link">View CRD →</a>
+  <a href="/docs/users/concepts/platform-service" className="reference-link-secondary">Learn Concept</a>
 </div>
 
 </div>
