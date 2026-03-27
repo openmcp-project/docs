@@ -54,10 +54,10 @@ export default function Home() {
       // Start when bottom is visible and end when content is still visible
       // We need a range where the visual content (images) is fully in view
 
-      // Start: section top at 50% viewport (content becoming centered)
-      // End: section top at -40% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.5;
-      const endThreshold = -windowHeight * 0.4;
+      // Start: section top at 40% viewport (content becoming centered)
+      // End: section top at -20% viewport (top exiting but bottom still visible)
+      const startThreshold = windowHeight * 0.4;
+      const endThreshold = -windowHeight * 0.2;
 
       // Only track when section is in the active range
       if (sectionTop > startThreshold || sectionTop < endThreshold) {
@@ -98,10 +98,10 @@ export default function Home() {
 
       const sectionTop = rect.top;
 
-      // Start: section top at 50% viewport (content becoming centered)
-      // End: section top at -40% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.5;
-      const endThreshold = -windowHeight * 0.4;
+      // Start: section top at 40% viewport (content becoming centered)
+      // End: section top at -20% viewport (top exiting but bottom still visible)
+      const startThreshold = windowHeight * 0.4;
+      const endThreshold = -windowHeight * 0.2;
 
       if (sectionTop > startThreshold || sectionTop < endThreshold) {
         return;
@@ -140,10 +140,10 @@ export default function Home() {
 
       const sectionTop = rect.top;
 
-      // Start: section top at 50% viewport (content becoming centered)
-      // End: section top at -40% viewport (top exiting but bottom still visible)
-      const startThreshold = windowHeight * 0.5;
-      const endThreshold = -windowHeight * 0.4;
+      // Start: section top at 40% viewport (content becoming centered)
+      // End: section top at -20% viewport (top exiting but bottom still visible)
+      const startThreshold = windowHeight * 0.4;
+      const endThreshold = -windowHeight * 0.2;
 
       if (sectionTop > startThreshold || sectionTop < endThreshold) {
         return;
