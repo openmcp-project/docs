@@ -24,6 +24,7 @@ Most ClusterProviders will probably require some form of configuration. Since th
 ### Cluster Profiles
 
 Out of the configuration(s), the ClusterProvider has to generate `ClusterProfile` resources. They serve as some kind of service discovery and look like this:
+
 ```yaml
 apiVersion: clusters.openmcp.cloud/v1alpha1
 kind: ClusterProfile
@@ -66,6 +67,7 @@ Note that each ClusterProvider must at least generate one `ClusterProfile` in or
 ### Cluster Management
 
 The main purpose of ClusterProviders is the management of k8s clusters. Each ClusterProvider therefore needs a controller that reconciles the `Cluster` resource, which looks like this:
+
 ```yaml
 apiVersion: clusters.openmcp.cloud/v1alpha1
 kind: Cluster
@@ -117,6 +119,7 @@ Note that any kind of kubeconfig should not be part of the cluster's status - ac
 ### Access Management
 
 ClusterProviders are not only responsible for creating and deleting k8s clusters, but also for managing access to their clusters. Controllers and human users can request access to a cluster by creating an `AccessRequest` resource which looks like this:
+
 ```yaml
 apiVersion: clusters.openmcp.cloud/v1alpha1
 kind: AccessRequest

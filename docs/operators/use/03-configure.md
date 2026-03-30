@@ -159,7 +159,7 @@ External Secrets service provider is currently under development. Check the [ser
 
 Congratulations! You have a working ControlPlane with managed services. Here's what you can explore next:
 
-- **[What is a Managed Control Plane?](../concepts/managed-control-plane.md)** — Deeper understanding of ControlPlanes
-- **[Service Providers](../concepts/service-provider.md)** — How managed services work
+- **[What is a Managed Control Plane?](/docs/users/concepts/managed-control-plane)** — Deeper understanding of ControlPlanes
+- **[Service Providers](/docs/users/concepts/service-provider)** — How managed services work
 - **[Crossplane Service Provider](https://github.com/openmcp-project/service-provider-crossplane)** — Manage cloud infrastructure
 - **[Landscaper Service Provider](https://github.com/openmcp-project/service-provider-landscaper)** — Orchestrate complex workloads

@@ -36,25 +36,25 @@ Explore the [open-source projects](./ecosystem) that power OpenControlPlane, inc
 <div className="reference-card reference-card-compact">
   <h3>Core Concepts</h3>
   <p>Understand how OpenControlPlane works.</p>
-  <a href="/users/concepts/managed-control-plane" className="reference-link">Learn Concepts →</a>
+  <a href="/docs/users/concepts/managed-control-plane" className="reference-link">Learn Concepts →</a>
 </div>
 
 <div className="reference-card reference-card-compact">
   <h3>Browse CRDs</h3>
   <p>Explore the complete API reference with examples.</p>
-  <a href="/reference/overview" className="reference-link">CRD Browser →</a>
+  <a href="/docs/reference/overview" className="reference-link">CRD Browser →</a>
 </div>
 
 <div className="reference-card reference-card-compact">
   <h3>Community</h3>
   <p>Connect with other users and contributors.</p>
-  <a href="/community/overview" className="reference-link">Join Community →</a>
+  <a href="/docs/community/overview" className="reference-link">Join Community →</a>
 </div>
 
 </div>
 
 ## Need Help?
 
-- **Community**: Join our [community hub](/community/overview) to connect with other users
+- **Community**: Join our [community hub](/docs/community/overview) to connect with other users
 - **GitHub**: Report issues or browse repositories at [openmcp-project](https://github.com/openmcp-project)
 - **Support**: Check the [contributing guide](https://github.com/openmcp-project/community/blob/main/CONTRIBUTING.md) for ways to get help

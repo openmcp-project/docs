@@ -20,6 +20,7 @@ Resources that end users interact with to consume platform capabilities.
   <p>The primary resource for creating and managing control planes in OpenControlPlane.</p>
   <a href="/docs/reference/core/managedcontrolplane" className="reference-link">View CRD →</a>
   <a href="/docs/users/concepts/managed-control-plane" className="reference-link-secondary">Learn Concept</a>
+  <a href="https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 <div className="reference-card">
@@ -34,6 +35,7 @@ Resources that end users interact with to consume platform capabilities.
   <p>Isolated environment within a project for deploying and managing applications.</p>
   <a href="/docs/reference/core/workspace" className="reference-link">View CRD →</a>
   <a href="/docs/users/concepts/managed-control-plane#workspace" className="reference-link-secondary">Learn Concept</a>
+  <a href="https://github.com/openmcp-project/project-workspace-operator/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 <div className="reference-card">
@@ -56,6 +58,7 @@ Resources that end users interact with to consume platform capabilities.
   <p>Organizational unit for grouping workspaces and managing resources across teams.</p>
   <a href="/docs/reference/core/project" className="reference-link">View CRD →</a>
   <a href="/docs/users/concepts/managed-control-plane#project" className="reference-link-secondary">Learn Concept</a>
+  <a href="https://github.com/openmcp-project/project-workspace-operator/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 <div className="reference-card">
@@ -66,6 +69,7 @@ Resources that end users interact with to consume platform capabilities.
   <p>Delivers consumable services to customers via ManagedControlPlanes.</p>
   <a href="/docs/reference/operator/providers/serviceprovider" className="reference-link">View CRD →</a>
   <a href="/docs/users/concepts/service-provider" className="reference-link-secondary">Learn Concept</a>
+  <a href="https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 </div>
@@ -83,6 +87,7 @@ Available service providers that can be deployed within control planes.
   <h3>Crossplane</h3>
   <p>Infrastructure provisioning and composition service using Crossplane.</p>
   <a href="/docs/reference/services/crossplane" className="reference-link">View CRD →</a>
+  <a href="https://github.com/openmcp-project/service-provider-crossplane/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 <div className="reference-card">
@@ -92,6 +97,7 @@ Available service providers that can be deployed within control planes.
   <h3>Landscaper</h3>
   <p>Declarative deployment orchestration service using Landscaper.</p>
   <a href="/docs/reference/services/landscaper" className="reference-link">View CRD →</a>
+  <a href="https://github.com/openmcp-project/service-provider-landscaper/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 <div className="reference-card">
@@ -101,6 +107,7 @@ Available service providers that can be deployed within control planes.
   <h3>Velero</h3>
   <p>Backup and disaster recovery service using Velero.</p>
   <a href="/docs/reference/services/velero" className="reference-link">View CRD →</a>
+  <a href="https://github.com/openmcp-project/service-provider-velero/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 </div>
@@ -121,6 +128,7 @@ Resources that platform operators use to configure and manage the platform infra
   <p>Manages Kubernetes clusters and provides access within the ecosystem.</p>
   <a href="/docs/reference/operator/providers/clusterprovider" className="reference-link">View CRD →</a>
   <a href="/docs/users/concepts/cluster-provider" className="reference-link-secondary">Learn Concept</a>
+  <a href="https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 <div className="reference-card">
@@ -131,6 +139,7 @@ Resources that platform operators use to configure and manage the platform infra
   <p>Delivers complete platform capabilities and services.</p>
   <a href="/docs/reference/operator/providers/platformservice" className="reference-link">View CRD →</a>
   <a href="/docs/users/concepts/platform-service" className="reference-link-secondary">Learn Concept</a>
+  <a href="https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 </div>
@@ -145,37 +154,28 @@ Resources for managing cluster access and configuration.
   <h3>Cluster</h3>
   <p>Represents a Kubernetes cluster within OpenControlPlane.</p>
   <a href="/docs/reference/operator/clusters/cluster" className="reference-link">View CRD →</a>
+  <a href="https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 <div className="reference-card">
   <h3>ClusterRequest</h3>
   <p>Request for cluster creation or modification.</p>
   <a href="/docs/reference/operator/clusters/clusterrequest" className="reference-link">View CRD →</a>
+  <a href="https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 <div className="reference-card">
   <h3>AccessRequest</h3>
   <p>Request access to a cluster or control plane.</p>
   <a href="/docs/reference/operator/clusters/accessrequest" className="reference-link">View CRD →</a>
+  <a href="https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 <div className="reference-card">
   <h3>ClusterProfile</h3>
   <p>Defines reusable cluster configuration templates.</p>
   <a href="/docs/reference/operator/clusters/clusterprofile" className="reference-link">View CRD →</a>
+  <a href="https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests" className="reference-link-secondary" target="_blank" rel="noopener noreferrer">Source Code</a>
 </div>
 
 </div>
-
----
-
-## Source Code
-
-CRD definitions are maintained across multiple repositories:
-
-- **Core & Operator CRDs**: [openmcp-operator](https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests)
-- **Project & Workspace CRDs**: [project-workspace-operator](https://github.com/openmcp-project/project-workspace-operator/tree/main/api/crds/manifests)
-- **Service Providers**:
-  - Crossplane: [service-provider-crossplane](https://github.com/openmcp-project/service-provider-crossplane/tree/main/api/crds/manifests)
-  - Landscaper: [service-provider-landscaper](https://github.com/openmcp-project/service-provider-landscaper/tree/main/api/crds/manifests)
-  - Velero: [service-provider-velero](https://github.com/openmcp-project/service-provider-velero/tree/main/api/crds/manifests)

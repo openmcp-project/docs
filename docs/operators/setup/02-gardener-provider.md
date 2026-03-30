@@ -301,6 +301,7 @@ In the `extra-manifests` folder, create a file named `gardener-cluster-provider-
 <Tabs queryString="provider-config-shoot-small" defaultValue="GCP">
 
 <TabItem value="GCP" label="GCP">
+
 ```yaml title="config/extra-manifests/gardener-cluster-provider-shoot-small.yaml"
 apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
 kind: ProviderConfig
@@ -361,9 +362,11 @@ spec:
       region: <region-name> # e.g. europe-west1
       secretBindingName: <gardener-secret-binding-name>
 ```
+
 </TabItem>
 
 <TabItem value="AWS" label="AWS" >
+
 ```yaml title="config/extra-manifests/gardener-cluster-provider-shoot-small.yaml"
 apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
 kind: ProviderConfig
@@ -433,6 +436,9 @@ spec:
       region: <region-name> # e.g. eu-west-1
       secretBindingName: <gardener-secret-binding-name>
 ```
+
+:::
+
 </TabItem>
 
 </Tabs>
@@ -442,6 +448,7 @@ In the `extra-manifests` folder, create a file named `gardener-cluster-provider-
 <Tabs queryString="provider-config-shoot-workerless" defaultValue="GCP">
 
 <TabItem value="GCP" label="GCP">
+
 ```yaml title="config/extra-manifests/gardener-cluster-provider-shoot-workerless.yaml"
 apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
 kind: ProviderConfig
@@ -471,9 +478,11 @@ spec:
       purpose: evaluation
       region: <region-name> # eg europe-west1
 ```
+
 </TabItem>
 
 <TabItem value="AWS" label="AWS" >
+
 ```yaml title="config/extra-manifests/gardener-cluster-provider-shoot-workerless.yaml"
 apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
 kind: ProviderConfig
@@ -503,6 +512,7 @@ spec:
       purpose: evaluation
       region: <region-name> # e.g. eu-west-1
 ```
+
 </TabItem>
 
 </Tabs>
