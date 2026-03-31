@@ -579,7 +579,7 @@ export default function Home() {
                   }}
                 />
                 <h3>Continuous self-healing</h3>
-                <p>Keep your landscape in sync. Crossplane continuously observes the desired and the actual state and reconciles any differences automatically.</p>
+                <p>Keep your landscape in sync. Kubernetes controllers continuously observes the desired and the actual state and reconciles any differences automatically.</p>
               </FeatureCard>
               <FeatureCard>
                 <ThemedImage
@@ -604,7 +604,7 @@ export default function Home() {
                 />
                 <h3>Designed for reuse</h3>
                 <p>
-                  Define your landscapes in modular building blocks using <i>Crossplane Compositions</i> or <i>Helm charts</i>. Replicate modules easily across different regions or stages.
+                  Define your landscapes in modular building blocks using <i>Service Providers</i> or <i>Platform Services</i>. Replicate modules easily across different regions or stages.
                 </p>
               </FeatureCard>
               <FeatureCard>
@@ -699,7 +699,7 @@ export default function Home() {
               </div>
               <div className={`section-text-item ${activeFeature === 1 ? 'active' : ''}`}>
                 <h3>Self-healing</h3>
-                <p>The control plane continuously monitors your resources and automatically corrects drift, recovers from failures, and ensures your infrastructure matches the desired state at all times—powered by Crossplane.</p>
+                <p>The control plane continuously monitors your resources and automatically corrects drift, recovers from failures, and ensures your infrastructure matches the desired state at all times—powered by Kubernetes.</p>
               </div>
               <div className={`section-text-item ${activeFeature === 2 ? 'active' : ''}`}>
                 <h3>GitOps</h3>
