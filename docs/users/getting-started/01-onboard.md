@@ -66,11 +66,27 @@ Before you begin, ensure you have:
 If you don't have access to an OpenControlPlane installation, contact your platform operator. Operators can follow the [Bootstrapping Guide](../../operators/00-overview.md) to set up a new environment.
 :::
 
+:::note Limited Access
+Normally, you will only have limited access to resources in the onboarding cluster.
+This means you won't be able to list existing resources of most kinds, but you will be able to create the resources that you actually require.
+:::
+
 ---
 
 ## Step 1: Create a Project
 
 A `Project` is the starting point of your ControlPlane journey. It's a logical grouping of `Workspaces` and `ControlPlanes`. Use a Project to represent an organization, department, team, or any other logical grouping.
+
+:::note Organization-Specific Labels
+In your organization, certain `annotations` or `labels` might be required on your resources. Please contact your cluster administrator to find out more.
+For example, certain SAP-specific labels are as follows:
+```yaml
+labels:
+    openmcp.cloud.sap/charging-target: "<replace>"
+    openmcp.cloud.sap/charging-target-type: "<replace>"
+```
+The values for these are provided by your cluster administrator.
+:::
 
 ```yaml
 apiVersion: core.openmcp.cloud/v1alpha1
@@ -91,10 +107,47 @@ spec:
         - view
 ```
 
-Apply it to the Onboarding API:
+Create it on the Onboarding API:
 
 ```bash
-kubectl apply -f project.yaml
+kubectl create -f project.yaml
+```
+
+:::note
+We use `kubectl create` rather than `apply` throughout this guide.
+:::
+
+Once the project reconciles, check its status. It should contain a `namespace` that the project generated:
+
+```
+kubectl describe project platform-team
+```
+
+```
+Name:         platform-team
+Namespace:
+API Version:  core.openmcp.cloud/v1alpha1
+Kind:         Project
+Metadata:
+  Creation Timestamp:  2026-03-10T12:02:37Z
+  Finalizers:
+    core.openmcp.cloud
+  Generation:        1
+  Resource Version:  140594720
+  UID:               0566ecc4-72f0-4905-904c-cc609fcfc014
+Spec:
+  Members:
+    Kind:  User
+    Name:  <your user mail address>
+    Roles:
+      admin
+    Kind:  User
+    Name:  <any other user mail address>
+    Roles:
+      admin
+Status:
+  Namespace:  project-platform-team
+Events:       <none>
 ```
 
 ---
@@ -124,12 +177,50 @@ spec:
 ```
 
 :::info Namespace Convention
-Workspaces live in a namespace named `project-<project-name>`. For example, a Workspace in the `platform-team` Project goes in the `project-platform-team` namespace.
+Workspaces live in a namespace named `project-<project-name>`. For example, a Workspace in the `platform-team` Project goes in the `project-platform-team` namespace. This namespace is retrieved from the Project status above.
 :::
 
 ```bash
-kubectl apply -f workspace.yaml
+kubectl create -f workspace.yaml
 ```
+
+The output of this object will also contain a namespace. That namespace is the one to use for your ControlPlane creation. Inspect the resource:
+
+```
+kubectl describe workspace dev -n project-platform-team
+```
+
+```
+Name:         dev
+Namespace:    project-platform-team
+Labels:       <none>
+Annotations:  core.openmcp.cloud/created-by: <your user mail address>
+              openmcp.cloud/display-name: Platform Team - Dev
+API Version:  core.openmcp.cloud/v1alpha1
+Kind:         Workspace
+Metadata:
+  Creation Timestamp:  2026-03-10T12:02:51Z
+  Finalizers:
+    core.openmcp.cloud
+  Generation:        1
+  Resource Version:  140594791
+  UID:               9d52be65-0c71-4ab4-85b4-dcf20e12fa7f
+Spec:
+  Members:
+    Kind:  User
+    Name:  <your user mail address>
+    Roles:
+      admin
+    Kind:  User
+    Name:  <any other user mail address>
+    Roles:
+      admin
+Status:
+  Namespace:  project-platform-team--ws-dev
+Events:       <none>
+```
+
+Grab that namespace and continue with creating the ControlPlane resource.
 
 ---
 
@@ -205,9 +296,67 @@ iam:
 
 For token-based auth, a ServiceAccount is automatically generated and bound to the specified roles.
 
+:::note
+The name of this object is significant and will be used later when installing managed services. Choose carefully.
+:::
+
 ```bash
-kubectl apply -f controlplane.yaml
+kubectl create -f controlplane.yaml
 ```
+
+Normally, you would only require one of OIDC or token-based auth, so don't worry if one says failed to reconcile while the other is `Ready`.
+
+Once the ControlPlane is successfully reconciled, you should see something like this:
+
+```
+kubectl describe mcpv2 my-controlplane -n project-platform-team--ws-dev
+```
+
+```
+Name:         my-controlplane
+Namespace:    project-platform-team--ws-dev
+Labels:       <none>
+Annotations:  <none>
+API Version:  core.openmcp.cloud/v2alpha1
+Kind:         ManagedControlPlaneV2
+Metadata:
+  Creation Timestamp:  2026-03-13T09:36:31Z
+  ...
+Spec:
+  Iam:
+    Oidc:
+      Default Provider:
+        Role Bindings:
+          Role Refs:
+            Kind:  ClusterRole
+            Name:  cluster-admin
+          Subjects:
+            Kind:  User
+            Name:  first.user@example.com
+            Kind:  User
+            Name:  second.user@example.com
+    Tokens:
+      Name:  ci-service-token
+      Role Refs:
+        Kind:  ClusterRole
+        Name:  cluster-admin
+Status:
+  Access:
+    oidc_openmcp:
+      Name:  oidc-openmcp.my-controlplane.kubeconfig
+    token_ci-service-token:
+      Name:  token-ci-service-token.my-controlplane.kubeconfig
+  Conditions:
+    Last Transition Time:  2026-03-13T13:25:00Z
+    Message:
+    ...
+```
+
+Note the `status.access` resource under `oidc_openmcp`. This is the Secret you need to fetch in order to get your kubeconfig for the provisioned ControlPlane.
+
+:::info
+If any of the needed resources to install a specific service provider do not exist on your onboarding cluster, ask your cluster administrator to install the required CRDs via a `ServiceProvider` resource.
+:::
 
 ---
 
