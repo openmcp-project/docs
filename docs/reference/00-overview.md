@@ -99,6 +99,15 @@ Available service providers that can be deployed within control planes.
   <a href="/docs/reference/services/velero" className="reference-link">View CRD →</a>
 </div>
 
+<div className="reference-card">
+  <div className="reference-icon-container reference-icon-container-standard">
+    <img src="/docs/img/platform/tower.png" alt="OCM" className="reference-icon-large" />
+  </div>
+  <h3>OCM</h3>
+  <p>Software delivery and deployment service using the Open Component Model.</p>
+  <a href="/docs/reference/services/ocm" className="reference-link">View CRD →</a>
+</div>
+
 </div>
 
 ## Operator Resources
@@ -173,3 +182,4 @@ CRD definitions are maintained across multiple repositories:
   - Crossplane: [service-provider-crossplane](https://github.com/openmcp-project/service-provider-crossplane/tree/main/api/crds/manifests)
   - Landscaper: [service-provider-landscaper](https://github.com/openmcp-project/service-provider-landscaper/tree/main/api/crds/manifests)
   - Velero: [service-provider-velero](https://github.com/openmcp-project/service-provider-velero/tree/main/api/crds/manifests)
+  - OCM: [service-provider-ocm](https://github.com/open-component-model/service-provider-ocm/tree/main/api/crds/manifests)

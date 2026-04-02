@@ -77,6 +77,7 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
 - [Crossplane service provider](https://github.com/openmcp-project/service-provider-crossplane)
 - [Landscaper service provider](https://github.com/openmcp-project/service-provider-landscaper)
 - [Velero service provider](https://github.com/openmcp-project/service-provider-velero)
+- [OCM service provider](https://github.com/open-component-model/service-provider-ocm)
 - [Service provider template](https://github.com/openmcp-project/repository-template)
 
 **Cluster Providers:**
