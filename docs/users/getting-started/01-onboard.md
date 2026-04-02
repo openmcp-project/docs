@@ -77,17 +77,6 @@ This means you won't be able to list existing resources of most kinds, but you w
 
 A `Project` is the starting point of your ControlPlane journey. It's a logical grouping of `Workspaces` and `ControlPlanes`. Use a Project to represent an organization, department, team, or any other logical grouping.
 
-:::note Organization-Specific Labels
-In your organization, certain `annotations` or `labels` might be required on your resources. Please contact your cluster administrator to find out more.
-For example, certain SAP-specific labels are as follows:
-```yaml
-labels:
-    openmcp.cloud.sap/charging-target: "<replace>"
-    openmcp.cloud.sap/charging-target-type: "<replace>"
-```
-The values for these are provided by your cluster administrator.
-:::
-
 ```yaml
 apiVersion: core.openmcp.cloud/v1alpha1
 kind: Project
