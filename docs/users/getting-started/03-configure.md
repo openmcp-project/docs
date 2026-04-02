@@ -15,7 +15,7 @@ You can install managed services in your ControlPlane to add capabilities like i
 
 ### Prerequisites
 
-In order to install any of the below offerings, their `ProviderConfig` object must exist in your onboarding cluster. Each service will have a specific `ProviderConfig` object that you can get from the service provider's repository. Please contact your onboarding cluster administrator to install the necessary configurations and the `ServiceProvider` objects.
+In order to install any of the below offerings, their `ProviderConfig` object must exist in your platform cluster. Each service will have a specific `ProviderConfig` object that you can get from the service provider's repository. Please contact your platform owner to install the necessary configurations and the `ServiceProvider` objects.
 
 :::warning Name Matching
 For each of these providers, the `name` of the managed service object **must** match your ControlPlane object's name. This ensures a single ControlPlane cannot have multiple installations of the same provider.
