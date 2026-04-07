@@ -34,6 +34,11 @@ Run the following command to generate a new provider. Replace `velero` with the 
 go run ./cmd/template -v -module github.com/openmcp-project/service-provider-velero -kind Velero -group velero
 ```
 
+Optional flags:
+- `-v` generates sample code to get started quickly
+- `-w` enables workload cluster support (see below)
+- `-s` generates a [secret watcher](#watch-secrets-for-changes) implementation
+
 The template generates a fully functional service provider that can be executed and deployed on your local machine using [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
 
 To run the the generated end-to-end test using [task](https://taskfile.dev/), init the [build](https://github.com/openmcp-project/build) submodule and execute the e2e test:
@@ -231,6 +236,69 @@ func Configure(cluster resources.ManagedCluster, platformCluster *clusters.Clust
 ```
 
 Finally, ensure that the synchronized image pull secrets are [referenced in any workload](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret) you reconcile.
+
+## Watch Secrets for Changes
+
+If your service provider references secrets on the platform cluster (e.g. image pull secrets configured in the `ProviderConfig`), you may want to automatically trigger reconciliation when those secrets change. The service-provider-runtime provides an optional `SecretWatcher` interface for this purpose.
+
+When enabled, the runtime watches Kubernetes `Secret` objects in a configured namespace on the platform cluster. Whenever a secret changes, it calls your `IsReferencedSecret` method to determine whether the change is relevant. If it is, all `ServiceProviderAPI` objects are re-enqueued for reconciliation, ensuring that your provider picks up the updated secret data.
+
+### Generate with the template
+
+Pass the `-s` flag to the template generator to scaffold the secret watcher:
+
+```bash
+go run ./cmd/template -v -s -module github.com/openmcp-project/service-provider-velero -kind Velero -group velero
+```
+
+This generates:
+- An `IsReferencedSecret` method stub in your controller
+- A `WithSecretNamespace(podNamespace)` call in the setup code
+
+### Implement `IsReferencedSecret`
+
+Your reconciler must implement the `SecretWatcher` interface by providing an `IsReferencedSecret` method. This method receives the changed secret and the current `ProviderConfig`, and returns `true` if the secret should trigger reconciliation.
+
+```go
+// IsReferencedSecret returns true if the given secret should trigger
+// reconciliation. See spruntime.SecretWatcher for details.
+func (r *VeleroReconciler) IsReferencedSecret(ctx context.Context, secret *corev1.Secret, pc *apiv1alpha1.ProviderConfig) bool {
+    if pc == nil {
+        return false
+    }
+    for _, ref := range pc.Spec.ImagePullSecrets {
+        if ref.Name == secret.Name {
+            return true
+        }
+    }
+    return false
+}
+```
+
+:::info
+The `pc` parameter may be `nil` if the `ProviderConfig` has not been loaded yet. Always guard against this before accessing its fields.
+:::
+
+### Enable secret watching in setup
+
+In your `main.go`, chain `WithSecretNamespace` when building the `SPReconciler`. The namespace should be the pod's own namespace on the platform cluster, which is where secrets like image pull secrets are typically stored:
+
+```go
+spr := spruntime.NewSPReconciler[*velerosv1alpha1.Velero, *velerosv1alpha1.ProviderConfig](
+    func() *velerosv1alpha1.Velero { return &velerosv1alpha1.Velero{} },
+).
+    WithPlatformCluster(platformCluster).
+    WithOnboardingCluster(onboardingCluster).
+    WithSecretNamespace(podNamespace).
+    WithServiceProviderReconciler(&controller.VeleroReconciler{...}).
+    // ...
+```
+
+The watch is only active when both conditions are met:
+1. Your reconciler implements the `SecretWatcher` interface
+2. `WithSecretNamespace` is configured with a non-empty namespace
+
+When a referenced secret changes, the runtime lists all `ServiceProviderAPI` objects from the onboarding cluster and enqueues them for reconciliation. This ensures every service instance picks up the latest secret data during its next reconcile cycle.
 
 ## Edit the ServiceProviderReconciler
 
