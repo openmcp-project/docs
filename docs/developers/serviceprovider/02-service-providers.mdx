@@ -408,6 +408,24 @@ OpenMCP controllers use `task` instead of `make` to generate code, build your co
 
 Run `task -l` to see all available tasks.
 
+## Release and Publish Workflows
+
+The template includes two reusable GitHub workflows to create releases and publish build artifacts. These workflows are defined in the [build submodule](https://github.com/openmcp-project/build).
+
+To reuse these workflows outside of the [github.com/openmcp-project](https://github.com/openmcp-project) organization, you must provide your own GitHub App values as [input parameters](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows#passing-inputs-and-secrets-to-a-reusable-workflow), e.g. in /.github/workflows/release.yaml:
+
+```yaml
+name: Versioned Release
+
+jobs:
+  release_tag:
+  uses: openmcp-project/build/.github/workflows/release.lib.yaml@2857d51e2d98261233de19e6df4e49f20db8bbda # main
+  with:
+    app_id: "YOUR_APP_ID"
+  secrets:
+    app_private_key: ${{ secrets.YOUR_APP_PRIVATE_KEY }}
+```
+
 ## openmcp-testing
 
 The template includes an e2e test suite built with [kubernetes e2e framework](https://github.com/kubernetes-sigs/e2e-framework) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing). It provides helper functions such as:
