@@ -40,21 +40,20 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
 <div className="reference-grid">
 
 <div className="reference-card reference-card-featured" style={{gridColumn: 'span 2'}}>
-  <IconContainer size={70} compact>
-    <Puzzle size={70} strokeWidth={2} />
+  <IconContainer size={60} compact>
+    <Puzzle size={60} strokeWidth={2} />
   </IconContainer>
   <h3>SIG Extensibility</h3>
   <p>Make it easy to build, share, and adopt extensions—service providers, cluster providers, and platform services.</p>
 
-  <div className="sig-details">
+  <div className="sig-details" style={{margin: '16px 0 20px 0'}}>
     <div><strong>Leads:</strong> Maximilian Techritz, Christopher Junk (SAP)</div>
     <div><strong>Meetings:</strong> Bi-weekly, Wednesday 3PM CET</div>
     <div><strong>Mailing List:</strong> openMCP-extensibility@lists.neonephos.org</div>
   </div>
 
-  <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '4px'}}>
-    <a href="https://github.com/openmcp-project/community/tree/main/sig-extensibility" className="reference-link">View Charter</a>
-    <a href="mailto:openMCP-extensibility@lists.neonephos.org" className="reference-link">Subscribe</a>
+  <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '0'}}>
+    <a href="https://lists.neonephos.org/g/openMCP-extensibility/" className="reference-link" style={{background: 'rgba(255, 255, 255, 0.95)', color: '#064d4b !important', fontWeight: '700', fontSize: '1rem', padding: '12px 24px', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)'}}>Subscribe to Mailing List</a>
   </div>
 </div>
 
