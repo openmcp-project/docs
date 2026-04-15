@@ -99,7 +99,7 @@ trust-manager will create and maintain a ConfigMap named `full-ca-bundle` in the
 
 ## Step 3 — Create ConfigMap(s) on the platform cluster
 
-The CA bundles must be available as ConfigMaps in the `openmcp-system` namespace on the platform cluster.
+The CA bundles must be available as ConfigMaps in the `openmcp-system` namespace on the **platform cluster**.
 
 <Tabs>
 <TabItem value="single" label="Single ConfigMap">
