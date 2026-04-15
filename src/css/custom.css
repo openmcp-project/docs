@@ -2124,6 +2124,38 @@ body[class*="docs-doc-id-reference"] .row {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Subscribe button - light background with dark text */
+.reference-card-featured a.subscribe-button {
+  background: white !important;
+  color: #032423 !important;
+  border: none;
+  font-weight: 700 !important;
+  padding: 12px 24px !important;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  font-size: 1rem !important;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  text-shadow: none !important;
+}
+
+.reference-card-featured a.subscribe-button:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme='dark'] .reference-card-featured a.subscribe-button {
+  background: white !important;
+  color: #032423 !important;
+}
+
+[data-theme='dark'] .reference-card-featured a.subscribe-button:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
 .reference-card-featured:hover {
   transform: translateY(-4px);
   box-shadow: 0 24px 80px rgba(4, 159, 154, 0.5);

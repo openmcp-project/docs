@@ -53,22 +53,7 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
   </div>
 
   <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '0'}}>
-    <a 
-      href="https://lists.neonephos.org/g/openMCP-extensibility/" 
-      style={{
-        background: 'white',
-        color: '#032423',
-        fontWeight: '700',
-        fontSize: '1rem',
-        padding: '12px 24px',
-        borderRadius: '8px',
-        textDecoration: 'none',
-        display: 'inline-flex',
-        alignItems: 'center',
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
-        transition: 'all 0.2s ease'
-      }}
-    >
+    <a href="https://lists.neonephos.org/g/openMCP-extensibility/" className="subscribe-button">
       Subscribe to Mailing List
     </a>
   </div>
