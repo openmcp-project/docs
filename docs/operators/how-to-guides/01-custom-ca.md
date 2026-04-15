@@ -145,7 +145,7 @@ The following example uses the Crossplane service provider. Other service provid
 apiVersion: crossplane.services.openmcp.cloud/v1alpha1
 kind: ProviderConfig
 metadata:
-  name: crossplane
+  name: default
   namespace: openmcp-system
 spec:
   # ... other fields ...
@@ -163,7 +163,7 @@ kubectl apply -f crossplane-provider-config.yaml
 Repeat this step for every service provider installed on your platform.
 
 :::info Which bundle to reference
-Most service providers should reference the **full bundle** (`full-bundle.crt`) so they can reach both internal and public endpoints. Use the custom-only bundle (`ca-bundle.crt`) only if the service provider exclusively communicates with internal services. Check each service provider's documentation to confirm.
+Some service providers should reference the **full bundle** (`full-bundle.crt`) to reach both internal and public endpoints. This is the case when the implementation replaces the default certificate store. Other service provider implementations might append the custom certificates to the existing ones. In this case, the custom-only bundle (`ca-bundle.crt`) should be used. Check each service provider's documentation to confirm.
 :::
 
 ## Verification
