@@ -2125,35 +2125,43 @@ body[class*="docs-doc-id-reference"] .row {
 }
 
 /* Subscribe button - light background with dark text */
-.reference-card-featured a.subscribe-button {
-  background: white !important;
-  color: #032423 !important;
-  border: none;
+.reference-card-featured a.subscribe-button,
+.reference-card-featured a.subscribe-button:link,
+.reference-card-featured a.subscribe-button:visited {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: none !important;
   font-weight: 700 !important;
   padding: 12px 24px !important;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
   font-size: 1rem !important;
-  text-decoration: none;
+  text-decoration: none !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
   text-shadow: none !important;
+  letter-spacing: 0 !important;
 }
 
 .reference-card-featured a.subscribe-button:hover {
-  background: rgba(255, 255, 255, 0.9) !important;
-  transform: translateY(-2px);
+  background: #f0f0f0 !important;
+  color: #000000 !important;
+  transform: translateY(-2px) !important;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+  text-decoration: none !important;
 }
 
-[data-theme='dark'] .reference-card-featured a.subscribe-button {
-  background: white !important;
-  color: #032423 !important;
+[data-theme='dark'] .reference-card-featured a.subscribe-button,
+[data-theme='dark'] .reference-card-featured a.subscribe-button:link,
+[data-theme='dark'] .reference-card-featured a.subscribe-button:visited {
+  background: #ffffff !important;
+  color: #000000 !important;
 }
 
 [data-theme='dark'] .reference-card-featured a.subscribe-button:hover {
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: #f0f0f0 !important;
+  color: #000000 !important;
 }
 
 .reference-card-featured:hover {
