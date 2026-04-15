@@ -147,7 +147,7 @@ ProviderConfig should **only** contain **controller operational configuration** 
 | **Reconciliation Behavior**    | How the controller reconciles resources    | `pollInterval`, `maxConcurrentReconciles`, `requeueAfter`   |
 | **Retry & Timeouts**           | Controller retry and timeout configuration | `retryBackoff`, `reconcileTimeout`, `helmReleaseTimeout`    |
 | **Observability Settings**     | Controller metrics, logging, and tracing   | `enableMetrics`, `metricsPort`, `logLevel`, `enableTracing` |
-| **Controller Feature Toggles** | Enable/disable controller-level features   | `enableDriftDetection`                                   |
+| **Controller Feature Toggles** | Enable/disable controller-level features   | `enableDriftDetection`                                      |
 
 ##### What SHOULD NOT be in ProviderConfig
 
@@ -157,16 +157,16 @@ The current `ProviderConfig` implementations across the project mix controller o
 
 The following information does **NOT** belong in ProviderConfig:
 
-| Category                                                                                    | Why It Doesn't Belong                                                       | Where It Should Live                            | Current State                                    |
-| ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------ |
-| **Deployment Artifacts**                                                                    | Controller doesn't need to know about images/charts — just how to reconcile | Future **Registry/ComponentCatalog** API        | Currently embedded in ProviderConfig (incorrect) |
-| - Image URLs                                                                                | Artifact location is deployment concern, not controller behavior            | Registry                                        | `availableImages`, `versions[].image.url`        |
-| - Chart URLs                                                                                | Same as image URLs                                                          | Registry                                        | `chartUrl`, `versions[].chart.url`               |
-| - Available Versions                                                                        | Not controller behavior                            | Registry + TenantPolicy/ServiceOffering         | Explicit version lists                           |
-| **Tenant Constraints**                                                                      | What tenants can or cannot use — not controller operational behavior        | Future **TenantPolicy/ServiceOffering** concept | Currently embedded in ProviderConfig (incorrect) |
+| Category                                                                                         | Why It Doesn't Belong                                                       | Where It Should Live                            | Current State                                    |
+| ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------ |
+| **Deployment Artifacts**                                                                         | Controller doesn't need to know about images/charts — just how to reconcile | Future **Registry/ComponentCatalog** API        | Currently embedded in ProviderConfig (incorrect) |
+| - Image URLs                                                                                     | Artifact location is deployment concern, not controller behavior            | Registry                                        | `availableImages`, `versions[].image.url`        |
+| - Chart URLs                                                                                     | Same as image URLs                                                          | Registry                                        | `chartUrl`, `versions[].chart.url`               |
+| - Available Versions                                                                             | Not controller behavior                                                     | Registry + TenantPolicy/ServiceOffering         | Explicit version lists                           |
+| **Tenant Constraints**                                                                           | What tenants can or cannot use — not controller operational behavior        | Future **TenantPolicy/ServiceOffering** concept | Currently embedded in ProviderConfig (incorrect) |
 | - Allowed domain service specific extensions such as Crossplane Providers or Velero Plugins etc. | Tenant domain constraint, not controller setting                            | TenantPolicy/ServiceOffering                    | `allowedProviders`                               |
-| - Version Constraints                                                                       | Business policy, not controller behavior                                    | TenantPolicy/ServiceOffering                    | `minVersion`, `maxVersion`, `versionPolicy`      |
-| - Feature Access Control                                                                    | Domain-level tenant restrictions                                            | TenantPolicy/ServiceOffering                    | Various feature flags                            |
+| - Version Constraints                                                                            | Business policy, not controller behavior                                    | TenantPolicy/ServiceOffering                    | `minVersion`, `maxVersion`, `versionPolicy`      |
+| - Feature Access Control                                                                         | Domain-level tenant restrictions                                            | TenantPolicy/ServiceOffering                    | Various feature flags                            |
 
 ##### Design Implications
 
