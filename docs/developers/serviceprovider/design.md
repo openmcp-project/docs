@@ -74,7 +74,47 @@ sequenceDiagram
 
 ### Config
 
-A `ServiceProvider` defines a `ServiceProviderConfig` that contains provider-specific options for platform operators to specify a managed service offering. For example, [service-provider-crossplane](https://github.com/openmcp-project/service-provider-crossplane/) allows platform operators to decide which Crossplane providers can be installed by end user as part of the managed service.
+The configuration of a Service Provider involves two distinct resources that serve different purposes:
+
+#### ServiceProvider vs. ProviderConfig
+
+It is important to understand the separation between the `ServiceProvider` CRD and the `ProviderConfig` CRD:
+
+| Resource            | API Group                                   | Purpose                                                 | Managed By        |
+| ------------------- | ------------------------------------------- | ------------------------------------------------------- | ----------------- |
+| **ServiceProvider** | `openmcp.cloud/v1alpha1`                    | How to deploy the ServiceProvider controller itself     | openmcp-operator  |
+| **ProviderConfig**  | `<service>.services.openmcp.cloud/v1alpha1` | How the deployed controller should behave operationally | Platform Operator |
+
+**ServiceProvider** (managed by openmcp-operator) defines the controller deployment:
+
+```yaml
+apiVersion: openmcp.cloud/v1alpha1
+kind: ServiceProvider
+metadata:
+  name: external-secrets
+spec:
+  # Controller image to deploy
+  image: .../service-provider-external-secrets:v0.1.0@sha256:...
+  # Secrets for pulling the CONTROLLER image
+  imagePullSecrets:
+    - name: artifactory
+  # Controller replicas
+  runReplicas: 1
+  # Controller log verbosity
+  verbosity: debug
+```
+
+**ProviderConfig** (managed by Platform Operator) defines controller operational behavior:
+
+```yaml
+apiVersion: externalsecrets.services.openmcp.cloud/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  # How the controller reconciles
+  pollInterval: 1m
+```
 
 ```mermaid
 graph LR
@@ -82,7 +122,7 @@ graph LR
     OP[PlatformOperator]
     SP[ServiceProvider]
     SPA[ServiceProviderAPI]
-    SPC[ServiceProviderConfig]
+    SPC[ProviderConfig]
     OP -->|manages instances|SP
     OP -->|manages instances|SPC
     OP -. installs .-> SPA
@@ -91,8 +131,116 @@ graph LR
 All operator tasks may be partially or fully automated.
 
 :::info
-The `ServiceProvider` object itself is a higher level platform concept that is described in the corresponding `PlatformService`, i.e. [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
+The `ServiceProvider` object itself is a higher level platform concept that is described in the corresponding `PlatformService`, i.e. [openmcp-operator](https://github.com/openmcp-project/openmcp-operator). The `ServiceProvider` handles deployment concerns (image, replicas, pull secrets for the controller), while `ProviderConfig` handles runtime operational concerns (poll intervals, timeouts, controller features).
 :::
+
+#### ServiceProviderConfig Guidelines
+
+When designing a `ProviderConfig` for your Service Provider, follow these guidelines to ensure consistency and maintainability across the platform.
+
+##### What SHOULD be in ProviderConfig
+
+ProviderConfig should **only** contain **controller operational configuration** — settings that control how the ServiceProvider controller behaves, not what it deploys or what users/tenants can use.
+
+| Category                       | Description                                | Examples                                                    |
+| ------------------------------ | ------------------------------------------ | ----------------------------------------------------------- |
+| **Reconciliation Behavior**    | How the controller reconciles resources    | `pollInterval`, `maxConcurrentReconciles`, `requeueAfter`   |
+| **Retry & Timeouts**           | Controller retry and timeout configuration | `retryBackoff`, `reconcileTimeout`, `helmReleaseTimeout`    |
+| **Observability Settings**     | Controller metrics, logging, and tracing   | `enableMetrics`, `metricsPort`, `logLevel`, `enableTracing` |
+| **Controller Feature Toggles** | Enable/disable controller-level features   | `enableDriftDetection`,                                     |
+
+##### What SHOULD NOT be in ProviderConfig
+
+:::warning Current State vs. Pure Design
+The current `ProviderConfig` implementations across the project mix controller operational configuration with deployment artifacts and tenant constraints. This section clarifies what does NOT belong in ProviderConfig and where it should live instead. Future work tracked in [backlog#384](https://github.com/openmcp-project/backlog/issues/384) will introduce proper separation of concerns.
+:::
+
+The following information does **NOT** belong in ProviderConfig:
+
+| Category                                                                                    | Why It Doesn't Belong                                                       | Where It Should Live                            | Current State                                    |
+| ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------ |
+| **Deployment Artifacts**                                                                    | Controller doesn't need to know about images/charts — just how to reconcile | Future **Registry/ComponentCatalog** API        | Currently embedded in ProviderConfig (incorrect) |
+| - Image URLs                                                                                | Artifact location is deployment concern, not controller behavior            | Registry                                        | `availableImages`, `versions[].image.url`        |
+| - Chart URLs                                                                                | Same as image URLs                                                          | Registry                                        | `chartUrl`, `versions[].chart.url`               |
+| - Available Versions                                                                        | Not controller behavior                            | Registry + TenantPolicy/ServiceOffering         | Explicit version lists                           |
+| **Tenant Constraints**                                                                      | What tenants can or cannot use — not controller operational behavior        | Future **TenantPolicy/ServiceOffering** concept | Currently embedded in ProviderConfig (incorrect) |
+| - Allowed domain service specific extensions such as Crossplane Providers or Velero Plugins etc. | Tenant domain constraint, not controller setting                            | TenantPolicy/ServiceOffering                    | `allowedProviders`                               |
+| - Version Constraints                                                                       | Business policy, not controller behavior                                    | TenantPolicy/ServiceOffering                    | `minVersion`, `maxVersion`, `versionPolicy`      |
+| - Feature Access Control                                                                    | Domain-level tenant restrictions                                            | TenantPolicy/ServiceOffering                    | Various feature flags                            |
+
+##### Design Implications
+
+1. **For Service Provider Contributors**: When creating a new Service Provider today, you will need to temporarily include deployment artifacts (images, charts, versions) and potentially tenant constraints in your `ProviderConfig`. This is a known limitation. Structure your API so these fields can be gracefully deprecated when the Registry API and TenantPolicy/ServiceOffering concepts become available. Clearly document which fields are operational (permanent) vs. artifacts/constraints (temporary).
+
+2. **For Platform Operators**: Current `ProviderConfig` resources mix operational settings with deployment artifacts and tenant constraints. The operational settings (pollInterval, timeouts, retries) configure controller behavior and will remain. The artifacts and constraints will eventually move to separate systems.
+
+3. **For Version Updates**: Adding support for a new service version currently requires updating the `ProviderConfig`. In the future, the Registry will handle artifact discovery, and TenantPolicy/ServiceOffering will handle what tenants can use.
+
+##### Example: Current vs. Pure ProviderConfig
+
+**Current State** (mixed concerns — deployment artifacts + tenant constraints + operational config):
+
+```yaml
+apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  # OPERATIONAL (correct — belongs here)
+  pollInterval: 1m
+  maxConcurrentReconciles: 5
+  helmReleaseTimeout: 10m
+
+  # DEPLOYMENT ARTIFACTS (incorrect — should live in Registry)
+  versions:
+    - version: "1.18.0"
+      chart:
+        url: oci://ghcr.io/crossplane/crossplane
+        secretRef:
+          name: registry-credentials
+      image:
+        url: crossplane/crossplane:v1.18.0
+        secretRef:
+          name: registry-credentials
+
+  # TENANT CONSTRAINTS (incorrect — should live in TenantPolicy/ServiceOffering)
+  providers:
+    allowedProviders:
+      - provider-kubernetes
+      - provider-helm
+```
+
+**Future State** (pure operational configuration only):
+
+```yaml
+apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  # Controller operational settings only
+  pollInterval: 1m
+  maxConcurrentReconciles: 5
+  helmReleaseTimeout: 10m
+  retryBackoff:
+    initialInterval: 5s
+    maxInterval: 5m
+  enableMetrics: true
+  logLevel: info
+```
+
+**Deployment artifacts** move to separate API (backlog#384):
+
+tbd
+
+**Tenant constraints** move to TenantPolicy/ServiceOffering concept:
+
+tbd
+
+##### Related Issues and Future Work
+
+- [backlog#384: Discoverability of Open Control Plane components](https://github.com/openmcp-project/backlog/issues/384) — Will introduce Registry API for deployment artifacts
+- Future TenantPolicy/ServiceOffering concept — Will separate tenant constraints from controller configuration
 
 ### Service Discovery and Access Management
 
@@ -181,12 +329,12 @@ The `service-provider-runtime` is built on top of `controller-runtime` and intro
 
 The following table provides a simplified overview of the layers within a `ServiceProvider` controller:
 
-| Layer | Description | Target Audience |
-| :--- | :--- | :--- |
-| Service Provider | Defines `ServiceProviderAPI`/`ServiceProviderConfig` and implements service-provider-runtime operations | Service provider developers |
-| service-provider-runtime | Defines ServiceProvider reconciliation semantics | Platform developers |
-| multicluster/controller-runtime | Defines generic reconciliation semantics | Out of scope |
-| Kubernetes API machinery | Kubernetes essentials | Out of scope |
+| Layer                           | Description                                                                                             | Target Audience             |
+| :------------------------------ | :------------------------------------------------------------------------------------------------------ | :-------------------------- |
+| Service Provider                | Defines `ServiceProviderAPI`/`ServiceProviderConfig` and implements service-provider-runtime operations | Service provider developers |
+| service-provider-runtime        | Defines ServiceProvider reconciliation semantics                                                        | Platform developers         |
+| multicluster/controller-runtime | Defines generic reconciliation semantics                                                                | Out of scope                |
+| Kubernetes API machinery        | Kubernetes essentials                                                                                   | Out of scope                |
 
 ### Functionality
 

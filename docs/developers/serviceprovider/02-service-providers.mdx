@@ -167,9 +167,31 @@ type ManagedResource struct {
 
 Service providers must expose a `ProviderConfig` which platform operators use to configure provider behavior. Because [provider deployment](https://openmcp-project.github.io/docs/developers/provider_deployment/) does not support passing arguments to the binary directly, configuration must be expressed via this API.
 
-Typical settings include version constraints, image locations and pull secrets which are especially important to support air-gapped environments.
+:::warning Important Design Consideration
+The current `ProviderConfig` pattern in many existing Service Providers incorrectly mixes three separate concerns:
+1. **Controller operational configuration** (correct — belongs in ProviderConfig)
+2. **Deployment artifacts** like image URLs and chart locations (incorrect — should live in future Registry API, tracked in [backlog#384](https://github.com/openmcp-project/backlog/issues/384))
+3. **Tenant constraints** like `allowedProviders` or version policies (incorrect — should live in future TenantPolicy/ServiceOffering concept)
 
-For example, Velero also implicitly defines the available plugins via the `ProviderConfig`.
+When designing your `ProviderConfig`, **only include controller operational settings** — configuration that controls how your controller reconciles, not what it deploys or what tenants can use. Structure your API to allow graceful deprecation of deployment and constraint fields when the Registry and TenantPolicy systems become available. See the [ProviderConfig Guidelines](./design#serviceproviderconfig-guidelines) for detailed recommendations.
+:::
+
+ProviderConfig should contain **controller operational settings only**, such as:
+- **Reconciliation behavior**: `pollInterval`, `maxConcurrentReconciles`, `requeueAfter`
+- **Timeouts and retries**: `retryBackoff`, `reconcileTimeout`, `helmReleaseTimeout`
+- **Observability**: `enableMetrics`, `logLevel`, `enableTracing`
+- **Controller features**: `enableDriftDetection`, `enableStatusReporting`
+- **Platform secrets**: `imagePullSecrets`, `caBundleRef` (for controller operation)
+
+:::info Current Temporary Necessity
+Many existing Service Providers also include deployment artifacts (image/chart URLs, version lists) and tenant constraints (`allowedProviders`, version policies) in their ProviderConfig. These are **temporary inclusions** that will eventually move to separate systems:
+- **Deployment artifacts** → Future Registry/ComponentCatalog API
+- **Tenant constraints** → Future TenantPolicy/ServiceOffering concept
+
+When creating a new Service Provider, clearly document which fields are operational (permanent) vs. artifacts/constraints (temporary).
+:::
+
+For example, Velero's ProviderConfig currently includes both operational settings and deployment artifacts:
 
 ```yaml
 apiVersion: velero.services.openmcp.cloud/v1alpha1
@@ -177,7 +199,10 @@ kind: ProviderConfig
 metadata:
   name: default
 spec:
+  # OPERATIONAL SETTINGS (correct — permanent)
   pollInterval: 1m
+
+  # DEPLOYMENT ARTIFACTS (temporary — will move to Registry)
   availableImages:
     - name: velero
       versions: ["v1.17.1"]
@@ -185,6 +210,8 @@ spec:
     - name: aws
       versions: ["v1.13.0"]
       image: "velero/velero-plugin-for-aws"
+
+  # PLATFORM SECRETS (correct — for controller operation)
   imagePullSecrets:
     - name: privateregcred
 ```
