@@ -147,7 +147,7 @@ ProviderConfig should **only** contain **controller operational configuration** 
 | **Reconciliation Behavior**    | How the controller reconciles resources    | `pollInterval`, `maxConcurrentReconciles`, `requeueAfter`   |
 | **Retry & Timeouts**           | Controller retry and timeout configuration | `retryBackoff`, `reconcileTimeout`, `helmReleaseTimeout`    |
 | **Observability Settings**     | Controller metrics, logging, and tracing   | `enableMetrics`, `metricsPort`, `logLevel`, `enableTracing` |
-| **Controller Feature Toggles** | Enable/disable controller-level features   | `enableDriftDetection`,                                     |
+| **Controller Feature Toggles** | Enable/disable controller-level features   | `enableDriftDetection`                                   |
 
 ##### What SHOULD NOT be in ProviderConfig
 
