@@ -171,11 +171,32 @@ Service providers must expose a `ProviderConfig` which platform operators use to
 
 The `ProviderConfig` API is **subject to change** as the platform evolves. A future Registry/Marketplace concept ([backlog#384](https://github.com/openmcp-project/backlog/issues/384)) will handle deployment artifacts, and a TenantPolicy/ServiceOffering concept will handle tenant constraints. Until then, some Service Providers include these concerns in their `ProviderConfig` as a temporary measure.
 
-When designing your `ProviderConfig`, aim for the **ideal minimal structure** that contains only controller operational settings. See the [ProviderConfig Guidelines](./design#serviceproviderconfig-guidelines) for detailed design recommendations.
+When designing your `ProviderConfig`, **only include controller operational settings** — configuration that controls how your controller reconciles, not what it deploys or what tenants can use. Structure your API to allow graceful deprecation of deployment artifact and tenant constraint fields when the Registry and TenantPolicy systems become available.
+
+### ProviderConfig Guidelines
+
+#### What SHOULD be in ProviderConfig
+
+| Category | Fields | Purpose |
+|----------|--------|---------|
+| **Reconciliation** | `pollInterval`, `maxConcurrentReconciles`, `requeueAfter` | Control reconcile frequency and parallelism |
+| **Timeouts** | `retryBackoff`, `reconcileTimeout`, `helmReleaseTimeout` | Prevent hung operations |
+| **Observability** | `enableMetrics`, `logLevel`, `enableTracing` | Controller diagnostics |
+| **Features** | `enableDriftDetection`, `enableStatusReporting` | Toggle controller behaviors |
+| **Trust** | `caBundleRef` | Access to registries and trust bundles |
+
+#### What SHOULD NOT be in ProviderConfig
+
+The following do **not** belong in ProviderConfig and will move to dedicated systems:
+
+| Category | Examples | Future Home |
+|----------|----------|-------------|
+| **Deployment Artifacts** | Image URLs, chart URLs, version lists | Registry API ([backlog#384](https://github.com/openmcp-project/backlog/issues/384)) |
+| **Tenant Constraints** | [`availableProviders`](https://github.com/openmcp-project/service-provider-crossplane) in service-provider-crossplane, version policies | TenantPolicy/ServiceOffering |
 
 ### Ideal Minimal ProviderConfig
 
-A well-designed `ProviderConfig` contains **only controller operational settings** — configuration that controls how your ServiceProvider controller reconciles, not what it deploys:
+A well-designed `ProviderConfig` contains **only controller operational settings**:
 
 ```yaml
 apiVersion: myservice.services.openmcp.cloud/v1alpha1
@@ -190,16 +211,6 @@ spec:
   # Timeouts
   helmReleaseTimeout: 10m
 ```
-
-**Recommended operational fields:**
-
-| Category | Fields | Purpose |
-|----------|--------|---------|
-| Reconciliation | `pollInterval`, `maxConcurrentReconciles`, `requeueAfter` | Control reconcile frequency and parallelism |
-| Timeouts | `retryBackoff`, `reconcileTimeout`, `helmReleaseTimeout` | Prevent hung operations |
-| Observability | `enableMetrics`, `logLevel`, `enableTracing` | Controller diagnostics |
-| Features | `enableDriftDetection`, `enableStatusReporting` | Toggle controller behaviors |
-| Trust | `caBundleRef` | Access to registries and trust bundles |
 
 ### Current State: When You Need More
 
