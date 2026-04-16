@@ -76,10 +76,10 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/co_axolotl.png',
     navbar: {
-      title: 'Open Control Plane',
+      title: '',
       logo: {
         alt: 'Open Control Plane Logo',
-        src: 'img/co_axolotl_mirrored.png',
+        src: 'img/ocp-logo.png',
       },
       items: [
         {
