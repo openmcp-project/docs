@@ -161,6 +161,25 @@
   box-shadow: none !important;
 }
 
+/* Navbar logo styling */
+.navbar__logo {
+  height: 40px !important;
+  width: auto !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.navbar__logo img {
+  height: 100% !important;
+  width: auto !important;
+  object-fit: contain !important;
+}
+
+.navbar__brand {
+  display: flex !important;
+  align-items: center !important;
+}
+
 /* ===== Landing Page: Hero ===== */
 .lp-home-top {
   height: 60vh;
