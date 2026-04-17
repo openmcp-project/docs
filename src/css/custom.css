@@ -986,7 +986,81 @@ html[data-theme="dark"] .open-source-section .button--primary:hover {
   color: #000000 !important;
 }
 
-/* ===== Global link colors in light mode ===== */
+/* ===== Video Section ===== */
+.video-section {
+  padding: 80px 24px;
+  background: var(--ifm-background-color);
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.video-section-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.video-section-eyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal-6);
+  margin: 0 0 12px 0;
+}
+
+.video-section-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ifm-font-color-base);
+  margin: 0 0 16px 0;
+}
+
+.video-section-subtitle {
+  font-size: 1.05rem;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.6;
+  margin: 0 0 40px 0;
+}
+
+.video-embed-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(4, 159, 154, 0.2), 0 4px 16px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.video-embed-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+[data-theme='dark'] .video-section {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .video-embed-wrapper {
+  box-shadow: 0 20px 60px rgba(44, 224, 191, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 768px) {
+  .video-section-title {
+    font-size: 1.6rem;
+  }
+  .video-section {
+    padding: 60px 16px;
+  }
+}
+
+
 html[data-theme="light"] {
   --ifm-link-color: var(--c-accent);
   --ifm-link-hover-color: var(--c-accent);

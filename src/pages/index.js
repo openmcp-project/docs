@@ -1227,6 +1227,26 @@ spec:
             </div>
           </div>
         </section>
+
+        <section className="video-section">
+          <div className="container">
+            <div className="video-section-inner">
+              <p className="video-section-eyebrow">See it in action</p>
+              <h2 className="video-section-title">Watch the KubeCon Amsterdam Talk</h2>
+              <p className="video-section-subtitle">
+                See how OpenControlPlane enables teams to build, share, and adopt cloud-native control planes at scale.
+              </p>
+              <div className="video-embed-wrapper">
+                <iframe
+                  src="https://www.youtube.com/embed/hR8hFht9sFA"
+                  title="OpenControlPlane – KubeCon Amsterdam"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </Layout>
   );
