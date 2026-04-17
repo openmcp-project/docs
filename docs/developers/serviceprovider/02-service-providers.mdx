@@ -169,7 +169,7 @@ Service providers must expose a `ProviderConfig` which platform operators use to
 
 ### ProviderConfig Guidelines
 
-When designing your `ProviderConfig`, **only include controller operational settings** -  configuration that controls how your controller reconciles, not what it deploys or what tenants can use.
+When designing your `ProviderConfig`, **only include controller operational settings** - configuration that controls how your controller reconciles, not what it deploys or what tenants can use.
 Operational settings include reconciliation behavior, timeouts, observability, feature toggles, and trust configuration (CA bundles).
 
 **Do not include** deployment artifacts (images, charts, versions) or tenant constraints (version policies, available providers).
@@ -219,7 +219,7 @@ spec:
       versions: ["v1.13.0"]
       image: "velero/velero-plugin-for-aws"
 
-  # DEPLOYMENT SPECIFIC (temporary — will move to separate API)
+  # DEPLOYMENT ARTIFACTS (temporary — will move to separate API)
   imagePullSecrets:
     - name: privateregcred
 ```
