@@ -167,9 +167,39 @@ type ManagedResource struct {
 
 Service providers must expose a `ProviderConfig` which platform operators use to configure provider behavior. Because [provider deployment](https://openmcp-project.github.io/docs/developers/provider_deployment/) does not support passing arguments to the binary directly, configuration must be expressed via this API.
 
-Typical settings include version constraints, image locations and pull secrets which are especially important to support air-gapped environments.
+### ProviderConfig Guidelines
 
-For example, Velero also implicitly defines the available plugins via the `ProviderConfig`.
+When designing your `ProviderConfig`, **only include controller operational settings** - configuration that controls how your controller reconciles, not what it deploys or what tenants can use.
+Operational settings include reconciliation behavior, timeouts, observability, feature toggles, and trust configuration (CA bundles).
+
+**Do not include** deployment artifacts (images, charts, versions) or tenant constraints (version policies, available providers).
+
+:::info Temporary Necessity
+Information about deployment artifacts and tenant constraints will move to dedicated Registry and TenantPolicy systems in the future (see [Discoverability of OpenControlPlane components](https://github.com/openmcp-project/backlog/issues/384)). Until then, some Service Providers include these concerns in their `ProviderConfig` as a temporary measure. Structure your API to allow graceful deprecation of deployment artifact and tenant constraint fields when the Registry and TenantPolicy systems become available.
+:::
+
+
+### Ideal Minimal ProviderConfig
+
+A well-designed `ProviderConfig` contains **only controller operational settings**:
+
+```yaml
+apiVersion: myservice.services.openmcp.cloud/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  # Reconciliation behavior
+  pollInterval: 1m
+  maxConcurrentReconciles: 5
+
+  # Timeouts
+  helmReleaseTimeout: 10m
+```
+
+### Current State: When You Need More
+
+For example, Velero's ProviderConfig currently includes both operational settings and deployment artifacts:
 
 ```yaml
 apiVersion: velero.services.openmcp.cloud/v1alpha1
@@ -177,7 +207,10 @@ kind: ProviderConfig
 metadata:
   name: default
 spec:
+  # OPERATIONAL SETTINGS (correct — permanent)
   pollInterval: 1m
+
+  # DEPLOYMENT ARTIFACTS (temporary — will move to separate API)
   availableImages:
     - name: velero
       versions: ["v1.17.1"]
@@ -185,6 +218,8 @@ spec:
     - name: aws
       versions: ["v1.13.0"]
       image: "velero/velero-plugin-for-aws"
+
+  # DEPLOYMENT ARTIFACTS (temporary — will move to separate API)
   imagePullSecrets:
     - name: privateregcred
 ```
