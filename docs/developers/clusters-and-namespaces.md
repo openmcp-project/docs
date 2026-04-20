@@ -108,7 +108,7 @@ Each service provider must use a unique namespace per tenant service instance. F
 | `<provider>-<instance-id>` (e.g., `ls-system-<id>`) | Service provider workloads, isolated per tenant |
 
 :::info
-Newly developed services should prioritize deploying their workloads on Workload Clusters rather than MCP Clusters. See the [service provider design](./serviceprovider/design.md#deployment-model) for details.
+Newly developed services should prioritize deploying their workloads on Workload Clusters rather than MCP Clusters. See the [service provider design](./serviceprovider/04-design.mdx#deployment-model) for details.
 :::
 
 ## Real-World Examples
