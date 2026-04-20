@@ -170,20 +170,57 @@ Some service providers should reference the **full bundle** (`full-bundle.crt`) 
 
 ## Verification
 
-Confirm the ConfigMap(s) are present and contain the expected data:
+Confirm the ConfigMap(s) are present on the **platform cluster** and contain the expected data:
 
 ```shell
 kubectl get configmap -n openmcp-system
-kubectl describe configmap ca-bundles -n openmcp-system
+kubectl describe configmap {ca-bundles,custom-ca-bundle,full-ca-bundle} -n openmcp-system
 ```
 
-Check that the ProviderConfig of each service provider has been accepted by the operator:
+Check that the ProviderConfig of each service provider has been accepted by the operator, e.g. for Crossplane:
 
 ```shell
 kubectl get providerconfigs.crossplane.services.openmcp.cloud -n openmcp-system
 ```
 
 Service provider pods that were already running will restart automatically to pick up the new CA configuration. If a pod does not restart, delete it manually to trigger a fresh start.
+
+To verify that the custom CA bundle is valid and trusted, run a temporary pod that mounts the ConfigMap and uses it as the CA store for a `curl` request to an endpoint that is signed by your custom CA. Replace `https://your-internal-service.example.com` with an actual URL in your environment:
+
+```yaml title="ca-test-pod.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ca-bundle-test
+  namespace: openmcp-system
+spec:
+  restartPolicy: Never
+  containers:
+    - name: test
+      image: ubuntu:24.04
+      command:
+        - /bin/bash
+        - -c
+        - |
+          apt-get update -qq && apt-get install -y -qq curl
+          curl --cacert /ca/ca-bundle.crt https://your-internal-service.example.com
+      volumeMounts:
+        - name: ca-bundle
+          mountPath: /ca
+  volumes:
+    - name: ca-bundle
+      configMap:
+        name: custom-ca-bundle
+```
+
+```shell
+kubectl apply -f ca-test-pod.yaml
+kubectl wait --for=condition=Ready pod/ca-bundle-test -n openmcp-system --timeout=60s
+kubectl logs -n openmcp-system ca-bundle-test
+kubectl delete pod ca-bundle-test -n openmcp-system
+```
+
+A successful TLS handshake confirms your custom CA bundle is correct. If `curl` returns a certificate verification error, double-check that the PEM file in the ConfigMap contains the full CA chain up to the root.
 
 :::warning Container runtime
 The CA bundle is propagated to service provider components running inside Managed Control Planes, but **not** to the container runtime on the cluster nodes. If your private OCI registry uses a custom CA, you must also install the CA certificate directly on the cluster nodes so the kubelet can pull images. Refer to your cluster provider's documentation for node-level CA configuration.
