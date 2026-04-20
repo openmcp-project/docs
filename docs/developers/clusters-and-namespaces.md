@@ -14,7 +14,7 @@ OpenControlPlane uses four types of clusters, each with a distinct role:
 |---------|---------|-----------------|
 | **Onboarding** | User-facing API surface for managing Projects, Workspaces, and ControlPlanes | End users |
 | **Platform** | Runs all operators (openmcp-operator, service providers, cluster providers) and manages per-tenant resources | Platform operators, service provider developers |
-| **MCP** | Per-tenant lightweight Kubernetes cluster that hosts the DomainServiceAPI | End users (via DomainServiceAPI) |
+| **MCP** | Per-tenant lightweight Kubernetes cluster | End users |
 | **Workload** | Per-tenant cluster for running DomainService controllers (optional) | Service provider developers |
 
 ## Namespace Model
@@ -72,18 +72,18 @@ For example, a project named `platform-team` with a workspace `dev` results in:
 - `project-platform-team` for the project
 - `project-platform-team--ws-dev` for the workspace
 
-ServiceProviderAPI CRDs are installed on the Onboarding Cluster so that all tenants can discover available services.
+[Service Providers](../users/concepts/service-provider.md) install CRDs on the Onboarding Cluster so that all tenants can discover available services.
 
 ### Platform Cluster
 
-The Platform Cluster runs all operators and manages per-tenant resources:
+The Platform Cluster runs all operators. Tenant resources are isolated using namespaces:
 
 | Namespace | Purpose |
 |-----------|---------|
 | `openmcp-system` | System namespace where all provider pods (service providers, cluster providers, platform services) and the openmcp-operator run |
 | `mcp--<uuid>` | One per MCP tenant. Auto-generated using a deterministic SHAKE128 hash of the MCP name and namespace. Contains AccessRequests, ClusterRequests, and kubeconfig secrets scoped to that tenant |
 
-The `mcp--<uuid>` namespaces are created and managed automatically by the platform. The [service-provider-runtime](./serviceprovider/02-service-providers.mdx) resolves the correct tenant namespace via the [`ClusterContext`](./serviceprovider/02-service-providers.mdx#createorupdate-operation).
+The `mcp--<uuid>` namespaces are created and managed automatically by the platform.
 
 :::info
 The `POD_NAMESPACE` environment variable, available to all provider pods, refers to the provider's namespace on the Platform Cluster (typically `openmcp-system`). See the [deployment guide](./serviceprovider/01-deployment.mdx) for all available environment variables.
