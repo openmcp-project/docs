@@ -15,7 +15,7 @@ OpenControlPlane uses four types of clusters, each with a distinct role:
 | **Onboarding** | User-facing API surface for managing Projects, Workspaces, and ControlPlanes | End users |
 | **Platform** | Runs all operators (openmcp-operator, service providers, cluster providers) and manages per-tenant resources | Platform operators, service provider developers |
 | **MCP** | Per-tenant lightweight Kubernetes cluster | End users |
-| **Workload** | Per-tenant cluster for running DomainService controllers (optional) | Service provider developers |
+| **Workload** | Shared multi-tenant cluster for running DomainService controllers (optional) | Service provider developers |
 
 ## Namespace Model
 
@@ -40,9 +40,7 @@ graph LR
     end
 
     subgraph MCPCluster["MCP (per tenant)"]
-        MN1["<b>crossplane-system</b><br/>Crossplane components"]
-        MN2["<b>ls-system-&lt;id&gt;</b><br/>Landscaper components"]
-        MN3["<b>flux-system</b><br/>Flux components"]
+        MN1["<b>service-specific namespace</b><br/>Service provider resources"]
     end
 
     subgraph WorkloadCluster["Workload (optional)"]
@@ -95,23 +93,19 @@ Each tenant gets a dedicated MCP (Managed Control Plane) Cluster — a lightweig
 
 | Namespace | Purpose |
 |-----------|---------|
-| `crossplane-system` | Crossplane components (installed by service-provider-crossplane) |
-| `ls-system-<instance-id>` | Landscaper components (installed by service-provider-landscaper) |
-| `flux-system` | Flux components |
-| `cert-manager` | cert-manager components |
-| `external-secrets` | External Secrets Operator |
+| Service-specific (e.g., `crossplane-system`, `ls-system-<id>`, `flux-system`) | Resources deployed by service providers and platform components |
 
 Each service provider chooses its own namespace on the MCP cluster — there is no single default namespace convention. For example, Crossplane uses the fixed namespace `crossplane-system`, while Landscaper derives an instance-specific namespace like `ls-system-<id>`. When building a new service provider, you decide which namespace to deploy your resources into.
 
 ### Workload Cluster
 
-Workload Clusters are optional per-tenant clusters provisioned on demand when a service provider requests them. They are used for running DomainService controllers outside the MCP cluster.
+Workload Clusters are shared multi-tenant clusters. Multiple service instances from different tenants can run on the same cluster, so tenant isolation via namespaces is required.
+
+Each service provider must use a unique namespace per tenant service instance. For example, by [hashing the tenant resource's name and namespace into an instance ID](#service-provider-landscaper-mcp--workload-cluster) and using it as a namespace suffix.
 
 | Namespace | Purpose |
 |-----------|---------|
-| Service-specific (e.g., `envoy-gateway-system`, `velero`) | Where DomainService controllers and their resources run |
-
-Each MCP that requests a workload cluster gets its own dedicated cluster, maintaining per-tenant isolation. Service providers choose their own namespace naming conventions on the workload cluster.
+| `<provider>-<instance-id>` (e.g., `ls-system-<id>`) | Service provider workloads, isolated per tenant |
 
 :::info
 Newly developed services should prioritize deploying their workloads on Workload Clusters rather than MCP Clusters. See the [service provider design](./serviceprovider/design.md#deployment-model) for details.
