@@ -134,7 +134,7 @@ kubectl create configmap full-ca-bundle \
 </Tabs>
 
 :::info trust-manager users
-If you used trust-manager in Step 2, it already created the `full-ca-bundle` ConfigMap in `openmcp-system`. You only need to create the `custom-ca-bundle` ConfigMap for the custom-only bundle.
+If you used trust-manager in Step 2, skip this step entirely. Both ConfigMaps are already in place: `custom-ca-bundle` was created as the source for the `Bundle` resource, and trust-manager creates and maintains `full-ca-bundle` automatically.
 :::
 
 ## Step 4 — Reference the bundle in each service provider's ProviderConfig
