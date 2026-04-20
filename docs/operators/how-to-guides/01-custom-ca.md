@@ -58,7 +58,7 @@ The example above uses [curl's CA certificates extracted from Mozilla](https://c
 If [trust-manager](https://cert-manager.io/docs/trust/trust-manager/) is installed, create a `Bundle` resource that merges your custom CAs with the default public CA pool automatically. trust-manager will keep the full bundle up to date as the public CA pool changes.
 
 :::info Assumption
-This guide assumes trust-manager is configured to watch the `openmcp-system` namespace. If that is not the case, add a `namespaceSelector` to the `Bundle` target that matches `openmcp-system`, and create the source ConfigMap in the namespace trust-manager reads from (typically `cert-manager`).
+This guide assumes `openmcp-system` is configured as the trust namespace. If that is not the case, add a `namespaceSelector` to the `Bundle` target that matches `openmcp-system`, and create the source ConfigMap in the namespace trust-manager reads from (typically `cert-manager`).
 :::
 
 First, create a ConfigMap with your custom CA bundle in the `openmcp-system` namespace:
@@ -80,12 +80,14 @@ spec:
   sources:
     - configMap:
         name: custom-ca-bundle
-        namespace: openmcp-system
         key: ca-bundle.crt
     - useDefaultCAs: true
   target:
     configMap:
       key: full-bundle.crt
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: openmcp-system
 ```
 
 ```shell
