@@ -1,0 +1,26 @@
+version: "3"
+
+tasks:
+  docker-dev:
+    desc: Run the Docusaurus dev server in Docker with live reload
+    cmds:
+      - |
+        docker run --rm -it \
+          -v "$(pwd):/workspace" \
+          -w /workspace \
+          -p 3000:3000 \
+          --user node \
+          node:25-alpine \
+          sh -c "npm ci && npm start -- --host 0.0.0.0"
+
+  docker-serve:
+    desc: Build and serve the production Docusaurus site in Docker
+    cmds:
+      - |
+        docker run --rm -it \
+          -v "$(pwd):/workspace" \
+          -w /workspace \
+          -p 3000:3000 \
+          --user node \
+          node:25-alpine \
+          sh -c "npm ci && npm run build && npm run serve -- --host 0.0.0.0"

@@ -28,6 +28,15 @@ $ npm start
 
 The local development server should start and open up a browser window. Most changes are reflected live without having to restart the server or reload the website.
 
+### 🐳 Docker
+
+If you prefer not to install Node.js locally, you can use the provided [Taskfile](Taskfile.yml) with [Task](https://taskfile.dev) to run the project in Docker.
+
+| Task                | Description                                                       |
+| ------------------- | ----------------------------------------------------------------- |
+| `task docker-dev`   | Run the dev server with live reload at `http://localhost:3000`    |
+| `task docker-serve` | Build the production site and serve it at `http://localhost:3000` |
+
 Changes to the documentation must be done via pull requests. A GitHub Actions [workflow](.github/workflows/test-deploy.yml) will check if the website can be built.
 
 ### 🌍 Deployment
