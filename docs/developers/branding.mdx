@@ -62,31 +62,28 @@ The favicon is used in browser tabs and bookmarks. It is available as `.ico`.
 
 When referring to the project, always use the full name **Open Control Plane** (three words, each capitalised) or the abbreviation **OCP**. Both are correct.
 
-<div className="reference-grid">
-
-<div className="reference-card reference-card-compact" style={{borderLeft: '4px solid #22c55e'}}>
-  <h3 style={{color: '#16a34a'}}>✓ Do</h3>
-  <ul style={{marginBottom: 0}}>
-    <li>Open Control Plane</li>
-    <li>OCP</li>
-    <li>Open Control Plane (OCP)</li>
-    <li>the OCP platform</li>
-    <li>openmcp-project <em>(repository / org name)</em></li>
-  </ul>
-</div>
-
-<div className="reference-card reference-card-compact" style={{borderLeft: '4px solid #ef4444'}}>
-  <h3 style={{color: '#dc2626'}}>✗ Don't</h3>
-  <ul style={{marginBottom: 0}}>
-    <li>OpenControlPlane <em>(no spaces, looks like code)</em></li>
-    <li>open control plane <em>(lowercase)</em></li>
-    <li>Open control plane <em>(only first word capitalised)</em></li>
-    <li>OCP Platform <em>(redundant — "Platform" is already implied)</em></li>
-    <li>the OCP tool <em>(it's a platform, not a tool)</em></li>
-  </ul>
-</div>
-
-</div>
+<table style={{width: '100%', borderCollapse: 'collapse', marginTop: '16px'}}>
+  <thead>
+    <tr>
+      <th style={{width: '50%', padding: '10px 16px', background: '#f0fdf4', color: '#15803d', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase', borderBottom: '2px solid #22c55e', textAlign: 'left'}}>✓ Do</th>
+      <th style={{width: '50%', padding: '10px 16px', background: '#fef2f2', color: '#dc2626', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase', borderBottom: '2px solid #ef4444', textAlign: 'left'}}>✗ Don't</th>
+    </tr>
+  </thead>
+  <tbody>
+    {[
+      ['Open Control Plane', 'OpenControlPlane'],
+      ['OCP', 'open control plane'],
+      ['Open Control Plane (OCP)', 'Open control plane'],
+      ['the OCP platform', 'OCP Platform — redundant'],
+      ['openmcp-project (org/repo names)', 'the OCP tool — it\'s a platform'],
+    ].map(([good, bad], i) => (
+      <tr key={i} style={{background: i % 2 === 0 ? 'transparent' : 'var(--ifm-color-emphasis-100)'}}>
+        <td style={{padding: '10px 16px', fontSize: '0.9rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)'}}><code style={{background: 'none', color: 'inherit', fontFamily: 'inherit'}}>{good}</code></td>
+        <td style={{padding: '10px 16px', fontSize: '0.9rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)', color: 'var(--ifm-color-emphasis-600)'}}><s>{bad}</s></td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
 :::tip In code vs. prose
 In code identifiers, CLI commands, and repository names, `openmcp` and `opencontrolplane` are acceptable as single-word forms. In all human-readable prose, use **Open Control Plane**.
