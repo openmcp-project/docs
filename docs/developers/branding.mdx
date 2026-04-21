@@ -8,43 +8,67 @@ This page provides guidance on how to correctly represent **Open Control Plane**
 
 ---
 
-## Logo & Assets
+## Logo
+
+The logo is the primary brand mark. Use it in headers, emails, presentations, and documentation.
 
 <div className="reference-grid">
 
 <div className="reference-card reference-card-compact" style={{textAlign: 'center'}}>
-  <img src="/docs/img/logo.png" alt="Open Control Plane Logo" style={{maxHeight: '60px', width: 'auto', margin: '12px auto'}} />
-  <h3>Logo</h3>
-  <p>Use on light backgrounds. The horizontal lockup is the preferred form for headers, emails, and documentation.</p>
+  <img src="/docs/img/logo.png" alt="Open Control Plane Logo (Horizontal)" style={{maxHeight: '60px', width: 'auto', margin: '12px auto'}} />
+  <h3>Horizontal</h3>
+  <p>The preferred lockup for headers, emails, and wide contexts. Use on light backgrounds.</p>
   <a href="/docs/img/logo.png" download className="reference-link">Download PNG →</a>
 </div>
 
+<div className="reference-card reference-card-compact" style={{textAlign: 'center', opacity: 0.6}}>
+  <div style={{fontSize: '40px', margin: '16px auto 12px', lineHeight: 1}}>🔜</div>
+  <h3>Stacked</h3>
+  <p>Icon above wordmark — for square or compact contexts such as slide decks and social cards.</p>
+  <span style={{fontSize: '0.8rem', color: 'var(--ifm-color-emphasis-500)', fontStyle: 'italic'}}>Coming Soon</span>
+</div>
+
+</div>
+
+---
+
+## Icons
+
+The axolotl mascot is used as a standalone icon in contexts where the full logo doesn't fit — avatars, app icons, favicons, and badges.
+
+<div className="reference-grid">
+
 <div className="reference-card reference-card-compact" style={{textAlign: 'center'}}>
-  <img src="/docs/img/co_axolotl.png" alt="Open Control Plane Icon" style={{maxHeight: '80px', width: 'auto', margin: '12px auto'}} />
-  <h3>Icon / Mascot</h3>
-  <p>The axolotl mascot. Use as a standalone icon in contexts where the full logo doesn't fit, such as avatars or app icons.</p>
+  <img src="/docs/img/co_axolotl.png" alt="Axolotl icon – Default" style={{maxHeight: '72px', width: 'auto', margin: '12px auto'}} />
+  <h3>Default</h3>
+  <p>Standard variant with background fill. Use in most contexts.</p>
   <a href="/docs/img/co_axolotl.png" download className="reference-link">Download PNG →</a>
 </div>
 
-<div className="reference-card reference-card-compact" style={{textAlign: 'center', opacity: 0.6}}>
-  <div style={{fontSize: '48px', margin: '16px auto 12px', lineHeight: 1}}>🔜</div>
-  <h3>Logo (Dark)</h3>
-  <p>A dark-mode variant of the logo for use on dark or teal backgrounds.</p>
-  <span style={{fontSize: '0.8rem', color: 'var(--ifm-color-emphasis-500)', fontStyle: 'italic'}}>Coming Soon</span>
+<div className="reference-card reference-card-compact" style={{textAlign: 'center'}}>
+  <img src="/docs/img/co_axolotl_transparent.png" alt="Axolotl icon – Transparent" style={{maxHeight: '72px', width: 'auto', margin: '12px auto'}} />
+  <h3>Transparent</h3>
+  <p>No background — ideal for overlaying on coloured or image backgrounds.</p>
+  <a href="/docs/img/co_axolotl_transparent.png" download className="reference-link">Download PNG →</a>
 </div>
 
-<div className="reference-card reference-card-compact" style={{textAlign: 'center', opacity: 0.6}}>
-  <div style={{fontSize: '48px', margin: '16px auto 12px', lineHeight: 1}}>🔜</div>
-  <h3>SVG Assets</h3>
-  <p>Vector versions of the logo and icon for print, large-format displays, and scalable integrations.</p>
-  <span style={{fontSize: '0.8rem', color: 'var(--ifm-color-emphasis-500)', fontStyle: 'italic'}}>Coming Soon</span>
+<div className="reference-card reference-card-compact" style={{textAlign: 'center'}}>
+  <img src="/docs/img/co_axolotl_mirrored.png" alt="Axolotl icon – Mirrored" style={{maxHeight: '72px', width: 'auto', margin: '12px auto'}} />
+  <h3>Mirrored</h3>
+  <p>Horizontally flipped variant for layouts that need the mascot facing the other way.</p>
+  <a href="/docs/img/co_axolotl_mirrored.png" download className="reference-link">Download PNG →</a>
+</div>
+
+<div className="reference-card reference-card-compact" style={{textAlign: 'center'}}>
+  <img src="/docs/img/co_axolotl.svg" alt="Axolotl icon – SVG" style={{maxHeight: '72px', width: 'auto', margin: '12px auto'}} />
+  <h3>SVG</h3>
+  <p>Vector format for print, large-format displays, and any scalable integration.</p>
+  <a href="/docs/img/co_axolotl.svg" download className="reference-link">Download SVG →</a>
 </div>
 
 </div>
 
 ### Favicon
-
-The favicon is used in browser tabs and bookmarks. It is available as `.ico`.
 
 <div style={{display: 'flex', alignItems: 'center', gap: '20px', padding: '16px', background: 'var(--ifm-color-emphasis-100)', borderRadius: '8px', margin: '16px 0'}}>
   <img src="/docs/img/favicon.ico" alt="Favicon" style={{width: '32px', height: '32px'}} />
@@ -53,6 +77,47 @@ The favicon is used in browser tabs and bookmarks. It is available as `.ico`.
     <span style={{fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)'}}>Used automatically by the documentation site. For custom integrations, request a PNG variant.</span>
   </div>
 </div>
+
+---
+
+## Colors
+
+The brand palette is built on a single teal spectrum — from light mint to deep ocean. Shades are not interchangeable; each maps to a specific audience and context.
+
+<table style={{width: '100%', borderCollapse: 'collapse', marginTop: '16px', marginBottom: '24px'}}>
+  <thead>
+    <tr>
+      <th style={{width: '10%', padding: '10px 16px', background: 'var(--ifm-color-emphasis-100)', fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.05em', textTransform: 'uppercase', borderBottom: '2px solid var(--ifm-color-emphasis-300)', textAlign: 'left'}}>Swatch</th>
+      <th style={{width: '18%', padding: '10px 16px', background: 'var(--ifm-color-emphasis-100)', fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.05em', textTransform: 'uppercase', borderBottom: '2px solid var(--ifm-color-emphasis-300)', textAlign: 'left'}}>Token</th>
+      <th style={{width: '14%', padding: '10px 16px', background: 'var(--ifm-color-emphasis-100)', fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.05em', textTransform: 'uppercase', borderBottom: '2px solid var(--ifm-color-emphasis-300)', textAlign: 'left'}}>Hex</th>
+      <th style={{width: '20%', padding: '10px 16px', background: 'var(--ifm-color-emphasis-100)', fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.05em', textTransform: 'uppercase', borderBottom: '2px solid var(--ifm-color-emphasis-300)', textAlign: 'left'}}>Audience</th>
+      <th style={{padding: '10px 16px', background: 'var(--ifm-color-emphasis-100)', fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.05em', textTransform: 'uppercase', borderBottom: '2px solid var(--ifm-color-emphasis-300)', textAlign: 'left'}}>Usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    {[
+      ['#C2FCEE', '--teal-2', '#C2FCEE', 'All / Accent', 'Subtle highlights, light-mode call-to-action tints, email accent text on dark backgrounds'],
+      ['#2CE0BF', '--teal-4', '#2CE0BF', 'All / Accent', 'Vibrant accent for badges, icons, hover states, and gradient endpoints'],
+      ['#049F9A', '--teal-6', '#049F9A', 'End Users', 'Primary brand colour — buttons, links, and UI elements targeting application end users'],
+      ['#02414C', '--teal-10', '#02414C', 'Platform Operators', 'Primary tone for operator-focused content, deep nav backgrounds, and section headers'],
+      ['#012931', '--teal-11', '#012931', 'Contributors', 'Darkest brand tone — contributor-facing surfaces (ghost button border), footers, deepest header gradients'],
+    ].map(([hex, token, code, audience, usage], i) => (
+      <tr key={i} style={{background: i % 2 === 0 ? 'transparent' : 'var(--ifm-color-emphasis-100)'}}>
+        <td style={{padding: '10px 16px', borderBottom: '1px solid var(--ifm-color-emphasis-200)'}}>
+          <div style={{width: '32px', height: '32px', borderRadius: '6px', background: hex, border: '1px solid var(--ifm-color-emphasis-300)', flexShrink: 0}} />
+        </td>
+        <td style={{padding: '10px 16px', fontSize: '0.85rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)'}}><code>{token}</code></td>
+        <td style={{padding: '10px 16px', fontSize: '0.85rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)'}}><code>{code}</code></td>
+        <td style={{padding: '10px 16px', fontSize: '0.85rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)', fontWeight: 500, color: 'var(--ifm-color-emphasis-700)'}}>{audience}</td>
+        <td style={{padding: '10px 16px', fontSize: '0.85rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)', color: 'var(--ifm-color-emphasis-700)'}}>{usage}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+:::tip Persona-driven colour selection
+Lighter teals (`--teal-6`, `--teal-7`) signal end-user-facing surfaces — the parts of the platform that application developers interact with daily. Darker teals (`--teal-10`, `--teal-11`) signal operator- and contributor-facing surfaces — administration, configuration, platform management, and open-source contribution CTAs. When in doubt, ask: *who is this UI for?*
+:::
 
 ---
 
