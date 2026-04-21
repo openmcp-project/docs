@@ -673,6 +673,11 @@ func createHelmRelease() (*helmv2.HelmRelease, error) {
 In here, the values, for example, could come from the `ProviderConfig`. Or further image accesses could be configured by other service accounts and secrets
 being created as a first step.
 
+:::warning
+If secrets need to be copied into tenant namespaces on the platform cluster (e.g. to access an OCIRepository with a Helm chart), the secret name must be adjusted to avoid conflicts with other service providers.
+Use a service‑provider–specific prefix for the copied secret, e.g. rename privateregcred to sp-crossplane-privateregcred. Make sure the resulting name does not exceed the allowed [max name length](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).
+:::
+
 Also notice the `KubeConfig` section. Your service provider controller is deployed in the Platform cluster. The target controller that your provider is deploying
 will run in either the MCP or the Workload cluster. This depends on your choice, however, it is recommended to deploy into the workload cluster as documented [here](https://openmcp-project.github.io/docs/about/design/service-provider/#non-goals).
 
