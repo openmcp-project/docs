@@ -6,12 +6,12 @@ sidebar_position: 1
 
 Use this guide when the domain service managed by your service provider needs to trust custom Certificate Authorities — for example, to connect to APIs of a private cloud platform, a database server, or any HTTPS endpoint whose certificate is signed by a non-public CA.
 
-This guide covers the developer side. For the operator side (creating the CA bundle ConfigMaps and referencing them in a deployed `ProviderConfig`) see [Configure Custom CAs](/docs/operators/how-to-guides/01-custom-ca).
+This guide covers the developer side. For the operator side (creating the CA bundle ConfigMaps and referencing them in a deployed `ProviderConfig`) see [Configure Custom CAs](../../../operators/how-to-guides/01-custom-ca.md).
 
 ## Prerequisites
 
 - A service provider created from the [service-provider-template](https://github.com/openmcp-project/service-provider-template)
-- Familiarity with the [ProviderConfig design guidelines](/docs/developers/serviceprovider/service-providers#edit-the-providerconfig-api)
+- Familiarity with the [ProviderConfig design guidelines](../02-service-providers.mdx#edit-the-providerconfig-api)
 
 ## Step 1 — Add `caBundleRef` to your ProviderConfig API
 
