@@ -1,0 +1,112 @@
+---
+sidebar_position: 99
+---
+
+# Branding
+
+This page provides guidance on how to correctly represent **Open Control Plane** in documentation, presentations, integrations, and community content.
+
+---
+
+## Logo & Assets
+
+<div className="reference-grid">
+
+<div className="reference-card reference-card-compact" style={{textAlign: 'center'}}>
+  <img src="/docs/img/logo.png" alt="Open Control Plane Logo" style={{maxHeight: '60px', width: 'auto', margin: '12px auto'}} />
+  <h3>Logo</h3>
+  <p>Use on light backgrounds. The horizontal lockup is the preferred form for headers, emails, and documentation.</p>
+  <a href="/docs/img/logo.png" download className="reference-link">Download PNG →</a>
+</div>
+
+<div className="reference-card reference-card-compact" style={{textAlign: 'center'}}>
+  <img src="/docs/img/co_axolotl.png" alt="Open Control Plane Icon" style={{maxHeight: '80px', width: 'auto', margin: '12px auto'}} />
+  <h3>Icon / Mascot</h3>
+  <p>The axolotl mascot. Use as a standalone icon in contexts where the full logo doesn't fit, such as avatars or app icons.</p>
+  <a href="/docs/img/co_axolotl.png" download className="reference-link">Download PNG →</a>
+</div>
+
+<div className="reference-card reference-card-compact" style={{textAlign: 'center', opacity: 0.6}}>
+  <div style={{fontSize: '48px', margin: '16px auto 12px', lineHeight: 1}}>🔜</div>
+  <h3>Logo (Dark)</h3>
+  <p>A dark-mode variant of the logo for use on dark or teal backgrounds.</p>
+  <span style={{fontSize: '0.8rem', color: 'var(--ifm-color-emphasis-500)', fontStyle: 'italic'}}>Coming Soon</span>
+</div>
+
+<div className="reference-card reference-card-compact" style={{textAlign: 'center', opacity: 0.6}}>
+  <div style={{fontSize: '48px', margin: '16px auto 12px', lineHeight: 1}}>🔜</div>
+  <h3>SVG Assets</h3>
+  <p>Vector versions of the logo and icon for print, large-format displays, and scalable integrations.</p>
+  <span style={{fontSize: '0.8rem', color: 'var(--ifm-color-emphasis-500)', fontStyle: 'italic'}}>Coming Soon</span>
+</div>
+
+</div>
+
+### Favicon
+
+The favicon is used in browser tabs and bookmarks. It is available as `.ico`.
+
+<div style={{display: 'flex', alignItems: 'center', gap: '20px', padding: '16px', background: 'var(--ifm-color-emphasis-100)', borderRadius: '8px', margin: '16px 0'}}>
+  <img src="/docs/img/favicon.ico" alt="Favicon" style={{width: '32px', height: '32px'}} />
+  <div>
+    <strong>favicon.ico</strong> — 32×32px<br/>
+    <span style={{fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)'}}>Used automatically by the documentation site. For custom integrations, request a PNG variant.</span>
+  </div>
+</div>
+
+---
+
+## Naming
+
+### The correct name is **Open Control Plane**
+
+When referring to the project, always use the full name **Open Control Plane** (three words, each capitalised) or the abbreviation **OCP**. Both are correct.
+
+<div className="reference-grid">
+
+<div className="reference-card reference-card-compact" style={{borderLeft: '4px solid #22c55e'}}>
+  <h3 style={{color: '#16a34a'}}>✓ Do</h3>
+  <ul style={{marginBottom: 0}}>
+    <li>Open Control Plane</li>
+    <li>OCP</li>
+    <li>Open Control Plane (OCP)</li>
+    <li>the OCP platform</li>
+    <li>openmcp-project <em>(repository / org name)</em></li>
+  </ul>
+</div>
+
+<div className="reference-card reference-card-compact" style={{borderLeft: '4px solid #ef4444'}}>
+  <h3 style={{color: '#dc2626'}}>✗ Don't</h3>
+  <ul style={{marginBottom: 0}}>
+    <li>OpenControlPlane <em>(no spaces, looks like code)</em></li>
+    <li>open control plane <em>(lowercase)</em></li>
+    <li>Open control plane <em>(only first word capitalised)</em></li>
+    <li>OCP Platform <em>(redundant — "Platform" is already implied)</em></li>
+    <li>the OCP tool <em>(it's a platform, not a tool)</em></li>
+  </ul>
+</div>
+
+</div>
+
+:::tip In code vs. prose
+In code identifiers, CLI commands, and repository names, `openmcp` and `opencontrolplane` are acceptable as single-word forms. In all human-readable prose, use **Open Control Plane**.
+:::
+
+---
+
+## Avoid the "MCP" Abbreviation
+
+:::warning Don't use MCP as an abbreviation for this project
+**MCP** is widely established in the developer community as **Model Context Protocol** (Anthropic's open standard for AI tool integrations). Using MCP to refer to Open Control Plane's *Managed Control Planes* causes immediate confusion — especially at cloud-native and AI-adjacent conferences like KubeCon.
+:::
+
+When referring to a single instance of a control plane managed by the platform, use one of these instead:
+
+| Instead of… | Use… |
+|---|---|
+| MCP | **Managed Control Plane** (full form, first use) |
+| MCP | **control plane** (after first use in context) |
+| my MCP | **my control plane** |
+| MCP list | **control plane list** |
+
+If you are writing documentation or a blog post, introduce the full term **Managed Control Plane** on first use and then shorten to **control plane** — never to MCP.
