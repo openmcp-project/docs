@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-slug: /reference/services/velero
+id: velero
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

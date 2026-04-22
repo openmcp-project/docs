@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-slug: /operators/gardener-provider
+id: gardener-provider
 ---
 
 import Tabs from '@theme/Tabs';

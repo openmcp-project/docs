@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /users/concepts/managed-control-plane
+id: managed-control-plane
 ---
 
 # Managed Control Planes (MCPs)

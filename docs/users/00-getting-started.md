@@ -1,6 +1,6 @@
 ---
 sidebar_position: 0
-slug: /users/getting-started
+id: getting-started
 ---
 
 # Welcome

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-slug: /reference/core/project
+id: project
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

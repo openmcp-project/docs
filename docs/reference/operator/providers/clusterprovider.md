@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-slug: /reference/operator/providers/clusterprovider
+id: clusterprovider
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

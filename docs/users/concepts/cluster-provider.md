@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-slug: /users/concepts/cluster-provider
+id: cluster-provider
 ---
 
 # Cluster Providers

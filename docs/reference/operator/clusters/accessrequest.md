@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-slug: /reference/operator/clusters/accessrequest
+id: accessrequest
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

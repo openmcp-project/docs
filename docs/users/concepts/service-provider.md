@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-slug: /users/concepts/service-provider
+id: service-provider
 ---
 
 # Service Providers

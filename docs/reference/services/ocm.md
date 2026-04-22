@@ -1,6 +1,6 @@
 ---
 sidebar_position: 4
-slug: /reference/services/ocm
+id: ocm
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

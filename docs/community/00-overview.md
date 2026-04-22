@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /community/overview
+id: overview
 ---
 
 import IconContainer from '@site/src/components/IconContainer';

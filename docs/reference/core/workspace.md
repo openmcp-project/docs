@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-slug: /reference/core/workspace
+id: workspace
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

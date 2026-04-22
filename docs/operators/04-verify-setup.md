@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-slug: /operators/verify-setup
+id: verify-setup
 ---
 
 import Tabs from '@theme/Tabs';

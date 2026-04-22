@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /operators/how-to-guides/custom-ca
+id: custom-ca
 ---
 
 import Tabs from '@theme/Tabs';

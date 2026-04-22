@@ -1,6 +1,6 @@
 ---
 sidebar_position: 0
-slug: /operators/overview
+id: overview
 ---
 
 import Tabs from '@theme/Tabs';

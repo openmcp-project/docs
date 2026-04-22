@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /operators/kind-provider
+id: kind-provider
 ---
 
 import Tabs from '@theme/Tabs';

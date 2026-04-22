@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-slug: /reference/services/landscaper
+id: landscaper
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

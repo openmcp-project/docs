@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /users/getting-started/onboard
+id: onboard
 ---
 
 # 1. Onboard

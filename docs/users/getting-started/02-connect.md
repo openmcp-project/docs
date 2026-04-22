@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-slug: /users/getting-started/connect
+id: connect
 ---
 
 # 2. Connect

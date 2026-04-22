@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /reference/services/crossplane
+id: crossplane
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

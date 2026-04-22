@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /reference/overview
+id: overview
 ---
 
 # CRD Reference
