@@ -31,4 +31,3 @@ Work on feature branches based on `main`. Merge via PR.
 
 - Docusaurus 3 (MDX + React in `.mdx` files)
 - Custom CSS variables in `src/css/custom.css`
-- Brand teal palette: `--teal-2` through `--teal-11` (see `docs/developers/branding.mdx`)
