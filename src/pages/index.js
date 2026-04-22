@@ -708,7 +708,7 @@ export default function Home() {
               </div>
               <div className="section-header-right-col">
                 <Link className="section-header-cta" to="/users/getting-started">Read end user guides →</Link>
-                <Link className="section-header-cta" to="/developers/serviceprovider/service-providers">Contribute ServiceProvider →</Link>
+                <Link className="section-header-cta" to="/developers/serviceprovider/develop">Contribute ServiceProvider →</Link>
               </div>
             </div>
 

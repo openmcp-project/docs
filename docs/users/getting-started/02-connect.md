@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+id: connect
 ---
 
 # 2. Connect

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+id: gardener-provider
 ---
 
 import Tabs from '@theme/Tabs';

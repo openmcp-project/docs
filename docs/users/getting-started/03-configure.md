@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+id: configure
 ---
 
 import Tabs from '@theme/Tabs';

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+id: serviceprovider
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
@@ -26,5 +27,5 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 
 ## Related Resources
 
-- [Build a Service Provider](/developers/serviceprovider/service-providers)
+- [Build a Service Provider](/developers/serviceprovider/develop)
 - [Service Provider Examples](/developers/serviceprovider/examples)

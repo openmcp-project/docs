@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+id: crossplane
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

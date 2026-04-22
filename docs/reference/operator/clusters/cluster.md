@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+id: cluster
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

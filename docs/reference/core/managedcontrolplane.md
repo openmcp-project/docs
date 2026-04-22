@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+id: managedcontrolplane
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

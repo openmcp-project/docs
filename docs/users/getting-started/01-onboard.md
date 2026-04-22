@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+id: onboard
 ---
 
 # 1. Onboard

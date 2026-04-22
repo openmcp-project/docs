@@ -1,5 +1,6 @@
 ---
-sidebar_position: 0
+sidebar_position: 1
+id: setup
 ---
 
 import Tabs from '@theme/Tabs';
