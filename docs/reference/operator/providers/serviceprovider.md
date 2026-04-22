@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+slug: /reference/operator/providers/serviceprovider
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+slug: /users/getting-started/configure
 ---
 
 import Tabs from '@theme/Tabs';

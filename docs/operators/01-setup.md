@@ -1,5 +1,6 @@
 ---
 sidebar_position: 0
+slug: /operators/setup
 ---
 
 import Tabs from '@theme/Tabs';
