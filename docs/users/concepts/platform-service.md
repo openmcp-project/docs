@@ -1,4 +1,5 @@
 ---
+sidebar_position: 4
 slug: /users/concepts/platform-service
 ---
 
