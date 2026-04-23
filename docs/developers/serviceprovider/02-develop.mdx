@@ -31,7 +31,7 @@ A service provider operates across multiple clusters. The following table shows 
 | `r.PlatformCluster` | Platform Cluster | ProviderConfig (cluster-scoped); image pull secrets (in pod namespace); AccessRequests and kubeconfig secrets (in the per-tenant `mcp--<uuid>` namespace) |
 | `r.OnboardingCluster` | Onboarding Cluster | ServiceProviderAPI objects in `project-<p>--ws-<w>` workspace namespaces |
 | `clusters.MCPCluster` | MCP Cluster (per tenant) | DomainServiceAPI CRDs and deployed resources in a namespace you choose (e.g., `crossplane-system`) |
-| `clusters.WorkloadCluster` | Workload Cluster (per tenant/shared, optional) | DomainService controller workloads in a namespace you choose |
+| `clusters.WorkloadCluster` | Workload Cluster (shared, optional) | DomainService controller workloads in a namespace you choose |
 
 For a complete overview of namespaces across all cluster types, including real-world examples, see [Clusters and Namespaces](../clusters-and-namespaces.md).
 
