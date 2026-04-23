@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+id: clusters-and-namespaces
 ---
 
 # Clusters and Namespaces
@@ -139,5 +140,5 @@ Image pull secrets are copied from the pod namespace on the Platform Cluster to 
 The instance ID is a base32-encoded SHA1 hash of the Landscaper resource's namespace and name, producing a unique namespace per instance. Image pull secrets are synced from the pod namespace on the Platform Cluster to the instance namespace on the Workload Cluster.
 
 :::tip For Service Provider Developers
-You access MCP and Workload clusters via the [`ClusterContext`](./serviceprovider/02-service-providers.mdx#createorupdate-operation) provided by the service-provider-runtime. See the [service provider development guide](./serviceprovider/02-service-providers.mdx#cluster-and-namespace-context) for the full mapping.
+You access MCP and Workload clusters via the [`ClusterContext`](./serviceprovider/02-develop.mdx#createorupdate-operation) provided by the service-provider-runtime. See the [service provider development guide](./serviceprovider/02-develop.mdx#cluster-and-namespace-context) for the full mapping.
 :::
