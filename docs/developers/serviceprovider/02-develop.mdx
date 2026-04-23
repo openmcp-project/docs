@@ -22,6 +22,19 @@ A service provider consists of the following two major parts, similar to a regul
 
 For a visual overview of how these components fit into an OpenControlPlane installation, refer to the [service provider deployment model](https://openmcp-project.github.io/docs/about/design/service-provider#deployment-model).
 
+## Cluster and Namespace Context
+
+A service provider operates across multiple clusters. The following table shows which cluster each code-level accessor points to and what you typically find there:
+
+| Code Access | Cluster | What lives there |
+|-------------|---------|------------------|
+| `r.PlatformCluster` | Platform Cluster | ProviderConfig (cluster-scoped); image pull secrets (in pod namespace); AccessRequests and kubeconfig secrets (in the per-tenant `mcp--<uuid>` namespace) |
+| `r.OnboardingCluster` | Onboarding Cluster | ServiceProviderAPI objects in `project-<p>--ws-<w>` workspace namespaces |
+| `clusters.MCPCluster` | MCP Cluster (per tenant) | DomainServiceAPI CRDs and deployed resources in a namespace you choose (e.g., `crossplane-system`) |
+| `clusters.WorkloadCluster` | Workload Cluster (shared, optional) | DomainService controller workloads in a namespace you choose |
+
+For a complete overview of namespaces across all cluster types, including real-world examples, see [Clusters and Namespaces](../clusters-and-namespaces.md).
+
 ## Prerequisites
 
 Start by creating a new repository for your service provider using the [service-provider-template](https://github.com/openmcp-project/service-provider-template). Click "Use this template" button on the GitHub page and give your new repository a name that reflects the domain service it provides, e.g. `service-provider-velero` for a service provider that deploys Velero.
