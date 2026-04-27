@@ -116,6 +116,41 @@ Events:
 The base OCM installation comes with a bare minimum set of RBAC settings. To extend this, follow the [custom RBAC for OCM](https://github.com/open-component-model/open-component-model/blob/main/kubernetes/controller/docs/getting-started/custom-rbac.md) guide. Since you are an admin on the ControlPlane, extending the service account's RBAC should work.
 
 </TabItem>
+<TabItem value="kro" label="Kro">
+
+[Kro](https://kro.run) (Kube Resource Orchestrator) lets you create custom Kubernetes APIs by composing existing resources into higher-level abstractions. The service provider installs the Kro controller into the `kro-system` namespace on your ControlPlane via a Flux `HelmRelease`.
+
+To install the Kro operator for your ControlPlane, create a `Kro` resource in the same namespace and with the same name as your ControlPlane object:
+
+```yaml
+apiVersion: kro.services.openmcp.cloud/v1alpha1
+kind: Kro
+metadata:
+  name: my-controlplane
+  namespace: project-platform-team--ws-dev
+spec:
+  version: 0.9.1
+```
+
+```bash
+kubectl apply -f kro.yaml
+```
+
+Once this object reconciles, you can verify the Kro controller is running on the ControlPlane:
+
+```bash
+# Make sure you are using the kubeconfig for the ControlPlane
+kubectl get pods -n kro-system
+```
+
+```
+NAME                              READY   STATUS    RESTARTS   AGE
+kro-7d9c6f8b54-abcde              1/1     Running   0          45s
+```
+
+The chart source, image pull secret, and Helm values are configured cluster-wide through the `ProviderConfig` maintained by your platform operator. See the [service-provider-kro README](https://github.com/openmcp-project/service-provider-kro#providerconfig) for the full set of tunables.
+
+</TabItem>
 </Tabs>
 
 ---
@@ -129,3 +164,4 @@ Congratulations! You have a working ControlPlane with managed services. Here's w
 - **[Crossplane Service Provider](https://github.com/openmcp-project/service-provider-crossplane)** — Manage cloud infrastructure
 - **[Landscaper Service Provider](https://github.com/openmcp-project/service-provider-landscaper)** — Orchestrate complex workloads
 - **[OCM Service Provider](https://github.com/open-component-model/service-provider-ocm)** — Deliver and deploy software with the Open Component Model
+- **[Kro Service Provider](https://github.com/openmcp-project/service-provider-kro)** — Compose custom Kubernetes APIs with Kro
