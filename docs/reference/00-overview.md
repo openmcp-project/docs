@@ -109,6 +109,15 @@ Available service providers that can be deployed within control planes.
   <a href="/docs/reference/services/ocm" className="reference-link">View CRD →</a>
 </div>
 
+<div className="reference-card">
+  <div className="reference-icon-container reference-icon-container-standard">
+    <img src="/docs/img/platform/tower.png" alt="Kro" className="reference-icon-large" />
+  </div>
+  <h3>Kro</h3>
+  <p>Custom Kubernetes APIs composed from existing resources using Kro.</p>
+  <a href="/docs/reference/services/kro" className="reference-link">View CRD →</a>
+</div>
+
 </div>
 
 ## Operator Resources
@@ -184,3 +193,4 @@ CRD definitions are maintained across multiple repositories:
   - Landscaper: [service-provider-landscaper](https://github.com/openmcp-project/service-provider-landscaper/tree/main/api/crds/manifests)
   - Velero: [service-provider-velero](https://github.com/openmcp-project/service-provider-velero/tree/main/api/crds/manifests)
   - OCM: [service-provider-ocm](https://github.com/open-component-model/service-provider-ocm/tree/main/api/crds/manifests)
+  - Kro: [service-provider-kro](https://github.com/openmcp-project/service-provider-kro/tree/main/api/crds/manifests)
