@@ -1221,7 +1221,7 @@ spec:
                 <div className="typing-open-source">100% open-source</div>
               </div>
               <p>
-                This project started as an inner-source initiative within SAP. Thanks to <b>NeonEphos</b>, it now operates 100% publicly and has been donated to the <Link to="https://github.com/openmcp-project" target="_blank" rel="noopener noreferrer">OpenControlPlane organization</Link>.
+                This project started as an inner-source initiative within SAP. Thanks to <b>NeoNephos</b>, it now operates 100% publicly and has been donated to the <Link to="https://github.com/openmcp-project" target="_blank" rel="noopener noreferrer">OpenControlPlane organization</Link>.
                 <br />
                 <br />
                 <b>
