@@ -5,6 +5,13 @@ ValentinGerlach:
   image_url: /img/authors/ValentinGerlach.png
   socials:
     github: ValentinGerlach
+MoritzMarby:
+  name: Moritz Marby
+  title: openMCP Contributor
+  url: https://github.com/n3rdc4ptn
+  image_url: /img/authors/MoritzMarby.png
+  socials:
+    github: n3rdc4ptn
 ReneSchuenemann:
   name: Rene Schünemann
   title: openMCP Contributor
