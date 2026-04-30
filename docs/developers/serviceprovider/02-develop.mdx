@@ -653,8 +653,8 @@ In here, the values, for example, could come from the `ProviderConfig`. Or furth
 being created as a first step.
 
 :::warning
-Any resources created in a tenant namespace on the platform cluster (e.g. a pull secret to access an OCIRepository with a Helm chart), the resource name must be adjusted to avoid conflicts with other service providers.
-Use a service‑provider–specific prefix for the resource, e.g. rename privateregcred to sp-crossplane-privateregcred. Make sure the resulting name does not exceed the allowed [max name length](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).
+Any resource created in a tenant namespace on the platform cluster (e.g. a pull secret to access an OCIRepository with a Helm chart) must have a carefully chosen name to avoid conflicts with other service providers.
+Use a service‑provider–specific prefix for the resource, e.g. rename privateregcred to sp-crossplane-privateregcred for pull secret copies. Make sure the resulting name does not exceed the allowed [max name length](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).
 :::
 
 Also notice the `KubeConfig` section. Your service provider controller is deployed in the Platform cluster. The target controller that your provider is deploying
