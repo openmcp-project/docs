@@ -190,8 +190,8 @@ Service providers must expose a `ProviderConfig` which platform operators use to
 At the time of writing, the design of a `ProviderConfig` must address the following concerns:
 
 1. Deployment prerequisites for restricted environments: A `ProviderConfig` **must** expose the configuration required to deploy a service provider in private or aig-gapped environments, for example by specifying image and Helm chart pull secrets.
-2. Constraining deployable domain service versions: A `ProviderConfig` **may** expose configuration that constraints which versions of a domain service the service provider is allowed to deploy. This enables platform operators to explicitly define an approved set of versions.
-It is encouraged to add this for new service providers until dedicated Registry and TenantPolicy systems will replace this in the future (see [Discoverability of OpenControlPlane components](https://github.com/openmcp-project/backlog/issues/384)).
+2. Constraining deployable domain service versions: A `ProviderConfig` **must** expose configuration that constraints which versions of a domain service the service provider is allowed to deploy. This enables platform operators to explicitly define an approved set of versions.
+It is required to add this for new service providers until dedicated Registry and TenantPolicy systems will replace this in the future (see [Discoverability of OpenControlPlane components](https://github.com/openmcp-project/backlog/issues/384)).
 3. Runtime behavior: A `ProviderConfig` **may** expose configuration settings that influence the runtime behavior of a service provider, such as the poll interval used in the service provider template.
 
 ### ProviderConfig Example
