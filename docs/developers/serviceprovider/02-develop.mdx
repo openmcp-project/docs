@@ -187,37 +187,16 @@ Service providers must expose a `ProviderConfig` which platform operators use to
 
 ### ProviderConfig Guidelines
 
-When designing your `ProviderConfig`, **only include controller operational settings** - configuration that controls how your controller reconciles, not what it deploys or what tenants can use.
-Operational settings include reconciliation behavior, timeouts, observability, feature toggles, and trust configuration (CA bundles).
+At the time of writing, the design of a `ProviderConfig` must address the following concerns:
 
-**Do not include** deployment artifacts (images, charts, versions) or tenant constraints (version policies, available providers).
+1. Deployment prerequisites for restricted environments: A `ProviderConfig` **must** expose the configuration required to deploy a service provider in private or aig-gapped environments, for example by specifying image and Helm chart pull secrets.
+2. Constraining deployable domain service versions: A `ProviderConfig` **may** expose configuration that constraints which versions of a domain service the service provider is allowed to deploy. This enables platform operators to explicitly define an approved set of versions.
+It is encouraged to add this for new service providers until dedicated Registry and TenantPolicy systems will replace this in the future (see [Discoverability of OpenControlPlane components](https://github.com/openmcp-project/backlog/issues/384)) .
+3. Runtime behavior: A `ProviderConfig` **may** expose configuration settings that influence the runtime behavior of a service provider, such as the poll interval used in the service provider template.
 
-:::info Temporary Necessity
-Information about deployment artifacts and tenant constraints will move to dedicated Registry and TenantPolicy systems in the future (see [Discoverability of OpenControlPlane components](https://github.com/openmcp-project/backlog/issues/384)). Until then, some Service Providers include these concerns in their `ProviderConfig` as a temporary measure. Structure your API to allow graceful deprecation of deployment artifact and tenant constraint fields when the Registry and TenantPolicy systems become available.
-:::
+### ProviderConfig Example
 
-
-### Ideal Minimal ProviderConfig
-
-A well-designed `ProviderConfig` contains **only controller operational settings**:
-
-```yaml
-apiVersion: myservice.services.openmcp.cloud/v1alpha1
-kind: ProviderConfig
-metadata:
-  name: default
-spec:
-  # Reconciliation behavior
-  pollInterval: 1m
-  maxConcurrentReconciles: 5
-
-  # Timeouts
-  helmReleaseTimeout: 10m
-```
-
-### Current State: When You Need More
-
-For example, Velero's ProviderConfig currently includes both operational settings and deployment artifacts:
+Velero's ProviderConfig currently includes both operational settings and deployment artifacts:
 
 ```yaml
 apiVersion: velero.services.openmcp.cloud/v1alpha1
@@ -674,8 +653,8 @@ In here, the values, for example, could come from the `ProviderConfig`. Or furth
 being created as a first step.
 
 :::warning
-If secrets need to be copied into tenant namespaces on the platform cluster (e.g. to access an OCIRepository with a Helm chart), the secret name must be adjusted to avoid conflicts with other service providers.
-Use a service‑provider–specific prefix for the copied secret, e.g. rename privateregcred to sp-crossplane-privateregcred. Make sure the resulting name does not exceed the allowed [max name length](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).
+Any resources created in a tenant namespace on the platform cluster (e.g. a pull secret to access an OCIRepository with a Helm chart), the resource name must be adjusted to avoid conflicts with other service providers.
+Use a service‑provider–specific prefix for the resource, e.g. rename privateregcred to sp-crossplane-privateregcred. Make sure the resulting name does not exceed the allowed [max name length](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).
 :::
 
 Also notice the `KubeConfig` section. Your service provider controller is deployed in the Platform cluster. The target controller that your provider is deploying
