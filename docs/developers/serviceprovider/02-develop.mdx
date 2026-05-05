@@ -479,36 +479,6 @@ jobs:
     app_private_key: ${{ secrets.YOUR_APP_PRIVATE_KEY }}
 ```
 
-## openmcp-testing
-
-The template includes an e2e test suite built with [kubernetes e2e framework](https://github.com/kubernetes-sigs/e2e-framework) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing). It provides helper functions such as:
-
-- `ConfigByPrefix` to get a config for `platform`, `mcp`, `onboarding` or `onboarding` clusters.
-- `CreateObjectFromDir` to apply manifests to a cluster
-
-Example:
-
-```go
-Assess("verify service can be consumed", func(ctx context.Context, t *testing.T, c *envconf.Config) context.Context {
-   onboardingConfig, err := clusterutils.ConfigByPrefix("onboarding", "test")
-   if err != nil {
-    t.Error(err)
-    return ctx
-   }
-   objList, err := resources.CreateObjectsFromDir(ctx, onboardingConfig, "onboarding")
-   if err != nil {
-    t.Errorf("failed to create onboarding cluster objects: %v", err)
-    return ctx
-   }
-   for _, obj := range objList.Items {
-    if err := wait.For(openmcpconditions.Match(&obj, onboardingConfig, "Ready", corev1.ConditionTrue)); err != nil {
-     t.Error(err)
-    }
-   }
-   return ctx
-})
-```
-
 ## Best Practices
 
 ### For simple deployments
