@@ -16,7 +16,7 @@ flowchart LR
   end
   P -->|"creates (via operator)"| O["Onboarding cluster<br/>(consumer applies CRs here)"]
   P -->|"creates per tenant (via operator)"| M["MCP cluster<br/>(per-tenant control plane)"]
-  M -.->|"optional"| W["Workload cluster<br/>(external fixtures, e.g. landscaper)"]
+  P -.->|"optional"| W["Workload cluster<br/>(external fixtures, e.g. landscaper)"]
 ```
 
 
@@ -137,30 +137,7 @@ basicTest := features.New("my service").
 testenv.Test(t, basicTest)
 ```
 
-Additionly, `openmcp-testing` also provides helpers to make it easy to implement tests. For example:
-
-**MCP lifecycle helpers**
-- `providers.CreateMCP(name, opts...)` / `providers.DeleteMCP(name, opts...)`: create/delete an MCP as a Setup/Teardown step.
-
-**Cluster access helper**
-- `clusterutils.OnboardingConfig()`: returns the `*envconf.Config` for the onboarding cluster.
-- `clusterutils.MCPConfig(ctx, platformCfg, name)`: returns the `*envconf.Config` for a named MCP.
-- `clusterutils.ConfigByPrefix(prefix, ns)`: returns the `*envconf.Config` for any cluster by name prefix (e.g. workload).
-
-**Domain API helpers**
-- `providers.ImportDomainAPIs(mcpName, dir, opts...)`: apply domain API manifests from a directory to an MCP cluster as an Assess/Setup step.
-
-**Resource operations helpers**
-- `resources.CreateObjectsFromDir(ctx, cfg, dir)`: apply every manifest in a directory.
-- `resources.DeleteObject(ctx, cfg, obj, opts...)`: delete a single object and wait for finalization.
-
-**Conditions helpers** (use with `wait.For`; imported as `openmcpconditions "github.com/openmcp-project/openmcp-testing/pkg/conditions"`)
-- `openmcpconditions.Match(obj, cfg, conditionType, status)`: wait until an object's status condition matches (e.g. `"Ready"`, `corev1.ConditionTrue`).
-- `openmcpconditions.Status(obj, cfg, key, value)`: wait until a status field reaches a given value (e.g. `"phase"`, `"Completed"`).
-
-:::tip
-These are the most commonly used helpers. For the full API, browse the [`pkg/`](https://github.com/openmcp-project/openmcp-testing/tree/main/pkg) directory in the `openmcp-testing` repository.
-:::
+`openmcp-testing` also provides helpers for MCP lifecycle management, cluster access, resource operations, and condition waiting. For the full API, browse the [`pkg/`](https://github.com/openmcp-project/openmcp-testing/tree/main/pkg) directory in the `openmcp-testing` repository.
 
 A typical `Assess` step applies domain objects onto the MCP and waits for them to reconcile:
 
