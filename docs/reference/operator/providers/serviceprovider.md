@@ -27,5 +27,5 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 
 ## Related Resources
 
-- [Build a Service Provider](/developers/serviceprovider/develop)
-- [Service Provider Examples](/developers/serviceprovider/examples)
+- [Build a Service Provider](/docs/developers/serviceprovider/develop)
+- [Service Provider Examples](/docs/developers/serviceprovider/examples)
