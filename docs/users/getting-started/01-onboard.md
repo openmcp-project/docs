@@ -8,7 +8,7 @@ id: onboard
 This guide walks you through creating the foundational resources for your OpenControlPlane setup: Project, Workspace, and ControlPlane.
 
 :::info Prerequisites
-Requires a deployed OpenControlPlane platform. Operators: see [setup guide](/operators/setup) → [verify setup](/operators/verify-setup).
+Requires a deployed OpenControlPlane platform. Operators: see [setup guide](/docs/operators/setup) → [verify setup](/docs/operators/verify-setup).
 :::
 
 ## Understanding the Hierarchy
