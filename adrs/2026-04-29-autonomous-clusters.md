@@ -168,6 +168,8 @@ spec:
 
 OCM based deployment way:
 
+![RGD based shipment](./rgd_based_autonomous_clusters.excalidraw.svg)
+
 ```yaml
 apiVersion: delivery.ocm.software/v1alpha1
 kind: Component
