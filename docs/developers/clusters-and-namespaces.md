@@ -85,7 +85,7 @@ The Platform Cluster runs all operators. Tenant resources are isolated using nam
 The `mcp--<uuid>` namespaces are created and managed automatically by the platform.
 
 :::info
-The `POD_NAMESPACE` environment variable, available to all provider pods, refers to the provider's namespace on the Platform Cluster (typically `openmcp-system`). See the [deployment guide](./serviceprovider/01-deployment.mdx) for all available environment variables.
+The `POD_NAMESPACE` environment variable, available to all provider pods, refers to the provider's namespace on the Platform Cluster (typically `openmcp-system`). See the [deployment guide](./serviceprovider/04-deployment.mdx) for all available environment variables.
 :::
 
 ### MCP Cluster
@@ -109,7 +109,7 @@ Each service provider must use a unique namespace per tenant service instance. F
 | `<provider>-<instance-id>` (e.g., `ls-system-<id>`) | Service provider workloads, isolated per tenant |
 
 :::info
-Newly developed services should prioritize deploying their workloads on Workload Clusters rather than MCP Clusters. See the [service provider design](./serviceprovider/04-design.mdx#deployment-model) for details.
+Newly developed services should prioritize deploying their workloads on Workload Clusters rather than MCP Clusters. See the [service provider design](./serviceprovider/01-design.mdx#deployment-model) for details.
 :::
 
 ## Real-World Examples
