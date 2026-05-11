@@ -33,6 +33,10 @@ A service provider operates across multiple clusters. The following table shows 
 | `clusters.MCPCluster` | MCP Cluster (per tenant) | DomainServiceAPI CRDs and deployed resources in a namespace you choose (e.g., `crossplane-system`) |
 | `clusters.WorkloadCluster` | Workload Cluster (shared, optional) | DomainService controller workloads in a namespace you choose |
 
+:::info
+In the previous table, `r` refers to the receiver of the [CreateOrUpdate](#createorupdate-operation) and [Delete](#delete-operation) methods, while `clusters` refers to the parameter of type `ClusterContext`.
+:::
+
 For a complete overview of namespaces across all cluster types, including real-world examples, see [Clusters and Namespaces](../clusters-and-namespaces.md).
 
 ## Prerequisites
@@ -336,7 +340,7 @@ When a referenced secret changes, the runtime lists all `ServiceProviderAPI` obj
 
 ## Edit the ServiceProviderReconciler
 
-Your `Reconciler` must implement two functions: `CreateOrUpdate` and `Delete`. The template sets up your reconciler together with the generic reconciler from `pkg/runtime`, which handles openMCP-specifics (cluster access, config updates, etc.).
+Your `Reconciler` must implement two methods: `CreateOrUpdate` and `Delete`. The template sets up your reconciler together with the generic reconciler from `pkg/runtime`, which handles openMCP-specifics (cluster access, config updates, etc.).
 
 ### CreateOrUpdate Operation
 
@@ -362,11 +366,15 @@ func (r *FooServiceReconciler) CreateOrUpdate(ctx context.Context, svcobj *apiv1
 }
 ```
 
-In a real world example like Velero, this step contains installing and reconciling every required resource, including CRDs, namespace(s), service account(s), deployments(s), etc. into the MCP and workload cluster.
+In a real world example like Velero, this step contains installing and reconciling every required resource, including CRDs, namespace(s), service account(s), deployment(s), etc. into the MCP and workload cluster.
 
 The `ClusterContext` provides access to all request specific clusters. This always includes the managed control plane and, when requested, the workload cluster associated with the current request.
 
 The workload cluster is optional and will not be available for providers that deploy their workload directly to the managed control plane.
+
+:::info
+[Cluster and Namespace Context](#cluster-and-namespace-context) provides an overview of available clusters, their purpose and how to access them.
+:::
 
 In addition, `ClusterContext` exposes two `ObjectKeys` that can be used to retrieve the kubeconfig for either the managed control plane or the workload cluster. These kubeconfigs can be passed to a [HelmReleases spec](https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.HelmReleaseSpec) when a service provider uses Flux to deploy its service.
 
@@ -392,7 +400,9 @@ Any update to either the `ServiceProviderAPI` or `ProviderConfig` triggers recon
 
 ### Delete Operation
 
-When a user removes a service, the provider must delete all managed resources.
+When a user removes a service, the provider must delete all managed resources. A managed resource is any resource the service provider explicitly creates in its [CreateOrUpdate Operation](#createorupdate-operation).
+For example, the `HelmRelease` in [Flux based](#for-complex-deployments-with-lot-of-moving-parts) service providers is considered a managed resource.
+The Kubernetes objects created by Flux from that `HelmRelease` are managed by Flux and not by the service provider.
 
 The basic template example deletes the `Foo` CRD:
 
