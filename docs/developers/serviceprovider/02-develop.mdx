@@ -80,7 +80,7 @@ go run ./cmd/template -v -w -module github.com/openmcp-project/service-provider-
 ```
 :::
 
-For a detailed guide to the [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) testing framework, test structure, and examples, see the [Testing guide](./testing).
+For a detailed guide to the [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) testing framework, test structure, and examples, see the [Testing guide](./testing). For running your controller locally outside the cluster and troubleshooting common issues, see the [Debug guide](./debugging).
 
 The template generator removes its own code after execution. If you want to revert your changes and start fresh, simply use git and delete any generated untracked files. For this reason, remove template-generation step from the e2e test `.github/workflows/go.yaml` before committing your changes (otherwise your workflow will fail).
 

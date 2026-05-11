@@ -85,7 +85,7 @@ The Platform Cluster runs all operators. Tenant resources are isolated using nam
 The `mcp--<uuid>` namespaces are created and managed automatically by the platform.
 
 :::info
-The `POD_NAMESPACE` environment variable, available to all provider pods, refers to the provider's namespace on the Platform Cluster (typically `openmcp-system`). See the [deployment guide](./serviceprovider/04-deployment.mdx) for all available environment variables.
+The `POD_NAMESPACE` environment variable, available to all provider pods, refers to the provider's namespace on the Platform Cluster (typically `openmcp-system`). See the [deployment guide](./serviceprovider/05-deployment.mdx) for all available environment variables.
 :::
 
 ### MCP Cluster
