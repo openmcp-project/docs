@@ -8,7 +8,7 @@ id: getting-started
 OpenControlPlane is a platform that lets you create and manage Kubernetes-based control planes for your teams. Think of it as a way to deliver cloud services to your organization—everything from databases and message queues to CI/CD pipelines and monitoring tools—all through a unified Kubernetes API.
 
 :::info Prerequisites
-Requires a deployed OpenControlPlane platform. Operators: see [setup guide](/docs/operators/setup) → [verify setup](/docs/operators/verify-setup).
+Requires a deployed OpenControlPlane platform. Operators: see the [Operators section](/operators/quickstart).
 :::
 
 ## What You'll Learn
