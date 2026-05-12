@@ -92,7 +92,7 @@ Save this as `controlplane.yaml`:
 apiVersion: core.openmcp.cloud/v2alpha1
 kind: ManagedControlPlaneV2
 metadata:
-  name: my-mcp
+  name: my-controlplane
   namespace: default
 spec:
   iam: {}
@@ -107,14 +107,14 @@ kubectl --kubeconfig $ONBOARDING apply -f controlplane.yaml
 Wait for it to become ready:
 
 ```shell
-kubectl --kubeconfig $ONBOARDING get managedcontrolplanev2 my-mcp -w
+kubectl --kubeconfig $ONBOARDING get managedcontrolplanev2 my-controlplane -w
 ```
 
 Once provisioning completes, you will see:
 
 ```
 NAME     PHASE
-my-mcp   Ready
+my-controlplane   Ready
 ```
 
 The platform has provisioned an isolated cluster for this control plane.
@@ -133,7 +133,7 @@ Save this as `flux-service.yaml`:
 apiVersion: flux.services.openmcp.cloud/v1alpha1
 kind: Flux
 metadata:
-  name: my-mcp
+  name: my-controlplane
   namespace: default
 spec:
   version: v2.4.0
@@ -148,13 +148,13 @@ The `service-provider-flux` on the platform cluster detects this request and ins
 Get the kubeconfig for the `ControlPlane` cluster and verify:
 
 ```shell
-export MCP=$(ocpctl env kubeconfig local --cluster my-mcp)
+export MCP=$(ocpctl env kubeconfig local --cluster my-controlplane)
 ```
 
 > 🟣 **ControlPlane Cluster**
 
 ```shell
-kubectl --kubeconfig $MCP get pods -n flux-system
+kubectl --kubeconfig $CONTROLPLANE get pods -n flux-system
 ```
 
 You should see Flux controllers running:
