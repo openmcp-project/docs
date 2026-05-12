@@ -40,10 +40,10 @@ The separation ensures end users never touch infrastructure. They interact only 
 ## Install ocpctl
 
 ```shell
-# macOS / Linux
-curl -fsSL https://github.com/openmcp-project/ocpctl/releases/latest/download/ocpctl -o /usr/local/bin/ocpctl
-chmod +x /usr/local/bin/ocpctl
+go install github.com/openmcp-project/ocpctl@v0.1.0-alpha.1
 ```
+
+Or download a pre-built binary from the [releases page](https://github.com/openmcp-project/ocpctl/releases/latest).
 
 ---
 
@@ -53,29 +53,47 @@ chmod +x /usr/local/bin/ocpctl
 ocpctl env apply local
 ```
 
-This takes a few minutes. It creates a local Kind-based environment with the full OpenControlPlane stack: `openmcp-operator`, `cluster-provider-kind`, `service-provider-flux`, plus an onboarding cluster.
-
-Get kubeconfigs for both clusters:
-
-```shell
-export PLATFORM=$(ocpctl env kubeconfig local --cluster platform)
-export ONBOARDING=$(ocpctl env kubeconfig local --cluster onboarding)
-```
+This takes a few minutes. It creates a local Kind-based environment with the full OpenControlPlane stack: `openmcp-operator`, `cluster-provider-kind`, plus an onboarding cluster.
 
 Verify the platform is running:
 
 > 🟢 **Platform Cluster**
 
 ```shell
-kubectl --kubeconfig $PLATFORM get pods -n openmcp-system
+kubectl config use-context kind-local-platform
+```
+
+### Install service-provider-flux
+
+```shell
+kubectl apply -f - <<EOF
+apiVersion: openmcp.cloud/v1alpha1
+kind: ServiceProvider
+metadata:
+  name: flux
+  namespace: openmcp-system
+spec:
+  image: ghcr.io/openmcp-project/images/service-provider-flux:v0.2.0
+EOF
+```
+
+### Verify setup
+
+```shell
+kubectl get pods -n openmcp-system
 ```
 
 You should see these pods in `Running` state:
 
 ```
-openmcp-operator-...         1/1   Running
-cp-kind-...                  1/1   Running
-sp-flux-...                  1/1   Running
+NAME                                     READY   STATUS      RESTARTS   AGE
+cp-kind-66fbf7d448-wvrnl                 1/1     Running     0          23m
+cp-kind-init-qfjmh                       0/1     Completed   0          23m
+openmcp-operator-d5c547c75-p4xgh         1/1     Running     0          23m
+ps-managedcontrolplane-9c848d7bc-fjq27   1/1     Running     0          22m
+ps-managedcontrolplane-init-qqldp        0/1     Completed   0          23m
+sp-flux-586bfdbdf4-pkbwr                 1/1     Running     0          9s
+sp-flux-init-mkqnl                       0/1     Completed   0          47m
 ```
 
 ---
@@ -101,13 +119,14 @@ spec:
 > 🔵 **Onboarding Cluster**
 
 ```shell
-kubectl --kubeconfig $ONBOARDING apply -f controlplane.yaml
+kubectl config use-context kind-local-onboarding
+kubectl apply -f controlplane.yaml
 ```
 
 Wait for it to become ready:
 
 ```shell
-kubectl --kubeconfig $ONBOARDING get managedcontrolplanev2 my-controlplane -w
+kubectl get managedcontrolplanev2 my-controlplane -w
 ```
 
 Once provisioning completes, you will see:
@@ -140,21 +159,19 @@ spec:
 ```
 
 ```shell
-kubectl --kubeconfig $ONBOARDING apply -f flux-service.yaml
+kubectl config use-context kind-local-onboarding
+kubectl apply -f flux-service.yaml
 ```
 
 The `service-provider-flux` on the platform cluster detects this request and installs Flux into the `ControlPlane` cluster automatically.
 
-Get the kubeconfig for the `ControlPlane` cluster and verify:
-
-```shell
-export MCP=$(ocpctl env kubeconfig local --cluster my-controlplane)
-```
+Verify Flux is running on the `ControlPlane` cluster:
 
 > 🟣 **ControlPlane Cluster**
 
 ```shell
-kubectl --kubeconfig $CONTROLPLANE get pods -n flux-system
+kubectl config use-context kind-local-my-controlplane
+kubectl get pods -n flux-system
 ```
 
 You should see Flux controllers running:
