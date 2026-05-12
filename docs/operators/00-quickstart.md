@@ -5,7 +5,7 @@ id: quickstart
 
 # Quickstart
 
-Get OpenControlPlane running on your local machine in under 10 minutes. By the end, you'll have a platform that hands out managed control planes with Flux to your teams.
+Get OpenControlPlane running on your local machine in under 10 minutes. By the end, you'll have a platform that hands out managed `ControlPlanes` with Flux to your teams.
 
 :::note
 [`ocpctl`](https://github.com/openmcp-project/ocpctl) is the CLI for managing OpenControlPlane environments locally and in production. It is under active development — some commands and flags may change.
@@ -24,7 +24,7 @@ OpenControlPlane creates three clusters that work together:
 | Cluster | Who uses it | Purpose |
 |---------|-------------|---------|
 | 🟢 **Platform** | Platform operators | Runs the operator, cluster providers, and service providers |
-| 🔵 **Onboarding** | End users (teams) | API surface where teams create control planes |
+| 🔵 **Onboarding** | End users (teams) | API surface where teams create `ControlPlanes` |
 | 🟣 **MCP** | End users (teams) | One per team, isolated workspace with requested services |
 
 The separation ensures end users never touch infrastructure. They interact only with the Onboarding cluster to request resources, and their services appear on their own MCP cluster.
@@ -184,4 +184,4 @@ Your platform is running. Here's what to explore next:
 
 - **Add more services** — beyond Flux, you can offer [Crossplane](https://www.crossplane.io/), [External Secrets Operator](https://external-secrets.io/), [Velero](https://velero.io/), and more to your teams. Each service is a ServiceProvider deployed on the platform cluster.
 - **Deploy on real infrastructure** — follow the [Production Setup](./production-setup/00-overview.md) guide to run OpenControlPlane on Gardener.
-- **Manage team access** — learn how [Projects and Workspaces](/users/concepts/projects-and-workspaces) let you organize teams and control planes.
+- **Manage team access** — learn how [Projects and Workspaces](/users/concepts/projects-and-workspaces) let you organize teams and `ControlPlanes`.
