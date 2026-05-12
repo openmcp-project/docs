@@ -5,7 +5,7 @@ id: overview
 
 # Overview
 
-As a platform operator, you deploy and manage OpenControlPlane so your teams can self-serve managed control planes. You configure the providers that back those control planes and the services that run on them—your teams interact with the platform through a simple Kubernetes API.
+As a platform operator, you deploy and manage OpenControlPlane so your teams can self-serve managed `ControlPlanes`. You configure the providers that back those `ControlPlanes` and the services that run on them. Your teams interact with the platform through a simple Kubernetes API.
 
 ## Your Journey
 
@@ -17,9 +17,9 @@ The [Production Setup](./production-setup/00-overview.md) section covers deployi
 
 ## What You'll Be Able to Do
 
-- Provision isolated Kubernetes control planes for your teams on demand
+- Provision isolated Kubernetes `ControlPlanes` for your teams on demand
 - Offer services (Flux, Crossplane, ESO, and more) that teams can request through a Kubernetes API
-- Manage team access through Projects and Workspaces, organizing control planes by team and environment
+- Manage team access through Projects and Workspaces, organizing `ControlPlanes` by team and environment
 
 ## Quick Navigation
 
