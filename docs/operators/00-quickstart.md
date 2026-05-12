@@ -15,8 +15,8 @@ Get OpenControlPlane running on your local machine in under 10 minutes. By the e
 
 ```mermaid
 flowchart LR
-    A["<b>Platform Cluster</b><br/>runs the operator + providers"] -->|manages| B["<b>Onboarding Cluster</b><br/>teams request MCPs here"]
-    B -->|provisions| C["<b>MCP Cluster</b><br/>your isolated workspace"]
+    A["<b>Platform Cluster</b><br/>runs the operator + providers"] -->|manages| B["<b>Onboarding Cluster</b><br/>teams request ControlPlanes here"]
+    B -->|provisions| C["<b>ControlPlane Cluster</b><br/>your isolated ControlPlane"]
 ```
 
 OpenControlPlane creates three clusters that work together:
@@ -25,9 +25,9 @@ OpenControlPlane creates three clusters that work together:
 |---------|-------------|---------|
 | 🟢 **Platform** | Platform operators | Runs the operator, cluster providers, and service providers |
 | 🔵 **Onboarding** | End users (teams) | API surface where teams create `ControlPlanes` |
-| 🟣 **MCP** | End users (teams) | One per team, isolated workspace with requested services |
+| 🟣 **ControlPlane** | End users (teams) | One per team, isolated workspace with requested services |
 
-The separation ensures end users never touch infrastructure. They interact only with the Onboarding cluster to request resources, and their services appear on their own MCP cluster.
+The separation ensures end users never touch infrastructure. They interact only with the Onboarding cluster to request resources, and their services appear on their own `ControlPlane` cluster.
 
 ---
 
@@ -86,9 +86,9 @@ Now switch to the end-user perspective. A team wants their own control plane.
 
 See the [ManagedControlPlane reference](/reference/core/managedcontrolplane) for the full API.
 
-Save this as `mcp.yaml`:
+Save this as `controlplane.yaml`:
 
-```yaml title="mcp.yaml"
+```yaml title="controlplane.yaml"
 apiVersion: core.openmcp.cloud/v2alpha1
 kind: ManagedControlPlaneV2
 metadata:
@@ -101,7 +101,7 @@ spec:
 > 🔵 **Onboarding Cluster**
 
 ```shell
-kubectl --kubeconfig $ONBOARDING apply -f mcp.yaml
+kubectl --kubeconfig $ONBOARDING apply -f controlplane.yaml
 ```
 
 Wait for it to become ready:
@@ -123,7 +123,7 @@ The platform has provisioned an isolated cluster for this control plane.
 
 ## Step 3: Request Flux as a service
 
-The team wants Flux installed on their MCP:
+The team wants Flux installed on their `ControlPlane`:
 
 > 🔵 **Onboarding Cluster**
 
@@ -143,15 +143,15 @@ spec:
 kubectl --kubeconfig $ONBOARDING apply -f flux-service.yaml
 ```
 
-The `service-provider-flux` on the platform cluster detects this request and installs Flux into the MCP cluster automatically.
+The `service-provider-flux` on the platform cluster detects this request and installs Flux into the `ControlPlane` cluster automatically.
 
-Get the kubeconfig for the MCP cluster and verify:
+Get the kubeconfig for the `ControlPlane` cluster and verify:
 
 ```shell
 export MCP=$(ocpctl env kubeconfig local --cluster my-mcp)
 ```
 
-> 🟣 **MCP Cluster**
+> 🟣 **ControlPlane Cluster**
 
 ```shell
 kubectl --kubeconfig $MCP get pods -n flux-system
