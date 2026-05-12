@@ -77,6 +77,26 @@ spec:
 EOF
 ```
 
+### Configure allowed Flux versions
+
+Once `sp-flux` is running, apply a `ProviderConfig` to define which Flux versions end users may install:
+
+```shell
+kubectl apply -f - <<EOF
+apiVersion: flux.services.openmcp.cloud/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: flux
+spec:
+  versions:
+    - version: "2.8.3"
+      chartVersion: "2.18.2"
+      chartUrl: "oci://ghcr.io/fluxcd-community/charts/flux2"
+EOF
+```
+
+This controls exactly which versions teams can request in Step 3. Add more entries to the `versions` list to offer additional versions.
+
 ### Verify setup
 
 ```shell
@@ -100,9 +120,9 @@ sp-flux-init-mkqnl                       0/1     Completed   0          47m
 
 ## Step 2: Create a ManagedControlPlane
 
-Now switch to the end-user perspective. A team wants their own control plane.
+Now switch to the **end-user perspective**. A team wants their own `ControlPlane`.
 
-See the [ManagedControlPlane reference](/reference/core/managedcontrolplane) for the full API.
+See the [`ManagedControlPlaneV2` reference](/reference/core/managedcontrolplane) for the full API.
 
 Save this as `controlplane.yaml`:
 
@@ -136,7 +156,7 @@ NAME     PHASE
 my-controlplane   Ready
 ```
 
-The platform has provisioned an isolated cluster for this control plane.
+The platform has provisioned an isolated `ControlPlane` cluster.
 
 ---
 
