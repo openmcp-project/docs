@@ -35,6 +35,7 @@ The separation ensures end users never touch infrastructure. They interact only 
 
 - Docker running (8 GB RAM allocated to it)
 - `kubectl` installed
+- `kind` installed
 - ~10 minutes
 
 ## Install ocpctl
@@ -122,11 +123,19 @@ sp-flux-init-mkqnl                       0/1     Completed   0          47m
 
 Now switch to the **end-user perspective**. A team wants their own `ControlPlane`.
 
+First, export the onboarding cluster's kubeconfig so `kubectl` can reach it:
+
+```shell
+kind export kubeconfig --name local-onboarding
+```
+
 See the [`ManagedControlPlaneV2` reference](/reference/core/managedcontrolplane) for the full API.
 
-Save this as `controlplane.yaml`:
+> 🔵 **Onboarding Cluster**
 
-```yaml title="controlplane.yaml"
+```shell
+kubectl config use-context kind-local-onboarding
+kubectl apply -f - <<EOF
 apiVersion: core.openmcp.cloud/v2alpha1
 kind: ManagedControlPlaneV2
 metadata:
@@ -134,13 +143,7 @@ metadata:
   namespace: default
 spec:
   iam: {}
-```
-
-> 🔵 **Onboarding Cluster**
-
-```shell
-kubectl config use-context kind-local-onboarding
-kubectl apply -f controlplane.yaml
+EOF
 ```
 
 Wait for it to become ready:
@@ -157,6 +160,12 @@ my-controlplane   Ready
 ```
 
 The platform has provisioned an isolated `ControlPlane` cluster.
+
+Export its kubeconfig before continuing:
+
+```shell
+kind export kubeconfig --name local-my-controlplane
+```
 
 ---
 
