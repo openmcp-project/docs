@@ -59,13 +59,13 @@ This takes a few minutes. It creates a local Kind-based environment with the ful
 
 Verify the platform is running:
 
-> 🟢 **Platform Cluster**
-
 ```shell
 kubectl config use-context kind-local-platform
 ```
 
 ### Install service-provider-flux
+
+:::apply-to-platform
 
 ```shell
 flux install
@@ -80,9 +80,13 @@ spec:
 EOF
 ```
 
+:::
+
 ### Configure allowed Flux versions
 
 Once `sp-flux` is running, apply a `ProviderConfig` to define which Flux versions end users may install:
+
+:::apply-to-platform
 
 ```shell
 kubectl apply -f - <<EOF
@@ -98,6 +102,8 @@ spec:
 EOF
 ```
 
+:::
+
 This controls exactly which versions teams can request in Step 3. Add more entries to the `versions` list to offer additional versions.
 
 :::note Error
@@ -111,6 +117,8 @@ Please wait for a couple of seconds and then try again. Continue when the output
 :::
 
 ### Verify setup
+
+:::apply-to-platform
 
 ```shell
 kubectl get pods -n openmcp-system
@@ -129,6 +137,8 @@ sp-flux-586bfdbdf4-pkbwr                 1/1     Running     0          9s
 sp-flux-init-mkqnl                       0/1     Completed   0          47m
 ```
 
+:::
+
 ---
 
 ## Step 2: Create a ManagedControlPlane
@@ -143,7 +153,7 @@ kind export kubeconfig --name local-onboarding
 
 See the [`ManagedControlPlaneV2` reference](/reference/core/managedcontrolplane) for the full API.
 
-> 🔵 **Onboarding Cluster**
+:::apply-to-onboarding-api
 
 ```shell
 kubectl config use-context kind-local-onboarding
@@ -157,6 +167,8 @@ spec:
   iam: {}
 EOF
 ```
+
+:::
 
 Wait for it to become ready:
 
@@ -179,7 +191,7 @@ The platform has provisioned an isolated `ControlPlane` cluster.
 
 The team wants Flux installed on their `ControlPlane`:
 
-> 🔵 **Onboarding Cluster**
+:::apply-to-onboarding-api
 
 ```shell
 kubectl config use-context kind-local-onboarding
@@ -193,6 +205,8 @@ spec:
   version: 2.8.3
 EOF
 ```
+
+:::
 
 The `service-provider-flux` on the platform cluster detects this request and installs Flux into the `ControlPlane` cluster automatically.
 
@@ -212,7 +226,7 @@ And export the kubeconfig to your current kube context:
 kind export kubeconfig --name <name of ControlPlane>
 ```
 
-> 🟣 **ControlPlane Cluster**
+:::apply-to-controlplane
 
 ```shell
 kubectl get pods -n flux-system
@@ -229,6 +243,8 @@ kustomize-controller-7587bc49f9-m47nv          1/1     Running   0          2m8s
 notification-controller-d7d89cdb9-sht7p        1/1     Running   0          2m8s
 source-controller-7f6f4dd77d-vmxvv             1/1     Running   0          2m8s
 ```
+
+:::
 
 The team now has a fully functional control plane with Flux, provisioned through a simple API request.
 
