@@ -63,12 +63,12 @@ Verify the platform is running:
 
 ```shell
 kubectl config use-context kind-local-platform
-flux install
 ```
 
 ### Install service-provider-flux
 
 ```shell
+flux install
 kubectl apply -f - <<EOF
 apiVersion: openmcp.cloud/v1alpha1
 kind: ServiceProvider
@@ -99,6 +99,16 @@ EOF
 ```
 
 This controls exactly which versions teams can request in Step 3. Add more entries to the `versions` list to offer additional versions.
+
+:::note Error
+You might receive the following error message:
+
+```shell
+error: resource mapping not found for name: "flux" namespace: "" from "STDIN": no matches for kind "ProviderConfig" in version "flux.services.openmcp.cloud/v1alpha1"
+ensure CRDs are installed first
+```
+Please wait for a couple of seconds and then try again. Continue when the output says: `providerconfig.flux.services.openmcp.cloud/flux created`.
+:::
 
 ### Verify setup
 
@@ -212,12 +222,12 @@ You should see Flux controllers running:
 
 ```
 NAME                                           READY   STATUS    RESTARTS   AGE
-helm-controller-8564d95f86-fwgsh               1/1     Running   0          2m4s
-image-automation-controller-5c484478c6-nwv8r   1/1     Running   0          2m4s
-image-reflector-controller-5875745f59-x64dl    1/1     Running   0          2m4s
-kustomize-controller-7587bc49f9-x5dlx          1/1     Running   0          2m4s
-notification-controller-d7d89cdb9-zh99l        1/1     Running   0          2m4s
-source-controller-7f6f4dd77d-f6p7g             1/1     Running   0          2m4s
+helm-controller-8564d95f86-6kxlg               1/1     Running   0          2m8s
+image-automation-controller-5c484478c6-jj29p   1/1     Running   0          2m8s
+image-reflector-controller-5875745f59-b9cp4    1/1     Running   0          2m8s
+kustomize-controller-7587bc49f9-m47nv          1/1     Running   0          2m8s
+notification-controller-d7d89cdb9-sht7p        1/1     Running   0          2m8s
+source-controller-7f6f4dd77d-vmxvv             1/1     Running   0          2m8s
 ```
 
 The team now has a fully functional control plane with Flux, provisioned through a simple API request.
