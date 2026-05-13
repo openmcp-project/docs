@@ -34,8 +34,9 @@ The separation ensures end users never touch infrastructure. They interact only 
 ## Prerequisites
 
 - Docker running (8 GB RAM allocated to it)
-- `kubectl` installed
-- `kind` installed
+- `kubectl` CLI installed
+- `kind` CLI installed
+- `flux` CLI installed
 - ~10 minutes
 
 ## Install ocpctl
@@ -62,6 +63,7 @@ Verify the platform is running:
 
 ```shell
 kubectl config use-context kind-local-platform
+flux install
 ```
 
 ### Install service-provider-flux
@@ -155,17 +157,11 @@ kubectl get managedcontrolplanev2 my-controlplane -w
 Once provisioning completes, you will see:
 
 ```
-NAME     PHASE
+NAME              PHASE
 my-controlplane   Ready
 ```
 
 The platform has provisioned an isolated `ControlPlane` cluster.
-
-Export its kubeconfig before continuing:
-
-```shell
-kind export kubeconfig --name local-my-controlplane
-```
 
 ---
 
@@ -175,39 +171,53 @@ The team wants Flux installed on their `ControlPlane`:
 
 > 🔵 **Onboarding Cluster**
 
-Save this as `flux-service.yaml`:
-
-```yaml title="flux-service.yaml"
+```shell
+kubectl config use-context kind-local-onboarding
+kubectl apply -f - <<EOF
 apiVersion: flux.services.openmcp.cloud/v1alpha1
 kind: Flux
 metadata:
   name: my-controlplane
   namespace: default
 spec:
-  version: v2.4.0
-```
-
-```shell
-kubectl config use-context kind-local-onboarding
-kubectl apply -f flux-service.yaml
+  version: 2.8.3
+EOF
 ```
 
 The `service-provider-flux` on the platform cluster detects this request and installs Flux into the `ControlPlane` cluster automatically.
 
-Verify Flux is running on the `ControlPlane` cluster:
+To verify Flux is running on the `ControlPlane`, we connect to the `ControlPlane` cluster by exporting the kubeconfig to our current kube context.
+The name of this `ControlPlane` is always unique. Therefore we need to copy the name of the `ControlPlane` cluster by executing:
+
+```shell
+> kind get clusters
+local-onboarding
+local-platform
+mcp-ad2klitc.f52190f9     <- copy name of ControlPlane
+```
+
+And export the kubeconfig to your current kube context:
+
+```shell
+kind export kubeconfig --name <name of ControlPlane>
+```
 
 > 🟣 **ControlPlane Cluster**
 
 ```shell
-kubectl config use-context kind-local-my-controlplane
 kubectl get pods -n flux-system
 ```
 
 You should see Flux controllers running:
 
 ```
-source-controller-...        1/1   Running
-kustomize-controller-...     1/1   Running
+NAME                                           READY   STATUS    RESTARTS   AGE
+helm-controller-8564d95f86-fwgsh               1/1     Running   0          2m4s
+image-automation-controller-5c484478c6-nwv8r   1/1     Running   0          2m4s
+image-reflector-controller-5875745f59-x64dl    1/1     Running   0          2m4s
+kustomize-controller-7587bc49f9-x5dlx          1/1     Running   0          2m4s
+notification-controller-d7d89cdb9-zh99l        1/1     Running   0          2m4s
+source-controller-7f6f4dd77d-f6p7g             1/1     Running   0          2m4s
 ```
 
 The team now has a fully functional control plane with Flux, provisioned through a simple API request.
