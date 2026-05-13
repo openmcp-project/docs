@@ -56,6 +56,8 @@ For Gardener, retrieve the onboarding cluster kubeconfig using the Gardener API 
 
 Create a file named `my-mcp.yaml` with the following content in the configuration folder:
 
+:::apply-to-onboarding-api
+
 ```yaml title="config/my-mcp.yaml"
 apiVersion: core.openmcp.cloud/v2alpha1
 kind: ManagedControlPlaneV2
@@ -65,6 +67,8 @@ metadata:
 spec:
   iam: {}
 ```
+
+:::
 
 Apply the file to the onboarding cluster:
 

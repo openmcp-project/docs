@@ -272,6 +272,8 @@ mkdir ./config/extra-manifests
 
 In the `extra-manifests` folder, create a file named `gardener-landscape.yaml` with the following content:
 
+:::apply-to-platform
+
 ```yaml title="config/extra-manifests/gardener-landscape.yaml"
 apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
 kind: Landscape
@@ -283,6 +285,8 @@ spec:
       name: gardener-landscape-kubeconfig
       namespace: openmcp-system
 ```
+
+:::
 
 The gardener landscape configuration requires a secret that contains the kubeconfig to access the Gardener project. For that purpose, create a secret named `gardener-landscape-kubeconfig` in the `openmcp-system` namespace of the platform cluster that contains the kubeconfig file that has access to the Gardener installation.
 See the [Gardener documentation](https://gardener.cloud/docs/dashboard/automated-resource-management/#create-a-service-account) on how to create a service account in the Gardener project using the Gardener dashboard.

@@ -144,6 +144,8 @@ Each service provider that needs to trust your custom CAs must have a `caBundleR
 
 The following example uses the Crossplane service provider. Other service providers follow the same pattern — refer to their individual documentation for details on which bundle to use.
 
+:::apply-to-platform
+
 ```yaml title="crossplane-provider-config.yaml"
 apiVersion: crossplane.services.openmcp.cloud/v1alpha1
 kind: ProviderConfig
@@ -156,6 +158,8 @@ spec:
     name: ca-bundles       # ConfigMap name
     key: full-bundle.crt   # Key within the ConfigMap
 ```
+
+:::
 
 Apply the updated ProviderConfig:
 
