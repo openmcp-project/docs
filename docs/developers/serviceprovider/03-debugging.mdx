@@ -17,7 +17,7 @@ Use the `local-dev.sh` script from [cluster-provider-kind](https://github.com/op
 ./hack/local-dev.sh deploy
 ```
 
-This creates a KinD-based platform cluster with the OpenMCP operator, cluster provider, and any configured service providers.
+This creates a KinD-based Platform cluster with the OpenMCP operator, cluster provider, and any configured service providers.
 
 To tear everything down and start fresh:
 
@@ -51,7 +51,15 @@ By default, `./hack/local-dev.sh` will set the current context to the **Onboardi
 ```bash
 ./hack/local-dev.sh access-platform-cluster --force
 ```
-This switches your current kubectl context to the platform cluster. Your previous context is saved so you can restore it later.
+This switches your current kubectl context to the Platform cluster. Your previous context is saved so you can restore it later.
+
+To obtain the Platform cluster kubeconfig:
+
+```bash
+./hack/local-dev.sh access-platform-cluster
+```
+
+This prints the path and the exact `export` command to use, e.g. `export KUBECONFIG=/tmp/platform-kubeconfig-AP8A8l`. You can use this later to run your service provider outside of the cluster.
 
 ### Managing Multiple Kubeconfigs with kw
 
@@ -101,20 +109,27 @@ The operator also injects these environment variables into the pod:
 | `POD_IP` | IP address of the pod |
 | `POD_SERVICE_ACCOUNT_NAME` | Service account running the pod |
 
-You need to supply the flags and environment variables that the operator would normally provide:
+You need to supply the flags and environment variables that the operator would normally provide, plus enable debug mode to use locally-reachable cluster addresses:
 
 ```bash
-POD_NAMESPACE=<provider-pod-namespace> go run ./cmd/<your-service-provider>/main.go run \
+KUBECONFIG=<path-to-platform-kubeconfig> \
+POD_NAMESPACE=openmcp-system \
+DEV_DEBUG=true \
+go run ./cmd/<your-service-provider>/main.go run \
   --environment local \
   --provider-name <your-provider-name> \
   --verbosity DEBUG
 ```
 
+The `DEV_DEBUG=true` flag activates local debug mode: instead of using the in-cluster API server addresses for the Onboarding, MCP or Workload clusters, the controller reads the `kind.clusters.openmcp.cloud/localhost` annotation from the corresponding `AccessRequest` objects and uses those locally-reachable addresses instead.
 :::tip
-Before running the `run` subcommand for the first time, you need to initialize the CRDs on the target clusters by running the `init` subcommand with the same flags:
+Before running the `run` subcommand for the first time, you need to initialize the CRDs on the target clusters by running the `init` subcommand with the same environment variables and flags:
 
 ```bash
-POD_NAMESPACE=<provider-pod-namespace> go run ./cmd/<your-service-provider>/main.go init \
+KUBECONFIG=<path-to-platform-kubeconfig> \
+POD_NAMESPACE=openmcp-system \
+DEV_DEBUG=true \
+go run ./cmd/<your-service-provider>/main.go init \
   --environment local \
   --provider-name <your-provider-name> \
   --verbosity DEBUG
@@ -211,7 +226,7 @@ kind load docker-image <your-image>:<tag> --name platform
 If your controller fails to connect to the MCP or workload cluster, verify that the AccessRequest was created and that the corresponding kubeconfig secret exists:
 
 ```bash
-# On the platform cluster, in the tenant namespace
+# On the Platform cluster, in the tenant namespace
 kubectl get accessrequests -n mcp--<uuid>
 kubectl get secrets -n mcp--<uuid>
 ```
