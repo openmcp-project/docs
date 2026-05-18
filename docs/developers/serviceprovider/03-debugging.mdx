@@ -198,6 +198,10 @@ To resume normal reconciliation after `ignore`, remove the annotation:
 kubectl annotate <resource> -n <namespace> <name> openmcp.cloud/operation-
 ```
 
+:::note
+Support for operation annotations is service-provider-dependent. Even though the [service-provider-template](https://github.com/openmcp-project/service-provider-template) runtime currently respects these annotations, they were not initially supported.  Currently, not all existing service providers include this implementation. You should check the provider's reconciler code to confirm support.
+:::
+
 ## Common Issues
 
 ### CRD Updates Not Reflected on the Clusters
@@ -212,14 +216,6 @@ POD_NAMESPACE=<provider-pod-namespace> go run ./cmd/<your-service-provider>/main
 ```
 
 If `init` fails, check its logs for errors (e.g. schema validation failures or missing cluster access).
-
-### Image Not Loaded into KinD
-
-If your pod is stuck in `ImagePullBackOff`, the image was likely not loaded into the KinD cluster. After building with `task build:img:build-test`, make sure the image is available inside the cluster. The `local-dev.sh` script handles this for known providers, but for your own SP you may need to load it manually:
-
-```bash
-kind load docker-image <your-image>:<tag> --name platform
-```
 
 ### Cluster Access or Kubeconfig Secrets Missing
 
