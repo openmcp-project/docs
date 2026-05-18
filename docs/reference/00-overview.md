@@ -111,9 +111,9 @@ Available service providers that can be deployed within control planes.
 
 <div className="reference-card">
   <div className="reference-icon-container reference-icon-container-standard">
-    <img src="/docs/img/platform/tower_kro.png" alt="Kro" className="reference-icon-large" />
+    <img src="/docs/img/platform/tower_kro.png" alt="kro" className="reference-icon-large" />
   </div>
-  <h3>Kro</h3>
+  <h3>kro</h3>
   <p>Compose Kubernetes resources into reusable, higher-level APIs using kro.</p>
   <a href="/docs/reference/services/kro" className="reference-link">View CRD →</a>
 </div>
