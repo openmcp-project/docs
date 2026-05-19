@@ -82,6 +82,8 @@ ps-managedcontrolplane-init-qqldp        0/1     Completed   0          23m
 
 ### Install service-provider-flux
 
+This guide uses Flux as an example managed service that teams can request for their control plane. Managed service options are added to the platform as [ServiceProviders](../reference/operator/providers/serviceprovider.md).
+
 :::apply-to-platform
 
 ```shell
