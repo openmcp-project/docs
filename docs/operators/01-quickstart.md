@@ -60,9 +60,25 @@ This takes a few minutes. It creates a local Kind-based environment with the ful
 
 Verify the platform is running:
 
+:::apply-to-platform
+
 ```shell
 kubectl config use-context kind-local-platform
+kubectl get pods -n openmcp-system
 ```
+
+You should see these pods in `Running` state:
+
+```
+NAME                                     READY   STATUS      RESTARTS   AGE
+cp-kind-66fbf7d448-wvrnl                 1/1     Running     0          23m
+cp-kind-init-qfjmh                       0/1     Completed   0          23m
+openmcp-operator-d5c547c75-p4xgh         1/1     Running     0          23m
+ps-managedcontrolplane-9c848d7bc-fjq27   1/1     Running     0          22m
+ps-managedcontrolplane-init-qqldp        0/1     Completed   0          23m
+```
+
+:::
 
 ### Install service-provider-flux
 
@@ -115,29 +131,6 @@ error: resource mapping not found for name: "flux" namespace: "" from "STDIN": n
 ensure CRDs are installed first
 ```
 Please wait for a couple of seconds and then try again. Continue when the output says: `providerconfig.flux.services.openmcp.cloud/flux created`.
-:::
-
-### Verify setup
-
-:::apply-to-platform
-
-```shell
-kubectl get pods -n openmcp-system
-```
-
-You should see these pods in `Running` state:
-
-```
-NAME                                     READY   STATUS      RESTARTS   AGE
-cp-kind-66fbf7d448-wvrnl                 1/1     Running     0          23m
-cp-kind-init-qfjmh                       0/1     Completed   0          23m
-openmcp-operator-d5c547c75-p4xgh         1/1     Running     0          23m
-ps-managedcontrolplane-9c848d7bc-fjq27   1/1     Running     0          22m
-ps-managedcontrolplane-init-qqldp        0/1     Completed   0          23m
-sp-flux-586bfdbdf4-pkbwr                 1/1     Running     0          9s
-sp-flux-init-mkqnl                       0/1     Completed   0          47m
-```
-
 :::
 
 ---
