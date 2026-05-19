@@ -15,7 +15,7 @@ Get OpenControlPlane running on your local machine in under 10 minutes. By the e
 
 ```mermaid
 flowchart LR
-    A["<b>Platform Cluster</b><br/>runs the operator + providers"] -->|manages| B["<b>Onboarding Cluster</b><br/>teams request ControlPlanes here"]
+    A["<b>Platform Cluster</b><br/>runs platform services + providers"] -->|manages| B["<b>Onboarding Cluster</b><br/>teams request ControlPlanes here"]
     B -->|provisions| C["<b>ControlPlane Cluster</b><br/>your isolated ControlPlane"]
 ```
 
@@ -23,7 +23,7 @@ OpenControlPlane creates three clusters that work together:
 
 | Cluster | Who uses it | Purpose |
 |---------|-------------|---------|
-| 🟢 **Platform** | Platform operators | Runs the operator, cluster providers, and service providers |
+| 🟢 **Platform** | Platform operators | Runs platform services, cluster providers, and service providers |
 | 🔵 **Onboarding** | End users (teams) | API surface where teams create `ControlPlanes` |
 | 🟣 **ControlPlane** | End users (teams) | One per team, isolated workspace with requested services |
 
