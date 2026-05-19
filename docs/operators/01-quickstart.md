@@ -204,7 +204,7 @@ EOF
 
 :::
 
-The `service-provider-flux` on the platform cluster detects this request and installs Flux into the `ControlPlane` cluster automatically.
+`ServiceProvider` Flux on the platform cluster detects this request and installs Flux into the `ControlPlane` cluster automatically.
 
 To verify Flux is running on the `ControlPlane`, we connect to the `ControlPlane` cluster by exporting the kubeconfig to our current kube context.
 The name of this `ControlPlane` is always unique. Therefore we need to copy the name of the `ControlPlane` cluster by executing:
