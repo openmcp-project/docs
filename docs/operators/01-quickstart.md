@@ -210,7 +210,10 @@ To verify Flux is running on the `ControlPlane`, we connect to the `ControlPlane
 The name of this `ControlPlane` is always unique. Therefore we need to copy the name of the `ControlPlane` cluster by executing:
 
 ```shell
-> kind get clusters
+kind get clusters
+```
+
+```
 local-onboarding
 local-platform
 mcp-ad2klitc.f52190f9     <- copy name of ControlPlane
