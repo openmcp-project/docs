@@ -263,6 +263,6 @@ Removes all Kind clusters and resources created by `ocpctl env apply local`.
 
 Your platform is running. Here's what to explore next:
 
-- **Add more services** — beyond Flux, you can offer [Crossplane](https://www.crossplane.io/), [External Secrets Operator](https://external-secrets.io/), [Velero](https://velero.io/), and more to your teams. Each service is a [ServiceProvider](/developers/serviceprovider/deploy) deployed on the platform cluster.
+- **Add more services** — beyond Flux, you can offer [Crossplane](https://www.crossplane.io/), [External Secrets Operator](https://external-secrets.io/), [Velero](https://velero.io/), and more to your teams. Each service is a [`ServiceProvider`](/developers/serviceprovider/deploy) deployed on the platform cluster.
 - **Deploy on real infrastructure** — follow the [Production Setup](./production-setup/00-overview.md) guide to run OpenControlPlane on Gardener.
 - **Manage team access** — learn how [Projects and Workspaces](/users/concepts/projects-and-workspaces) let you organize teams and `ControlPlanes`.
