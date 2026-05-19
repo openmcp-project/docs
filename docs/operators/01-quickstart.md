@@ -33,11 +33,11 @@ The separation ensures end users never touch infrastructure. They interact only 
 
 ## Prerequisites
 
-- Docker running (8 GB RAM allocated to it)
-- `go` installed
-- `kubectl` CLI installed
-- `kind` CLI installed
-- `flux` CLI installed
+- [Docker](https://docs.docker.com/get-started/get-docker/) running (8 GB RAM allocated to it)
+- [Go](https://go.dev/doc/install) installed
+- [`kubectl`](https://kubernetes.io/docs/tasks/tools/) CLI installed
+- [`kind`](https://kind.sigs.k8s.io/docs/user/quick-start/#installation) CLI installed
+- [`flux`](https://fluxcd.io/flux/installation/#install-the-flux-cli) CLI installed
 - ~10 minutes
 
 ## Install ocpctl
