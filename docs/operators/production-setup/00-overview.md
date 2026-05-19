@@ -5,7 +5,7 @@ id: production-overview
 
 # Overview
 
-This section covers deploying OpenControlPlane on real infrastructure using the `openmcp-bootstrapper`. This is the path for platform engineers setting up production or staging environments.
+This section covers deploying OpenControlPlane on real infrastructure using the [`openmcp-bootstrapper`](https://github.com/openmcp-project/bootstrapper). This is the path for platform engineers setting up production or staging environments.
 
 If you want to try OpenControlPlane locally first, start with the [Quickstart](../quickstart) instead.
 
@@ -20,7 +20,7 @@ If you want to try OpenControlPlane locally first, start with the [Quickstart](.
 - A target Kubernetes cluster matching your cluster provider (e.g., a Gardener Shoot)
 - A Git repository for storing landscape state (must not be empty — at least a README)
 - Access to the OCI registry containing OpenControlPlane components (`ghcr.io/openmcp-project`)
-- The `openmcp-bootstrapper` CLI tool
+- The [`openmcp-bootstrapper`](https://github.com/openmcp-project/bootstrapper) CLI tool
 
 ## How Bootstrapping Works
 
