@@ -8,7 +8,7 @@ id: quickstart
 Get OpenControlPlane running on your local machine in under 10 minutes. By the end, you'll have a platform that hands out managed `ControlPlanes` with the capability for teams to request Flux.
 
 :::note
-[`ocpctl`](https://github.com/openmcp-project/ocpctl) is the CLI for managing OpenControlPlane environments locally and in production. It is under active development — some commands and flags may change.
+[`ocpctl`](https://github.com/openmcp-project/ocpctl) is the CLI for managing OpenControlPlane environments locally and in production. It is under active development. Some commands and flags may change.
 :::
 
 ## What You'll Build
@@ -71,11 +71,11 @@ You should see these pods in `Running` state:
 
 ```
 NAME                                     READY   STATUS      RESTARTS   AGE
-cp-kind-66fbf7d448-wvrnl                 1/1     Running     0          23m
-cp-kind-init-qfjmh                       0/1     Completed   0          23m
-openmcp-operator-d5c547c75-p4xgh         1/1     Running     0          23m
-ps-managedcontrolplane-9c848d7bc-fjq27   1/1     Running     0          22m
-ps-managedcontrolplane-init-qqldp        0/1     Completed   0          23m
+cp-kind-66fbf7d448-bd5xg                 1/1     Running     0          72s
+cp-kind-init-2zl9x                       0/1     Completed   0          83s
+openmcp-operator-d5c547c75-w5ngg         1/1     Running     0          2m3s
+ps-managedcontrolplane-9c848d7bc-49czl   1/1     Running     0          51s
+ps-managedcontrolplane-init-d7v4k        0/1     Completed   0          84s
 ```
 
 :::
