@@ -34,6 +34,7 @@ The separation ensures end users never touch infrastructure. They interact only 
 ## Prerequisites
 
 - Docker running (8 GB RAM allocated to it)
+- `go` installed
 - `kubectl` CLI installed
 - `kind` CLI installed
 - `flux` CLI installed
