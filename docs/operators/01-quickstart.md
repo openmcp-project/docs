@@ -103,7 +103,7 @@ EOF
 
 ### Configure allowed Flux versions
 
-Once `sp-flux` is running, apply a `ProviderConfig` to define which Flux versions end users may install:
+Once `ServiceProvider` Flux is running, apply a `ProviderConfig` to define which Flux versions end users may install:
 
 :::apply-to-platform
 
