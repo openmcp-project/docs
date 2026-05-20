@@ -82,7 +82,7 @@ ps-managedcontrolplane-init-d7v4k        0/1     Completed   0          84s
 
 ### Install service-provider-flux
 
-This guide uses Flux as an example managed service that teams can request for their `ControlPlane`. Managed service options are added to the platform as [ServiceProviders](/reference/operator/providers/serviceprovider.md).
+This guide uses Flux as an example managed service that teams can request for their `ControlPlane`. Managed service options are added to the platform as [ServiceProviders](/reference/operator/providers/serviceprovider).
 
 :::apply-to-platform
 
