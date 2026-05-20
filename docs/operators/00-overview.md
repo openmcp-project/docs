@@ -34,7 +34,7 @@ The [Production Setup](./production-setup/00-overview.md) section covers deployi
 <div className="reference-card reference-card-compact">
   <h3>Production Setup</h3>
   <p>Deploy on real infrastructure with Gardener.</p>
-  <a href="/operators/production-setup/overview" className="reference-link">Production Setup →</a>
+  <a href="/operators/production-setup/production-overview" className="reference-link">Production Setup →</a>
 </div>
 
 <div className="reference-card reference-card-compact">
