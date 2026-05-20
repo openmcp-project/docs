@@ -253,13 +253,13 @@ export default function Home() {
             <div className="container" style={{ padding: "0" }}>
               <div className="actions">
                 <div className="action medium alt">
-                  <a href="/docs/users/getting-started">Get Started</a>
+                  <a href="/users/getting-started">Get Started</a>
                 </div>
                 <div className="action medium alt">
-                  <a href="/docs/operators/getting-started">Run Your Platform</a>
+                  <a href="/operators/overview">Run Your Platform</a>
                 </div>
                 <div className="action medium alt">
-                  <a href="/docs/developers/getting-started">Build Together</a>
+                  <a href="/developers/overview">Build Together</a>
                 </div>
               </div>
             </div>
@@ -662,7 +662,7 @@ export default function Home() {
         <section className="get-started-section gray-white">
           <Link
             className="button button--primary button--lg"
-            to="/developers/getting-started"
+            to="/developers/overview"
           >
             Start contributing
           </Link>
@@ -1241,7 +1241,7 @@ spec:
               </Link>
               <br />
               <span>
-                and learn <Link to="/developers/getting-started">how to contribute</Link>
+                and learn <Link to="/developers/overview">how to contribute</Link>
               </span>
               <br />
               <br />
