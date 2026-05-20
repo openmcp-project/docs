@@ -47,6 +47,10 @@ const config: Config = {
             'https://github.com/openmcp-project/docs/tree/main/',
           sidebarCollapsible: true,
           sidebarCollapsed: true,
+          admonitions: {
+            keywords: ['apply-to-onboarding-api', 'apply-to-gardener', 'apply-to-platform', 'apply-to-controlplane', 'apply-to'],
+            extendDefaults: true,
+          },
         },
         blog: {
           routeBasePath: "adrs",
