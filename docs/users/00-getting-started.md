@@ -8,7 +8,7 @@ id: getting-started
 OpenControlPlane is a platform that lets you create and manage Kubernetes-based control planes for your teams. Think of it as a way to deliver cloud services to your organization—everything from databases and message queues to CI/CD pipelines and monitoring tools—all through a unified Kubernetes API.
 
 :::info Prerequisites
-Requires a deployed OpenControlPlane platform. Operators: see [setup guide](/docs/operators/setup) → [verify setup](/docs/operators/verify-setup).
+Requires a deployed OpenControlPlane platform. Operators: see the [Operators section](/operators/quickstart).
 :::
 
 ## What You'll Learn
@@ -40,26 +40,26 @@ Explore the [open-source projects](./ecosystem) that power OpenControlPlane, inc
 <div className="reference-card reference-card-compact">
   <h3>New User?</h3>
   <p>Start with our step-by-step onboarding guide.</p>
-  <a href="/docs/users/getting-started/onboard" className="reference-link">Get Started →</a>
+  <a href="/users/getting-started/onboard" className="reference-link">Get Started →</a>
 </div>
 
 <div className="reference-card reference-card-compact">
   <h3>Learn Concepts</h3>
   <p>Understand how OpenControlPlane works.</p>
-  <a href="/docs/users/concepts/managed-control-plane" className="reference-link">Core Concepts →</a>
+  <a href="/users/concepts/managed-control-plane" className="reference-link">Core Concepts →</a>
 </div>
 
 <div className="reference-card reference-card-compact">
   <h3>Browse CRDs</h3>
   <p>Explore the complete API reference with examples.</p>
-  <a href="/docs/reference/overview" className="reference-link">CRD Browser →</a>
+  <a href="/reference/overview" className="reference-link">CRD Browser →</a>
 </div>
 
 </div>
 
 ## Need Help?
 
-- **Community**: Join our [community hub](/docs/community/overview) to connect with other users
+- **Community**: Join our [community hub](/community/overview) to connect with other users
 - **GitHub**: Report issues or browse repositories at [openmcp-project](https://github.com/openmcp-project)
 - **Support**: Check the [contributing guide](https://github.com/openmcp-project/community/blob/main/CONTRIBUTING.md) for ways to get help
 

@@ -26,5 +26,5 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 
 ## Related Resources
 
-- [Build a Cluster Provider](/docs/developers/clusterprovider/develop)
-- [Cluster Provider Examples](/docs/developers/clusterprovider/examples)
+- [Build a Cluster Provider](/developers/clusterprovider/develop)
+- [Cluster Provider Examples](/developers/clusterprovider/examples)
