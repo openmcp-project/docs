@@ -8,7 +8,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 # ServiceProvider
 
 <div className="crd-header-container">
-  <img src="/docs/img/platform/tower.png" alt="ServiceProvider" className="crd-header-icon" />
+  <img src="/img/platform/tower.png" alt="ServiceProvider" className="crd-header-icon" />
   <div className="crd-header-text">
     <p>Delivers consumable services to customers via ManagedControlPlanes. Service providers enable platform operators to offer managed services to end users.</p>
   </div>
