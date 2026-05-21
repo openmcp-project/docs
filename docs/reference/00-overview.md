@@ -193,4 +193,4 @@ CRD definitions are maintained across multiple repositories:
   - Landscaper: [service-provider-landscaper](https://github.com/openmcp-project/service-provider-landscaper/tree/main/api/crds/manifests)
   - Velero: [service-provider-velero](https://github.com/openmcp-project/service-provider-velero/tree/main/api/crds/manifests)
   - OCM: [service-provider-ocm](https://github.com/open-component-model/service-provider-ocm/tree/main/api/crds/manifests)
-  - Kro: [service-provider-kro](https://github.com/openmcp-project/service-provider-kro/tree/main/api/crds/manifests)
+  - kro: [service-provider-kro](https://github.com/openmcp-project/service-provider-kro/tree/main/api/crds/manifests)
