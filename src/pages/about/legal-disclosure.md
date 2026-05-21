@@ -1,6 +1,6 @@
 ---
 title: Legal Disclosure
-description: Legal Disclosure / Impressum for Open Control Plane
+description: Legal Disclosure / Impressum for OpenControlPlane
 ---
 
 # Legal Disclosure / Impressum
