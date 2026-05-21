@@ -102,7 +102,7 @@ Available service providers that can be deployed within control planes.
 
 <div className="reference-card">
   <div className="reference-icon-container reference-icon-container-standard">
-    <img src="/docs/img/platform/tower_ocm.png" alt="OCM" className="reference-icon-large" />
+    <img src="/img/platform/tower_ocm.png" alt="OCM" className="reference-icon-large" />
   </div>
   <h3>OCM</h3>
   <p>Software delivery and deployment service using the Open Component Model.</p>
@@ -111,11 +111,11 @@ Available service providers that can be deployed within control planes.
 
 <div className="reference-card">
   <div className="reference-icon-container reference-icon-container-standard">
-    <img src="/docs/img/platform/tower_kro.png" alt="kro" className="reference-icon-large" />
+    <img src="/img/platform/tower_kro.png" alt="kro" className="reference-icon-large" />
   </div>
   <h3>kro</h3>
   <p>Compose Kubernetes resources into reusable, higher-level APIs using kro.</p>
-  <a href="/docs/reference/services/kro" className="reference-link">View CRD →</a>
+  <a href="/reference/services/kro" className="reference-link">View CRD →</a>
 </div>
 
 </div>

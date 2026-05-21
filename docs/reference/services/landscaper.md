@@ -8,7 +8,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 # Landscaper
 
 <div className="crd-header-container">
-  <img src="/docs/img/platform/tower_landscaper.png" alt="Landscaper" className="crd-header-icon" />
+  <img src="/img/platform/tower_landscaper.png" alt="Landscaper" className="crd-header-icon" />
   <div className="crd-header-text">
     <p>Delivers Landscaper as a service within ManagedControlPlanes, enabling declarative deployment orchestration.</p>
   </div>
