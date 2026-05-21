@@ -1,6 +1,6 @@
 ---
 title: Privacy Statement
-description: Privacy Statement for Open Control Plane
+description: Privacy Statement for OpenControlPlane
 ---
 
 # Privacy Statement
@@ -13,7 +13,7 @@ Hasso-Plattner-Ring 7
 
 Email: [privacy@sap.com](mailto:privacy@sap.com)
 
-SAP Deutschland SE & Co. KG ("SAP", "we", "us") is the controller responsible for processing your personal data when you visit the Open Control Plane documentation website at [openmcp-project.github.io/docs](https://openmcp-project.github.io/docs).
+SAP Deutschland SE & Co. KG ("SAP", "we", "us") is the controller responsible for processing your personal data when you visit the OpenControlPlane documentation website at [open-control-plane.io](https://open-control-plane.io).
 
 ## Data We Collect
 
@@ -35,7 +35,7 @@ This website uses only **technically necessary cookies** that are required for t
 
 ### GitHub Issues and Contributions
 
-If you submit issues, pull requests, or other contributions through GitHub, GitHub's own privacy policy applies to the data you provide. We process your GitHub username and contribution content to maintain and improve the Open Control Plane project.
+If you submit issues, pull requests, or other contributions through GitHub, GitHub's own privacy policy applies to the data you provide. We process your GitHub username and contribution content to maintain and improve the OpenControlPlane project.
 
 ## Your Rights
 
