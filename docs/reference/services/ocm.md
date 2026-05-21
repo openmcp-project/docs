@@ -8,7 +8,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 # OCM
 
 <div className="crd-header-container">
-  <img src="/docs/img/platform/tower.png" alt="OCM" className="crd-header-icon" />
+  <img src="/img/platform/tower.png" alt="OCM" className="crd-header-icon" />
   <div className="crd-header-text">
     <p>Delivers the Open Component Model (OCM) as a service within ManagedControlPlanes, enabling secure software delivery and deployment at any scale.</p>
   </div>

@@ -11,7 +11,7 @@ OpenControlPlane is built on top of amazing open-source projects from the cloud 
 
 <div className="project-card">
   <div className="project-card-header">
-    <img src="/docs/img/logos/kubernetes.png" alt="Kubernetes" className="project-logo" />
+    <img src="/img/logos/kubernetes.png" alt="Kubernetes" className="project-logo" />
     <h3>Kubernetes</h3>
   </div>
   <div className="project-description">
@@ -25,7 +25,7 @@ OpenControlPlane is built on top of amazing open-source projects from the cloud 
 
 <div className="project-card">
   <div className="project-card-header">
-    <img src="/docs/img/logos/crossplane.png" alt="Crossplane" className="project-logo" />
+    <img src="/img/logos/crossplane.png" alt="Crossplane" className="project-logo" />
     <h3>Crossplane</h3>
   </div>
   <div className="project-description">
@@ -48,7 +48,7 @@ OpenControlPlane is built on top of amazing open-source projects from the cloud 
 
 <div className="project-card">
   <div className="project-card-header">
-    <img src="/docs/img/logos/gardener.png" alt="Gardener" className="project-logo" />
+    <img src="/img/logos/gardener.png" alt="Gardener" className="project-logo" />
     <h3>Gardener</h3>
   </div>
   <div className="project-description">
@@ -62,7 +62,7 @@ OpenControlPlane is built on top of amazing open-source projects from the cloud 
 
 <div className="project-card">
   <div className="project-card-header">
-    <img src="/docs/img/logos/flux.png" alt="Flux" className="project-logo" />
+    <img src="/img/logos/flux.png" alt="Flux" className="project-logo" />
     <h3>Flux</h3>
   </div>
   <div className="project-description">
@@ -76,7 +76,7 @@ OpenControlPlane is built on top of amazing open-source projects from the cloud 
 
 <div className="project-card">
   <div className="project-card-header">
-    <img src="/docs/img/logos/kyverno.png" alt="Kyverno" className="project-logo" />
+    <img src="/img/logos/kyverno.png" alt="Kyverno" className="project-logo" />
     <h3>Kyverno</h3>
   </div>
   <div className="project-description">
@@ -90,7 +90,7 @@ OpenControlPlane is built on top of amazing open-source projects from the cloud 
 
 <div className="project-card">
   <div className="project-card-header">
-    <img src="/docs/img/logos/external-secrets.png" alt="External Secrets" className="project-logo" />
+    <img src="/img/logos/external-secrets.png" alt="External Secrets" className="project-logo" />
     <h3>External Secrets</h3>
   </div>
   <div className="project-description">
@@ -104,7 +104,7 @@ OpenControlPlane is built on top of amazing open-source projects from the cloud 
 
 <div className="project-card">
   <div className="project-card-header">
-    <img src="/docs/img/logos/ocm.svg" alt="Open Component Model" className="project-logo" />
+    <img src="/img/logos/ocm.svg" alt="Open Component Model" className="project-logo" />
     <h3>Open Component Model</h3>
   </div>
   <div className="project-description">
@@ -118,7 +118,7 @@ OpenControlPlane is built on top of amazing open-source projects from the cloud 
 
 <div className="project-card">
   <div className="project-card-header">
-    <img src="/docs/img/logos/landscaper.png" alt="Landscaper" className="project-logo" />
+    <img src="/img/logos/landscaper.png" alt="Landscaper" className="project-logo" />
     <h3>Landscaper</h3>
   </div>
   <div className="project-description">
