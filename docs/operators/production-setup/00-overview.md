@@ -66,7 +66,7 @@ docker pull ghcr.io/openmcp-project/images/openmcp-bootstrapper:${OPENMCP_BOOTST
 
 ## Next Steps
 
-- [Gardener Provider](./gardener-provider) — Deploy on Gardener-managed infrastructure
+- [Gardener Provider](./01-gardener-provider.md) — Deploy on Gardener-managed infrastructure
 
 ## Coming Soon
 

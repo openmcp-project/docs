@@ -10,7 +10,7 @@ As a platform operator, you deploy and manage OpenControlPlane so your teams can
 ## Your Journey
 
 **Trying it out locally?**
-The [Quickstart](./quickstart) gets you a full local platform in under 10 minutes using `ocpctl`. No infrastructure required.
+The [Quickstart](./01-quickstart.md) gets you a full local platform in under 10 minutes using `ocpctl`. No infrastructure required.
 
 **Deploying to production?**
 The [Production Setup](./production-setup/00-overview.md) section covers deploying on real infrastructure with Gardener.

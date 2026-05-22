@@ -18,20 +18,20 @@ This guide will help you understand and use OpenControlPlane effectively:
 ### Getting Started
 
 Learn the basics of working with OpenControlPlane:
-- **[Onboarding](./getting-started/onboard)** - Create your first project and workspace
-- **[Connect](./getting-started/connect)** - Access your control plane
-- **[Configure](./getting-started/configure)** - Set up services and resources
+- **[Onboarding](./getting-started/01-onboard.md)** - Create your first project and workspace
+- **[Connect](./getting-started/02-connect.md)** - Access your control plane
+- **[Configure](./getting-started/03-configure.md)** - Set up services and resources
 
 ### Core Concepts
 
 Understand the building blocks:
-- **[Managed Control Plane](./concepts/managed-control-plane)** - Your dedicated Kubernetes API server
-- **[Projects & Workspaces](./concepts/managed-control-plane)** - Organize teams and environments
-- **[Service Providers](./concepts/service-provider)** - Deploy services like Crossplane or Landscaper
+- **[Managed Control Plane](./concepts/managed-control-plane.md)** - Your dedicated Kubernetes API server
+- **[Projects & Workspaces](./concepts/managed-control-plane.md)** - Organize teams and environments
+- **[Service Providers](./concepts/service-provider.md)** - Deploy services like Crossplane or Landscaper
 
 ### Ecosystem
 
-Explore the [open-source projects](./ecosystem) that power OpenControlPlane, including Kubernetes, Crossplane, Gardener, and Landscaper.
+Explore the [open-source projects](./ecosystem.md) that power OpenControlPlane, including Kubernetes, Crossplane, Gardener, and Landscaper.
 
 ## Quick Navigation
 
@@ -65,4 +65,4 @@ Explore the [open-source projects](./ecosystem) that power OpenControlPlane, inc
 
 ---
 
-Ready to get started? Head to the [onboarding guide](./getting-started/onboard) to create your first control plane.
+Ready to get started? Head to the [onboarding guide](./getting-started/01-onboard.md) to create your first control plane.
