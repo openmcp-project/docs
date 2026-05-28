@@ -33,7 +33,7 @@ apiVersion: ocm.services.openmcp.cloud/v1alpha1
 kind: OCM
 metadata:
   name: my-controlplane
-  namespace: my-namespace
+  namespace: my-workspace
 spec:
   version: 0.3.0
 ```

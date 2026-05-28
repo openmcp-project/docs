@@ -33,7 +33,7 @@ apiVersion: kro.services.openmcp.cloud/v1alpha1
 kind: Kro
 metadata:
   name: my-controlplane
-  namespace: my-namespace
+  namespace: my-workspace
 spec:
   version: 0.9.2
 ```
