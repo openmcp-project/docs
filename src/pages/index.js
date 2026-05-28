@@ -242,12 +242,12 @@ export default function Home() {
   }
 
   return (
-    <Layout title={`${siteConfig.title}`} description="Documentation for open control plane">
+    <Layout title={`${siteConfig.title}`} description="Documentation for OpenControlPlane">
       <div className="lp-home">
         <div className="flex-container">
           <div className="main">
             <h1 className="heading">
-              <span className="name clip">open control plane docs</span>
+              <span className="name clip">OpenControlPlane docs</span>
               <span className="text">Give your teams the power to run robust, compliant clouds. Public, private, or Sovereign.</span>
             </h1>
             <div className="container" style={{ padding: "0" }}>
@@ -939,7 +939,7 @@ spec:
             <div className="section-header section-header-right">
               <div className="section-header-content">
                 <h2 className="section-main-title"><i>READY-TO-USE</i> CONTROL PLANES</h2>
-                <p className="section-subtitle">Provision, manage, secure all instances on open control plane platform</p>
+                <p className="section-subtitle">Provision, manage, secure all instances on OpenControlPlane platform</p>
                 {/* Subsection navigation */}
                 <div className="section-nav-dots">
                   <button
@@ -1069,7 +1069,7 @@ spec:
             <div className="section-header">
               <div className="section-header-content">
                 <h2 className="section-main-title">RUNS EVERYWHERE</h2>
-                <p className="section-subtitle">Open Control Plane can be installed wherever Kubernetes is available.</p>
+                <p className="section-subtitle">OpenControlPlane can be installed wherever Kubernetes is available.</p>
                 {/* Subsection navigation */}
                 <div className="section-nav-dots">
                   <button

@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Open Control Plane',
+  title: 'OpenControlPlane',
   tagline: 'Part of ApeiroRA and NeoNephos.',
   favicon: 'img/favicon.ico',
 
@@ -94,9 +94,9 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/co_axolotl.png',
     navbar: {
-      title: 'Open Control Plane',
+      title: 'OpenControlPlane',
       logo: {
-        alt: 'Open Control Plane Logo',
+        alt: 'OpenControlPlane Logo',
         src: 'img/co_axolotl_mirrored.png',
       },
       items: [
@@ -185,7 +185,7 @@ const config: Config = {
         },
       ],
       copyright: `
-        Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company and openControlPlane contributors.
+        Copyright OpenControlPlane contributors.
         <br>
         This site is hosted by <a href="https://pages.github.com/">GitHub Pages</a>.
         Please see the <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement">GitHub Privacy Statement</a> for any information how GitHub processes your personal data.
