@@ -8,7 +8,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 # OCM
 
 <div className="crd-header-container">
-  <img src="/img/platform/tower.png" alt="OCM" className="crd-header-icon" />
+  <img src="/img/platform/tower_ocm.png" alt="OCM" className="crd-header-icon" />
   <div className="crd-header-text">
     <p>Delivers the Open Component Model (OCM) as a service within ManagedControlPlanes, enabling secure software delivery and deployment at any scale.</p>
   </div>
@@ -22,7 +22,6 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   crdUrl="https://raw.githubusercontent.com/open-component-model/service-provider-ocm/main/api/crds/manifests/ocm.services.openmcp.cloud_ocms.yaml"
   name="OCM"
   description="OCM service provider resource"
-  exampleUrl="https://raw.githubusercontent.com/open-component-model/service-provider-ocm/main/config/samples/v1alpha1_ocm.yaml"
 />
 
 ## Usage
@@ -33,10 +32,10 @@ Deploy OCM within a control plane:
 apiVersion: ocm.services.openmcp.cloud/v1alpha1
 kind: OCM
 metadata:
-  name: my-controlplane
-  namespace: project-platform-team--ws-dev
+  name: my-ocm
+  namespace: my-workspace
 spec:
-  version: 0.3.0
+  version: 0.7.0
 ```
 
 The OCM service provider manages the `ocm-k8s-toolkit` controller deployment on your ManagedControlPlane, enabling secure software delivery using the Open Component Model.

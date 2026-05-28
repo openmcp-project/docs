@@ -102,11 +102,20 @@ Available service providers that can be deployed within control planes.
 
 <div className="reference-card">
   <div className="reference-icon-container reference-icon-container-standard">
-    <img src="/img/platform/tower.png" alt="OCM" className="reference-icon-large" />
+    <img src="/img/platform/tower_ocm.png" alt="OCM" className="reference-icon-large" />
   </div>
   <h3>OCM</h3>
   <p>Software delivery and deployment service using the Open Component Model.</p>
   <a href="/reference/services/ocm" className="reference-link">View CRD →</a>
+</div>
+
+<div className="reference-card">
+  <div className="reference-icon-container reference-icon-container-standard">
+    <img src="/img/platform/tower_kro.png" alt="kro" className="reference-icon-large" />
+  </div>
+  <h3>kro</h3>
+  <p>Compose Kubernetes resources into reusable, higher-level APIs using kro.</p>
+  <a href="/reference/services/kro" className="reference-link">View CRD →</a>
 </div>
 
 </div>
@@ -184,3 +193,4 @@ CRD definitions are maintained across multiple repositories:
   - Landscaper: [service-provider-landscaper](https://github.com/openmcp-project/service-provider-landscaper/tree/main/api/crds/manifests)
   - Velero: [service-provider-velero](https://github.com/openmcp-project/service-provider-velero/tree/main/api/crds/manifests)
   - OCM: [service-provider-ocm](https://github.com/open-component-model/service-provider-ocm/tree/main/api/crds/manifests)
+  - kro: [service-provider-kro](https://github.com/openmcp-project/service-provider-kro/tree/main/api/crds/manifests)

@@ -1756,6 +1756,7 @@ body[class*="docs-doc-id-reference"] .row {
   width: 80px;
   height: 80px;
   flex-shrink: 0;
+  object-fit: contain;
   filter: drop-shadow(0 4px 12px rgba(4, 159, 154, 0.3));
 }
 
