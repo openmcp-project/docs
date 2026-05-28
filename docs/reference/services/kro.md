@@ -32,7 +32,7 @@ Deploy kro within a control plane:
 apiVersion: kro.services.openmcp.cloud/v1alpha1
 kind: Kro
 metadata:
-  name: my-controlplane
+  name: my-kro
   namespace: my-workspace
 spec:
   version: 0.9.2

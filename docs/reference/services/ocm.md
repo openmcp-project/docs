@@ -32,10 +32,10 @@ Deploy OCM within a control plane:
 apiVersion: ocm.services.openmcp.cloud/v1alpha1
 kind: OCM
 metadata:
-  name: my-controlplane
+  name: my-ocm
   namespace: my-workspace
 spec:
-  version: 0.3.0
+  version: 0.7.0
 ```
 
 The OCM service provider manages the `ocm-k8s-toolkit` controller deployment on your ManagedControlPlane, enabling secure software delivery using the Open Component Model.
