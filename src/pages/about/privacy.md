@@ -11,7 +11,7 @@ SAP Deutschland SE & Co. KG
 Hasso-Plattner-Ring 7
 69190 Walldorf, Germany
 
-Email: [privacy@sap.com](mailto:privacy@sap.com)
+Email: [support@neonephos.org](mailto:support@neonephos.org)
 
 SAP Deutschland SE & Co. KG ("SAP", "we", "us") is the controller responsible for processing your personal data when you visit the OpenControlPlane documentation website at [open-control-plane.io](https://open-control-plane.io).
 
@@ -55,7 +55,7 @@ You also have the right to lodge a complaint with a supervisory authority, in pa
 For questions or requests regarding data protection, please contact:
 
 **SAP Data Protection Officer**
-Email: [privacy@sap.com](mailto:privacy@sap.com)
+Email: [support@neonephos.org](mailto:support@neonephos.org)
 
 SAP Deutschland SE & Co. KG
 Hasso-Plattner-Ring 7
