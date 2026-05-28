@@ -185,7 +185,7 @@ const config: Config = {
         },
       ],
       copyright: `
-        Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company and openControlPlane contributors.
+        Copyright OpenControlPlane contributors.
         <br>
         This site is hosted by <a href="https://pages.github.com/">GitHub Pages</a>.
         Please see the <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement">GitHub Privacy Statement</a> for any information how GitHub processes your personal data.
