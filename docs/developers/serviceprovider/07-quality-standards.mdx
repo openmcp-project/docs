@@ -36,39 +36,37 @@ When a user triggers an uninstall of a domain service through the `ServiceProvid
 
 Before uninstalling, the service provider checks whether any custom resources belonging to the domain service still exist on the managed `ControlPlane`. If they do, the provider blocks deletion and surfaces a clear message explaining what needs to be cleaned up first.
 
-### 2. Status phases and conditions
+### 2. Status reporting and error messages
 
 Every `ServiceProviderAPI` reconciled by the service provider carries a `Status.Phase` (`Ready` / `Progressing` / `Terminating`) and typed `Conditions` (at minimum `Ready`, plus type-specific ones). Conditions follow the `metav1.Condition` shape with `reason` and `message`. See the [status reporting guidelines](/developers/general#status-reporting) for the expected conventions.
 
-### 3. Clear error messages
+When reconciliation fails, the cause appears on a Condition's `message` and as a Kubernetes Event on the `ServiceProviderAPI`. Messages are actionable — they name the missing or invalid input, or the underlying system that failed.
 
-When reconciliation fails, the cause appears on a Condition's `message` and as a Kubernetes Event on the `ServiceProviderAPI`. Messages are actionable — they name the missing or invalid input, or the upstream system that failed.
-
-### 4. Operation annotations
+### 3. Operation annotations
 
 The service provider honours the [operation annotations](/developers/general#operation-annotations) defined in the controller guidelines. These annotations allow platform owners and end users to pause or force-reconcile a `ServiceProviderAPI` or `ServiceProviderConfig` without modifying its spec.
 
-### 5. API stability policy
+### 4. API stability policy
 
 The provider declares its API maturity per CRD (`v1alpha1`, `v1beta1`, `v1`) and follows the matching change policy. Breaking changes at `v1beta1`+ require a deprecation cycle. Conversion webhooks exist when multiple versions are served.
 
-### 6. Air-gapped / custom CA bundle support
+### 5. Air-gapped / custom CA bundle support
 
 The provider supports custom CA bundles so it can operate in air-gapped or corporate environments that use private certificate authorities. The CA bundle is propagated to all relevant components of the domain service, ensuring that outbound connections and external integrations trust the custom certificates.
 
-### 7. Release artifacts
+### 6. Release artifacts
 
 Each tagged release publishes a multi-architecture container image and an OCM component descriptor referencing that image. Both are pushed to a publicly resolvable registry. Without published artifacts, no landscape can install the provider through the OpenControlPlane onboarding system.
 
-### 8. Security hardening
+### 7. Security hardening
 
 The controller's container runs with `runAsNonRoot: true`, `readOnlyRootFilesystem: true`, `allowPrivilegeEscalation: false`, and drops all Linux capabilities. RBAC is split between cluster-scope (only what is truly needed) and namespace-scope. No wildcards on critical verbs (`*` on `secrets`, etc.).
 
-### 9. Testing
+### 8. Testing
 
 **Community** requires unit tests covering the reconciler. **Stable** additionally requires end-to-end tests run on every release against a real cluster. Tests must cover the full lifecycle: install, reconcile, and delete. The [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) framework provides tooling for this within the OpenControlPlane ecosystem; equivalent frameworks are acceptable.
 
-### 10. Maintenance signals
+### 9. Maintenance signals
 
 A `MAINTAINERS.md` or `CODEOWNERS` file names responsible humans or teams. The repo declares its support level (best-effort, business-hours, etc.).
 
@@ -105,8 +103,7 @@ A link back to this page so anyone reading the table can find the definitions.
 | Criterion                       | Status |
 | ------------------------------- | :----: |
 | Deletion behaviour              |   ✅   |
-| Status phases & conditions      |   ✅   |
-| Clear error messages            |   ✅   |
+| Status reporting & error messages |   ✅   |
 | Operation annotations           |   ✅   |
 | API stability policy            |   ✅   |
 | Air-gapped / custom CA          |   ❌   |
