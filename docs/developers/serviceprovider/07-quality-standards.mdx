@@ -58,15 +58,11 @@ The provider supports custom CA bundles so it can operate in air-gapped or corpo
 
 Each tagged release publishes a multi-architecture container image and an OCM component descriptor referencing that image. Both are pushed to a publicly resolvable registry. Without published artifacts, no landscape can install the provider through the OpenControlPlane onboarding system.
 
-### 7. Security hardening
-
-The controller's container runs with `runAsNonRoot: true`, `readOnlyRootFilesystem: true`, `allowPrivilegeEscalation: false`, and drops all Linux capabilities. RBAC is split between cluster-scope (only what is truly needed) and namespace-scope. No wildcards on critical verbs (`*` on `secrets`, etc.).
-
-### 8. Testing
+### 7. Testing
 
 **Community** requires unit tests covering the reconciler. **Stable** additionally requires end-to-end tests run on every release against a real cluster. Tests must cover the full lifecycle: install, reconcile, and delete. The [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) framework provides tooling for this within the OpenControlPlane ecosystem; equivalent frameworks are acceptable.
 
-### 9. Maintenance signals
+### 8. Maintenance signals
 
 A `MAINTAINERS.md` or `CODEOWNERS` file names responsible humans or teams. The repo declares its support level (best-effort, business-hours, etc.).
 
@@ -108,7 +104,6 @@ A link back to this page so anyone reading the table can find the definitions.
 | API stability policy            |   ✅   |
 | Air-gapped / custom CA          |   ❌   |
 | Release artifacts (image + OCM) |   ✅   |
-| Security hardening              |   ⚠️   |
 | Testing                         |   ✅   |
 | Maintenance signals             |   ✅   |
 
