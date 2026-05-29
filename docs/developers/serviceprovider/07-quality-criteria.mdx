@@ -5,12 +5,9 @@ id: quality-criteria
 
 # Quality Criteria
 
-This page defines the quality criteria a `ServiceProvider` should meet to be considered ready for use in different kinds of OpenControlPlane landscapes, from early-stage experiments to production environments with corporate compliance requirements.
+This page defines the quality criteria a `ServiceProvider` should aim for to be ready for use in different kinds of OpenControlPlane landscapes, from early-stage experiments to production environments with corporate compliance requirements.
 
-The criteria exist for two audiences:
-
-1. **Service provider developers** read it as a checklist. It tells you what you need to implement.
-2. **Platform owners** read it to evaluate whether a service provider is mature enough to install in their landscape.
+Use this page as a starting point: it tells you which criteria to implement and helps you understand what maturity level your service provider is at. Once you have assessed your own provider against the criteria, a sig-extensibility approver can review your assessment and confirm which tier it belongs to. No further process is required.
 
 The criteria are **tooling-agnostic**. They describe what a service provider must *produce* (its artifacts) and how it must *behave* (at runtime), not how it is built. Service providers in any GitHub organisation can adhere to them, regardless of the build system or CI they use.
 
@@ -22,13 +19,7 @@ The criteria are **tooling-agnostic**. They describe what a service provider mus
 | <img src="https://img.shields.io/badge/Quality-Incubating-3d9970?style=flat-square&labelColor=555" alt="Quality: Incubating" />     | Dev/test landscapes, internal platforms, situations where rough edges are tolerable   | Regulated or production environments without additional review |
 | <img src="https://img.shields.io/badge/Quality-Stable-1e8f95?style=flat-square&labelColor=555" alt="Quality: Stable" />             | Production landscapes, customer-facing platforms, corporate / air-gapped environments |                                                                |
 
-:::note
-The tier design outlined here is preliminary and not yet finalised. The names, boundaries, and criteria of each tier are subject to change. A forthcoming [Service Discovery and Access Management](http://localhost:3000/developers/serviceprovider/design#service-discovery-and-access-management) concept will revisit and expand these tiers with additional content and requirements.
-:::
-
 ## The quality criteria
-
-The tier matrix later on this page shows which criteria are required at which tier.
 
 ### 1. Deletion behaviour
 
@@ -40,7 +31,7 @@ Before uninstalling, the service provider checks whether any custom resources be
 
 Every `ServiceProviderAPI` reconciled by the service provider carries a `Status.Phase` (`Ready` / `Progressing` / `Terminating`) and typed `Conditions` (at minimum `Ready`, plus type-specific ones). Conditions follow the `metav1.Condition` shape with `reason` and `message`. See the [status reporting guidelines](/developers/general#status-reporting) for the expected conventions.
 
-When reconciliation fails, the cause appears on a Condition's `message` and as a Kubernetes Event on the `ServiceProviderAPI`. Messages are actionable — they name the missing or invalid input, or the underlying system that failed.
+When reconciliation fails, the cause appears on a Condition's `message` and as a Kubernetes Event on the `ServiceProviderAPI`. Messages are actionable: they name the missing or invalid input, or the underlying system that failed.
 
 ### 3. Operation annotations
 
@@ -77,7 +68,7 @@ Each service-provider repository carries a **Quality Criteria block** in its REA
 
 A badge showing the tier you claim. Copy the snippet for your tier from the [Badge snippets](#badge-snippets) section below and paste it into your README.
 
-### 2. Compliance table
+### 2. Self-assessment table
 
 A table showing the status of every criterion. Three states:
 
@@ -85,7 +76,7 @@ A table showing the status of every criterion. Three states:
 - ❌ **Not met** — the criterion is not satisfied.
 - ⚠️ **Partial** — some aspects are met, with known gaps documented (link to a tracking issue if available).
 
-The tier you claim is a **floor**: every cell that the tier requires must be ✅. You may also have ✅ entries for criteria the tier does not require — that is encouraged and visible to platform owners.
+Fill this in yourself based on your own assessment. A sig-extensibility approver can then review it and confirm the tier. No further process is required.
 
 ### 3. Link to the canonical criteria
 
