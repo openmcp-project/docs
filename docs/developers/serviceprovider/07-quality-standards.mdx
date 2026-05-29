@@ -60,7 +60,7 @@ Each tagged release publishes a multi-architecture container image and an OCM co
 
 ### 7. Testing
 
-**Community** requires unit tests covering the reconciler. **Stable** additionally requires end-to-end tests run on every release against a real cluster. Tests must cover the full lifecycle: install, reconcile, and delete. The [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) framework provides tooling for this within the OpenControlPlane ecosystem; equivalent frameworks are acceptable.
+The service provider is tested against a real cluster covering the full lifecycle: install, reconcile, and delete. The [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) framework provides tooling for this within the OpenControlPlane ecosystem. A dedicated integration test suite to verify that a service provider is well-behaved is planned for the future.
 
 ### 8. Ownership and maintenance documentation
 
