@@ -16,11 +16,11 @@ The criteria are **tooling-agnostic**. They describe what a service provider mus
 
 ## Tiers at a glance
 
-| Tier               | Suitable for                                                                          | Not suitable for                                               |
-| ------------------ | ------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| <img src="https://img.shields.io/badge/Quality-Experimental-e69138?style=flat-square&labelColor=555" alt="Quality: Experimental" /> | Proof-of-concept, evaluation, contributor hacking | Anything you don't want to clean up by hand if it breaks |
-| <img src="https://img.shields.io/badge/Quality-Incubating-3d9970?style=flat-square&labelColor=555" alt="Quality: Incubating" /> | Dev/test landscapes, internal platforms, situations where rough edges are tolerable | Regulated or production environments without additional review |
-| <img src="https://img.shields.io/badge/Quality-Stable-1e8f95?style=flat-square&labelColor=555" alt="Quality: Stable" /> | Production landscapes, customer-facing platforms, corporate / air-gapped environments | |
+| Tier                                                                                                                                | Suitable for                                                                          | Not suitable for                                               |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| <img src="https://img.shields.io/badge/Quality-Experimental-e69138?style=flat-square&labelColor=555" alt="Quality: Experimental" /> | Proof-of-concept, evaluation, contributor hacking                                     | Anything you don't want to clean up by hand if it breaks       |
+| <img src="https://img.shields.io/badge/Quality-Incubating-3d9970?style=flat-square&labelColor=555" alt="Quality: Incubating" />     | Dev/test landscapes, internal platforms, situations where rough edges are tolerable   | Regulated or production environments without additional review |
+| <img src="https://img.shields.io/badge/Quality-Stable-1e8f95?style=flat-square&labelColor=555" alt="Quality: Stable" />             | Production landscapes, customer-facing platforms, corporate / air-gapped environments |                                                                |
 
 :::note
 The tier design outlined here is preliminary and not yet finalised. The names, boundaries, and criteria of each tier are subject to change. A forthcoming [Service Discovery and Access Management](http://localhost:3000/developers/serviceprovider/design#service-discovery-and-access-management) concept will revisit and expand these tiers with additional content and requirements.
@@ -98,16 +98,16 @@ A link back to this page so anyone reading the table can find the definitions.
 
 ![Quality: Incubating](https://img.shields.io/badge/Quality-Incubating-3d9970?style=flat-square&labelColor=555)
 
-| Criterion                       | Status |
-| ------------------------------- | :----: |
-| Deletion behaviour              |   ✅   |
-| Status reporting & error messages |   ✅   |
-| Operation annotations           |   ✅   |
-| API stability policy            |   ✅   |
-| Air-gapped / custom CA          |   ❌   |
-| Release artifacts (image + OCM) |   ✅   |
-| Testing                         |   ✅   |
-| Ownership and maintenance docs  |   ✅   |
+| Criterion                         | Status |
+| --------------------------------- | :----: |
+| Deletion behaviour                |   ✅    |
+| Status reporting & error messages |   ✅    |
+| Operation annotations             |   ✅    |
+| API stability policy              |   ✅    |
+| Air-gapped / custom CA            |   ❌    |
+| Release artifacts (image + OCM)   |   ✅    |
+| Testing                           |   ✅    |
+| Ownership and maintenance docs    |   ✅    |
 
 See the [OpenControlPlane Quality Criteria](https://open-control-plane.io/developers/serviceprovider/quality-criteria) for definitions.
 ```
