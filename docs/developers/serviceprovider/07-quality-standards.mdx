@@ -62,9 +62,9 @@ Each tagged release publishes a multi-architecture container image and an OCM co
 
 **Community** requires unit tests covering the reconciler. **Stable** additionally requires end-to-end tests run on every release against a real cluster. Tests must cover the full lifecycle: install, reconcile, and delete. The [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) framework provides tooling for this within the OpenControlPlane ecosystem; equivalent frameworks are acceptable.
 
-### 8. Maintenance signals
+### 8. Ownership and maintenance documentation
 
-A `MAINTAINERS.md` or `CODEOWNERS` file names responsible humans or teams. The repo declares its support level (best-effort, business-hours, etc.).
+A `MAINTAINERS.md` or `CODEOWNERS` file names responsible humans or teams. Contribution and issue reporting instructions are documented in `CONTRIBUTING.md` or the project README.
 
 
 ## Declaring a tier in your service-provider repository
@@ -105,7 +105,7 @@ A link back to this page so anyone reading the table can find the definitions.
 | Air-gapped / custom CA          |   ❌   |
 | Release artifacts (image + OCM) |   ✅   |
 | Testing                         |   ✅   |
-| Maintenance signals             |   ✅   |
+| Ownership and maintenance docs  |   ✅   |
 
 See the [OpenControlPlane Quality Standards](https://open-control-plane.io/developers/serviceprovider/quality-standards) for definitions.
 ```
