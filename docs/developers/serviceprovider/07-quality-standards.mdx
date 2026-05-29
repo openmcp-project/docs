@@ -1,0 +1,135 @@
+---
+sidebar_position: 7
+id: quality-criteria
+---
+
+# Quality Criteria
+
+This page defines the quality criteria a `ServiceProvider` should meet to be considered ready for use in different kinds of OpenControlPlane landscapes, from early-stage experiments to production environments with corporate compliance requirements.
+
+The criteria exist for two audiences:
+
+1. **Service provider developers** read it as a checklist. It tells you what you need to implement.
+2. **Platform owners** read it to evaluate whether a service provider is mature enough to install in their landscape.
+
+The criteria are **tooling-agnostic**. They describe what a service provider must *produce* (its artifacts) and how it must *behave* (at runtime), not how it is built. Service providers in any GitHub organisation can adhere to them, regardless of the build system or CI they use.
+
+## Tiers at a glance
+
+| Tier               | Suitable for                                                                          | Not suitable for                                               |
+| ------------------ | ------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| <img src="https://img.shields.io/badge/Quality-Experimental-e69138?style=flat-square&labelColor=555" alt="Quality: Experimental" /> | Proof-of-concept, evaluation, contributor hacking | Anything you don't want to clean up by hand if it breaks |
+| <img src="https://img.shields.io/badge/Quality-Community-3d9970?style=flat-square&labelColor=555" alt="Quality: Community" /> | Dev/test landscapes, internal platforms, situations where rough edges are tolerable | Regulated or production environments without additional review |
+| <img src="https://img.shields.io/badge/Quality-Stable-1e8f95?style=flat-square&labelColor=555" alt="Quality: Stable" /> | Production landscapes, customer-facing platforms, corporate / air-gapped environments | |
+
+:::note
+The tier design outlined here is preliminary and not yet finalised. The names, boundaries, and criteria of each tier are subject to change. A forthcoming [Service Discovery and Access Management](http://localhost:3000/developers/serviceprovider/design#service-discovery-and-access-management) concept will revisit and expand these tiers with additional content and requirements.
+:::
+
+## The quality criteria
+
+The tier matrix later on this page shows which criteria are required at which tier.
+
+### 1. Deletion behaviour
+
+When a user triggers an uninstall of a domain service through the `ServiceProviderAPI`, the service provider must not blindly remove the domain service and its CRDs from the managed `ControlPlane`. Domain services like Crossplane, Flux, or ESO install CRDs into the `ControlPlane`, and users may have created instances of those CRDs. Deleting the CRDs while custom resources still exist would leave those resources orphaned in the cluster or cause managed resources in external systems to escape the platform's control.
+
+Before uninstalling, the service provider checks whether any custom resources belonging to the domain service still exist on the managed `ControlPlane`. If they do, the provider blocks deletion and surfaces a clear message explaining what needs to be cleaned up first.
+
+### 2. Status reporting and error messages
+
+Every `ServiceProviderAPI` reconciled by the service provider carries a `Status.Phase` (`Ready` / `Progressing` / `Terminating`) and typed `Conditions` (at minimum `Ready`, plus type-specific ones). Conditions follow the `metav1.Condition` shape with `reason` and `message`. See the [status reporting guidelines](/developers/general#status-reporting) for the expected conventions.
+
+When reconciliation fails, the cause appears on a Condition's `message` and as a Kubernetes Event on the `ServiceProviderAPI`. Messages are actionable — they name the missing or invalid input, or the underlying system that failed.
+
+### 3. Operation annotations
+
+The service provider honours the [operation annotations](/developers/general#operation-annotations) defined in the controller guidelines. These annotations allow platform owners and end users to pause or force-reconcile a `ServiceProviderAPI` or `ServiceProviderConfig` without modifying its spec.
+
+### 4. API stability policy
+
+The provider declares its API maturity per CRD (`v1alpha1`, `v1beta1`, `v1`) and follows the matching change policy. Breaking changes at `v1beta1`+ require a deprecation cycle. Conversion webhooks exist when multiple versions are served. See the Kubernetes [API conventions](https://github.com/kubernetes/community/blob/main/contributors/devel/sig-architecture/api-conventions.md) and [API change guidelines](https://github.com/kubernetes/community/blob/main/contributors/devel/sig-architecture/api_changes.md) for the expectations this criterion builds on.
+
+### 5. Custom CA bundle support
+
+The provider supports custom CA bundles so it can operate in air-gapped or corporate environments that use private certificate authorities. The CA bundle is propagated to all relevant components of the domain service, ensuring that outbound connections and external integrations trust the custom certificates.
+
+### 6. Release artifacts
+
+Each tagged release publishes a multi-architecture container image and an OCM component descriptor referencing that image. Both are pushed to a publicly resolvable registry. Without published artifacts, no landscape can install the provider through the OpenControlPlane onboarding system.
+
+### 7. Testing
+
+The service provider is tested against a real cluster covering the full lifecycle: install, reconcile, and delete a `DomainService` in a `ControlPlane`. The [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) framework provides tooling for this within the OpenControlPlane ecosystem. A dedicated integration test suite to verify that a service provider is well-behaved is planned for the future.
+
+### 8. Ownership and maintenance documentation
+
+A `MAINTAINERS.md` or `CODEOWNERS` file names responsible humans or teams. Contribution and issue reporting instructions are documented in `CONTRIBUTING.md` or the project README.
+
+
+## Declaring a tier in your service-provider repository
+
+Each service-provider repository carries a **Quality Criteria block** in its README, placed directly below the title and badges and above the "About this project" section. It has three parts.
+
+### 1. Tier badge
+
+A badge showing the tier you claim. Copy the snippet for your tier from the [Badge snippets](#badge-snippets) section below and paste it into your README.
+
+### 2. Compliance table
+
+A table showing the status of every criterion. Three states:
+
+- ✅ **Met** — the criterion is fully satisfied.
+- ❌ **Not met** — the criterion is not satisfied.
+- ⚠️ **Partial** — some aspects are met, with known gaps documented (link to a tracking issue if available).
+
+The tier you claim is a **floor**: every cell that the tier requires must be ✅. You may also have ✅ entries for criteria the tier does not require — that is encouraged and visible to platform owners.
+
+### 3. Link to the canonical criteria
+
+A link back to this page so anyone reading the table can find the definitions.
+
+### Example
+
+```markdown
+## Quality Criteria
+
+![Quality: Community](https://img.shields.io/badge/Quality-Community-3d9970?style=flat-square&labelColor=555)
+
+| Criterion                       | Status |
+| ------------------------------- | :----: |
+| Deletion behaviour              |   ✅   |
+| Status reporting & error messages |   ✅   |
+| Operation annotations           |   ✅   |
+| API stability policy            |   ✅   |
+| Air-gapped / custom CA          |   ❌   |
+| Release artifacts (image + OCM) |   ✅   |
+| Testing                         |   ✅   |
+| Ownership and maintenance docs  |   ✅   |
+
+See the [OpenControlPlane Quality Criteria](https://open-control-plane.io/developers/serviceprovider/quality-criteria) for definitions.
+```
+
+### Badge snippets
+
+Copy the badge for your tier and paste it into your README directly below the `## Quality Criteria` heading:
+
+**Experimental**
+
+```markdown
+[![Quality: Experimental](https://img.shields.io/badge/Quality-Experimental-e69138?style=flat-square&labelColor=555)](https://open-control-plane.io/developers/serviceprovider/quality-criteria)
+```
+
+**Community**
+
+```markdown
+[![Quality: Community](https://img.shields.io/badge/Quality-Community-3d9970?style=flat-square&labelColor=555)](https://open-control-plane.io/developers/serviceprovider/quality-criteria)
+```
+
+**Stable**
+
+```markdown
+[![Quality: Stable](https://img.shields.io/badge/Quality-Stable-1e8f95?style=flat-square&labelColor=555)](https://open-control-plane.io/developers/serviceprovider/quality-criteria)
+```
+
+These render identically on GitHub, GitLab, and the OpenControlPlane docs site.
