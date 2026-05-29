@@ -1,18 +1,18 @@
 ---
 sidebar_position: 7
-id: quality-standards
+id: quality-criteria
 ---
 
-# Quality Standards
+# Quality Criteria
 
-This page defines the quality standards a `ServiceProvider` should meet to be considered ready for use in different kinds of OpenControlPlane landscapes, from early-stage experiments to production environments with corporate compliance requirements.
+This page defines the quality criteria a `ServiceProvider` should meet to be considered ready for use in different kinds of OpenControlPlane landscapes, from early-stage experiments to production environments with corporate compliance requirements.
 
-The standard exists for two audiences:
+The criteria exist for two audiences:
 
 1. **Service provider developers** read it as a checklist. It tells you what you need to implement.
 2. **Platform owners** read it to evaluate whether a service provider is mature enough to install in their landscape.
 
-The standard is **tooling-agnostic**. It describes what a service provider must *produce* (its artifacts) and how it must *behave* (at runtime), not how it is built. Service providers in any GitHub organisation can adhere to it, regardless of the build system or CI they use.
+The criteria are **tooling-agnostic**. They describe what a service provider must *produce* (its artifacts) and how it must *behave* (at runtime), not how it is built. Service providers in any GitHub organisation can adhere to them, regardless of the build system or CI they use.
 
 ## Tiers at a glance
 
@@ -69,7 +69,7 @@ A `MAINTAINERS.md` or `CODEOWNERS` file names responsible humans or teams. Contr
 
 ## Declaring a tier in your service-provider repository
 
-Each service-provider repository carries a **Quality Standards block** in its README, placed directly below the title and badges and above the "About this project" section. It has three parts.
+Each service-provider repository carries a **Quality Criteria block** in its README, placed directly below the title and badges and above the "About this project" section. It has three parts.
 
 ### 1. Tier badge
 
@@ -85,14 +85,14 @@ A table showing the status of every criterion. Three states:
 
 The tier you claim is a **floor**: every cell that the tier requires must be ✅. You may also have ✅ entries for criteria the tier does not require — that is encouraged and visible to platform owners.
 
-### 3. Link to the canonical standard
+### 3. Link to the canonical criteria
 
 A link back to this page so anyone reading the table can find the definitions.
 
 ### Example
 
 ```markdown
-## Quality Standards
+## Quality Criteria
 
 ![Quality: Community](https://img.shields.io/badge/Quality-Community-3d9970?style=flat-square&labelColor=555)
 
@@ -107,29 +107,29 @@ A link back to this page so anyone reading the table can find the definitions.
 | Testing                         |   ✅   |
 | Ownership and maintenance docs  |   ✅   |
 
-See the [OpenControlPlane Quality Standards](https://open-control-plane.io/developers/serviceprovider/quality-standards) for definitions.
+See the [OpenControlPlane Quality Criteria](https://open-control-plane.io/developers/serviceprovider/quality-criteria) for definitions.
 ```
 
 ### Badge snippets
 
-Copy the badge for your tier and paste it into your README directly below the `## Quality Standards` heading:
+Copy the badge for your tier and paste it into your README directly below the `## Quality Criteria` heading:
 
 **Experimental**
 
 ```markdown
-[![Quality: Experimental](https://img.shields.io/badge/Quality-Experimental-e69138?style=flat-square&labelColor=555)](https://open-control-plane.io/developers/serviceprovider/quality-standards)
+[![Quality: Experimental](https://img.shields.io/badge/Quality-Experimental-e69138?style=flat-square&labelColor=555)](https://open-control-plane.io/developers/serviceprovider/quality-criteria)
 ```
 
 **Community**
 
 ```markdown
-[![Quality: Community](https://img.shields.io/badge/Quality-Community-3d9970?style=flat-square&labelColor=555)](https://open-control-plane.io/developers/serviceprovider/quality-standards)
+[![Quality: Community](https://img.shields.io/badge/Quality-Community-3d9970?style=flat-square&labelColor=555)](https://open-control-plane.io/developers/serviceprovider/quality-criteria)
 ```
 
 **Stable**
 
 ```markdown
-[![Quality: Stable](https://img.shields.io/badge/Quality-Stable-1e8f95?style=flat-square&labelColor=555)](https://open-control-plane.io/developers/serviceprovider/quality-standards)
+[![Quality: Stable](https://img.shields.io/badge/Quality-Stable-1e8f95?style=flat-square&labelColor=555)](https://open-control-plane.io/developers/serviceprovider/quality-criteria)
 ```
 
 These render identically on GitHub, GitLab, and the OpenControlPlane docs site.
