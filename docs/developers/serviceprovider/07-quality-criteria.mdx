@@ -58,6 +58,8 @@ The provider supports custom CA bundles so it can operate in air-gapped or corpo
 
 Each tagged release publishes a multi-architecture container image and an OCM component descriptor referencing that image. Both are pushed to a publicly resolvable registry. Without published artifacts, no landscape can install the provider through the OpenControlPlane onboarding system.
 
+The [openmcp-project/build](https://github.com/openmcp-project/build) repository provides reusable GitHub Actions workflows and Taskfiles that implement this build pipeline. The [service-provider-template](https://github.com/openmcp-project/service-provider-template) already wires these conventions in and is the recommended starting point for new providers.
+
 ### 7. Testing
 
 The service provider is tested against a real cluster covering the full lifecycle: install, reconcile, and delete a `DomainService` in a `ControlPlane`. The [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) framework provides tooling for this within the OpenControlPlane ecosystem. A dedicated integration test suite to verify that a service provider is well-behaved is planned for the future.
