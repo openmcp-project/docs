@@ -38,7 +38,7 @@ Before uninstalling, the service provider checks whether any custom resources be
 
 ### 2. Status phases and conditions
 
-Every `ServiceProviderAPI` reconciled by the service provider carries a `Status.Phase` (`Ready` / `Progressing` / `Terminating`) and typed `Conditions` (at minimum `Ready`, plus type-specific ones). Conditions follow the `metav1.Condition` shape with `reason` and `message`. See the [status reporting guidelines](https://open-control-plane.io/developers/general#status-reporting) for the expected conventions.
+Every `ServiceProviderAPI` reconciled by the service provider carries a `Status.Phase` (`Ready` / `Progressing` / `Terminating`) and typed `Conditions` (at minimum `Ready`, plus type-specific ones). Conditions follow the `metav1.Condition` shape with `reason` and `message`. See the [status reporting guidelines](/developers/general#status-reporting) for the expected conventions.
 
 ### 3. Clear error messages
 
@@ -46,7 +46,7 @@ When reconciliation fails, the cause appears on a Condition's `message` and as a
 
 ### 4. Operation annotations
 
-The service provider honours the [operation annotations](https://open-control-plane.io/developers/general#operation-annotations) defined in the controller guidelines. These annotations allow platform owners to pause or force-reconcile a `ServiceProviderAPI` or `ServiceProviderConfig` without modifying its spec.
+The service provider honours the [operation annotations](/developers/general#operation-annotations) defined in the controller guidelines. These annotations allow platform owners to pause or force-reconcile a `ServiceProviderAPI` or `ServiceProviderConfig` without modifying its spec.
 
 ### 5. API stability policy
 
