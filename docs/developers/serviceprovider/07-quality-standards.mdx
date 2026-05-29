@@ -48,7 +48,7 @@ The service provider honours the [operation annotations](/developers/general#ope
 
 ### 4. API stability policy
 
-The provider declares its API maturity per CRD (`v1alpha1`, `v1beta1`, `v1`) and follows the matching change policy. Breaking changes at `v1beta1`+ require a deprecation cycle. Conversion webhooks exist when multiple versions are served.
+The provider declares its API maturity per CRD (`v1alpha1`, `v1beta1`, `v1`) and follows the matching change policy. Breaking changes at `v1beta1`+ require a deprecation cycle. Conversion webhooks exist when multiple versions are served. See the Kubernetes [API conventions](https://github.com/kubernetes/community/blob/main/contributors/devel/sig-architecture/api-conventions.md) and [API change guidelines](https://github.com/kubernetes/community/blob/main/contributors/devel/sig-architecture/api_changes.md) for the expectations this criterion builds on.
 
 ### 5. Air-gapped / custom CA bundle support
 
