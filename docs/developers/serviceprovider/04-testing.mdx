@@ -5,7 +5,7 @@ id: testing
 
 # Test
 
-[`openmcp-testing`](https://github.com/openmcp-project/openmcp-testing) is a testing framework based on [`sigs.k8s.io/e2e-framework`](https://github.com/kubernetes-sigs/e2e-framework). It provisions a kind-based **platform** cluster, installs `openmcp-operator` plus the cluster providers, service providers, and platform services needed to run tests for your service provider. It also provides several helpers to manage the **onboarding** cluster and per-tenant **MCP** clusters to be able to define complex test scenarios.
+[`openmcp-testing`](https://github.com/openmcp-project/openmcp-testing) is a testing framework based on [`sigs.k8s.io/e2e-framework`](https://github.com/kubernetes-sigs/e2e-framework). It provisions a kind-based **platform** cluster, installs `openmcp-operator` plus the cluster providers, service providers, and platform services needed to run tests for your service provider. It also provides several helpers to manage the **onboarding** cluster and per-tenant **ControlPlane** clusters to be able to define complex test scenarios.
 
 ## Cluster topology
 
@@ -15,7 +15,7 @@ flowchart LR
     P["openmcp-operator,<br/>cluster/service/platform providers"]
   end
   P -->|"creates (via operator)"| O["Onboarding cluster<br/>(consumer applies CRs here)"]
-  P -->|"creates per tenant (via operator)"| M["MCP cluster<br/>(per-tenant control plane)"]
+  P -->|"creates per tenant (via operator)"| M["ControlPlane cluster<br/>(per-tenant control plane)"]
   P -.->|"optional"| W["Workload cluster<br/>(external fixtures, e.g. landscaper)"]
 ```
 
@@ -97,7 +97,7 @@ Extensions: []extensions.Extension{&fluxcd.FluxCD{}},
 
 - `test/e2e/platform/`: platform-cluster manifests (e.g. `ProviderConfig`, pull secrets)
 - `test/e2e/onboarding/`: service CRs the user applies on the onboarding cluster
-- `test/e2e/mcp/`: resources deployed on the MCP cluster
+- `test/e2e/mcp/`: resources deployed on the ControlPlane cluster
 - `test/e2e/workload/`: optional, for external workload-cluster test fixtures (e.g. minio for velero)
 
 `resources.CreateObjectsFromDir(ctx, clusterCfg, directoryName)` can be used to read and apply the content of `test/e2e/<directoryName>` and create it on the cluster referenced by `clusterCfg`. 
@@ -128,7 +128,7 @@ basicTest := features.New("my service").
         return ctx
     }).
     Assess("verify resource reconciles", func(ctx context.Context, t *testing.T, c *envconf.Config) context.Context {
-        // assert domain-specific results on the MCP or onboarding cluster
+        // assert domain-specific results on the ControlPlane or onboarding cluster
         return ctx
     }).
     Teardown(providers.DeleteMCP("test-mcp", wait.WithTimeout(5*time.Minute))).
@@ -137,9 +137,9 @@ basicTest := features.New("my service").
 testenv.Test(t, basicTest)
 ```
 
-`openmcp-testing` also provides helpers for MCP lifecycle management, cluster access, resource operations, and condition waiting. For the full API, browse the [`pkg/`](https://github.com/openmcp-project/openmcp-testing/tree/main/pkg) directory in the `openmcp-testing` repository.
+`openmcp-testing` also provides helpers for ControlPlane lifecycle management, cluster access, resource operations, and condition waiting. For the full API, browse the [`pkg/`](https://github.com/openmcp-project/openmcp-testing/tree/main/pkg) directory in the `openmcp-testing` repository.
 
-A typical `Assess` step applies domain objects onto the MCP and waits for them to reconcile:
+A typical `Assess` step applies domain objects onto the ControlPlane and waits for them to reconcile:
 
 ```go
 Assess("domain objects can be created", func(ctx context.Context, t *testing.T, c *envconf.Config) context.Context {
@@ -186,9 +186,9 @@ Assess("deploy external dependency", func(ctx context.Context, t *testing.T, c *
 })
 ```
 
-## Testing with multiple MCPs
+## Testing with multiple ControlPlanes
 
-It's also possible to test and verify tenant isolation or per-tenant configuration. This is achieved by creating multiple MCPs and run the same assertions against each one of them:
+It's also possible to test and verify tenant isolation or per-tenant configuration. This is achieved by creating multiple ControlPlanes and run the same assertions against each one of them:
 
 ```go
 basicProviderTest := features.New("multi-tenant test").

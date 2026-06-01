@@ -70,4 +70,4 @@ docker pull ghcr.io/openmcp-project/images/openmcp-bootstrapper:${OPENMCP_BOOTST
 
 ## Coming Soon
 
-**User management** via Projects and Workspaces — organize teams and control access to ManagedControlPlanes. This will be documented in this section once the feature is available.
+**User management** via Projects and Workspaces — organize teams and control access to ControlPlanes. This will be documented in this section once the feature is available.

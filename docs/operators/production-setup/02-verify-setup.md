@@ -52,7 +52,7 @@ kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get clusters.clusters.ope
 
 For Gardener, retrieve the onboarding cluster kubeconfig using the Gardener API or dashboard, then save it to `./kubeconfigs/onboarding.kubeconfig`.
 
-## Create a Managed Control Plane
+## Create a ControlPlane
 
 Create a file named `my-mcp.yaml` with the following content in the configuration folder:
 
@@ -76,7 +76,7 @@ Apply the file to the onboarding cluster:
 kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig apply -f ./config/my-mcp.yaml
 ```
 
-The openmcp-operator should start to create the necessary resources in order to create the managed control plane. As a result, a new `Managed Control Plane` should be available soon.
+The openmcp-operator should start to create the necessary resources in order to create the ControlPlane. As a result, a new `ControlPlane` should be available soon.
 
 Wait for it to become ready:
 

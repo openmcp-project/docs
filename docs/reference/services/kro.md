@@ -10,7 +10,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 <div className="crd-header-container">
   <img src="/img/platform/tower_kro.png" alt="kro" className="crd-header-icon" />
   <div className="crd-header-text">
-    <p>Delivers kro as a service within ManagedControlPlanes, enabling declarative, multi-resource Kubernetes abstractions through the ResourceGraphDefinition CRD.</p>
+    <p>Delivers kro as a service within ControlPlanes, enabling declarative, multi-resource Kubernetes abstractions through the ResourceGraphDefinition CRD.</p>
   </div>
 </div>
 

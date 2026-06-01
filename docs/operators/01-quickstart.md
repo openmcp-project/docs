@@ -137,7 +137,7 @@ Please wait for a couple of seconds and then try again. Continue when the output
 
 ---
 
-## Step 2: Create a ManagedControlPlane
+## Step 2: Create a ControlPlane
 
 Now switch to the **end-user perspective**. A team wants their own `ControlPlane`.
 
@@ -147,7 +147,7 @@ First, export the onboarding cluster's kubeconfig so `kubectl` can reach it:
 kind export kubeconfig --name local-onboarding
 ```
 
-See the [`ManagedControlPlaneV2` reference](/reference/core/managedcontrolplane) for the full API.
+See the [`ManagedControlPlaneV2` reference](/reference/core/controlplane) for the full API.
 
 :::apply-to-onboarding-api
 

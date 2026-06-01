@@ -10,7 +10,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 <div className="crd-header-container">
   <img src="/img/platform/tower_velero.png" alt="Velero" className="crd-header-icon" />
   <div className="crd-header-text">
-    <p>Delivers Velero as a service for backup and disaster recovery within ManagedControlPlanes.</p>
+    <p>Delivers Velero as a service for backup and disaster recovery within ControlPlanes.</p>
   </div>
 </div>
 

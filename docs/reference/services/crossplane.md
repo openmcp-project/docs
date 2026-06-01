@@ -10,7 +10,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 <div className="crd-header-container">
   <img src="/img/platform/tower_crossplane.png" alt="Crossplane" className="crd-header-icon" />
   <div className="crd-header-text">
-    <p>Delivers Crossplane as a service within ManagedControlPlanes, enabling infrastructure provisioning through composition.</p>
+    <p>Delivers Crossplane as a service within ControlPlanes, enabling infrastructure provisioning through composition.</p>
   </div>
 </div>
 

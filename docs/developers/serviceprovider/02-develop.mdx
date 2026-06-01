@@ -17,7 +17,7 @@ Let's get started!
 
 A service provider consists of the following two major parts, similar to a regular kubernetes controller:
 
-- **A user-facing ServiceProviderAPI**: This allows end users to request a `DomainService` for a `ManagedControlPlane`, e.g. `FooService` or `Velero`.
+- **A user-facing ServiceProviderAPI**: This allows end users to request a `DomainService` for a `ControlPlane`, e.g. `FooService` or `Velero`.
 - **A controller that reconciles the ServiceProviderAPI**: This controller manages the lifecycle of the provided `DomainService` and its API (such as `Foo` or the CRDs of Velero).
 
 For a visual overview of how these components fit into an OpenControlPlane installation, refer to the [service provider deployment model](https://openmcp-project.github.io/docs/about/design/service-provider#deployment-model).
@@ -30,7 +30,7 @@ A service provider operates across multiple clusters. The following table shows 
 |-------------|---------|------------------|
 | `r.PlatformCluster` | Platform Cluster | ProviderConfig (cluster-scoped); image pull secrets (in pod namespace); AccessRequests and kubeconfig secrets (in the per-tenant `mcp--<uuid>` namespace) |
 | `r.OnboardingCluster` | Onboarding Cluster | ServiceProviderAPI objects in `project-<p>--ws-<w>` workspace namespaces |
-| `clusters.MCPCluster` | MCP Cluster (per tenant) | DomainServiceAPI CRDs and deployed resources in a namespace you choose (e.g., `crossplane-system`) |
+| `clusters.MCPCluster` | ControlPlane cluster (per tenant) | DomainServiceAPI CRDs and deployed resources in a namespace you choose (e.g., `crossplane-system`) |
 | `clusters.WorkloadCluster` | Workload Cluster (shared, optional) | DomainService controller workloads in a namespace you choose |
 
 :::info
@@ -74,8 +74,8 @@ This test bootstraps a complete local openMCP installation with all required com
 
 - **The platform cluster** where your service provider is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator)
 - **The onboarding cluster** where end users request the domain service you provider offers.
-- **A managed control plane cluster (MCP)** where your service provider installs its [DomainServiceAPI](https://openmcp-project.github.io/docs/about/design/service-provider#api) and optionally its workload.
-- **An optional workload cluster**, provisioned when using the template flag `-w`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the MCP. This will result in another kind cluster.
+- **A ControlPlane cluster** where your service provider installs its [DomainServiceAPI](https://openmcp-project.github.io/docs/about/design/service-provider#api) and optionally its workload.
+- **An optional workload cluster**, provisioned when using the template flag `-w`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the ControlPlane. This will result in another kind cluster.
 
 :::info
 This means running the above command from the [Service Provider Template Usage](#service-provider-template-usage) section with `-w` like this:
@@ -342,7 +342,7 @@ Your `Reconciler` must implement two methods: `CreateOrUpdate` and `Delete`. The
 
 ### CreateOrUpdate Operation
 
-The template example contains a basic implementation that installs a CRD into the tenant MCP.
+The template example contains a basic implementation that installs a CRD into the tenant ControlPlane.
 
 ```go
 // CreateOrUpdate is called on every add or update event
@@ -364,17 +364,17 @@ func (r *FooServiceReconciler) CreateOrUpdate(ctx context.Context, svcobj *apiv1
 }
 ```
 
-In a real world example like Velero, this step contains installing and reconciling every required resource, including CRDs, namespace(s), service account(s), deployment(s), etc. into the MCP and workload cluster.
+In a real world example like Velero, this step contains installing and reconciling every required resource, including CRDs, namespace(s), service account(s), deployment(s), etc. into the ControlPlane and workload cluster.
 
-The `ClusterContext` provides access to all request specific clusters. This always includes the managed control plane and, when requested, the workload cluster associated with the current request.
+The `ClusterContext` provides access to all request specific clusters. This always includes the ControlPlane and, when requested, the workload cluster associated with the current request.
 
-The workload cluster is optional and will not be available for providers that deploy their workload directly to the managed control plane.
+The workload cluster is optional and will not be available for providers that deploy their workload directly to the ControlPlane.
 
 :::info
 [Cluster and Namespace Context](#cluster-and-namespace-context) provides an overview of available clusters, their purpose and how to access them.
 :::
 
-In addition, `ClusterContext` exposes two `ObjectKeys` that can be used to retrieve the kubeconfig for either the managed control plane or the workload cluster. These kubeconfigs can be passed to a [HelmReleases spec](https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.HelmReleaseSpec) when a service provider uses Flux to deploy its service.
+In addition, `ClusterContext` exposes two `ObjectKeys` that can be used to retrieve the kubeconfig for either the ControlPlane or the workload cluster. These kubeconfigs can be passed to a [HelmReleases spec](https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.HelmReleaseSpec) when a service provider uses Flux to deploy its service.
 
 ```go
 type ClusterContext struct {
@@ -638,9 +638,9 @@ Use a service‑provider–specific prefix for the resource, e.g. rename private
 :::
 
 Also notice the `KubeConfig` section. Your service provider controller is deployed in the Platform cluster. The target controller that your provider is deploying
-will run in either the MCP or the Workload cluster. This depends on your choice, however, it is recommended to deploy into the workload cluster as documented [here](https://openmcp-project.github.io/docs/about/design/service-provider/#non-goals).
+will run in either the ControlPlane or the Workload cluster. This depends on your choice, however, it is recommended to deploy into the workload cluster as documented [here](https://openmcp-project.github.io/docs/about/design/service-provider/#non-goals).
 
-This means that Flux will need a KubeConfig in order to deploy to the ManagedControlPlane cluster. And this is the KubeConfig that is given to Flux in this section.
+This means that Flux will need a KubeConfig in order to deploy to the ControlPlane cluster. And this is the KubeConfig that is given to Flux in this section.
 
 :::info
 Note, that as of this writing, it's a bit difficult to obtain the KubeConfig for the Workload Cluster. MCPCluster KubeConfig is obtained via a AccessRequest. For an example,

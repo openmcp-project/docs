@@ -10,7 +10,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 <div className="crd-header-container">
   <img src="/img/platform/tower_ocm.png" alt="OCM" className="crd-header-icon" />
   <div className="crd-header-text">
-    <p>Delivers the Open Component Model (OCM) as a service within ManagedControlPlanes, enabling secure software delivery and deployment at any scale.</p>
+    <p>Delivers the Open Component Model (OCM) as a service within ControlPlanes, enabling secure software delivery and deployment at any scale.</p>
   </div>
 </div>
 
@@ -38,6 +38,6 @@ spec:
   version: 0.7.0
 ```
 
-The OCM service provider manages the `ocm-k8s-toolkit` controller deployment on your ManagedControlPlane, enabling secure software delivery using the Open Component Model.
+The OCM service provider manages the `ocm-k8s-toolkit` controller deployment on your ControlPlane, enabling secure software delivery using the Open Component Model.
 
 The base installation comes with minimal RBAC settings. To extend permissions, follow the [custom RBAC for OCM](https://github.com/open-component-model/open-component-model/blob/main/kubernetes/controller/docs/getting-started/custom-rbac.md) guide.

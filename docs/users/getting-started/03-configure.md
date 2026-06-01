@@ -124,7 +124,7 @@ The base OCM installation comes with a bare minimum set of RBAC settings. To ext
 
 Congratulations! You have a working ControlPlane with managed services. Here's what you can explore next:
 
-- **[What is a Managed Control Plane?](../concepts/managed-control-plane.md)** — Deeper understanding of ControlPlanes
+- **[What is a ControlPlane?](../concepts/controlplane.md)** — Deeper understanding of ControlPlanes
 - **[Service Providers](../concepts/service-provider.md)** — How managed services work
 - **[Crossplane Service Provider](https://github.com/openmcp-project/service-provider-crossplane)** — Manage cloud infrastructure
 - **[Landscaper Service Provider](https://github.com/openmcp-project/service-provider-landscaper)** — Orchestrate complex workloads
