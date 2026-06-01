@@ -39,8 +39,8 @@ A service provider operates across multiple clusters. During debugging, you need
 | Cluster | What to look for |
 |---------|-----------------|
 | **Platform** | ProviderConfig, AccessRequests, kubeconfig secrets, SP pod logs |
-| **Onboarding** | ManagedControlPlane and ServiceProviderAPI objects |
-| **MCP** | DomainService CRDs and deployed resources |
+| **Onboarding** | ControlPlane and ServiceProviderAPI objects |
+| **ControlPlane** | DomainService CRDs and deployed resources |
 | **Workload** (optional) | DomainService controller workloads |
 
 For a full overview, see [Clusters and Namespaces](../clusters-and-namespaces.md).
@@ -79,7 +79,7 @@ kw flip
 kw bookmark load platform
 ```
 
-This is especially useful when you need to cross-reference resources across the platform, MCP, and workload clusters during a debugging session. See the [kw repo](https://github.com/Diaphteiros/kw) for the full list of commands and features.
+This is especially useful when you need to cross-reference resources across the platform, ControlPlane, and workload clusters during a debugging session. See the [kw repo](https://github.com/Diaphteiros/kw) for the full list of commands and features.
 
 ## Running Your Controller Locally
 
@@ -121,7 +121,7 @@ go run ./cmd/<your-service-provider>/main.go run \
   --verbosity DEBUG
 ```
 
-The `DEV_DEBUG=true` flag activates local debug mode: instead of using the in-cluster API server addresses for the Onboarding, MCP or Workload clusters, the controller reads the `kind.clusters.openmcp.cloud/localhost` annotation from the corresponding `AccessRequest` objects and uses those locally-reachable addresses instead.
+The `DEV_DEBUG=true` flag activates local debug mode: instead of using the in-cluster API server addresses for the Onboarding, ControlPlane or Workload clusters, the controller reads the `kind.clusters.openmcp.cloud/localhost` annotation from the corresponding `AccessRequest` objects and uses those locally-reachable addresses instead.
 :::tip
 Before running the `run` subcommand for the first time, you need to initialize the CRDs on the target clusters by running the `init` subcommand with the same environment variables and flags:
 
@@ -219,7 +219,7 @@ If `init` fails, check its logs for errors (e.g. schema validation failures or m
 
 ### Cluster Access or Kubeconfig Secrets Missing
 
-If your controller fails to connect to the MCP or workload cluster, verify that the AccessRequest was created and that the corresponding kubeconfig secret exists:
+If your controller fails to connect to the ControlPlane or workload cluster, verify that the AccessRequest was created and that the corresponding kubeconfig secret exists:
 
 ```bash
 # On the Platform cluster, in the tenant namespace

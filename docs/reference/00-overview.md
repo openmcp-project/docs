@@ -15,11 +15,11 @@ Resources that end users interact with to consume platform capabilities.
 
 <div className="reference-card">
   <div className="reference-icon-container reference-icon-container-standard">
-    <img src="/img/cp2.png" alt="ManagedControlPlane" className="reference-icon-large" />
+    <img src="/img/cp2.png" alt="ControlPlane" className="reference-icon-large" />
   </div>
   <h3>ManagedControlPlaneV2</h3>
   <p>The primary resource for creating and managing control planes in OpenControlPlane.</p>
-  <a href="/reference/core/managedcontrolplane" className="reference-link">View CRD →</a>
+  <a href="/reference/core/controlplane" className="reference-link">View CRD →</a>
 </div>
 
 <div className="reference-card">
@@ -61,7 +61,7 @@ Resources that end users interact with to consume platform capabilities.
     <img src="/img/platform/tower.png" alt="ServiceProvider" className="reference-icon-large" />
   </div>
   <h3>ServiceProvider</h3>
-  <p>Delivers consumable services to customers via ManagedControlPlanes.</p>
+  <p>Delivers consumable services to customers via ControlPlanes.</p>
   <a href="/reference/operator/providers/serviceprovider" className="reference-link">View CRD →</a>
 </div>
 

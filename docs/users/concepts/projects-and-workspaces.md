@@ -5,10 +5,10 @@ id: projects-and-workspaces
 
 # Projects and Workspaces
 
-Projects and Workspaces are the way OpenControlPlane organizes teams and their ManagedControlPlanes.
+Projects and Workspaces are the way OpenControlPlane organizes teams and their ControlPlanes.
 
-- A **Project** is a logical grouping of ManagedControlPlanes that belong to a team or business unit. It provides a namespace boundary and access control scope.
-- A **Workspace** is a named environment within a Project — for example `dev`, `staging`, or `prod`. Each Workspace can contain multiple ManagedControlPlanes.
+- A **Project** is a logical grouping of ControlPlanes that belong to a team or business unit. It provides a namespace boundary and access control scope.
+- A **Workspace** is a named environment within a Project — for example `dev`, `staging`, or `prod`. Each Workspace can contain multiple ControlPlanes.
 
 This gives teams a clear structure to organize their control planes by environment or purpose.
 

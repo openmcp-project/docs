@@ -25,8 +25,8 @@ Learn the basics of working with OpenControlPlane:
 ### Core Concepts
 
 Understand the building blocks:
-- **[Managed Control Plane](./concepts/managed-control-plane)** - Your dedicated Kubernetes API server
-- **[Projects & Workspaces](./concepts/managed-control-plane)** - Organize teams and environments
+- **[ControlPlane](./concepts/controlplane)** - Your dedicated Kubernetes API server
+- **[Projects & Workspaces](./concepts/controlplane)** - Organize teams and environments
 - **[Service Providers](./concepts/service-provider)** - Deploy services like Crossplane or Landscaper
 
 ### Ecosystem
@@ -46,7 +46,7 @@ Explore the [open-source projects](./ecosystem) that power OpenControlPlane, inc
 <div className="reference-card reference-card-compact">
   <h3>Learn Concepts</h3>
   <p>Understand how OpenControlPlane works.</p>
-  <a href="/users/concepts/managed-control-plane" className="reference-link">Core Concepts →</a>
+  <a href="/users/concepts/controlplane" className="reference-link">Core Concepts →</a>
 </div>
 
 <div className="reference-card reference-card-compact">
