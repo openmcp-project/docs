@@ -85,6 +85,14 @@ const config: Config = {
             from: '/developers/serviceprovider/service-providers',
             to: '/developers/serviceprovider/develop',
           },
+          {
+            from: '/reference/core/managedcontrolplane',
+            to: '/reference/core/controlplane',
+          },
+          {
+            from: '/users/concepts/managed-control-plane',
+            to: '/users/concepts/controlplane',
+          },
         ],
       },
     ],
