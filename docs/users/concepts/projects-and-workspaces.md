@@ -12,6 +12,11 @@ Projects and Workspaces are the way OpenControlPlane organizes teams and their C
 
 This gives teams a clear structure to organize their control planes by environment or purpose.
 
+- **End users** create ControlPlanes within their team's Project and Workspace. → [Getting started](/users/getting-started)
+- **Operators** set up Projects and Workspaces as part of platform onboarding. → [Operator guide](/operators/overview)
+
+**CRD Reference:** [Project](/reference/core/project) · [Workspace](/reference/core/workspace)
+
 :::note
 Full documentation for Projects and Workspaces is coming soon. User management via Projects and Workspaces will be covered in the [Production Setup](/operators/production-setup/production-overview) section.
 :::
