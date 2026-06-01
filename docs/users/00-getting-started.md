@@ -3,9 +3,36 @@ sidebar_position: 0
 id: getting-started
 ---
 
+import { User, Settings, Puzzle } from 'lucide-react';
+
 # Welcome
 
 OpenControlPlane is a platform that lets you create and manage Kubernetes-based control planes for your teams. Think of it as a way to deliver cloud services to your organization—everything from databases and message queues to CI/CD pipelines and monitoring tools—all through a unified Kubernetes API.
+
+<div className="reference-grid">
+
+<div className="reference-card">
+  <div style={{marginBottom: '12px', color: 'var(--teal-6)'}}><User size={48} /></div>
+  <h3>End User</h3>
+  <p>Your platform is already set up. Create control planes, request services, and manage your workloads.</p>
+  <span style={{fontWeight: 600, fontSize: '0.9rem', color: 'var(--teal-7)'}}>You're in the right place ✓</span>
+</div>
+
+<div className="reference-card">
+  <div style={{marginBottom: '12px', color: 'var(--teal-6)'}}><Settings size={48} /></div>
+  <h3>Platform Owner</h3>
+  <p>Deploy and operate OpenControlPlane for your teams. Configure providers and set up the platform infrastructure.</p>
+  <a href="/operators/overview" className="reference-link">Operators Guide →</a>
+</div>
+
+<div className="reference-card">
+  <div style={{marginBottom: '12px', color: 'var(--teal-6)'}}><Puzzle size={48} /></div>
+  <h3>Service Provider</h3>
+  <p>Build and publish services on OpenControlPlane. Extend the platform with custom providers and offerings.</p>
+  <a href="/developers/overview" className="reference-link">Developer Docs →</a>
+</div>
+
+</div>
 
 :::info Prerequisites
 Requires a deployed OpenControlPlane platform. Operators: see the [Operators section](/operators/quickstart).
