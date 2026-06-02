@@ -5,19 +5,19 @@ id: debugging
 
 # Debug
 
-This guide helps you run and debug your service provider during local development. It assumes you are developing based on the [service-provider-template](https://github.com/openmcp-project/service-provider-template) and running a local OpenMCP installation via [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind).
+This guide helps you run and debug your service provider during local development. It assumes you are developing based on the [service-provider-template](https://github.com/openmcp-project/service-provider-template) and running a local OpenControlPlane installation via [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind).
 
 ## Local Development Setup
 
 ### Deploy a Local Installation
 
-Use the `local-dev.sh` script from [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) to spin up a full local OpenMCP environment:
+Use the `local-dev.sh` script from [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) to spin up a full local OpenControlPlane environment:
 
 ```bash
 ./hack/local-dev.sh deploy
 ```
 
-This creates a KinD-based Platform cluster with the OpenMCP operator, cluster provider, and any configured service providers.
+This creates a KinD-based Platform cluster with the OpenControlPlane operator, cluster provider, and any configured service providers.
 
 To tear everything down and start fresh:
 
