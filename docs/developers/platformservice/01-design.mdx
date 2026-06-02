@@ -35,7 +35,7 @@ graph LR
 A consumer may be a human or another system.
 
 :::info
-A Platform Service may introduce a user-facing `API` but is not required to do so. Most Platform Service operate without exposing user-facing APIs and provide their capabilities internally to the Platform Owner and Service Provider layers (see [Domain](#domain) and [Service Provider Comparison](#comparison-to-service-providers)).
+A Platform Service may introduce a user-facing `API` but is not required to do so. Most Platform Services operate without exposing user-facing APIs and provide their capabilities internally to the Platform Owner and Service Provider layers (see [Domain](#domain) and [Service Provider Comparison](#comparison-to-service-providers)).
 :::
 
 ### Config
@@ -54,7 +54,7 @@ graph LR
 
 ### Deployment Model
 
-A Platform Service runs on the platform cluster, reconciles its platform cluster `API` and/or onboarding cluster `EndUserAPI`. It creates and manages resources on the platform cluster.
+A Platform Service runs on the platform cluster and reconciles its platform cluster `API` and/or onboarding cluster `EndUserAPI`. It creates and manages resources on the platform cluster.
 
 ```mermaid
 graph TD
@@ -65,7 +65,7 @@ graph TD
 
     %% Platform Cluster
     subgraph PlatformCluster
-        OP[openMCP-operator]
+        OP[openmcp-operator]
         PS[PlatformService]
         PSC[Config]
         API[API]
