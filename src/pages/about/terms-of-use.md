@@ -7,7 +7,7 @@ description: Terms of Use for OpenControlPlane
 
 ## Introduction
 
-This website ([openmcp-project.github.io/docs](https://openmcp-project.github.io/docs)) is maintained by Linux Foundation Europe as part of the OpenControlPlane project. By accessing or using this website, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use this website.
+This website ([open-control-plane.io](https://open-control-plane.io/)) is maintained by Linux Foundation Europe as part of the OpenControlPlane project. By accessing or using this website, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use this website.
 
 ## Trademarks
 
