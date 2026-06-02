@@ -32,9 +32,9 @@ kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get kustomizations.kustom
 
 You should see the `flux-system` and `bootstrap` Kustomizations in Ready state.
 
-## Inspect the deployed openMCP components
+## Inspect the deployed OpenControlPlane components
 
-Check the deployed openMCP components:
+Check the deployed OpenControlPlane components:
 
 ```shell
 kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get pods -n openmcp-system

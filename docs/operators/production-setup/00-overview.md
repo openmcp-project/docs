@@ -29,7 +29,7 @@ The bootstrapper sets up a GitOps process: the desired state of your landscape i
 ```mermaid
 flowchart TD
     subgraph OCI Registry
-        A[openMCP Root OCM Component]
+        A[OpenControlPlane Root OCM Component]
     end
 
     subgraph GitRepo[Git Repository]

@@ -70,7 +70,7 @@ git submodule update --init --recursive
 task test-e2e
 ```
 
-This test bootstraps a complete local openMCP installation with all required components, including:
+This test bootstraps a complete local OpenControlPlane installation with all required components, including:
 
 - **The platform cluster** where your service provider is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator)
 - **The onboarding cluster** where end users request the domain service you provider offers.
@@ -338,7 +338,7 @@ When a referenced secret changes, the runtime lists all `ServiceProviderAPI` obj
 
 ## Edit the ServiceProviderReconciler
 
-Your `Reconciler` must implement two methods: `CreateOrUpdate` and `Delete`. The template sets up your reconciler together with the generic reconciler from `pkg/runtime`, which handles openMCP-specifics (cluster access, config updates, etc.).
+Your `Reconciler` must implement two methods: `CreateOrUpdate` and `Delete`. The template sets up your reconciler together with the generic reconciler from `pkg/runtime`, which handles OpenControlPlane-specifics (cluster access, config updates, etc.).
 
 ### CreateOrUpdate Operation
 
@@ -442,7 +442,7 @@ The template code runs the provider with full admin permissions. Before releasin
 
 ## Taskfile Usage
 
-OpenMCP controllers use `task` instead of `make` to generate code, build your controller image, etc. The most important developer commands are:
+OpenControlPlane controllers use `task` instead of `make` to generate code, build your controller image, etc. The most important developer commands are:
 
 - **task generate** to regenerate code after API changes
 - **task build:img:build-test** to build an image for local testing

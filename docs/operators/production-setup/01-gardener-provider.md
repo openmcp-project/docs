@@ -37,7 +37,7 @@ mkdir kubeconfigs
 
 ## Create a Gardener Shoot for the Platform Cluster
 
-openMCP requires a running Kubernetes cluster that acts as the platform cluster.
+OpenControlPlane requires a running Kubernetes cluster that acts as the platform cluster.
 The platform cluster hosts the openmcp-operator and all service providers, cluster providers and platform services.
 In this example, we will create a Gardener Shoot cluster that acts as the platform cluster. See the [Gardener documentation](https://gardener.cloud/docs/getting-started/shoots/) for more information on how to create a Gardener Shoot cluster.
 
@@ -92,7 +92,7 @@ Download the admin kubeconfig of the `platform` Shoot cluster using the script c
 
 Replace `<your-org>` and `<your-repo>` with your Git organization and repository name.
 The environment can be set to the logical environment name (e.g. `dev`, `prod`, `live-eu-west`) that will be used in the Git repository to separate different environments.
-The branch can be set to the desired branch name in the Git repository that will be used to store the desired state of the openMCP landscape.
+The branch can be set to the desired branch name in the Git repository that will be used to store the desired state of the OpenControlPlane landscape.
 
 Get the latest version of the `github.com/openmcp/openmcp` root component:
 
@@ -201,7 +201,7 @@ flux-system   flux-system   3m15s   False   Source artifact not found, retrying 
 
 This error is also expected as the GitRepository does not exist yet. The `openmcp-bootstrapper` will create the GitRepository in the next step.
 
-## Run the `openmcp-bootstrapper` CLI tool to deploy openMCP to the Kind cluster
+## Run the `openmcp-bootstrapper` CLI tool to deploy OpenControlPlane to the Kind cluster
 
 Update the bootstrapping configuration file (bootstrapper-config.yaml) to include the Gardener cluster provider and the openmcp-operator configuration.
 
@@ -519,7 +519,7 @@ Replace also `<kubernetes-version>` with the desired Kubernetes version (e.g. `1
 Please adjust the shoot configuration based on your specific needs, e.g. change `Evaluation` to `Production` as purpose, if you are planning to use the ControlPlane for productive purposes. For all the details reg. Shoot configuration, please consult the respective Gardener documentation.
 :::
 
-Now run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy openMCP to the `platform` Gardener Shoot cluster:
+Now run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy OpenControlPlane to the `platform` Gardener Shoot cluster:
 
 ```shell
 docker run --rm -v ./config:/config -v ./kubeconfigs:/kubeconfigs ghcr.io/openmcp-project/images/openmcp-bootstrapper:${OPENMCP_BOOTSTRAPPER_VERSION} manage-deployment-repo --git-config /config/git-config.yaml --kubeconfig /kubeconfigs/platform.kubeconfig --extra-manifest-dir /config/extra-manifests /config/bootstrapper-config.yaml
@@ -551,7 +551,7 @@ Info: Applying Kustomization manifest: default/bootstrap
 
 ## Inspect the Git repository
 
-The desired state of the openMCP landscape has now been created in the Git repository and should look similar to the following structure:
+The desired state of the OpenControlPlane landscape has now been created in the Git repository and should look similar to the following structure:
 
 ```shell
 .
@@ -599,5 +599,5 @@ The desired state of the openMCP landscape has now been created in the Git repos
     └── root-kustomization.yaml
 ```
 
-The `envs/<environment-name>` folder contains the Kustomization files that are used by FluxCD to deploy openMCP to the platform cluster.
+The `envs/<environment-name>` folder contains the Kustomization files that are used by FluxCD to deploy OpenControlPlane to the platform cluster.
 The `resources` folder contains the base resources that are used by the Kustomization files in the `envs/<environment-name>` folder.
