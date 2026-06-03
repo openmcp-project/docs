@@ -23,7 +23,7 @@ The criteria are **tooling-agnostic**. They describe what a service provider mus
 
 ### 1. Deletion behaviour
 
-When a user triggers an uninstall of a domain service through the `ServiceProviderAPI`, the service provider must not blindly remove the domain service and its CRDs from the managed `ControlPlane`. Domain services like Crossplane, Flux, or ESO install CRDs into the `ControlPlane`, and users may have created instances of those CRDs. Deleting the CRDs while custom resources still exist would leave those resources orphaned in the cluster or cause managed resources in external systems to escape the platform's control.
+When a user requests to uninstall a service through the `ServiceProviderAPI`, the service provider must not blindly remove the service and its CRDs from the managed `ControlPlane`. Services like Crossplane, Flux, or ESO install CRDs into the `ControlPlane`, and users may have created instances of those CRDs. Deleting the CRDs while custom resources still exist would leave those resources orphaned in the cluster or cause managed resources in external systems to escape the platform's control.
 
 Before uninstalling, the service provider checks whether any custom resources belonging to the domain service still exist on the managed `ControlPlane`. If they do, the provider blocks deletion and surfaces a clear message explaining what needs to be cleaned up first.
 
