@@ -129,7 +129,7 @@ metadata:
   name: my-controlplane
   namespace: project-platform-team--ws-dev
 spec:
-  version: 0.9.1
+  version: 0.9.2
 ```
 
 ```bash
