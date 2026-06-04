@@ -148,7 +148,7 @@ NAME                              READY   STATUS    RESTARTS   AGE
 kro-7d9c6f8b54-abcde              1/1     Running   0          45s
 ```
 
-The chart source, image pull secret, and Helm values are configured cluster-wide through the `ProviderConfig` maintained by your platform operator. See the [service-provider-kro README](https://github.com/openmcp-project/service-provider-kro#providerconfig) for the full set of tunables.
+The chart source, image pull secret, and Helm values are configured cluster-wide through the `ProviderConfig` maintained by your platform owner. See the [service-provider-kro README](https://github.com/openmcp-project/service-provider-kro#providerconfig) for the full set of tunables.
 
 </TabItem>
 </Tabs>
