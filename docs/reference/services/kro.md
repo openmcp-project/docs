@@ -41,4 +41,4 @@ spec:
 
 The kro service provider installs and manages [kro](https://kro.run) on workload clusters via Flux HelmReleases. The chart source, image pull secret, and Helm values are configured cluster-wide through the `ProviderConfig` maintained by the platform operator.
 
-The name of the `Kro` resource **must** match the name of your ManagedControlPlane. This guarantees a single kro installation per control plane.
+The name of the `Kro` resource **must** match the name of your `ControlPlane`. This guarantees a single kro installation per control plane.
