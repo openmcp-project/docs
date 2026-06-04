@@ -42,14 +42,12 @@ export default function Footer() {
       <div className="ocp-footer__copyright-row">
         <div className="ocp-footer__inner">
           <p>
-            <strong>Copyright © Linux Foundation Europe.</strong>{' '}
-            OpenControlPlane is a project of the NeoNephos Foundation. For
-            applicable policies including privacy policy, terms of use and trademark usage
-            guidelines, please see{' '}
-            <a href="https://linuxfoundation.eu" target="_blank" rel="noopener noreferrer">
-              https://linuxfoundation.eu
+            Copyright Linux Foundation Europe. For web site terms of use, trademark
+            policy and other project policies please see{' '}
+            <a href="https://linuxfoundation.eu/en/policies" target="_blank" rel="noopener noreferrer">
+              https://linuxfoundation.eu/en/policies
             </a>
-            . Linux is a registered trademark of Linus Torvalds.
+            .
           </p>
         </div>
       </div>
