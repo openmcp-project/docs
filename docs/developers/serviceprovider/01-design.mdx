@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 1
 id: design
 ---
 
@@ -73,7 +73,7 @@ sequenceDiagram
     %% messages
     usr->>sp: request domain service through ServiceProviderAPI
     sp->>ds: deploys
-    sp-->>usr: installs DomainServiceAPI in user MCP
+    sp-->>usr: installs DomainServiceAPI in user ControlPlane
     usr->>ds: uses domain service through DomainServiceAPI
 ```
 
@@ -105,7 +105,7 @@ End users need to be aware of a) the available managed services, and b) valid in
 
 A) The available service offerings are made visible by installing the `ServiceProviderAPI` on the `OnboardingCluster` (see [deployment model](#deployment-model)). This ensures that any platform tenant is aware of all available `ServiceProviderAPIs`. In other words, the platform does not hide its end-user-facing feature set, even if a user belongs to a tenant that cannot successfully consume a specific `ServiceProviderAPI`.
 
-B) Valid input values are communicated through a yet-to-be-defined 'Marketplace'-like API provided by a `PlatformService` (more information with regard to [Discoverability of Open Control Plane components](https://github.com/openmcp-project/backlog/issues/384)). Note: This is still work in progress and outside the scope of this document.
+B) Valid input values are communicated through a yet-to-be-defined 'Marketplace'-like API provided by a `PlatformService` (more information with regard to [Discoverability of OpenControlPlane components](https://github.com/openmcp-project/backlog/issues/384)). Note: This is still work in progress and outside the scope of this document.
 
 ### Deployment Model
 
@@ -120,12 +120,12 @@ graph TD
 
     %% Platform Cluster
     subgraph PlatformCluster
-        SPO[openMCP-operator]
+        SPO[openmcp-operator]
         SP[ServiceProvider]
         SPC[ServiceProviderConfig]
     end
 
-    %% MCP Cluster
+    %% ControlPlane Cluster
     subgraph MCPCluster
         DS[DomainService]
         DSAPI[DomainServiceAPI]
@@ -149,7 +149,7 @@ graph TD
         Landscaper
     end
 
-    %% MCP Cluster
+    %% ControlPlane Cluster
     subgraph MCPCluster
         Crossplane
         Installation
@@ -199,14 +199,14 @@ The following table provides a simplified overview of the layers within a `Servi
 
 This section outlines the main functionality implemented within the runtime. Currently, the focus is on establishing consistency across `ServiceProvider` implementations. However, this section can be extended in the future to include more generic `ServiceProvider` concepts that are handled within the runtime.
 
-Main tasks towards MCP/Workload Clusters (based on watching the `ServiceProviderAPI`):
+Main tasks towards ControlPlane/Workload Clusters (based on watching the `ServiceProviderAPI`):
 
 - Observe Service Deployment (Drift Detection) -> IN: context, apiObject, reconcileScope; OUT: bool[exists, drift], error
 - Create Service Deployment (Init Lifecycle) -> IN: context, apiObject, reconcileScope; OUT: error
 - Update Service Deployment (Reconcile Drift) -> IN: context, apiObject, reconcileScope; OUT: error
 - Delete Service Deployment (End Lifecycle) -> IN: context, apiObject, reconcileScope; OUT: error
 
-In this context, `reconcileScope` holds the `ServiceProviderConfig` and provides clients to access onboarding, mcp and workload clusters.
+In this context, `reconcileScope` holds the `ServiceProviderConfig` and provides clients to access onboarding, ControlPlane and workload clusters.
 
 Main tasks towards Platform Cluster:
 

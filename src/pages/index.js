@@ -242,24 +242,24 @@ export default function Home() {
   }
 
   return (
-    <Layout title={`${siteConfig.title}`} description="Documentation for open control plane">
+    <Layout title={`${siteConfig.title}`} description="Documentation for OpenControlPlane">
       <div className="lp-home">
         <div className="flex-container">
           <div className="main">
             <h1 className="heading">
-              <span className="name clip">open control plane docs</span>
+              <span className="name clip">OpenControlPlane docs</span>
               <span className="text">Give your teams the power to run robust, compliant clouds. Public, private, or Sovereign.</span>
             </h1>
             <div className="container" style={{ padding: "0" }}>
               <div className="actions">
                 <div className="action medium alt">
-                  <a href="/docs/users/getting-started">Get Started</a>
+                  <a href="/users/getting-started">Get Started</a>
                 </div>
                 <div className="action medium alt">
-                  <a href="/docs/operators/getting-started">Run Your Platform</a>
+                  <a href="/operators/overview">Run Your Platform</a>
                 </div>
                 <div className="action medium alt">
-                  <a href="/docs/developers/getting-started">Build Together</a>
+                  <a href="/developers/overview">Build Together</a>
                 </div>
               </div>
             </div>
@@ -662,7 +662,7 @@ export default function Home() {
         <section className="get-started-section gray-white">
           <Link
             className="button button--primary button--lg"
-            to="/developers/getting-started"
+            to="/developers/overview"
           >
             Start contributing
           </Link>
@@ -939,7 +939,7 @@ spec:
             <div className="section-header section-header-right">
               <div className="section-header-content">
                 <h2 className="section-main-title"><i>READY-TO-USE</i> CONTROL PLANES</h2>
-                <p className="section-subtitle">Provision, manage, secure all instances on open control plane platform</p>
+                <p className="section-subtitle">Provision, manage, secure all instances on OpenControlPlane platform</p>
                 {/* Subsection navigation */}
                 <div className="section-nav-dots">
                   <button
@@ -966,7 +966,7 @@ spec:
                 </div>
               </div>
               <div className="section-header-right-col">
-                <Link className="section-header-cta" to="/operators/overview">Read operator guides →</Link>
+                <Link className="section-header-cta" to="/operators/quickstart">Read operator guides →</Link>
                 <Link className="section-header-cta" to="/developers/general">Contribute PlatformProvider →</Link>
               </div>
             </div>
@@ -1069,7 +1069,7 @@ spec:
             <div className="section-header">
               <div className="section-header-content">
                 <h2 className="section-main-title">RUNS EVERYWHERE</h2>
-                <p className="section-subtitle">Open Control Plane can be installed wherever Kubernetes is available.</p>
+                <p className="section-subtitle">OpenControlPlane can be installed wherever Kubernetes is available.</p>
                 {/* Subsection navigation */}
                 <div className="section-nav-dots">
                   <button
@@ -1096,7 +1096,7 @@ spec:
                 </div>
               </div>
               <div className="section-header-right-col">
-                <Link className="section-header-cta" to="/operators/overview">Read operator guides →</Link>
+                <Link className="section-header-cta" to="/operators/quickstart">Read operator guides →</Link>
                 <Link className="section-header-cta" to="/developers/clusterprovider/develop">Contribute ClusterProvider →</Link>
               </div>
             </div>
@@ -1221,7 +1221,7 @@ spec:
                 <div className="typing-open-source">100% open-source</div>
               </div>
               <p>
-                This project started as an inner-source initiative within SAP. Thanks to <b>NeonEphos</b>, it now operates 100% publicly and has been donated to the <Link to="https://github.com/openmcp-project" target="_blank" rel="noopener noreferrer">OpenControlPlane organization</Link>.
+                This project started as an inner-source initiative within SAP. Thanks to <b>NeoNephos</b>, it now operates 100% publicly and has been donated to the <Link to="https://github.com/openmcp-project" target="_blank" rel="noopener noreferrer">OpenControlPlane organization</Link>.
                 <br />
                 <br />
                 <b>
@@ -1241,7 +1241,7 @@ spec:
               </Link>
               <br />
               <span>
-                and learn <Link to="/developers/getting-started">how to contribute</Link>
+                and learn <Link to="/developers/overview">how to contribute</Link>
               </span>
               <br />
               <br />
