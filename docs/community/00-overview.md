@@ -50,11 +50,11 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
   <div className="sig-details" style={{margin: '16px 0 20px 0'}}>
     <div><strong>Leads:</strong> Maximilian Techritz, Christopher Junk (SAP)</div>
     <div><strong>Meetings:</strong> Bi-weekly, Wednesday 3PM CET</div>
-    <div><strong>Mailing List:</strong> opencontrolplane-extensibility@lists.neonephos.org</div>
+    <div><strong>Mailing List:</strong> openMCP-extensibility@lists.neonephos.org</div>
   </div>
 
   <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '0'}}>
-    <a href="https://lists.neonephos.org/g/opencontrolplane-extensibility/" className="subscribe-button">
+    <a href="https://lists.neonephos.org/g/openMCP-extensibility/" className="subscribe-button">
       Subscribe to Mailing List
     </a>
   </div>
@@ -80,6 +80,7 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
 - [Landscaper service provider](https://github.com/openmcp-project/service-provider-landscaper)
 - [Velero service provider](https://github.com/openmcp-project/service-provider-velero)
 - [OCM service provider](https://github.com/open-component-model/service-provider-ocm)
+- [Kro service provider](https://github.com/openmcp-project/service-provider-kro)
 - [Service provider template](https://github.com/openmcp-project/repository-template)
 
 **Cluster Providers:**
