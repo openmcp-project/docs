@@ -137,6 +137,7 @@ const config: Config = {
           sidebarId: 'referenceSidebar',
           position: 'right',
           label: 'CRD Browser',
+          className: 'navbar-crd-browser',
         },
         {
           href: 'https://github.com/openmcp-project/docs',

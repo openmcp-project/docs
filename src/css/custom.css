@@ -2538,6 +2538,54 @@ body[class*="docs-doc-id-reference"] .row {
 
 
 
+/* ===== CRD Browser Navbar Button ===== */
+.navbar-crd-browser {
+  padding: 6px 16px !important;
+  border-radius: 100px !important;
+  background: linear-gradient(135deg, var(--teal-6) 0%, var(--teal-7) 100%) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--teal-7) 35%, transparent);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
+  position: relative;
+  overflow: hidden;
+  margin-left: 6px;
+}
+
+.navbar-crd-browser::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 55%);
+  pointer-events: none;
+}
+
+.navbar-crd-browser:hover {
+  background: linear-gradient(135deg, var(--teal-7) 0%, var(--teal-10) 100%) !important;
+  color: var(--teal-2) !important;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--teal-7) 50%, transparent) !important;
+  transform: translateY(-2px);
+}
+
+.navbar-crd-browser:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--teal-7) 30%, transparent) !important;
+}
+
+[data-theme='dark'] .navbar-crd-browser {
+  background: linear-gradient(135deg, var(--teal-7) 0%, var(--teal-10) 100%) !important;
+  color: var(--teal-2) !important;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--teal-10) 50%, transparent);
+}
+
+[data-theme='dark'] .navbar-crd-browser:hover {
+  background: linear-gradient(135deg, var(--teal-6) 0%, var(--teal-7) 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--teal-6) 45%, transparent) !important;
+}
+
 /* ===== Role-based Page Header Accents ===== */
 /* Add subtle top border to main content based on current section */
 article[data-role="enduser"] {
