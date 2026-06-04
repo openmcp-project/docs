@@ -423,6 +423,25 @@ func (r *FooServiceReconciler) Delete(ctx context.Context, obj *apiv1alpha1.FooS
 }
 ```
 
+### Block deletion while user resources exist
+
+A naive `Delete` implementation removes the domain CRDs from the `ControlPlane` as soon as the user deletes the `ServiceProviderAPI`. Domain services such as Flux, Crossplane, or ESO install CRDs (e.g. `GitRepository`, `Bucket`, `ExternalSecret`) into the `ControlPlane`, and end users typically create custom resources of those CRDs. Removing the CRDs while user instances still exist orphans those resources in the cluster and can leave external systems (object storage, git repositories, secrets in vaults) escaping platform control.
+
+Quality criterion [Deletion behaviour](./quality-criteria#1-deletion-behaviour) requires the service provider to block deletion in this case. The expected flow inside `Delete`:
+
+1. Before removing any managed resource, list the domain CRs on `clusters.MCPCluster` for each kind the provider installs.
+2. If any instance exists, do **not** delete the managed resources. Set `Status.Phase = Terminating` and surface a `DeletionBlocked` condition (`type: DeletionBlocked`, `status: True`, `reason: UserResourcesPresent`, `message:` naming the offending kinds and counts) so the end user can see what to clean up.
+3. Return `ctrl.Result{RequeueAfter: ...}` so the controller re-checks once the user has cleaned up.
+4. Only when no user CRs remain, proceed with the existing teardown (delete CRDs, namespaces, workloads, etc.).
+
+:::warning
+There is no generic way to enumerate every CRD a domain service installs, so each provider must list the kinds it knows it owns. A force-delete escape hatch is intentionally not offered today; if you need one, raise it as a discussion before implementing it ad-hoc.
+:::
+
+:::info
+The [service-provider-template](https://github.com/openmcp-project/service-provider-template) does not yet provide a reference implementation for this check. Progress is tracked in [openmcp-project/service-provider-template#88](https://github.com/openmcp-project/service-provider-template/issues/88).
+:::
+
 ## Restrict Cluster Access
 
 The template code runs the provider with full admin permissions. Before releasing you provider, restrict its required permissions with the [ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/clusteraccess.go#L103). There are multiple occurrences in the `main.go` service provider setup.
