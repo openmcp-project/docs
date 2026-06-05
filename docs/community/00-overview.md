@@ -55,7 +55,9 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
 
   <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '0'}}>
     <a href="https://lists.neonephos.org/g/opencontrolplane-extensibility/" className="subscribe-button">
-      Subscribe to Mailing List
+      <Mail size={18} strokeWidth={2.5} className="subscribe-button-icon" />
+      <span>Subscribe to Mailing List</span>
+      <span className="subscribe-button-arrow" aria-hidden="true">→</span>
     </a>
   </div>
 </div>
