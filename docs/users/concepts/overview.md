@@ -30,6 +30,6 @@ How OpenControlPlane organizes teams and their `ControlPlanes`. Projects group `
 
 The three provider types that extend an OpenControlPlane environment: **Service Providers** add capabilities to individual `ControlPlanes`, **Platform Services** add system-wide infrastructure, and **Cluster Providers** manage the underlying Kubernetes clusters.
 
-**→** [Operator guide](/operators/overview) · [Developer guide](/developers/overview) · [Contribute](https://github.com/openmcp-project/community)
+**→** [Operator guide](/operators/overview) · [Developer guide](/developers/overview) · [Contribute](/community/overview)
 
 <div style={{clear: 'both'}} />
