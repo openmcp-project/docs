@@ -2169,19 +2169,6 @@ body[class*="docs-doc-id-reference"] .row {
   font-weight: 400;
 }
 
-.sig-mailing-list {
-  display: inline-block;
-  font-family: var(--ifm-font-family-monospace, ui-monospace, SFMono-Regular, Menlo, monospace);
-  font-size: 0.9em;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #ffffff !important;
-  padding: 2px 8px;
-  border-radius: 6px;
-  text-shadow: none !important;
-  word-break: break-all;
-}
-
 .sig-details strong {
   color: white !important;
   font-weight: 600;
