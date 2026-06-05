@@ -6,7 +6,7 @@ const PERSONAS = [
     key: 'user',
     icon: User,
     title: 'End User',
-    description: 'Create `ControlPlanes`, request services, and manage your custom resources. Your platform is already set up by a Platform Owner.',
+    description: '**Create** **`ControlPlanes`**, request services, and manage your custom resources.\n\nThis requires a running platform already set up by a Platform Owner.',
     href: '/users/getting-started',
     linkLabel: 'End User Guide →',
   },
@@ -14,7 +14,7 @@ const PERSONAS = [
     key: 'operator',
     icon: Settings,
     title: 'Platform Owner',
-    description: 'Deploy and operate OpenControlPlane for your End Users. Configure providers and set up the platform infrastructure.',
+    description: 'Deploy and **operate the platform** infrastructure for your organization.\n\nThis gives End Users a place to create `ControlPlanes` and consume services.',
     href: '/operators/overview',
     linkLabel: 'Operators Guide →',
   },
@@ -22,21 +22,21 @@ const PERSONAS = [
     key: 'developer',
     icon: Puzzle,
     title: 'Service Provider',
-    description: 'Build and publish services on OpenControlPlane. Extend the platform with custom providers and offerings that End Users can use.',
+    description: 'Build and publish custom providers and service offerings.\n\nThis **extends** the platform with services that End Users can request.',
     href: '/developers/overview',
     linkLabel: 'Developer Docs →',
   },
 ];
 
 function renderDescription(text) {
-  const parts = text.split(/(`[^`]+`)/g);
-  return parts.map((part, i) =>
-    part.startsWith('`') && part.endsWith('`') ? (
-      <code key={i}>{part.slice(1, -1)}</code>
-    ) : (
-      <React.Fragment key={i}>{part}</React.Fragment>
-    )
-  );
+  const parts = text.split(/(\*\*`[^`]+`\*\*|\*\*[^*]+\*\*|`[^`]+`|\n)/g);
+  return parts.map((part, i) => {
+    if (part === '\n') return <br key={i} />;
+    if (part.startsWith('**`') && part.endsWith('`**')) return <strong key={i}><code>{part.slice(3, -3)}</code></strong>;
+    if (part.startsWith('**') && part.endsWith('**')) return <strong key={i}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith('`') && part.endsWith('`')) return <code key={i}>{part.slice(1, -1)}</code>;
+    return <React.Fragment key={i}>{part}</React.Fragment>;
+  });
 }
 
 export default function PersonaCards({ active }) {
