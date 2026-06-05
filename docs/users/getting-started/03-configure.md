@@ -160,7 +160,7 @@ The chart source, image pull secret, and Helm values are configured cluster-wide
 Congratulations! You have a working ControlPlane with managed services. Here's what you can explore next:
 
 - **[What is a ControlPlane?](../concepts/controlplane.md)** — Deeper understanding of ControlPlanes
-- **[Service Providers](../concepts/service-provider.md)** — How managed services work
+- **[Service Providers](../concepts/providers.md)** — How managed services work
 - **[Crossplane Service Provider](https://github.com/openmcp-project/service-provider-crossplane)** — Manage cloud infrastructure
 - **[Landscaper Service Provider](https://github.com/openmcp-project/service-provider-landscaper)** — Orchestrate complex workloads
 - **[OCM Service Provider](https://github.com/open-component-model/service-provider-ocm)** — Deliver and deploy software with the Open Component Model

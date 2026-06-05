@@ -31,7 +31,7 @@ Learn the basics of working with OpenControlPlane:
 Understand the building blocks:
 - **[`ControlPlanes`](./concepts/controlplane)** - Your dedicated Kubernetes API server
 - **[`Projects` & `Workspaces`](./concepts/controlplane)** - Organize teams and environments
-- **[Service Providers](./concepts/service-provider)** - Deploy services like Crossplane or Landscaper
+- **[Service Providers](./concepts/providers)** - Deploy services like Crossplane or Landscaper
 
 ### Ecosystem
 
