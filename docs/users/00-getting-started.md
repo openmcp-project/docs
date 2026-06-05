@@ -7,14 +7,14 @@ import { User, Settings, Puzzle } from 'lucide-react';
 
 # Welcome
 
-OpenControlPlane is a platform that lets you create and manage Kubernetes-based control planes for your teams. Think of it as a way to deliver cloud services to your organization—everything from databases and message queues to CI/CD pipelines and monitoring tools—all through a unified Kubernetes API.
+OpenControlPlane is a platform that lets you create and manage Kubernetes-based `ControlPlanes` for your teams. Think of it as a way to deliver cloud services to your organization. Everything from databases and message queues to CI/CD pipelines and monitoring tools. Everything through via **one API**.
 
 <div className="reference-grid">
 
 <div className="reference-card">
   <div style={{marginBottom: '12px', color: 'var(--teal-6)'}}><User size={48} /></div>
   <h3>End User</h3>
-  <p>Your platform is already set up. Create control planes, request services, and manage your workloads.</p>
+  <p>Your platform is already set up. Create `ControlPlanes`, request services, and manage your custom resources.</p>
   <span style={{fontWeight: 600, fontSize: '0.9rem', color: 'var(--teal-7)'}}>You're in the right place ✓</span>
 </div>
 
@@ -52,8 +52,8 @@ Learn the basics of working with OpenControlPlane:
 ### Core Concepts
 
 Understand the building blocks:
-- **[ControlPlane](./concepts/controlplane)** - Your dedicated Kubernetes API server
-- **[Projects & Workspaces](./concepts/controlplane)** - Organize teams and environments
+- **[`ControlPlanes`](./concepts/controlplane)** - Your dedicated Kubernetes API server
+- **[`Projects` & `Workspaces`](./concepts/controlplane)** - Organize teams and environments
 - **[Service Providers](./concepts/service-provider)** - Deploy services like Crossplane or Landscaper
 
 ### Ecosystem
