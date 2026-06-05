@@ -2169,6 +2169,100 @@ body[class*="docs-doc-id-reference"] .row {
   font-weight: 400;
 }
 
+/* SIG meta block — reusable directory-style fact list for SIG cards */
+.reference-card-featured .sig-meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 20px;
+  margin: 18px 0 24px 0;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.reference-card-featured .sig-meta > div {
+  display: contents;
+}
+
+.reference-card-featured .sig-meta dt {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 4px 0;
+  text-shadow: none !important;
+}
+
+.reference-card-featured .sig-meta dd {
+  color: #ffffff !important;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 4px 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Action row — primary subscribe button + secondary link button */
+.reference-card-featured .sig-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4px;
+}
+
+/* Secondary action button - outlined, sits next to the primary subscribe button */
+.reference-card-featured a.sig-secondary-button,
+.reference-card-featured a.sig-secondary-button:link,
+.reference-card-featured a.sig-secondary-button:visited {
+  background: transparent !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255, 255, 255, 0.7) !important;
+  font-weight: 600 !important;
+  padding: 12px 22px !important;
+  border-radius: 999px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 1rem !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  letter-spacing: 0.01em !important;
+}
+
+.reference-card-featured a.sig-secondary-button .sig-secondary-button-icon,
+.reference-card-featured a.sig-secondary-button svg {
+  color: #ffffff !important;
+  flex-shrink: 0;
+}
+
+.reference-card-featured a.sig-secondary-button:hover,
+.reference-card-featured a.sig-secondary-button:focus-visible {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  text-decoration: none !important;
+}
+
+[data-theme='dark'] .reference-card-featured a.sig-secondary-button,
+[data-theme='dark'] .reference-card-featured a.sig-secondary-button:link,
+[data-theme='dark'] .reference-card-featured a.sig-secondary-button:visited {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-theme='dark'] .reference-card-featured a.sig-secondary-button:hover,
+[data-theme='dark'] .reference-card-featured a.sig-secondary-button:focus-visible {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: #ffffff !important;
+}
+
 .sig-details strong {
   color: white !important;
   font-weight: 600;

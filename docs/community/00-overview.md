@@ -4,7 +4,7 @@ id: overview
 ---
 
 import IconContainer from '@site/src/components/IconContainer';
-import { Users, Calendar, Code2, MessageSquare, Mail, FileText, Globe, Puzzle, CheckCircle, XCircle, Package, Server, Target, Rocket } from 'lucide-react';
+import { Users, Calendar, Code2, MessageSquare, Mail, FileText, Globe, Puzzle, CheckCircle, XCircle, Package, Server, Target, Rocket, ExternalLink, BookOpen } from 'lucide-react';
 
 # Community
 
@@ -36,10 +36,6 @@ Welcome to the OpenControlPlane community! We're building an open platform for m
 
 ## Special Interest Groups (SIG)
 
-### SIG Extensibility
-
-Special Interest Group focused on making it easy to build, share, and adopt extensions - service providers, cluster providers, and platform services.
-
 <div className="reference-grid">
 
 <div className="reference-card reference-card-featured" style={{gridColumn: 'span 2'}}>
@@ -49,46 +45,27 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
   <h3>SIG Extensibility</h3>
   <p>Make it easy to build, share, and adopt extensions - service providers, cluster providers, and platform services.</p>
 
-  <div className="sig-details" style={{margin: '16px 0 20px 0'}}>
-    <div><strong>Leads:</strong> Maximilian Techritz, Christopher Junk (SAP)</div>
-    <div><strong>Meetings:</strong> Bi-weekly, Wednesday 3PM CET</div>
-  </div>
+  <dl className="sig-meta">
+    <div><dt>Leads</dt><dd>Maximilian Techritz, Christopher Junk (SAP)</dd></div>
+    <div><dt>Meetings</dt><dd>Bi-weekly &middot; Wednesday 3PM CET</dd></div>
+    <div><dt>Focus</dt><dd>Service providers &middot; Cluster providers &middot; Platform services</dd></div>
+  </dl>
 
-  <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '0'}}>
+  <div className="sig-actions">
     <a href="https://lists.neonephos.org/g/opencontrolplane-extensibility/" className="subscribe-button">
       <Mail size={18} strokeWidth={2.5} className="subscribe-button-icon" />
       <span>Subscribe to Mailing List</span>
       <span className="subscribe-button-arrow" aria-hidden="true">→</span>
     </a>
+    <a href="https://github.com/openmcp-project/community/tree/main/sig-extensibility" className="sig-secondary-button">
+      <BookOpen size={18} strokeWidth={2.5} className="sig-secondary-button-icon" />
+      <span>View charter on GitHub</span>
+      <ExternalLink size={14} strokeWidth={2.5} aria-hidden="true" />
+    </a>
   </div>
 </div>
 
 </div>
-
-#### Scope
-
-**In scope:**
-- Developer tooling: templates, frameworks, SDKs
-- Increasing service options for end users
-- Technical standardization for extensibility
-
-**Out of scope:**
-- Core APIs (ServiceProvider, ClusterProvider, etc.)
-- Fundamental platform services (e.g., platform-service-gateway)
-
-#### Subprojects
-
-**Service Providers:**
-- [Crossplane service provider](https://github.com/openmcp-project/service-provider-crossplane)
-- [Landscaper service provider](https://github.com/openmcp-project/service-provider-landscaper)
-- [Velero service provider](https://github.com/openmcp-project/service-provider-velero)
-- [OCM service provider](https://github.com/open-component-model/service-provider-ocm)
-- [Service provider template](https://github.com/openmcp-project/repository-template)
-
-**Cluster Providers:**
-- [Gardener cluster provider](https://github.com/openmcp-project/cluster-provider-gardener)
-- [Kind cluster provider](https://github.com/openmcp-project/cluster-provider-kind)
-- Testing infrastructure
 
 ### Starting a New SIG
 
