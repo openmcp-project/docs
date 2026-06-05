@@ -45,7 +45,7 @@ export default function PersonaCards({ active }) {
       {PERSONAS.map(({ key, icon: Icon, title, description, href, linkLabel }) => {
         const isActive = key === active;
         return (
-          <div className="reference-card" key={key}>
+          <div className={`reference-card${isActive ? ' reference-card--active' : ''}`} key={key}>
             <div style={{ marginBottom: '12px', color: 'var(--teal-6)' }}>
               <Icon size={48} />
             </div>
@@ -53,7 +53,7 @@ export default function PersonaCards({ active }) {
             <p>{renderDescription(description)}</p>
             {isActive ? (
               <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--teal-7)' }}>
-                You're in the right place ✓
+                You are here ✓
               </span>
             ) : (
               <a href={href} className="reference-link">{linkLabel}</a>

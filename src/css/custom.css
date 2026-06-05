@@ -2407,6 +2407,16 @@ body[class*="docs-doc-id-reference"] .row {
   box-shadow: 0 8px 20px rgba(44, 224, 191, 0.15);
 }
 
+.reference-card--active {
+  border-color: var(--teal-6);
+  background: rgba(4, 159, 154, 0.06);
+}
+
+[data-theme='dark'] .reference-card--active {
+  border-color: var(--teal-6);
+  background: rgba(4, 159, 154, 0.1);
+}
+
 .reference-icon {
   width: 80px !important;
   height: 80px !important;
