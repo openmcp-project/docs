@@ -71,7 +71,7 @@ For example, a project named `platform-team` with a workspace `dev` results in:
 - `project-platform-team` for the project
 - `project-platform-team--ws-dev` for the workspace
 
-[Service Providers](../users/concepts/providers.md) install CRDs on the Onboarding Cluster so that all tenants can discover available services.
+[Service Providers](../users/concepts/providers) install CRDs on the Onboarding Cluster so that all tenants can discover available services.
 
 ### Platform Cluster
 
