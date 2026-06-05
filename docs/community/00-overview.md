@@ -34,9 +34,11 @@ Welcome to the OpenControlPlane community! We're building an open platform for m
 
 </div>
 
-## SIG Extensibility
+## Special Interest Groups (SIG)
 
-Special Interest Group focused on making it easy to build, share, and adopt extensions—service providers, cluster providers, and platform services.
+### SIG Extensibility
+
+Special Interest Group focused on making it easy to build, share, and adopt extensions - service providers, cluster providers, and platform services.
 
 <div className="reference-grid">
 
@@ -45,7 +47,7 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
     <Puzzle size={60} strokeWidth={2} />
   </IconContainer>
   <h3>SIG Extensibility</h3>
-  <p>Make it easy to build, share, and adopt extensions—service providers, cluster providers, and platform services.</p>
+  <p>Make it easy to build, share, and adopt extensions - service providers, cluster providers, and platform services.</p>
 
   <div className="sig-details" style={{margin: '16px 0 20px 0'}}>
     <div><strong>Leads:</strong> Maximilian Techritz, Christopher Junk (SAP)</div>
@@ -63,7 +65,7 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
 
 </div>
 
-### Scope
+#### Scope
 
 **In scope:**
 - Developer tooling: templates, frameworks, SDKs
@@ -74,7 +76,7 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
 - Core APIs (ServiceProvider, ClusterProvider, etc.)
 - Fundamental platform services (e.g., platform-service-gateway)
 
-### Subprojects
+#### Subprojects
 
 **Service Providers:**
 - [Crossplane service provider](https://github.com/openmcp-project/service-provider-crossplane)
@@ -90,7 +92,7 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
 
 ### Starting a New SIG
 
-Interested in creating a new SIG? See the [SIG template](https://github.com/openmcp-project/community/blob/main/sigs/sig-template.md) and open a [discussion](https://github.com/openmcp-project/community/discussions) in the community repository.
+Interested in creating a new SIG? See the [SIG template](https://github.com/openmcp-project/community/blob/main/sigs/sig-template.md) and open a [discussion](https://github.com/openmcp-project/community/discussions).
 
 ## Code of Conduct
 
