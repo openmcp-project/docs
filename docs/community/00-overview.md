@@ -50,7 +50,7 @@ Special Interest Group focused on making it easy to build, share, and adopt exte
   <div className="sig-details" style={{margin: '16px 0 20px 0'}}>
     <div><strong>Leads:</strong> Maximilian Techritz, Christopher Junk (SAP)</div>
     <div><strong>Meetings:</strong> Bi-weekly, Wednesday 3PM CET</div>
-    <div><strong>Mailing List:</strong> opencontrolplane-extensibility@lists.neonephos.org</div>
+    <div><strong>Mailing List:</strong> <span className="sig-mailing-list">opencontrolplane&#8203;-extensibility@&#8203;lists.neonephos.org</span></div>
   </div>
 
   <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '0'}}>
