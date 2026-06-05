@@ -1,8 +1,0 @@
----
-sidebar_position: 3
-id: service-provider
----
-
-# Service Providers
-
-Without service providers, ControlPlanes are of little use. They add functionality such as cloud provider APIs, GitOps, policies, or backup and restore to ControlPlanes. The operators of an OpenControlPlane environment decide which service providers are available to end users. The end users can then activate them for their ControlPlanes.
