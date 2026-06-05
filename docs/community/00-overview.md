@@ -20,7 +20,7 @@ Welcome to the OpenControlPlane community! We're building an open platform for m
   </IconContainer>
   <h3>Contribute Code</h3>
   <p>Check our contributing guide and start making your first contribution to the project.</p>
-  <a href="https://github.com/openmcp-project/community/blob/main/CONTRIBUTING.md" className="reference-link">Contributing Guide →</a>
+  <a href="https://github.com/openmcp-project/.github/blob/main/CONTRIBUTING.md" className="reference-link">Contributing Guide →</a>
 </div>
 
 <div className="reference-card reference-card-compact">
@@ -29,7 +29,7 @@ Welcome to the OpenControlPlane community! We're building an open platform for m
   </IconContainer>
   <h3>GitHub Discussions</h3>
   <p>Browse repositories, open issues, and join discussions on GitHub.</p>
-  <a href="https://github.com/openmcp-project" className="reference-link">openmcp-project →</a>
+  <a href="https://github.com/orgs/openmcp-project/discussions" className="reference-link">OpenControlPlane discussions→</a>
 </div>
 
 </div>
