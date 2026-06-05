@@ -88,7 +88,7 @@ Explore the [open-source projects](./ecosystem) that power OpenControlPlane, inc
 
 - **Community**: Join our [community hub](/community/overview) to connect with other users
 - **GitHub**: Report issues or browse repositories at [openmcp-project](https://github.com/openmcp-project)
-- **Support**: Check the [contributing guide](https://github.com/openmcp-project/community/blob/main/CONTRIBUTING.md) for ways to get help
+- **Support**: Check the [contributing guide](https://github.com/openmcp-project/.github/blob/main/CONTRIBUTING.md) for ways to get help
 
 ---
 
