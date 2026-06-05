@@ -3,9 +3,13 @@ sidebar_position: 0
 id: overview
 ---
 
+import PersonaCards from '@site/src/components/PersonaCards';
+
 # Overview
 
 As a platform operator, you deploy and manage OpenControlPlane so your teams can self-serve managed `ControlPlanes`. You configure the providers that back those `ControlPlanes` and the services that run on them. Your teams interact with the platform through a simple Kubernetes API.
+
+<PersonaCards active="operator" />
 
 ## Your Journey
 
