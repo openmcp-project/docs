@@ -1,7 +1,7 @@
 ---
 authors:
   - MoritzMarby
-  - ValentinGerlach # Change to your own handle. Add yourself to "authors.yml" if necessary.
+  - ValentinGerlach
   - MaximilianTechritz
 ---
 
@@ -39,9 +39,17 @@ A central way, managed by the platform, to get the location of images from.
 
 ### Flows which needs to be supported
 
-1. Give me all versions of artifact `crossplane-chart`.
+1. Give me all versions of artifact, e.g. `crossplane-chart`.
 2. Give me the pull secrets for artifact `crossplane-chart` version `v1.10`
 3. Different versions of an artifact can come from different registries.
+
+## Scope
+
+### In Scope
+
+- we are only supporting OCI images/artifacts
+
+### Out of Scope
 
 ## Proposal
 
@@ -64,7 +72,7 @@ spec:
       namespace:
 ```
 
-The `metadata.name` of an Artifact can be whatever.
+The `metadata.name` of an Artifact is arbitrary.
 They are intended to be fetched by their labels. For that we define two fixed labels:
 
 ```yaml
@@ -72,7 +80,7 @@ artifact.open-control-plane.io/name: # The name of artifact
 artifact.open-control-plane.io/version: # the version of the artifact
 ```
 
-When a service provider now wants to know which versions of crossplane are installable, they can fetch by the `artifact.open-control-plane.io/name`.
+When a service provider now wants to know which versions of an artifact are installable, they can fetch by the `artifact.open-control-plane.io/name`.
 
 The `artifact.open-control-plane.io/version` is not the same as the `tag` of the underlying oci image. The version is the version of the component, the user can select.
 For example `crossplane` is a component, which consists of two `artifacts`, the `chart` and the `image`. So there will be two `Artifact` resources which will be called:
@@ -108,3 +116,5 @@ spec:
 ```
 
 So they have different image `tags` but are listed under the same version. So a consuming entity can then easily knows I will use the chart with the tag `v1.20.0` and the image `v2.1.2` when a customer install the version `v1.20.0`.
+
+![](./discoverable-artifacts.excalidraw.svg)
