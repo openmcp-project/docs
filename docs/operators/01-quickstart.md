@@ -169,6 +169,7 @@ EOF
 Wait for it to become ready:
 
 ```shell
+kubectl config use-context kind-local-onboarding
 kubectl get managedcontrolplanev2 my-controlplane -w
 ```
 
@@ -179,7 +180,7 @@ NAME              PHASE
 my-controlplane   Ready
 ```
 
-The platform has provisioned an isolated `ControlPlane` cluster.
+The platform has provisioned an isolated `ControlPlane` cluster. Behind the scenes, OpenControlPlane asked `cluster-provider-kind` to create a new Kind cluster for this `ControlPlane`. The cluster is assigned a generated name of the form `mcp-<hash>.<random>` — for example `mcp-ad2klitc.f52190f9`. The hash is derived from the environment name; the suffix is random per provisioning run. You will need this name in Step 3.
 
 ---
 
@@ -206,8 +207,9 @@ EOF
 
 `ServiceProvider` Flux on the platform cluster detects this request and installs Flux into the `ControlPlane` cluster automatically.
 
-To verify Flux is running on the `ControlPlane`, we connect to the `ControlPlane` cluster by exporting the kubeconfig to our current kube context.
-The name of this `ControlPlane` is always unique. Therefore we need to copy the name of the `ControlPlane` cluster by executing:
+### Connect to the ControlPlane cluster
+
+The `ControlPlane` cluster runs as its own Kind cluster with a generated name. Find it:
 
 ```shell
 kind get clusters
@@ -216,19 +218,23 @@ kind get clusters
 ```
 local-onboarding
 local-platform
-mcp-ad2klitc.f52190f9     <- copy name of ControlPlane
+mcp-ad2klitc.f52190f9     <- your ControlPlane cluster
 ```
 
-And export the kubeconfig to your current kube context:
+Export its kubeconfig and switch context:
 
 ```shell
-kind export kubeconfig --name <name of ControlPlane>
+CONTROLPLANE_CLUSTER=$(kind get clusters | grep '^mcp-')
+kind export kubeconfig --name "$CONTROLPLANE_CLUSTER"
+kubectl config use-context "kind-$CONTROLPLANE_CLUSTER"
 ```
 
-:::apply-to-controlplane
+### Verify Flux is running
+
+Flux installation can take a few minutes while the `ControlPlane` cluster finishes bootstrapping. Wait for all pods to reach `Running`:
 
 ```shell
-kubectl get pods -n flux-system
+kubectl get pods -n flux-system -w
 ```
 
 You should see Flux controllers running:
@@ -242,8 +248,6 @@ kustomize-controller-7587bc49f9-m47nv          1/1     Running   0          2m8s
 notification-controller-d7d89cdb9-sht7p        1/1     Running   0          2m8s
 source-controller-7f6f4dd77d-vmxvv             1/1     Running   0          2m8s
 ```
-
-:::
 
 The team now has a fully functional control plane with Flux, provisioned through a simple API request.
 
