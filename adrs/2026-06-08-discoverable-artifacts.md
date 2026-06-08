@@ -53,6 +53,8 @@ A central way, managed by the platform, to get the location of images from.
 
 ## Proposal
 
+### Artifacts
+
 A new resource inside the `platform` cluster called `Artifact`.
 One artifact will point to exactly one oci image.
 
@@ -60,9 +62,6 @@ One artifact will point to exactly one oci image.
 kind: Artifact
 metadata:
   name: crossplane-chart-v1.20.0
-  labels:
-    artifact.open-control-plane.io/name: crossplane-chart
-    artifact.open-control-plane.io/version: v1.20.0
 spec:
   name: crossplane-chart
   version: v1.20.0
@@ -73,25 +72,16 @@ spec:
 ```
 
 The `metadata.name` of an Artifact is arbitrary.
-They are intended to be fetched by their labels. For that we define two fixed labels:
+They are intended to be fetched by their specfields using a `fieldSelector`.
+<!-- TODO: Valentin -->
 
-```yaml
-artifact.open-control-plane.io/name: # The name of artifact
-artifact.open-control-plane.io/version: # the version of the artifact
-```
-
-When a service provider now wants to know which versions of an artifact are installable, they can fetch by the `artifact.open-control-plane.io/name`.
-
-The `artifact.open-control-plane.io/version` is not the same as the `tag` of the underlying oci image. The version is the version of the component, the user can select.
+The `spec.version` parameter is not the same as the `tag` of the underlying oci image. The version is the version of the parent component, the user can select.
 For example `crossplane` is a component, which consists of two `artifacts`, the `chart` and the `image`. So there will be two `Artifact` resources which will be called:
 
 ```yaml
 kind: Artifact
 metadata:
   name: crossplane-image-v1.20.0
-  labels:
-    artifact.open-control-plane.io/name: crossplane-image
-    artifact.open-control-plane.io/version: v1.20.0
 spec:
   name: crossplane-image
   version: v2.1.2
@@ -103,9 +93,6 @@ spec:
 kind: Artifact
 metadata:
   name: crossplane-chart-v1.20.0
-  labels:
-    artifact.open-control-plane.io/name: crossplane-chart
-    artifact.open-control-plane.io/version: v1.20.0
 spec:
   name: crossplane-chart
   version: v1.20.0
@@ -117,4 +104,35 @@ spec:
 
 So they have different image `tags` but are listed under the same version. So a consuming entity can then easily knows I will use the chart with the tag `v1.20.0` and the image `v2.1.2` when a customer install the version `v1.20.0`.
 
-![](./discoverable-artifacts.excalidraw.svg)
+![Discoverable Artifacts](./discoverable-artifacts.excalidraw.svg)
+
+### ProviderConfig example
+
+Every `ServiceProvider` has a `ProviderConfig` resource. As we need to tell the `ServiceProvider` how to get to the `Artifact`s we need to define this in the `ProviderConfig`.
+
+Example for the `ServiceProvider` Crossplane:
+
+```yaml
+apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+kind: ProviderConfig
+spec:
+  chart:
+    selectors:
+      matchFields:
+        - artifactName: crossplane-chart
+  image:
+    selectors:
+      matchFields:
+        - artifactName: crossplane-image
+  providers:
+    selectors:
+      matchLabels:
+        crossplane.open-control-plane.io/type: "provider"
+  functions:
+    selectors:
+      matchLabels:
+        crossplane.open-control-plane.io/type: "functions"
+```
+
+
+<!-- TODO: Point out difference between artifactVersion and componentVersion -->
