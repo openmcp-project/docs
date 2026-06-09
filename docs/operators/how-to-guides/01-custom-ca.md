@@ -13,7 +13,6 @@ Use this guide when your OpenControlPlane platform runs in an environment where 
 
 - `kubectl` access to the platform cluster with permissions to create `ConfigMap` resources in the `openmcp-system` namespace
 - PEM-encoded certificate files for all custom CAs you want to add
-- (Optional) cert-manager with [trust-manager](https://cert-manager.io/docs/trust/trust-manager/) installed if you prefer automatic bundle management
 
 ## Step 1 — Create the custom CA bundle
 
@@ -34,34 +33,9 @@ MIIDXTCCAkWgAwIBAgIJANPQ...
 -----END CERTIFICATE-----
 ```
 
-## Step 2 — Create the full bundle
+## Step 2 — Create ConfigMap on the platform cluster
 
-Service providers that need to connect to both internal and public endpoints require a bundle that includes your custom CAs **and** the well-known public CA certificates. This is called the **full bundle**.
-
-<Tabs>
-<TabItem value="manual" label="Manual">
-
-Download a public CA certificate bundle and merge it with your custom bundle:
-
-```shell
-curl -fsSL https://curl.se/ca/cacert.pem -o public-cas.crt
-cat ca-bundle.crt public-cas.crt > full-bundle.crt
-```
-
-:::info Public CA certificate source
-The example above uses [curl's CA certificates extracted from Mozilla](https://curl.se/docs/caextract.html). Replace the URL if your organization uses a different source for well-known public CA certificates.
-:::
-
-</TabItem>
-<TabItem value="trust-manager" label="cert-manager trust-manager">
-
-If [trust-manager](https://cert-manager.io/docs/trust/trust-manager/) is installed, create a `Bundle` resource that merges your custom CAs with the default public CA pool automatically. trust-manager will keep the full bundle up to date as the public CA pool changes.
-
-:::info Assumption
-This guide assumes `openmcp-system` is configured as the trust namespace. If that is not the case, add a `namespaceSelector` to the `Bundle` target that matches `openmcp-system`, and create the source ConfigMap in the namespace trust-manager reads from (typically `cert-manager`).
-:::
-
-First, create a ConfigMap with your custom CA bundle in the `openmcp-system` namespace:
+The CA bundles must be available as ConfigMap in the `openmcp-system` namespace on the **platform cluster**.
 
 ```shell
 kubectl create configmap custom-ca-bundle \
@@ -69,79 +43,11 @@ kubectl create configmap custom-ca-bundle \
   --namespace=openmcp-system
 ```
 
-Then create a `Bundle` resource:
-
-```yaml title="full-bundle.yaml"
-apiVersion: trust.cert-manager.io/v1alpha1
-kind: Bundle
-metadata:
-  name: full-ca-bundle
-spec:
-  sources:
-    - configMap:
-        name: custom-ca-bundle
-        key: ca-bundle.crt
-    - useDefaultCAs: true
-  target:
-    configMap:
-      key: full-bundle.crt
-    namespaceSelector:
-      matchLabels:
-        kubernetes.io/metadata.name: openmcp-system
-```
-
-```shell
-kubectl apply -f full-bundle.yaml
-```
-
-trust-manager will create and maintain a ConfigMap named `full-ca-bundle` in the `openmcp-system` namespace containing the merged bundle. Skip Step 3 for the full bundle — trust-manager manages it for you.
-
-</TabItem>
-</Tabs>
-
-## Step 3 — Create ConfigMap(s) on the platform cluster
-
-The CA bundles must be available as ConfigMaps in the `openmcp-system` namespace on the **platform cluster**.
-
-<Tabs>
-<TabItem value="single" label="Single ConfigMap">
-
-Store both bundles in one ConfigMap using two separate keys:
-
-```shell
-kubectl create configmap ca-bundles \
-  --from-file=ca-bundle.crt=ca-bundle.crt \
-  --from-file=full-bundle.crt=full-bundle.crt \
-  --namespace=openmcp-system
-```
-
-</TabItem>
-<TabItem value="separate" label="Two ConfigMaps">
-
-Create one ConfigMap per bundle:
-
-```shell
-kubectl create configmap custom-ca-bundle \
-  --from-file=ca-bundle.crt=ca-bundle.crt \
-  --namespace=openmcp-system
-
-kubectl create configmap full-ca-bundle \
-  --from-file=full-bundle.crt=full-bundle.crt \
-  --namespace=openmcp-system
-```
-
-</TabItem>
-</Tabs>
-
-:::info trust-manager users
-If you used trust-manager in Step 2, skip this step entirely. Both ConfigMaps are already in place: `custom-ca-bundle` was created as the source for the `Bundle` resource, and trust-manager creates and maintains `full-ca-bundle` automatically.
-:::
-
-## Step 4 — Reference the bundle in each service provider's ProviderConfig
+## Step 3 — Reference the bundle in each service provider's ProviderConfig
 
 Each service provider that needs to trust your custom CAs must have a `caBundleRef` added to its `ProviderConfig`. The `caBundleRef` points to the ConfigMap key that contains the appropriate bundle.
 
-The following example uses the Crossplane service provider. Other service providers follow the same pattern — refer to their individual documentation for details on which bundle to use.
+The following example uses the Crossplane service provider. Other service providers follow the same pattern but be sure to check their individual documentation for implementation details.
 
 ```yaml title="crossplane-provider-config.yaml"
 apiVersion: crossplane.services.openmcp.cloud/v1alpha1
@@ -152,8 +58,8 @@ metadata:
 spec:
   # ... other fields ...
   caBundleRef:
-    name: ca-bundles       # ConfigMap name
-    key: full-bundle.crt   # Key within the ConfigMap
+    name: custom-ca-bundle    # ConfigMap name
+    key: ca-bundle.crt        # Key within the ConfigMap
 ```
 
 Apply the updated ProviderConfig:
@@ -164,17 +70,13 @@ kubectl apply -f crossplane-provider-config.yaml
 
 Repeat this step for every service provider installed on your platform.
 
-:::info Which bundle to reference
-Some service providers should reference the **full bundle** (`full-bundle.crt`) to reach both internal and public endpoints. This is the case when the implementation replaces the default certificate store. Other service provider implementations might append the custom certificates to the existing ones. In this case, the custom-only bundle (`ca-bundle.crt`) should be used. Check each service provider's documentation to confirm.
-:::
-
 ## Verification
 
-Confirm the ConfigMap(s) are present on the **platform cluster** and contain the expected data:
+Confirm the ConfigMap is present on the **platform cluster** and contains the expected data:
 
 ```shell
 kubectl get configmap -n openmcp-system
-kubectl describe configmap {ca-bundles,custom-ca-bundle,full-ca-bundle} -n openmcp-system
+kubectl describe configmap custom-ca-bundle -n openmcp-system
 ```
 
 Check that the ProviderConfig of each service provider has been accepted by the operator, e.g. for Crossplane:

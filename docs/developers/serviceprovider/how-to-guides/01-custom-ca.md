@@ -36,7 +36,7 @@ type ProviderConfigSpec struct {
 spec:
   caBundleRef:
     name: ca-bundles
-    key: full-bundle.crt
+    key: ca-bundle.crt
 ```
 
 After editing the type, run code generation to update the deepcopy and CRD manifest:
@@ -101,12 +101,7 @@ controller.FooServiceReconciler{
 
 ## Step 3 — Make use of the bundle
 
-:::info Which bundle key to use
-- Point `caBundleRef.key` at `full-bundle.crt` (custom + public CAs) when you **replace** `x509.SystemCertPool()` or construct an empty pool — otherwise well-known public CA certificates are lost.
-- Point `caBundleRef.key` at `ca-bundle.crt` (custom CAs only) when you **append** to `x509.SystemCertPool()` as shown above, because the system pool already contains the public CAs.
-
-Add this decision to your service provider's documentation, e.g. in the README. This helps operator to configure the right certificate bundle for your service provider.
-:::
+At this point, your reconciler can resolve the CA bundle from the platform cluster. The following sections show the two common integration points: outbound connections made by the controller itself, and workloads deployed into MCPs or workload clusters.
 
 ### 3a. Outbound connections from the controller process
 
@@ -177,7 +172,7 @@ if err := r.syncCABundle(ctx, pc, caBundle, workloadClient, targetNamespace); er
 }
 ```
 
-**Mount the ConfigMap** in any Pod spec you manage:
+**Mount the ConfigMap and set EnvVar** in any Pod spec you manage:
 
 ```go
 pod.Spec.Volumes = append(pod.Spec.Volumes, corev1.Volume{
@@ -190,17 +185,31 @@ pod.Spec.Volumes = append(pod.Spec.Volumes, corev1.Volume{
 })
 pod.Spec.Containers[0].VolumeMounts = append(pod.Spec.Containers[0].VolumeMounts, corev1.VolumeMount{
     Name:      "ca-bundle",
-    MountPath: "/etc/ssl/custom",
+    MountPath: "/etc/open-control-plane/custom-ca",
     ReadOnly:  true,
 })
+
+var certDirectories = []string{
+	"/etc/ssl/certs",
+	"/etc/pki/tls/certs",
+    "/etc/open-control-plane/custom-ca",
+}
+
+pod.Spec.Containers.Env[0] = append(pod.Spec.Containers[0].Env, corev1.EnvVar{
+    Name:  "SSL_CERT_DIR",
+    Value: strings.Join(certDirectories, ":"),  # appending the mount path of our custom CA cert to the usual directories
+}
 ```
 
 If you deploy via Helm, pass the bundle content as a chart value instead and let the chart handle the ConfigMap and volume mount.
 
+:::info
+Many HTTP and TLS client libraries can be configured to trust additional certificates through environment variables such as `SSL_CERT_DIR` but this is not universal behavior. Check how the specific library or runtime you use builds its trust store and whether it reads certificates from the system store, explicit file paths, or has other library-specific configuration.
+:::
+
 ## Step 4 — Re-enqueue on ConfigMap changes
 
 TODO
-
 ## Verification
 
 1. Create a `ProviderConfig` with a `caBundleRef` pointing to a ConfigMap that contains a self-signed CA certificate.
