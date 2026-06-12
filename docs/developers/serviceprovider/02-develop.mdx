@@ -425,16 +425,21 @@ func (r *FooServiceReconciler) Delete(ctx context.Context, obj *apiv1alpha1.FooS
 
 ### Block deletion while user resources exist
 
-A naive `Delete` implementation removes the domain CRDs from the `ControlPlane` as soon as the user requests deletion of the service via the Onboarding cluster. Services such as Flux, Crossplane, or ESO install CRDs (e.g. `GitRepository`, `Bucket`, `ExternalSecret`) into the `ControlPlane`, and end users typically create custom resources of those CRDs. Removing the CRDs while user instances still exist may orphan those resources in the cluster and leave external systems (object storage, git repositories, secrets in vaults) outside platform control.
+End users interact with two clusters in this context:
 
-Quality criterion [Deletion behaviour](./quality-criteria#1-deletion-behaviour) requires the service provider to block deletion in this case. The expected flow inside `Delete`:
+- The **Onboarding cluster**, where they create the `ServiceProviderAPI` object that requests the service. This object is controlled by the service provider.
+- The tenant **`ControlPlane` cluster**, where they create domain custom resources (e.g. `GitRepository`, `Bucket`, `ExternalSecret`) of the CRDs your provider installs. These CRs are controlled by the domain controllers your provider manages.
 
-1. Look up the user's custom resources on `clusters.MCPCluster` for the CRDs your provider installs (e.g. `GitRepository` for a Flux provider, `ClusterPolicy` for a Kyverno provider).
-2. If any are still there, set `Status.Phase = Terminating` on the `ServiceProviderAPI`, add a condition that names the kinds blocking deletion, and requeue. Skip the rest of `Delete`.
+A naive `Delete` implementation removes those domain CRDs from the `ControlPlane` cluster as soon as the user deletes the `ServiceProviderAPI` object on the Onboarding cluster. If the domain controller does not protect its CRs with finalizers removing the CRDs while user instances still exist may orphan those resources and leave external systems (object storage, git repositories, secrets in vaults) outside platform control.
+
+A service provider can improve the user experience and prevent silent data loss by blocking its own deletion until the user has cleaned up the domain CRs first. Quality criterion [Deletion behaviour](./quality-criteria#1-deletion-behaviour) asks providers to do this whenever the underlying domain controller lacks its own deletion safeguards. The expected flow inside `Delete`:
+
+1. Look up the user's domain custom resources on `clusters.MCPCluster` for the CRDs your provider installs (e.g. `GitRepository` for a Flux provider, `ClusterPolicy` for a Kyverno provider).
+2. If any are still there, set `Status.Phase = Terminating` on the `ServiceProviderAPI` object, add a condition that names the kinds blocking deletion, and requeue. Skip the rest of `Delete`.
 3. If none are left, run your normal teardown.
 
 :::warning
-There is no generic way to enumerate every CRD a domain service installs, so each provider must list the kinds it knows it owns. A force-delete escape hatch is intentionally not offered today; if you need one, raise it as a discussion before implementing it ad-hoc.
+There is no generic way to enumerate every CRD a domain service installs, so each provider must list the kinds it knows it owns. A force-delete escape hatch is intentionally not offered today; if you need one, raise it as a [discussion](https://github.com/orgs/openmcp-project/discussions) before implementing it ad-hoc.
 :::
 
 :::info
