@@ -425,7 +425,7 @@ func (r *FooServiceReconciler) Delete(ctx context.Context, obj *apiv1alpha1.FooS
 
 ### Block deletion while user resources exist
 
-A naive `Delete` implementation removes the domain CRDs from the `ControlPlane` as soon as the user requests deletion of the service via the Onboarding cluster. Services such as Flux, Crossplane, or ESO install CRDs (e.g. `GitRepository`, `Bucket`, `ExternalSecret`) into the `ControlPlane`, and end users typically create custom resources of those CRDs. Removing the CRDs while user instances still exist orphans those resources in the cluster and can leave external systems (object storage, git repositories, secrets in vaults) escaping platform control.
+A naive `Delete` implementation removes the domain CRDs from the `ControlPlane` as soon as the user requests deletion of the service via the Onboarding cluster. Services such as Flux, Crossplane, or ESO install CRDs (e.g. `GitRepository`, `Bucket`, `ExternalSecret`) into the `ControlPlane`, and end users typically create custom resources of those CRDs. Removing the CRDs while user instances still exist may orphan those resources in the cluster and leave external systems (object storage, git repositories, secrets in vaults) outside platform control.
 
 Quality criterion [Deletion behaviour](./quality-criteria#1-deletion-behaviour) requires the service provider to block deletion in this case. The expected flow inside `Delete`:
 
