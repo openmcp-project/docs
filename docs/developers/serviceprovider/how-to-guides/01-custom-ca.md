@@ -15,7 +15,7 @@ This guide covers the developer side. For the operator side (creating the CA bun
 
 ## Step 1 — Add `caBundleRef` to your ProviderConfig API
 
-Open your `ProviderConfig` type definition (typically `api/v1alpha1/providerconfig_types.go`) and add a `CaBundleRef` field to the spec:
+Open your `ProviderConfig` type definition (typically `api/v1alpha1/providerconfig_types.go`) and add a `CABundleRef` field to the spec:
 
 ```go title="api/v1alpha1/providerconfig_types.go"
 import corev1 "k8s.io/api/core/v1"
@@ -58,18 +58,18 @@ func (r *FooServiceReconciler) CreateOrUpdate(
     clusters spruntime.ClusterContext,
 ) (ctrl.Result, error) {
     var caBundle []byte
-    if pc.Spec.CaBundleRef != nil {
+    if pc.Spec.CABundleRef != nil {
         cm := &corev1.ConfigMap{}
         key := client.ObjectKey{
             Namespace: r.PodNamespace, // openmcp-system
-            Name:      pc.Spec.CaBundleRef.Name,
+            Name:      pc.Spec.CABundleRef.Name,
         }
         if err := r.PlatformCluster.Client().Get(ctx, key, cm); err != nil {
             return ctrl.Result{}, fmt.Errorf("fetching CA bundle ConfigMap %q: %w", key.Name, err)
         }
-        bundle, ok := cm.Data[pc.Spec.CaBundleRef.Key]
+        bundle, ok := cm.Data[pc.Spec.CABundleRef.Key]
         if !ok {
-            return ctrl.Result{}, fmt.Errorf("CA bundle ConfigMap %q has no key %q", key.Name, pc.Spec.CaBundleRef.Key)
+            return ctrl.Result{}, fmt.Errorf("CA bundle ConfigMap %q has no key %q", key.Name, pc.Spec.CABundleRef.Key)
         }
         caBundle = []byte(bundle)
     }
@@ -155,7 +155,7 @@ func (r *FooServiceReconciler) syncCABundle(
     }
     _, err := ctrl.CreateOrUpdate(ctx, targetClient, cm, func() error {
         cm.Data = map[string]string{
-            pc.Spec.CaBundleRef.Key: string(caBundle),
+            pc.Spec.CABundleRef.Key: string(caBundle),
         }
         return nil
     })
