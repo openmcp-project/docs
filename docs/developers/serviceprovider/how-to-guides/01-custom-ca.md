@@ -26,7 +26,7 @@ type ProviderConfigSpec struct {
     // CABundleRef is a reference to a config map containing certificate bundle.
     // It will be installed on the ManagedControlPlane and configured for the domain service.
     // +kubebuilder:validation:Optional
-    CaBundleRef *corev1.ConfigMapKeySelector `json:"caBundleRef,omitempty"`
+    CABundleRef *corev1.ConfigMapKeySelector `json:"caBundleRef,omitempty"`
 }
 ```
 
