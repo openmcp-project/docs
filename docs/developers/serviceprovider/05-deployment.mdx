@@ -1,16 +1,17 @@
 ---
-sidebar_position: 1
+sidebar_position: 5
+id: deploy
 ---
 
 # Deploy
 
-`ServiceProviders` provide the actual services that can be consumed by customers via the ManagedControlPlanes within the OpenControlPlane ecosystem.
+`ServiceProviders` provide the actual services that can be consumed by customers via the ControlPlanes within the OpenControlPlane ecosystem.
 
 They can automatically be deployed via the `ServiceProvider` resource. The [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) is responsible for these resources.
 
 All providers are cluster-scoped resources.
 
-## Example ServiceProvider Resource
+## Example `ServiceProvider` resource
 
 ```yaml
 apiVersion: openmcp.cloud/v1alpha1
@@ -24,7 +25,7 @@ spec:
 
 ## Common Provider Contract
 
-All provider types (ClusterProviders, ServiceProviders, PlatformServices) follow the same deployment contract.
+All provider types (`ClusterProviders`, `ServiceProviders`, `PlatformServices`) follow the same deployment contract.
 
 ### Executing the Binary
 
@@ -69,7 +70,7 @@ The following environment variables can be expected to be set:
 
 #### Customizations
 
-While it is possible to customize some aspects of how the provider binary is executed, such as adding additional environment variables, overwriting the subcommands, adding additional arguments, etc., this should only be done in exceptional cases to keep the complexity of setting up an openMCP landscape as low as possible.
+While it is possible to customize some aspects of how the provider binary is executed, such as adding additional environment variables, overwriting the subcommands, adding additional arguments, etc., this should only be done in exceptional cases to keep the complexity of setting up an OpenControlPlane landscape as low as possible.
 
 ### Configuration
 

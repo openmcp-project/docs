@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+id: custom-ca
 ---
 
 import Tabs from '@theme/Tabs';
@@ -49,6 +50,8 @@ Each service provider that needs to trust your custom CAs must have a `caBundleR
 
 The following example uses the Crossplane service provider. Other service providers follow the same pattern but be sure to check their individual documentation for implementation details.
 
+:::apply-to-platform
+
 ```yaml title="crossplane-provider-config.yaml"
 apiVersion: crossplane.services.openmcp.cloud/v1alpha1
 kind: ProviderConfig
@@ -61,6 +64,8 @@ spec:
     name: custom-ca-bundle    # ConfigMap name
     key: ca-bundle.crt        # Key within the ConfigMap
 ```
+
+:::
 
 Apply the updated ProviderConfig:
 
@@ -125,5 +130,5 @@ kubectl delete pod ca-bundle-test -n openmcp-system
 A successful TLS handshake confirms your custom CA bundle is correct. If `curl` returns a certificate verification error, double-check that the PEM file in the ConfigMap contains the full CA chain up to the root.
 
 :::warning Container runtime
-The CA bundle is propagated to service provider components running inside Managed Control Planes, but **not** to the container runtime on the cluster nodes. If your private OCI registry uses a custom CA, you must also install the CA certificate directly on the cluster nodes so the kubelet can pull images. Refer to your cluster provider's documentation for node-level CA configuration.
+The CA bundle is propagated to service provider components running inside ControlPlanes, but **not** to the container runtime on the cluster nodes. If your private OCI registry uses a custom CA, you must also install the CA certificate directly on the cluster nodes so the kubelet can pull images. Refer to your cluster provider's documentation for node-level CA configuration.
 :::

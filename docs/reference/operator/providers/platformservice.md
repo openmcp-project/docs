@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+id: platformservice
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
@@ -7,7 +8,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 # PlatformService
 
 <div className="crd-header-container">
-  <img src="/docs/img/platform/main.png" alt="PlatformService" className="crd-header-icon" />
+  <img src="/img/platform/main.png" alt="PlatformService" className="crd-header-icon" />
   <div className="crd-header-text">
     <p>Delivers complete platform capabilities and services. Provides comprehensive platform functionality for OpenControlPlane deployments.</p>
   </div>

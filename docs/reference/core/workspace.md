@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+id: workspace
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
@@ -9,8 +10,8 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 <div className="crd-header-container">
   <div className="crd-header-icon-custom">
     <div className="reference-icon-group reference-icon-group-workspace">
-      <img src="/docs/img/cp2.png" alt="" className="reference-icon-medium reference-icon-left" />
-      <img src="/docs/img/cp3.png" alt="" className="reference-icon-medium reference-icon-right" />
+      <img src="/img/cp2.png" alt="" className="reference-icon-medium reference-icon-left" />
+      <img src="/img/cp3.png" alt="" className="reference-icon-medium reference-icon-right" />
     </div>
     <div className="reference-icon-label">dev</div>
   </div>

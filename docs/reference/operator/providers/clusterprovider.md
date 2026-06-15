@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+id: clusterprovider
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
@@ -7,7 +8,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 # ClusterProvider
 
 <div className="crd-header-container">
-  <img src="/docs/img/platform/hangar_gardener.png" alt="ClusterProvider" className="crd-header-icon" />
+  <img src="/img/platform/hangar_gardener.png" alt="ClusterProvider" className="crd-header-icon" />
   <div className="crd-header-text">
     <p>Manages Kubernetes clusters and provides access within the OpenControlPlane ecosystem. Handles cluster lifecycle operations and access management.</p>
   </div>

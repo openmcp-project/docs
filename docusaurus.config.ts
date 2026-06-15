@@ -5,15 +5,15 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Open Control Plane',
+  title: 'OpenControlPlane',
   tagline: 'Part of ApeiroRA and NeoNephos.',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://openmcp-project.github.io',
+  url: 'https://open-control-plane.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/docs/',
+  baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -47,6 +47,10 @@ const config: Config = {
             'https://github.com/openmcp-project/docs/tree/main/',
           sidebarCollapsible: true,
           sidebarCollapsed: true,
+          admonitions: {
+            keywords: ['apply-to-onboarding-api', 'apply-to-gardener', 'apply-to-platform', 'apply-to-controlplane', 'apply-to'],
+            extendDefaults: true,
+          },
         },
         blog: {
           routeBasePath: "adrs",
@@ -72,13 +76,35 @@ const config: Config = {
     ],
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            from: '/developers/serviceprovider/service-providers',
+            to: '/developers/serviceprovider/develop',
+          },
+          {
+            from: '/reference/core/managedcontrolplane',
+            to: '/reference/core/controlplane',
+          },
+          {
+            from: '/users/concepts/managed-control-plane',
+            to: '/users/concepts/controlplane',
+          },
+        ],
+      },
+    ],
+  ],
+
   themeConfig: {
     // Replace with your project's social card
     image: 'img/co_axolotl.png',
     navbar: {
-      title: 'Open Control Plane',
+      title: 'OpenControlPlane',
       logo: {
-        alt: 'Open Control Plane Logo',
+        alt: 'OpenControlPlane Logo',
         src: 'img/co_axolotl_mirrored.png',
       },
       items: [
@@ -111,6 +137,7 @@ const config: Config = {
           sidebarId: 'referenceSidebar',
           position: 'right',
           label: 'CRD Browser',
+          className: 'navbar-crd-browser',
         },
         {
           href: 'https://github.com/openmcp-project/docs',
@@ -167,7 +194,7 @@ const config: Config = {
         },
       ],
       copyright: `
-        Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company and openControlPlane contributors.
+        Copyright OpenControlPlane contributors.
         <br>
         This site is hosted by <a href="https://pages.github.com/">GitHub Pages</a>.
         Please see the <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement">GitHub Privacy Statement</a> for any information how GitHub processes your personal data.

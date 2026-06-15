@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+id: velero
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
@@ -7,9 +8,9 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 # Velero
 
 <div className="crd-header-container">
-  <img src="/docs/img/platform/tower_velero.png" alt="Velero" className="crd-header-icon" />
+  <img src="/img/platform/tower_velero.png" alt="Velero" className="crd-header-icon" />
   <div className="crd-header-text">
-    <p>Delivers Velero as a service for backup and disaster recovery within ManagedControlPlanes.</p>
+    <p>Delivers Velero as a service for backup and disaster recovery within ControlPlanes.</p>
   </div>
 </div>
 

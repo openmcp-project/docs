@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+id: project
 ---
 
 import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
@@ -10,13 +11,13 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   <div className="crd-header-icon-project">
     <div className="reference-icon-project-container">
       <div className="reference-icon-workspace-mini reference-icon-workspace-dev">
-        <img src="/docs/img/cp1.png" alt="" className="reference-icon-small reference-icon-left" />
-        <img src="/docs/img/cp2.png" alt="" className="reference-icon-small reference-icon-right" />
+        <img src="/img/cp1.png" alt="" className="reference-icon-small reference-icon-left" />
+        <img src="/img/cp2.png" alt="" className="reference-icon-small reference-icon-right" />
         <div className="reference-icon-label-mini">dev</div>
       </div>
       <div className="reference-icon-workspace-mini reference-icon-workspace-prod">
-        <img src="/docs/img/cp3.png" alt="" className="reference-icon-small reference-icon-left" />
-        <img src="/docs/img/cp4.png" alt="" className="reference-icon-small reference-icon-right" />
+        <img src="/img/cp3.png" alt="" className="reference-icon-small reference-icon-left" />
+        <img src="/img/cp4.png" alt="" className="reference-icon-small reference-icon-right" />
         <div className="reference-icon-label-mini">prod</div>
       </div>
     </div>

@@ -986,7 +986,81 @@ html[data-theme="dark"] .open-source-section .button--primary:hover {
   color: #000000 !important;
 }
 
-/* ===== Global link colors in light mode ===== */
+/* ===== Video Section ===== */
+.video-section {
+  padding: 80px 24px;
+  background: var(--ifm-background-color);
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.video-section-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.video-section-eyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal-6);
+  margin: 0 0 12px 0;
+}
+
+.video-section-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ifm-font-color-base);
+  margin: 0 0 16px 0;
+}
+
+.video-section-subtitle {
+  font-size: 1.05rem;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.6;
+  margin: 0 0 40px 0;
+}
+
+.video-embed-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(4, 159, 154, 0.2), 0 4px 16px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.video-embed-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+[data-theme='dark'] .video-section {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .video-embed-wrapper {
+  box-shadow: 0 20px 60px rgba(44, 224, 191, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 768px) {
+  .video-section-title {
+    font-size: 1.6rem;
+  }
+  .video-section {
+    padding: 60px 16px;
+  }
+}
+
+
 html[data-theme="light"] {
   --ifm-link-color: var(--c-accent);
   --ifm-link-hover-color: var(--c-accent);
@@ -1682,6 +1756,7 @@ body[class*="docs-doc-id-reference"] .row {
   width: 80px;
   height: 80px;
   flex-shrink: 0;
+  object-fit: contain;
   filter: drop-shadow(0 4px 12px rgba(4, 159, 154, 0.3));
 }
 
@@ -2094,6 +2169,100 @@ body[class*="docs-doc-id-reference"] .row {
   font-weight: 400;
 }
 
+/* SIG meta block — reusable directory-style fact list for SIG cards */
+.reference-card-featured .sig-meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 20px;
+  margin: 18px 0 24px 0;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.reference-card-featured .sig-meta > div {
+  display: contents;
+}
+
+.reference-card-featured .sig-meta dt {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 4px 0;
+  text-shadow: none !important;
+}
+
+.reference-card-featured .sig-meta dd {
+  color: #ffffff !important;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 4px 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Action row — primary subscribe button + secondary link button */
+.reference-card-featured .sig-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4px;
+}
+
+/* Secondary action button - outlined, sits next to the primary subscribe button */
+.reference-card-featured a.sig-secondary-button,
+.reference-card-featured a.sig-secondary-button:link,
+.reference-card-featured a.sig-secondary-button:visited {
+  background: transparent !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255, 255, 255, 0.7) !important;
+  font-weight: 600 !important;
+  padding: 12px 22px !important;
+  border-radius: 999px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 1rem !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  letter-spacing: 0.01em !important;
+}
+
+.reference-card-featured a.sig-secondary-button .sig-secondary-button-icon,
+.reference-card-featured a.sig-secondary-button svg {
+  color: #ffffff !important;
+  flex-shrink: 0;
+}
+
+.reference-card-featured a.sig-secondary-button:hover,
+.reference-card-featured a.sig-secondary-button:focus-visible {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  text-decoration: none !important;
+}
+
+[data-theme='dark'] .reference-card-featured a.sig-secondary-button,
+[data-theme='dark'] .reference-card-featured a.sig-secondary-button:link,
+[data-theme='dark'] .reference-card-featured a.sig-secondary-button:visited {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-theme='dark'] .reference-card-featured a.sig-secondary-button:hover,
+[data-theme='dark'] .reference-card-featured a.sig-secondary-button:focus-visible {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: #ffffff !important;
+}
+
 .sig-details strong {
   color: white !important;
   font-weight: 600;
@@ -2124,44 +2293,85 @@ body[class*="docs-doc-id-reference"] .row {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Subscribe button - light background with dark text */
+/* Subscribe button - polished pill CTA on the teal card */
 .reference-card-featured a.subscribe-button,
 .reference-card-featured a.subscribe-button:link,
 .reference-card-featured a.subscribe-button:visited {
   background: #ffffff !important;
-  color: #000000 !important;
+  color: #064d4b !important;
   border: none !important;
   font-weight: 700 !important;
-  padding: 12px 24px !important;
-  border-radius: 8px !important;
-  transition: all 0.2s ease !important;
+  padding: 14px 28px !important;
+  border-radius: 999px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease !important;
   display: inline-flex !important;
   align-items: center !important;
+  gap: 10px !important;
   font-size: 1rem !important;
   text-decoration: none !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06) !important;
   text-shadow: none !important;
-  letter-spacing: 0 !important;
+  letter-spacing: 0.01em !important;
+  position: relative !important;
 }
 
-.reference-card-featured a.subscribe-button:hover {
-  background: #f0f0f0 !important;
-  color: #000000 !important;
+.reference-card-featured a.subscribe-button .subscribe-button-icon {
+  color: #064d4b !important;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.reference-card-featured a.subscribe-button .subscribe-button-arrow {
+  display: inline-block;
+  font-weight: 800;
+  transition: transform 0.2s ease;
+  color: inherit;
+}
+
+.reference-card-featured a.subscribe-button:hover,
+.reference-card-featured a.subscribe-button:focus-visible {
+  background: #064d4b !important;
+  color: #ffffff !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.35),
+    0 0 0 2px rgba(255, 255, 255, 0.85) !important;
   text-decoration: none !important;
+}
+
+.reference-card-featured a.subscribe-button:hover .subscribe-button-icon,
+.reference-card-featured a.subscribe-button:focus-visible .subscribe-button-icon {
+  color: #ffffff !important;
+}
+
+.reference-card-featured a.subscribe-button:hover .subscribe-button-arrow,
+.reference-card-featured a.subscribe-button:focus-visible .subscribe-button-arrow {
+  transform: translateX(4px);
 }
 
 [data-theme='dark'] .reference-card-featured a.subscribe-button,
 [data-theme='dark'] .reference-card-featured a.subscribe-button:link,
 [data-theme='dark'] .reference-card-featured a.subscribe-button:visited {
   background: #ffffff !important;
-  color: #000000 !important;
+  color: #064d4b !important;
 }
 
-[data-theme='dark'] .reference-card-featured a.subscribe-button:hover {
-  background: #f0f0f0 !important;
-  color: #000000 !important;
+[data-theme='dark'] .reference-card-featured a.subscribe-button .subscribe-button-icon {
+  color: #064d4b !important;
+}
+
+[data-theme='dark'] .reference-card-featured a.subscribe-button:hover,
+[data-theme='dark'] .reference-card-featured a.subscribe-button:focus-visible {
+  background: #042e2d !important;
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] .reference-card-featured a.subscribe-button:hover .subscribe-button-icon,
+[data-theme='dark'] .reference-card-featured a.subscribe-button:focus-visible .subscribe-button-icon {
+  color: #ffffff !important;
 }
 
 .reference-card-featured:hover {
@@ -2195,6 +2405,16 @@ body[class*="docs-doc-id-reference"] .row {
 
 [data-theme='dark'] .reference-card:hover {
   box-shadow: 0 8px 20px rgba(44, 224, 191, 0.15);
+}
+
+.reference-card--active {
+  border-color: var(--teal-6);
+  background: rgba(4, 159, 154, 0.06);
+}
+
+[data-theme='dark'] .reference-card--active {
+  border-color: var(--teal-6);
+  background: rgba(4, 159, 154, 0.1);
 }
 
 .reference-icon {
@@ -2462,6 +2682,54 @@ body[class*="docs-doc-id-reference"] .row {
 
 
 
+
+/* ===== CRD Browser Navbar Button ===== */
+.navbar-crd-browser {
+  padding: 6px 16px !important;
+  border-radius: 100px !important;
+  background: linear-gradient(135deg, var(--teal-6) 0%, var(--teal-7) 100%) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--teal-7) 35%, transparent);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
+  position: relative;
+  overflow: hidden;
+  margin-left: 6px;
+}
+
+.navbar-crd-browser::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 55%);
+  pointer-events: none;
+}
+
+.navbar-crd-browser:hover {
+  background: linear-gradient(135deg, var(--teal-7) 0%, var(--teal-10) 100%) !important;
+  color: var(--teal-2) !important;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--teal-7) 50%, transparent) !important;
+  transform: translateY(-2px);
+}
+
+.navbar-crd-browser:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--teal-7) 30%, transparent) !important;
+}
+
+[data-theme='dark'] .navbar-crd-browser {
+  background: linear-gradient(135deg, var(--teal-7) 0%, var(--teal-10) 100%) !important;
+  color: var(--teal-2) !important;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--teal-10) 50%, transparent);
+}
+
+[data-theme='dark'] .navbar-crd-browser:hover {
+  background: linear-gradient(135deg, var(--teal-6) 0%, var(--teal-7) 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--teal-6) 45%, transparent) !important;
+}
 
 /* ===== Role-based Page Header Accents ===== */
 /* Add subtle top border to main content based on current section */

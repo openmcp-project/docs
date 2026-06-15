@@ -1,5 +1,6 @@
 ---
-sidebar_position: 2
+sidebar_position: 1
+id: gardener-provider
 ---
 
 import Tabs from '@theme/Tabs';
@@ -8,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Prod: Run on Gardener
 
-### Requirements
+## Requirements
 
 * A running Gardener installation (see the [Gardener documentation](https://gardener.cloud/docs/) for more information on Gardener)
 * A Gardener project in which the clusters will be created
@@ -17,7 +18,7 @@ import TabItem from '@theme/TabItem';
 * If the Gardener installation is using OIDC for authentication, install the [OIDC kubectl plugin](https://github.com/int128/kubelogin)
 * Good understanding of Gardener and how to create Gardener Shoot clusters and Service Accounts in Gardener Projects.
 
-### Create a configuration folder
+## Create a configuration folder
 
 Create a directory that will be used to store the configuration files and the kubeconfig files.
 To keep this example simple, we will use a single directory named `config` in the current working directory.
@@ -34,9 +35,9 @@ Create a directory named `kubeconfigs` in the configuration folder to store the 
 mkdir kubeconfigs
 ```
 
-### Create a Gardener Shoot for the Platform Cluster
+## Create a Gardener Shoot for the Platform Cluster
 
-openMCP requires a running Kubernetes cluster that acts as the platform cluster.
+OpenControlPlane requires a running Kubernetes cluster that acts as the platform cluster.
 The platform cluster hosts the openmcp-operator and all service providers, cluster providers and platform services.
 In this example, we will create a Gardener Shoot cluster that acts as the platform cluster. See the [Gardener documentation](https://gardener.cloud/docs/getting-started/shoots/) for more information on how to create a Gardener Shoot cluster.
 
@@ -87,11 +88,11 @@ Download the admin kubeconfig of the `platform` Shoot cluster using the script c
 ./scripts/get-shoot-kubeconfig.sh <path-to-gardener-kubeconfig> <your-gardener-project-name> platform > ./kubeconfigs/platform.kubeconfig
 ```
 
-### Create a bootstrapping configuration file (bootstrapper-config.yaml) in the configuration folder
+## Create a bootstrapping configuration file (bootstrapper-config.yaml) in the configuration folder
 
 Replace `<your-org>` and `<your-repo>` with your Git organization and repository name.
 The environment can be set to the logical environment name (e.g. `dev`, `prod`, `live-eu-west`) that will be used in the Git repository to separate different environments.
-The branch can be set to the desired branch name in the Git repository that will be used to store the desired state of the openMCP landscape.
+The branch can be set to the desired branch name in the Git repository that will be used to store the desired state of the OpenControlPlane landscape.
 
 Get the latest version of the `github.com/openmcp/openmcp` root component:
 
@@ -116,7 +117,7 @@ openmcpOperator:
   config: {}
 ```
 
-### Create a Git configuration file (git-config.yaml) in the configuration folder
+## Create a Git configuration file (git-config.yaml) in the configuration folder
 
 For GitHub use a personal access token with `repo` write permissions.
 It is also possible to use a fine-grained token. In this case, it requires read and write permissions for `Contents`.
@@ -128,7 +129,7 @@ auth:
     password: "<your-git-token>"
 ```
 
-### Run the `openmcp-bootstrapper` CLI tool to deploy FluxCD to the Platform Cluster
+## Run the `openmcp-bootstrapper` CLI tool to deploy FluxCD to the Platform Cluster
 
 Run the `openmcp-bootstrapper` CLI tool to deploy FluxCD to the `platform` Gardener Shoot cluster:
 
@@ -154,12 +155,11 @@ Info: Applying flux deployment objects
 Info: Deployment of flux controllers completed
 ```
 
-### Inspect the deployed FluxCD controllers and Kustomization
+## Inspect the deployed FluxCD controllers and Kustomization
 
-Load the kubeconfig of the Kind cluster and check the deployed FluxCD controllers and the created GitRepository and Kustomization.
+Check the deployed FluxCD controllers and the created GitRepository and Kustomization:
 
 ```shell
-kind get kubeconfig --name platform > ./kubeconfigs/platform.kubeconfig
 kubectl --kubeconfig ./kubeconfigs/platform.kubeconfig get pods -n flux-system
 ```
 
@@ -201,7 +201,7 @@ flux-system   flux-system   3m15s   False   Source artifact not found, retrying 
 
 This error is also expected as the GitRepository does not exist yet. The `openmcp-bootstrapper` will create the GitRepository in the next step.
 
-### Run the `openmcp-bootstrapper` CLI tool to deploy openMCP to the Kind cluster
+## Run the `openmcp-bootstrapper` CLI tool to deploy OpenControlPlane to the Kind cluster
 
 Update the bootstrapping configuration file (bootstrapper-config.yaml) to include the Gardener cluster provider and the openmcp-operator configuration.
 
@@ -272,6 +272,8 @@ mkdir ./config/extra-manifests
 
 In the `extra-manifests` folder, create a file named `gardener-landscape.yaml` with the following content:
 
+:::apply-to-platform
+
 ```yaml title="config/extra-manifests/gardener-landscape.yaml"
 apiVersion: gardener.clusters.openmcp.cloud/v1alpha1
 kind: Landscape
@@ -283,6 +285,8 @@ spec:
       name: gardener-landscape-kubeconfig
       namespace: openmcp-system
 ```
+
+:::
 
 The gardener landscape configuration requires a secret that contains the kubeconfig to access the Gardener project. For that purpose, create a secret named `gardener-landscape-kubeconfig` in the `openmcp-system` namespace of the platform cluster that contains the kubeconfig file that has access to the Gardener installation.
 See the [Gardener documentation](https://gardener.cloud/docs/dashboard/automated-resource-management/#create-a-service-account) on how to create a service account in the Gardener project using the Gardener dashboard.
@@ -512,10 +516,10 @@ Replace `<gardener-project-name>` with the name of your Gardener project and `<g
 Replace also `<kubernetes-version>` with the desired Kubernetes version (e.g. `1.32`), `<garden-linux-version>` with the desired Garden Linux version (e.g. `1592.9.0`), `<region-name>` with the desired region (e.g. `europe-west1`), and `<zone-name>` with the desired zone (e.g. `europe-west1-c`).
 
 :::info
-Please adjust the shoot configuration based on your specific needs, e.g. change `Evaluation` to `Production` as purpose, if you are planning to use the MCP for productive purposes. For all the details reg. Shoot configuration, please consult the respective Gardener documentation.
+Please adjust the shoot configuration based on your specific needs, e.g. change `Evaluation` to `Production` as purpose, if you are planning to use the ControlPlane for productive purposes. For all the details reg. Shoot configuration, please consult the respective Gardener documentation.
 :::
 
-Now run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy openMCP to the `platform` Gardener Shoot cluster:
+Now run the `openmcp-bootstrapper` CLI tool to update the Git repository and deploy OpenControlPlane to the `platform` Gardener Shoot cluster:
 
 ```shell
 docker run --rm -v ./config:/config -v ./kubeconfigs:/kubeconfigs ghcr.io/openmcp-project/images/openmcp-bootstrapper:${OPENMCP_BOOTSTRAPPER_VERSION} manage-deployment-repo --git-config /config/git-config.yaml --kubeconfig /kubeconfigs/platform.kubeconfig --extra-manifest-dir /config/extra-manifests /config/bootstrapper-config.yaml
@@ -545,56 +549,55 @@ Info: Running kustomize on /tmp/openmcp.cloud.bootstrapper-245193548/repo/envs/d
 Info: Applying Kustomization manifest: default/bootstrap
 ```
 
-### Inspect the Git repository
+## Inspect the Git repository
 
-The desired state of the openMCP landscape has now been created in the Git repository and should look similar to the following structure:
+The desired state of the OpenControlPlane landscape has now been created in the Git repository and should look similar to the following structure:
 
 ```shell
 .
 ├── envs
-│   └── dev
-│       ├── fluxcd
-│       │   ├── flux-kustomization.yaml
-│       │   ├── gitrepo.yaml
-│       │   └── kustomization.yaml
-│       ├── kustomization.yaml
-│       ├── openmcp
-│       │   ├── config
-│       │   │   └── openmcp-operator-config.yaml
-│       │   └── kustomization.yaml
-│       └── root-kustomization.yaml
+│   └── dev
+│       ├── fluxcd
+│       │   ├── flux-kustomization.yaml
+│       │   ├── gitrepo.yaml
+│       │   └── kustomization.yaml
+│       ├── kustomization.yaml
+│       ├── openmcp
+│       │   ├── config
+│       │   │   └── openmcp-operator-config.yaml
+│       │   └── kustomization.yaml
+│       └── root-kustomization.yaml
 └── resources
     ├── fluxcd
-    │   ├── components.yaml
-    │   ├── flux-kustomization.yaml
-    │   ├── gitrepo.yaml
-    │   └── kustomization.yaml
+    │   ├── components.yaml
+    │   ├── flux-kustomization.yaml
+    │   ├── gitrepo.yaml
+    │   └── kustomization.yaml
     ├── kustomization.yaml
     ├── openmcp
-    │   ├── cluster-providers
-    │   │   └── gardener.yaml
-    │   ├── crds
-    │   │   ├── clusters.openmcp.cloud_accessrequests.yaml
-    │   │   ├── clusters.openmcp.cloud_clusterprofiles.yaml
-    │   │   ├── clusters.openmcp.cloud_clusterrequests.yaml
-    │   │   ├── clusters.openmcp.cloud_clusters.yaml
-    │   │   ├── gardener.clusters.openmcp.cloud_clusterconfigs.yaml
-    │   │   ├── gardener.clusters.openmcp.cloud_landscapes.yaml
-    │   │   ├── gardener.clusters.openmcp.cloud_providerconfigs.yaml
-    │   │   ├── openmcp.cloud_clusterproviders.yaml
-    │   │   ├── openmcp.cloud_platformservices.yaml
-    │   │   └── openmcp.cloud_serviceproviders.yaml
-    │   ├── deployment.yaml
-    │   ├── extra
-    │   │   ├── gardener-cluster-provider-shoot-small.yaml
-    │   │   ├── gardener-cluster-provider-shoot-workerless.yaml
-    │   │   └── gardener-landscape.yaml
-    │   ├── kustomization.yaml
-    │   ├── namespace.yaml
-    │   └── rbac.yaml
+    │   ├── cluster-providers
+    │   │   └── gardener.yaml
+    │   ├── crds
+    │   │   ├── clusters.openmcp.cloud_accessrequests.yaml
+    │   │   ├── clusters.openmcp.cloud_clusterprofiles.yaml
+    │   │   ├── clusters.openmcp.cloud_clusterrequests.yaml
+    │   │   ├── clusters.openmcp.cloud_clusters.yaml
+    │   │   ├── gardener.clusters.openmcp.cloud_clusterconfigs.yaml
+    │   │   ├── gardener.clusters.openmcp.cloud_landscapes.yaml
+    │   │   ├── gardener.clusters.openmcp.cloud_providerconfigs.yaml
+    │   │   ├── openmcp.cloud_clusterproviders.yaml
+    │   │   ├── openmcp.cloud_platformservices.yaml
+    │   │   └── openmcp.cloud_serviceproviders.yaml
+    │   ├── deployment.yaml
+    │   ├── extra
+    │   │   ├── gardener-cluster-provider-shoot-small.yaml
+    │   │   ├── gardener-cluster-provider-shoot-workerless.yaml
+    │   │   └── gardener-landscape.yaml
+    │   ├── kustomization.yaml
+    │   ├── namespace.yaml
+    │   └── rbac.yaml
     └── root-kustomization.yaml
 ```
 
-The `envs/<environment-name>` folder contains the Kustomization files that are used by FluxCD to deploy openMCP to the platform cluster.
+The `envs/<environment-name>` folder contains the Kustomization files that are used by FluxCD to deploy OpenControlPlane to the platform cluster.
 The `resources` folder contains the base resources that are used by the Kustomization files in the `envs/<environment-name>` folder.
-
