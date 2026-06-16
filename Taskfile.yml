@@ -23,7 +23,7 @@ tasks:
           -p 3000:3000 \
           --userns=keep-id \
           node:25-alpine \
-          sh -c "npm ci && npm start -- --host 0.0.0.0"
+          sh -c "npm ci && npm start -- --host 0.0.0.0 --poll 3000"
 
   docker-serve:
     desc: Build and serve the production Docusaurus site in Docker
