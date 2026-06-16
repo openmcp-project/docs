@@ -209,7 +209,38 @@ Many HTTP and TLS client libraries can be configured to trust additional certifi
 
 ## Step 4 — Re-enqueue on ConfigMap changes
 
-TODO
+When the CA bundle ConfigMap is updated, your controller must reconcile all `FooService` objects so they pick up the new certificate. The runtime provides a `ConfigMapWatcher` interface for this.
+
+### 4a. Implement `ConfigMapWatcher` on your reconciler
+
+```go title="internal/controller/fooservice_controller.go"
+// IsReferencedConfigMap returns true if the given ConfigMap should trigger
+// reconciliation. See serviceprovider.ConfigMapWatcher for details.
+func (r *FooServiceReconciler) IsReferencedConfigMap(ctx context.Context, configMap *corev1.ConfigMap, pc *apiv1alpha1.ProviderConfig) bool {
+    if pc == nil || pc.Spec.CABundleRef == nil {
+        return false
+    }
+    return configMap.Name == pc.Spec.CABundleRef.Name
+}
+```
+
+### 4b. Register the watch namespace on the builder
+
+Tell the `APIReconcilerBuilder` which namespace to watch for ConfigMap changes. Pass the same namespace used to read the bundle (your pod's namespace):
+
+```go title="cmd/main.go"
+spr := serviceprovider.NewAPIReconcilerBuilder[*fooservicesv1alpha1.FooService, *fooservicesv1alpha1.ProviderConfig]().
+    EmptyObjectProvider(func() *fooservicesv1alpha1.FooService { return &fooservicesv1alpha1.FooService{} }).
+    PlatformCluster(platformCluster).
+    OnboardingCluster(onboardingCluster).
+    // highlight-next-line
+    ConfigMapNamespace(podNamespace).
+    Reconciler(&controller.FooServiceReconciler{...}).
+    // ...
+```
+
+With these two changes in place, the runtime will watch ConfigMaps in the given namespace on the platform cluster. Whenever a ConfigMap changes, `IsReferencedConfigMap` is called — if it returns `true`, all `FooService` objects are re-enqueued for reconciliation automatically.
+
 ## Verification
 
 1. Create a `ProviderConfig` with a `caBundleRef` pointing to a ConfigMap that contains a self-signed CA certificate.
