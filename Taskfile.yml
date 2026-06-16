@@ -13,6 +13,18 @@ tasks:
           node:25-alpine \
           sh -c "npm ci && npm start -- --host 0.0.0.0"
 
+  podman-dev:
+    desc: Run the Docusaurus dev server in rootless Podman with live reload
+    cmds:
+      - |
+        podman run --rm -it \
+          -v "$(pwd):/workspace" \
+          -w /workspace \
+          -p 3000:3000 \
+          --userns=keep-id \
+          node:25-alpine \
+          sh -c "npm ci && npm start -- --host 0.0.0.0"
+
   docker-serve:
     desc: Build and serve the production Docusaurus site in Docker
     cmds:
