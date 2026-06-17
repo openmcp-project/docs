@@ -269,7 +269,7 @@ export default function Home() {
               <div className="image-bg"></div>
               <img
                 className="image-src"
-                src={require("/img/co_axolotl.png").default}
+                src={require("/img/opencontrolplane-icon-color.svg").default}
                 alt="Crossplane Axolotl"
                 style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", objectFit: "contain", zIndex: 1 }}
               />
