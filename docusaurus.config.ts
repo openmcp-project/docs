@@ -100,12 +100,12 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/co_axolotl.png',
+    image: 'img/opencontrolplane-icon-color.svg',
     navbar: {
       title: 'OpenControlPlane',
       logo: {
         alt: 'OpenControlPlane Logo',
-        src: 'img/co_axolotl_mirrored.png',
+        src: 'img/opencontrolplane-icon-color.svg',
       },
       items: [
         {
