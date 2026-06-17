@@ -1,7 +1,3 @@
----
-sidebar_position: 1
----
-
 # Implement Custom CA Support
 
 Use this guide when the domain service managed by your service provider needs to trust custom Certificate Authorities — for example, to connect to APIs of a private cloud platform, a database server, or any HTTPS endpoint whose certificate is signed by a non-public CA.
@@ -172,6 +168,10 @@ if err := r.syncCABundle(ctx, pc, caBundle, workloadClient, targetNamespace); er
 }
 ```
 
+:::note
+When `caBundleRef` is removed from the `ProviderConfig`, `syncCABundle` returns early (because `caBundle == nil`) and the previously copied ConfigMap will remain in the target namespace as an orphan. The orphan is harmless (it contains no secrets), but you may want to add a cleanup step that deletes the `ca-bundle` ConfigMap from the target namespace when `pc.Spec.CABundleRef == nil`.
+:::
+
 **Mount the ConfigMap and set EnvVar** in any Pod spec you manage:
 
 ```go
@@ -195,10 +195,10 @@ var certDirectories = []string{
     "/etc/open-control-plane/custom-ca",
 }
 
-pod.Spec.Containers.Env[0] = append(pod.Spec.Containers[0].Env, corev1.EnvVar{
+pod.Spec.Containers[0].Env = append(pod.Spec.Containers[0].Env, corev1.EnvVar{
     Name:  "SSL_CERT_DIR",
-    Value: strings.Join(certDirectories, ":"),  # appending the mount path of our custom CA cert to the usual directories
-}
+    Value: strings.Join(certDirectories, ":"), // appending the mount path of our custom CA cert to the usual directories
+})
 ```
 
 If you deploy via Helm, pass the bundle content as a chart value instead and let the chart handle the ConfigMap and volume mount.
