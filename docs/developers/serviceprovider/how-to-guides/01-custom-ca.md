@@ -246,5 +246,5 @@ With these two changes in place, the runtime will watch ConfigMaps in the given 
 1. Create a `ProviderConfig` with a `caBundleRef` pointing to a ConfigMap that contains a self-signed CA certificate.
 2. Verify your controller reads the ConfigMap without errors (check the controller logs).
 3. Confirm that outbound HTTPS connections to a service signed by that CA succeed.
-4. Update the ConfigMap content and confirm the controller reconciles all `FooService` objects automatically.
+4. Update the ConfigMap content and confirm the controller reconciles all `FooService` objects automatically (e.g. watch controller logs for new reconcile entries)
 5. Remove `caBundleRef` from the `ProviderConfig` and confirm the controller falls back to default TLS behavior.
