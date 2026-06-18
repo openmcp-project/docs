@@ -43,7 +43,7 @@ The separation ensures end users never touch infrastructure. They interact only 
 ## Install ocpctl
 
 ```shell
-go install github.com/openmcp-project/ocpctl@v0.1.0-alpha.1
+go install github.com/openmcp-project/ocpctl@v0.1.2
 ```
 
 Or download a pre-built binary from the [releases page](https://github.com/openmcp-project/ocpctl/releases/latest).
@@ -70,12 +70,14 @@ kubectl get pods -n openmcp-system
 You should see these pods in `Running` state:
 
 ```
-NAME                                     READY   STATUS      RESTARTS   AGE
-cp-kind-66fbf7d448-bd5xg                 1/1     Running     0          72s
-cp-kind-init-2zl9x                       0/1     Completed   0          83s
-openmcp-operator-d5c547c75-w5ngg         1/1     Running     0          2m3s
-ps-managedcontrolplane-9c848d7bc-49czl   1/1     Running     0          51s
-ps-managedcontrolplane-init-d7v4k        0/1     Completed   0          84s
+NAME                                      READY   STATUS      RESTARTS   AGE
+cp-kind-5cf448bb88-6nd2m                  1/1     Running     0          72s
+cp-kind-init-7c9fl                        0/1     Completed   0          83s
+openmcp-operator-5b7f788ddb-swq8j         1/1     Running     0          2m3s
+ps-helmdeployer-644d7454fc-9w852          1/1     Running     0          56s
+ps-helmdeployer-init-44z5k                0/1     Completed   0          87s
+ps-managedcontrolplane-7958959559-l55kg   1/1     Running     0          51s
+ps-managedcontrolplane-init-mkwnq         0/1     Completed   0          84s
 ```
 
 :::
@@ -95,7 +97,7 @@ metadata:
   name: flux
   namespace: openmcp-system
 spec:
-  image: ghcr.io/openmcp-project/images/service-provider-flux:v0.2.0
+  image: ghcr.io/openmcp-project/images/service-provider-flux:v1.0.0
 EOF
 ```
 
@@ -109,7 +111,7 @@ Once `ServiceProvider` Flux is running, apply a `ProviderConfig` to define which
 
 ```shell
 kubectl apply -f - <<EOF
-apiVersion: flux.services.openmcp.cloud/v1alpha1
+apiVersion: flux.services.open-control-plane.io/v1alpha1
 kind: ProviderConfig
 metadata:
   name: flux
@@ -193,7 +195,7 @@ The team wants Flux installed on their `ControlPlane`:
 ```shell
 kubectl config use-context kind-local-onboarding
 kubectl apply -f - <<EOF
-apiVersion: flux.services.openmcp.cloud/v1alpha1
+apiVersion: flux.services.open-control-plane.io/v1alpha1
 kind: Flux
 metadata:
   name: my-controlplane
