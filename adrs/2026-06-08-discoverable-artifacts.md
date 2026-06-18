@@ -7,15 +7,15 @@ authors:
 
 # Discoverable Artifacts
 
-The goal of this ADR is to define the concept for discovering the location where to get OCI artifacts for different services.
+This ADR defines how consumers discover the location of OCI artifacts for different services.
 
-One example is how a service provider, like crossplane-service-provider, running inside the OpenCP platform discovers where to get the chart and image for crossplane from? The solution for it will be defined in this ADR.
+For example, a service provider such as `crossplane-service-provider`, running inside the openMCP platform, needs to know where to fetch the Crossplane Helm chart and container image from. This ADR defines the solution.
 
 ## Current state
 
 ### Service Providers
 
-Each Service Provider is deployed by creating a `ServiceProvider` resource where the OCI image URL of the provider itself is specified directly:
+Each Service Provider is deployed by creating a `ServiceProvider` resource in which the OCI image URL of the provider is specified directly:
 
 ```yaml
 # From service-provider-flux
@@ -28,7 +28,7 @@ spec:
   image: ghcr.io/openmcp-project/images/service-provider-flux:v0.1.0
 ```
 
-The `ProviderConfig` resource of a Service Provider defines which versions of the managed service are available. For each version, all OCI artifact URLs (Helm chart and container images) plus pull secrets for private registries must be specified manually:
+The `ProviderConfig` resource of a Service Provider defines which versions of the managed service are available. For each version, all OCI artifact URLs (Helm chart and container image) as well as pull secrets for private registries must be specified manually:
 
 ```yaml
 # From service-provider-crossplane
@@ -92,7 +92,7 @@ spec:
 
 ### Platform Services
 
-When installing a Platform Service, the OCI image URL of the platform service controller itself is specified directly in the `PlatformService` resource:
+When installing a Platform Service, the OCI image URL of the controller is specified directly in the `PlatformService` resource:
 
 ```yaml
 # From platform-service-gateway
@@ -104,7 +104,7 @@ spec:
   image: ghcr.io/openmcp-project/images/platform-service-gateway:v0.1.0
 ```
 
-A Platform Service may additionally expose a service-specific config resource where image URLs and Helm chart locations for its dependencies must be configured manually:
+A Platform Service may additionally expose a service-specific configuration resource in which image URLs and Helm chart locations for its dependencies must be configured manually:
 
 ```yaml
 # From platform-service-gateway — GatewayServiceConfig
@@ -144,27 +144,27 @@ spec:
   image: "ghcr.io/openmcp-project/images/cluster-provider-gardener:v0.2.0"
 ```
 
-## New solution
+## New Solution
 
-A central way, managed by the platform, to get the location of images from.
+A centrally managed, platform-provided mechanism for resolving the location of OCI images.
 
 ### Requirements
 
-- multiple versions of an artifact must be storable
-- the solution must be usable in local development
-- pullsecrets for an artifact should be inherited
+- Multiple versions of an artifact must be storable.
+- The solution must support local development.
+- Pull secrets for an artifact should be inherited.
 
-### Flows which needs to be supported
+### Flows That Must Be Supported
 
-1. Give me all versions of artifact, e.g. `crossplane-chart`.
-2. Give me the pull secrets for artifact `crossplane-chart` version `v1.10`
-3. Different versions of an artifact can come from different registries.
+1. Retrieve all versions of an artifact, e.g. `crossplane-chart`.
+2. Retrieve the pull secrets for artifact `crossplane-chart` at version `v1.10`.
+3. Different versions of an artifact may originate from different registries.
 
 ## Scope
 
 ### In Scope
 
-- we are only supporting OCI images/artifacts
+- OCI images and artifacts only.
 
 ### Out of Scope
 
@@ -172,8 +172,7 @@ A central way, managed by the platform, to get the location of images from.
 
 ### Artifacts
 
-A new resource inside the `platform` cluster called `Artifact`.
-One artifact will point to exactly one oci image.
+A new resource in the `platform` cluster called `Artifact`. Each `Artifact` points to exactly one OCI image.
 
 ```yaml
 kind: Artifact
@@ -188,12 +187,12 @@ spec:
       namespace:
 ```
 
-The `metadata.name` of an Artifact is arbitrary.
-They are intended to be fetched by their specfields using a `fieldSelector`.
+The `metadata.name` of an `Artifact` is arbitrary.
+Artifacts are intended to be retrieved by their `spec` fields using a `fieldSelector`.
 <!-- TODO: Valentin -->
 
-The `spec.version` parameter is not the same as the `tag` of the underlying oci image. The version is the version of the parent component, the user can select.
-For example `crossplane` is a component, which consists of two `artifacts`, the `chart` and the `image`. So there will be two `Artifact` resources which will be called:
+The `spec.version` field is not the same as the `tag` of the underlying OCI image. The version represents the version of the parent component that a user selects.
+For example, `crossplane` is a component that consists of two artifacts: the `chart` and the `image`. There will therefore be two `Artifact` resources:
 
 ```yaml
 kind: Artifact
@@ -219,13 +218,13 @@ spec:
       namespace:
 ```
 
-So they have different image `tags` but are listed under the same version. So a consuming entity can then easily knows I will use the chart with the tag `v1.20.0` and the image `v2.1.2` when a customer install the version `v1.20.0`.
+Both artifacts carry different image tags but share the same component version. A consuming entity can therefore resolve: "for component version `v1.20.0`, use chart tag `v1.20.0` and image tag `v2.1.2`."
 
 ![Discoverable Artifacts](./discoverable-artifacts.excalidraw.svg)
 
-### ProviderConfig example
+### ProviderConfig Example
 
-Every `ServiceProvider` has a `ProviderConfig` resource. As we need to tell the `ServiceProvider` how to get to the `Artifact`s we need to define this in the `ProviderConfig`.
+Every `ServiceProvider` has a `ProviderConfig` resource. To inform the `ServiceProvider` how to locate the relevant `Artifact` resources, selectors are defined in the `ProviderConfig`.
 
 Example for the `ServiceProvider` Crossplane:
 
