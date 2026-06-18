@@ -1,6 +1,6 @@
 ---
 authors:
-  - ValentinGerlach # Change to your own handle. Add yourself to "authors.yml" if necessary.
+  - ValentinGerlach
   - MoritzMarby
 ---
 
