@@ -42,14 +42,13 @@ Finally, the platform should provide clear, machine-readable status reporting â€
 
 ### Component
 
-A component in OpenControlPlane is a part of the Platform. For example, the openmcp-operator is a component. Platform services, Cluster Providers and Service Providers are also components.
+A component in OpenControlPlane is a discrete part of the platform. Examples include the openmcp-operator, platform services, cluster providers, and service providers.
 
 ## Solution Proposal
 
 ### Distribution Configuration in Releases
 
-Every component in OpenControlPlane ships its own [`ResourceGraphDefinition`](https://kro.run/api/crds/resourcegraphdefinition). This will be part of the OCM component the component is shipped in.
-These RGDs should install the component in the cluster it is in.
+Every component in OpenControlPlane ships its own [`ResourceGraphDefinition`](https://kro.run/api/crds/resourcegraphdefinition) as part of its OCM component artifact. Each RGD describes how to install that component into the cluster it is deployed on.
 
 Example for the `openmcp-operator`:
 
@@ -253,7 +252,7 @@ spec:
                     name: ${configmap.metadata.name}
 ```
 
-The RGD can then be installed using the ocm controllers. So for the example above this would look like this:
+The RGD can then be installed using the OCM controllers. For the example above, this would look as follows:
 
 ```yaml
 apiVersion: delivery.ocm.software/v1alpha1
@@ -291,7 +290,7 @@ spec:
   additionalStatusFields:
     oci: resource.access.toOCI()
 ---
-# This will result in the rgd being installed in the kubernetes cluster, then we just need to create an instance of it and the OpenMCPOperator will be installed.
+# Once the RGD is installed in the cluster, create an instance to install the OpenMCP Operator.
 apiVersion: delivery.ocm.software/v1alpha1
 kind: Deployer
 metadata:
@@ -350,17 +349,17 @@ spec:
               tenancy: Shared
 ```
 
-After it, the openmcp controller is installed and if we upgrade the ocm component, it will also automatically gets updated, without any configuration change.
+Once this is applied, the OpenMCP Operator is installed. When the OCM component is upgraded, the operator is automatically updated without any configuration change.
 
-We could even define a semver filter in the OCM component resource to automatically update to minor versions.
+A semver filter can be defined on the OCM component resource to automatically update to new minor versions.
 
-The main concept will be, that all of our components ship their deployment configuration and information with themself using RGDs. This would allow a loosely connected deployment. This would also allow that we bundle up resources to distributions (see next chapter).
+The core principle is that all components ship their deployment configuration alongside their release artifacts using RGDs. This enables loosely coupled deployments and makes it possible to bundle components into distributions (see the next section).
 
 ### Distributions
 
-Using another RGD we could bundle up the whole OpenControlPlane Platform in a single RGD which would allow the bootstrapping of the whole Platform in a few simple Resources.
+Using a top-level RGD, the entire OpenControlPlane platform can be bundled into a single resource graph, enabling the platform to be bootstrapped with a small number of Kubernetes resources.
 
-The following example will show a Kind Distribution of OpenControlPlane.
+The following example shows a Kind distribution of OpenControlPlane.
 
 ```yaml
 apiVersion: kro.run/v1alpha1
@@ -417,7 +416,7 @@ spec:
           additionalStatusFields:
             oci: resource.access.toOCI()
 
-    # This will result in the rgd being installed in the kubernetes cluster, then we just need to create an instance of it and the OpenMCPOperator will be installed.
+    # Once the RGD is installed in the cluster, create an instance to install the OpenMCP Operator.
     - id: openmcpoperatordeployer
       template:
         apiVersion: delivery.ocm.software/v1alpha1
@@ -526,7 +525,7 @@ spec:
           ocmComponentName: ${clusterproviderkindcomponent.metadata.name}
 ```
 
-If we install this RGD inside the cluster we could use the following instance to install the whole suite for a kind setup with a default configuration.
+Once this RGD is installed in the cluster, the following instance bootstraps the full platform suite for a Kind setup with a default configuration.
 
 The RGD itself is also shipped as an OCM component (`openmcp-platform-kind`), so the cluster only needs to bootstrap the OCM `Repository`, pull the distribution component, deploy its RGD, and then instantiate `OpenMCPPlatform`. Everything from this point on is upgradeable through OCM.
 
