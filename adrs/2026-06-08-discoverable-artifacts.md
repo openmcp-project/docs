@@ -15,17 +15,134 @@ One example is how a service provider, like crossplane-service-provider, running
 
 ### Service Providers
 
-In there `ProviderConfig` they have a definition for `availableVersions` where the oci url is defined.
+Each Service Provider is deployed by creating a `ServiceProvider` resource where the OCI image URL of the provider itself is specified directly:
 
-When installing a Service Provider the image url is directly specified in the `ServiceProvider` resource.
+```yaml
+# From service-provider-flux
+apiVersion: openmcp.cloud/v1alpha1
+kind: ServiceProvider
+metadata:
+  name: flux
+  namespace: openmcp-system
+spec:
+  image: ghcr.io/openmcp-project/images/service-provider-flux:v0.1.0
+```
+
+The `ProviderConfig` resource of a Service Provider defines which versions of the managed service are available. For each version, all OCI artifact URLs (Helm chart and container images) plus pull secrets for private registries must be specified manually:
+
+```yaml
+# From service-provider-crossplane
+apiVersion: crossplane.services.open-control-plane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  versions:
+    - version: v2.0.2
+      chart:
+        url: "ghcr.io/openmcp-project/openmcp/charts/crossplane:2.0.2"
+        secretRef:
+          name: ghcr
+      image:
+        url: "ghcr.io/openmcp-project/openmcp/images/crossplane:2.0.2"
+        secretRef:
+          name: xyz
+    - version: v1.20.0
+      chart:
+        url: "ghcr.io/openmcp-project/openmcp/charts/crossplane:1.20.0"
+        secretRef:
+          name: ghcr
+      image:
+        url: "ghcr.io/openmcp-project/openmcp/images/crossplane:1.20.0"
+        secretRef:
+          name: xyz
+  providers:
+    availableProviders:
+      - name: provider-kubernetes
+        package: xpkg.upbound.io/upbound/provider-kubernetes
+        versions:
+          - v0.16.0
+          - v0.15.0
+    imagePullSecretRefs:
+      - name: secretforprivateproviders
+```
+
+```yaml
+# From service-provider-flux
+apiVersion: flux.services.open-control-plane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: flux
+spec:
+  versions:
+    - version: "2.8.3"
+      chartVersion: "2.18.2"
+      chartUrl: "oci://ghcr.io/fluxcd-community/charts/flux2"
+      chartPullSecret: "chart-registry-credentials"
+      values:
+        imagePullSecrets:
+          - name: "image-registry-credentials"
+        helmController:
+          image: my-registry.example.com/fluxcd/helm-controller
+          tag: v1.5.3
+        sourceController:
+          image: my-registry.example.com/fluxcd/source-controller
+          tag: v1.8.1
+```
 
 ### Platform Services
 
-When installing a platform service the image url is directly specified in the `PlatformService` resource.
+When installing a Platform Service, the OCI image URL of the platform service controller itself is specified directly in the `PlatformService` resource:
 
-### Cluster Provider
+```yaml
+# From platform-service-gateway
+apiVersion: openmcp.cloud/v1alpha1
+kind: PlatformService
+metadata:
+  name: gateway
+spec:
+  image: ghcr.io/openmcp-project/images/platform-service-gateway:v0.1.0
+```
 
-When installing a cluster provider the image url is directly specified in the `ClusterProvider` resource.
+A Platform Service may additionally expose a service-specific config resource where image URLs and Helm chart locations for its dependencies must be configured manually:
+
+```yaml
+# From platform-service-gateway — GatewayServiceConfig
+apiVersion: gateway.openmcp.cloud/v1alpha1
+kind: GatewayServiceConfig
+metadata:
+  name: gateway
+spec:
+  envoyGateway:
+    images:
+      proxy: "ghcr.io/openmcp-project/components/github.com/openmcp-project/openmcp/images/envoy-proxy:distroless-v1.36.2"
+      gateway: "ghcr.io/openmcp-project/components/github.com/openmcp-project/openmcp/images/envoy-gateway:v1.5.4"
+      rateLimit: "ghcr.io/openmcp-project/components/github.com/openmcp-project/openmcp/images/envoy-ratelimit:99d85510"
+    chart:
+      url: "oci://ghcr.io/openmcp-project/components/github.com/openmcp-project/openmcp/charts/envoy-gateway"
+      tag: "1.5.4"
+  clusters:
+    - selector:
+        matchPurpose: platform
+    - selector:
+        matchPurpose: workload
+  dns:
+    baseDomain: dev.openmcp.example.com
+```
+
+### Cluster Providers
+
+When installing a Cluster Provider, the OCI image URL is specified directly in the `ClusterProvider` resource:
+
+```yaml
+# From cluster-provider-gardener
+apiVersion: openmcp.cloud/v1alpha1
+kind: ClusterProvider
+metadata:
+  name: gardener
+spec:
+  image: "ghcr.io/openmcp-project/images/cluster-provider-gardener:v0.2.0"
+```
 
 ## New solution
 
@@ -35,7 +152,7 @@ A central way, managed by the platform, to get the location of images from.
 
 - multiple versions of an artifact must be storable
 - the solution must be usable in local development
-- pullsecrets for an artifact must
+- pullsecrets for an artifact should be inherited
 
 ### Flows which needs to be supported
 
