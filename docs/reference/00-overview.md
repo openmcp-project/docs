@@ -17,7 +17,7 @@ Resources that end users interact with to consume platform capabilities.
   <div className="reference-icon-container reference-icon-container-standard">
     <img src="/img/cp2.png" alt="ControlPlane" className="reference-icon-large" />
   </div>
-  <h3>ManagedControlPlaneV2</h3>
+  <h3>ControlPlane</h3>
   <p>The primary resource for creating and managing control planes in OpenControlPlane.</p>
   <a href="/reference/core/controlplane" className="reference-link">View CRD →</a>
 </div>

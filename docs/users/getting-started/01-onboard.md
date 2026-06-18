@@ -220,7 +220,7 @@ The `ControlPlane` resource is the heart of OpenControlPlane. Each ControlPlane 
 
 ```yaml
 apiVersion: core.openmcp.cloud/v2alpha1
-kind: ManagedControlPlaneV2
+kind: ControlPlane
 metadata:
   name: my-controlplane
   namespace: project-platform-team--ws-dev
@@ -308,7 +308,7 @@ Namespace:    project-platform-team--ws-dev
 Labels:       <none>
 Annotations:  <none>
 API Version:  core.openmcp.cloud/v2alpha1
-Kind:         ManagedControlPlaneV2
+Kind:         ControlPlane
 Metadata:
   Creation Timestamp:  2026-03-13T09:36:31Z
   ...

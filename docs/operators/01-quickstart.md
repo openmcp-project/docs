@@ -147,7 +147,7 @@ First, export the onboarding cluster's kubeconfig so `kubectl` can reach it:
 kind export kubeconfig --name local-onboarding
 ```
 
-See the [`ManagedControlPlaneV2` reference](/reference/core/controlplane) for the full API.
+See the [`ControlPlane` reference](/reference/core/controlplane) for the full API.
 
 :::apply-to-onboarding-api
 
@@ -155,7 +155,7 @@ See the [`ManagedControlPlaneV2` reference](/reference/core/controlplane) for th
 kubectl config use-context kind-local-onboarding
 kubectl apply -f - <<EOF
 apiVersion: core.openmcp.cloud/v2alpha1
-kind: ManagedControlPlaneV2
+kind: ControlPlane
 metadata:
   name: my-controlplane
   namespace: default
@@ -170,7 +170,7 @@ Wait for it to become ready:
 
 ```shell
 kubectl config use-context kind-local-onboarding
-kubectl get managedcontrolplanev2 my-controlplane -w
+kubectl get controlplane my-controlplane -w
 ```
 
 Once provisioning completes, you will see:
