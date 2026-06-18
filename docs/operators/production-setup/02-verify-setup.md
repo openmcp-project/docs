@@ -59,7 +59,7 @@ Create a file named `my-mcp.yaml` with the following content in the configuratio
 :::apply-to-onboarding-api
 
 ```yaml title="config/my-mcp.yaml"
-apiVersion: core.openmcp.cloud/v2alpha1
+apiVersion: core.open-control-plane.io/v2alpha1
 kind: ControlPlane
 metadata:
   name: my-mcp

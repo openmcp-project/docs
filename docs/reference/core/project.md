@@ -33,10 +33,10 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 **Kind:** `Project`
 
 <CRDViewerCompact
-  crdUrl="https://raw.githubusercontent.com/openmcp-project/project-workspace-operator/main/api/crds/manifests/core.openmcp.cloud_projects.yaml"
+  crdUrl="https://raw.githubusercontent.com/openmcp-project/platform-service-project-workspace/refs/heads/main/api/crds/manifests/core.openmcp.cloud_projects.yaml"
   name="Project"
   description="Project resource for multi-tenancy"
-  exampleUrl="https://raw.githubusercontent.com/openmcp-project/project-workspace-operator/main/config/samples/_v1alpha1_project.yaml"
+  exampleUrl="https://raw.githubusercontent.com/openmcp-project/platform-service-project-workspace/refs/heads/main/config/samples/_v1alpha1_project.yaml"
 />
 
 ## Usage

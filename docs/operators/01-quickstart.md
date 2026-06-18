@@ -154,7 +154,7 @@ See the [`ControlPlane` reference](/reference/core/controlplane) for the full AP
 ```shell
 kubectl config use-context kind-local-onboarding
 kubectl apply -f - <<EOF
-apiVersion: core.openmcp.cloud/v2alpha1
+apiVersion: core.open-control-plane.io/v2alpha1
 kind: ControlPlane
 metadata:
   name: my-controlplane

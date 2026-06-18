@@ -219,7 +219,7 @@ Grab that namespace and continue with creating the ControlPlane resource.
 The `ControlPlane` resource is the heart of OpenControlPlane. Each ControlPlane has its own Kubernetes API endpoint and data store. You can use the `iam` property to define who can access the ControlPlane.
 
 ```yaml
-apiVersion: core.openmcp.cloud/v2alpha1
+apiVersion: core.open-control-plane.io/v2alpha1
 kind: ControlPlane
 metadata:
   name: my-controlplane
@@ -307,7 +307,7 @@ Name:         my-controlplane
 Namespace:    project-platform-team--ws-dev
 Labels:       <none>
 Annotations:  <none>
-API Version:  core.openmcp.cloud/v2alpha1
+API Version:  core.open-control-plane.io/v2alpha1
 Kind:         ControlPlane
 Metadata:
   Creation Timestamp:  2026-03-13T09:36:31Z

@@ -14,7 +14,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   </div>
 </div>
 
-**API Group:** `core.openmcp.cloud`
+**API Group:** `core.open-control-plane.io`
 **API Version:** `v2alpha1`
 **Kind:** `ControlPlane`
 
@@ -30,7 +30,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 Create a ControlPlane with IAM configuration:
 
 ```yaml
-apiVersion: core.openmcp.cloud/v2alpha1
+apiVersion: core.open-control-plane.io/v2alpha1
 kind: ControlPlane
 metadata:
   name: my-controlplane

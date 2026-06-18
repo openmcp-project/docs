@@ -757,21 +757,21 @@ export default function Home() {
                 <div className={`essentials-visual-content ${activeFeature === 0 ? 'active' : ''}`}>
                   <div className="yaml-left-container">
                     <pre className="essentials-yaml-unified">
-{`apiVersion: openmcp.cloud/v1alpha1
-kind: ManagedControlPlane
+{`apiVersion: core.open-control-plane.io/v2alpha1
+kind: ControlPlane
 metadata:
   name: team-prod
 spec:
   provider: gardener
 ---
-apiVersion: openmcp.cloud/v1alpha1
+apiVersion: open-control-plane.io/v1alpha1
 kind: Database
 metadata:
   name: prod-db
 spec:
   engine: postgresql
 ---
-apiVersion: openmcp.cloud/v1alpha1
+apiVersion: open-control-plane.io/v1alpha1
 kind: Subaccount
 metadata:
   name: team-alpha

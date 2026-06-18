@@ -22,7 +22,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   crdUrl="https://raw.githubusercontent.com/openmcp-project/openmcp-operator/main/api/crds/manifests/openmcp.cloud_serviceproviders.yaml"
   name="ServiceProvider"
   description="Service delivery configuration"
-  exampleUrl="https://raw.githubusercontent.com/openmcp-project/openmcp-operator/main/internal/controllers/managedcontrolplane/testdata/test-01/platform/sp-01.yaml"
+  exampleUrl="https://raw.githubusercontent.com/openmcp-project/openmcp-operator/main/internal/controllers/controlplane/testdata/test-01/platform/sp-01.yaml"
 />
 
 ## Related Resources
