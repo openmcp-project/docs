@@ -12,7 +12,7 @@ id: testing
 ```mermaid
 flowchart LR
   subgraph kind["Platform cluster (created by the framework)"]
-    P["openmcp-operator,<br/>cluster/service/platform providers"]
+    P["openmcp-operator,<br/>platform services,<br>cluster/service providers"]
   end
   P -->|"creates (via operator)"| O["Onboarding cluster<br/>(consumer applies CRs here)"]
   P -->|"creates per tenant (via operator)"| M["ControlPlane cluster<br/>(per-tenant control plane)"]

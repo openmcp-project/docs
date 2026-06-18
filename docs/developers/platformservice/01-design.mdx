@@ -1,0 +1,103 @@
+---
+sidebar_position: 1
+id: design
+---
+
+# Design
+
+This document defines the terminology for Platform Services within the OpenControlPlane project and clarifies their scope, responsibilities and boundaries. In particular, it distinguishes Platform Services and Service Providers.
+
+## Domain
+
+Platform services deliver platform capabilities within the OpenControlPlane ecosystem. They follow similar architectural patterns to [Service Providers](../serviceprovider/01-design.mdx) and [Cluster Providers](../clusterprovider/04-design.mdx).
+
+When mapped to a layered architecture using the personas of **Platform Owner**, **Service Provider** and **User**, Platform Services operate in the **Platform Owner** layer. Together with [Cluster Providers](../clusterprovider/04-design.mdx) they build the foundation of OpenControlPlane:
+
+| Persona | OpenControlPlane Concept | Responsibility |
+| :------ | :--------------- | :------------------- |
+| Platform Owner | Platform Service and [Cluster Provider](../clusterprovider/04-design.mdx) | Provide platform capabilities consumed by the layers below |
+| Service Provider | [Service Providers](../serviceprovider/01-design.mdx) | Provide managed services consumed by the layer below |
+| User | Not an OpenControlPlane concept but a human end user | Generate value from the services provided by Platform Owners and Service Providers |
+
+Some Platform Services are required to operate OpenControlPlane, such as those included in the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator). Others are optional and extend the platform's capabilities to support specific use cases.
+
+:::info
+For more details on platform personas, see [Why Kubernetes Is Inappropriate for Platforms, and How to Make It Better](https://www.youtube.com/watch?v=7op_r9R0fCo).
+:::
+
+### API
+
+A Platform Service defines one or more `APIs` that consumers use to interact with its functionality.
+
+```mermaid
+graph LR
+    CON[Consumer]
+    API[API]
+    CON -->|manages instances|API
+```
+
+A consumer may be a human or another system.
+
+:::info
+A Platform Service may introduce a user-facing `API` but is not required to do so. Most Platform Services operate without exposing user-facing APIs and provide their capabilities internally to the Platform Owner and Service Provider layers (see [Domain](#domain) and [Service Provider Comparison](#comparison-to-service-providers)).
+:::
+
+### Config
+
+A Platform Service defines a `Config` resource that contains service-specific settings. This allows platform owners to configure the service for different deployment scenarios and to enable or disable features. 
+
+```mermaid
+graph LR
+    %% Platform Owner
+    OP[Platform Owner]
+    PS[PlatformService]
+    PSC[Config]
+    OP -->|manages instances|PS
+    OP -->|manages instances|PSC
+```
+
+### Deployment Model
+
+A Platform Service runs on the platform cluster and reconciles its platform cluster `API` and/or onboarding cluster `EndUserAPI`. It creates and manages resources on the platform cluster.
+
+```mermaid
+graph TD
+    %% Onboarding Cluster
+    subgraph OnboardingCluster
+        USRAPI[EndUserAPI]
+    end
+
+    %% Platform Cluster
+    subgraph PlatformCluster
+        OP[openmcp-operator]
+        PS[PlatformService]
+        PSC[Config]
+        API[API]
+    end
+
+    %% edges
+    PS -->|reconciles|API
+    PS -->|reconciles|USRAPI
+    PS -->|uses|PSC
+    OP-->|reconciles|PS
+```
+
+For more details on cluster types, see [Clusters and Namespaces](../clusters-and-namespaces.md).
+
+## Comparison to Service Providers
+
+The following table distinguishes Platform Services and Service Providers based on where they introduce new APIs.
+
+| Cluster | Platform Service | Service Provider |
+| :------ | :--------------- | :--------------- |
+| Platform cluster | ✳️ | ❌ |
+| Onboarding cluster | ✳️ | ✅ |
+| Control Plane | ❌ | ✅ |
+
+✅ MUST introduce API on that cluster type.  
+✳️ MAY introduce API on that cluster type.  
+❌ MUST NOT introduce API on that cluster type.
+
+:::info
+Note that the Service Provider [Config](../serviceprovider/01-design.mdx#config) is not considered a service.
+:::
