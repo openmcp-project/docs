@@ -30,7 +30,7 @@ For each of these providers, the `name` of the managed service object **must** m
 To install Crossplane, create a `Crossplane` resource in the same namespace as your ControlPlane:
 
 ```yaml
-apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+apiVersion: crossplane.services.open-control-plane.io/v1alpha1
 kind: Crossplane
 metadata:
   name: my-controlplane
@@ -56,7 +56,7 @@ kubectl apply -f crossplane.yaml
 To install Landscaper, create a `Landscaper` resource:
 
 ```yaml
-apiVersion: landscaper.services.openmcp.cloud/v1alpha2
+apiVersion: landscaper.services.open-control-plane.io/v1alpha2
 kind: Landscaper
 metadata:
   name: my-controlplane
@@ -77,7 +77,7 @@ The [Open Component Model (OCM)](https://ocm.software/) toolset helps you delive
 To install the OCM operator for your ControlPlane, create an `OCM` resource in the same namespace and with the same name as your ControlPlane object:
 
 ```yaml
-apiVersion: ocm.services.openmcp.cloud/v1alpha1
+apiVersion: ocm.services.open-control-plane.io/v1alpha1
 kind: OCM
 metadata:
   name: my-controlplane
@@ -123,7 +123,7 @@ The base OCM installation comes with a bare minimum set of RBAC settings. To ext
 To install the Kro operator for your ControlPlane, create a `Kro` resource in the same namespace and with the same name as your ControlPlane object:
 
 ```yaml
-apiVersion: kro.services.openmcp.cloud/v1alpha1
+apiVersion: kro.services.open-control-plane.iov1alpha1
 kind: Kro
 metadata:
   name: my-controlplane

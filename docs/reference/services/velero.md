@@ -14,12 +14,12 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   </div>
 </div>
 
-**API Group:** `velero.services.openmcp.cloud`
+**API Group:** `velero.services.open-control-plane.io`
 **API Version:** `v1alpha1`
 **Kind:** `Velero`
 
 <CRDViewerCompact
-  crdUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-velero/main/api/crds/manifests/velero.services.openmcp.cloud_veleroes.yaml"
+  crdUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-velero/main/api/crds/manifests/velero.services.open-control-plane.io_veleroes.yaml"
   name="Velero"
   description="Velero service provider resource"
   exampleUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-velero/main/config/samples/v1alpha1_velero.yaml"
@@ -30,7 +30,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 Deploy Velero for backup and recovery:
 
 ```yaml
-apiVersion: velero.services.openmcp.cloud/v1alpha1
+apiVersion: velero.services.open-control-plane.io/v1alpha1
 kind: Velero
 metadata:
   name: backup-service

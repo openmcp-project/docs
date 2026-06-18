@@ -14,12 +14,12 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   </div>
 </div>
 
-**API Group:** `kro.services.openmcp.cloud`
+**API Group:** `kro.services.open-control-plane.io`
 **API Version:** `v1alpha1`
 **Kind:** `Kro`
 
 <CRDViewerCompact
-  crdUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-kro/main/api/crds/manifests/kro.services.openmcp.cloud_kroes.yaml"
+  crdUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-kro/main/api/crds/manifests/kro.services.open-control-plane.io_kroes.yaml"
   name="kro"
   description="kro service provider resource"
   exampleUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-kro/main/test/e2e/onboarding/kro.yaml"
@@ -30,7 +30,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 Deploy kro within a control plane:
 
 ```yaml
-apiVersion: kro.services.openmcp.cloud/v1alpha1
+apiVersion: kro.services.open-control-plane.io/v1alpha1
 kind: Kro
 metadata:
   name: my-kro

@@ -131,10 +131,10 @@ This controls exactly which versions teams can request in Step 3. Add more entri
 You might receive the following error message:
 
 ```shell
-error: resource mapping not found for name: "flux" namespace: "" from "STDIN": no matches for kind "ProviderConfig" in version "flux.services.openmcp.cloud/v1alpha1"
+error: resource mapping not found for name: "flux" namespace: "" from "STDIN": no matches for kind "ProviderConfig" in version "flux.services.open-control-plane.io/v1alpha1"
 ensure CRDs are installed first
 ```
-Please wait for a couple of seconds and then try again. Continue when the output says: `providerconfig.flux.services.openmcp.cloud/flux created`.
+Please wait for a couple of seconds and then try again. Continue when the output says: `providerconfig.flux.services.open-control-plane.io/flux created`.
 :::
 
 ---
