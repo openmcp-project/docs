@@ -220,7 +220,7 @@ spec:
 
 Both artifacts carry different image tags but share the same component version. A consuming entity can therefore resolve: "for component version `v1.20.0`, use chart tag `v1.20.0` and image tag `v2.1.2`."
 
-![Discoverable Artifacts](./discoverable-artifacts.excalidraw.svg)
+![Discoverable Artifacts](./2026-06-08-discoverable-artifacts.excalidraw.svg)
 
 ### ProviderConfig Example
 
