@@ -41,7 +41,7 @@ The `generate-service` task supports the following arguments to customize the re
 - `watch`: The cluster to watch, allowed values are "platform" or "onboarding" (default "platform")
 - `module` The go module name of your platform service (default "github.com/openmcp-project/platform-service-example")
 
-The important part is to choose whether you expose an external (User facing) API or an internal (Platform Owner facing) API via the `watch` argument (see [deployment model](./design#deployment-model)).
+The important part is to choose whether you expose an external ([End User](../../users/00-getting-started.md) facing) API or an internal ([Platform Owner](../../users/00-getting-started.md) facing) API via the `watch` argument (see [deployment model](./design#deployment-model)).
 
 Run `generate-service` without `dryrun` to apply the result to disk, e.g.:
 
@@ -123,11 +123,45 @@ Modify the status to report service specific status information.
 
 A Platform Service may expose additional configuration options to a [Platform Owner](../../users/00-getting-started.md). The configuration is either expressed as structured API or a regular `ConfigMap`. The template provides a dedicated `ProviderConfig` API to define its configuration options.
 
-The example controller watches the `ProviderConfig` and creates reconciliation requests for any existing API object on changes to the `ProviderConfig`.
+The example controller watches the `ProviderConfig` and creates reconciliation requests for any existing API object on changes to the `ProviderConfig`:
+
+```go
+func (r *FooReconciler) SetupWithManager(mgr manager.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&v1alpha1.Foo{}).
+		WatchesRawSource(source.Kind(
+			r.platformCluster.Cluster().GetCache(),
+			&v1alpha1.ProviderConfig{},
+			handler.TypedEnqueueRequestsFromMapFunc(r.enqueueAll()),
+			ctrlutils.ToTypedPredicate[*v1alpha1.ProviderConfig](ctrlutils.ExactNamePredicate(r.providerName, "")),
+		)).
+		Named(r.providerName).
+		Complete(r)
+}
+
+func (r *FooReconciler) enqueueAll() func(ctx context.Context, _ *v1alpha1.ProviderConfig) []reconcile.Request {
+	return func(ctx context.Context, _ *v1alpha1.ProviderConfig) []reconcile.Request {
+		list := &v1alpha1.FooList{}
+		if err := r.platformCluster.Client().List(ctx, list); err != nil {
+			logf.FromContext(ctx).Error(err, "failed to list Foo objects")
+			return nil
+		}
+		reqs := make([]reconcile.Request, 0, len(list.Items))
+		for _, obj := range list.Items {
+			reqs = append(reqs, reconcile.Request{
+				NamespacedName: client.ObjectKeyFromObject(&obj),
+			})
+		}
+		return reqs
+	}
+}
+```
 
 Inside the `Reconcile` function the `ProviderConfig` is fetched and reconciliation exits if no config is defined:
 
 ```go
+func (r *FooReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
+	...
 	config := &v1alpha1.ProviderConfig{}
 	if err := r.platformCluster.Client().Get(ctx, types.NamespacedName{Name: r.providerName}, config); err != nil {
 		if apierrors.IsNotFound(err) {
@@ -135,9 +169,13 @@ Inside the `Reconcile` function the `ProviderConfig` is fetched and reconciliati
 		}
 		return reconcile.Result{}, client.IgnoreNotFound(err)
 	}
+	...
+}
 ```
 
-The generated E2E test creates an empty `ProviderConfig` to reconcile the example `Foo` successfully. In a real deployment the Config is typically expected to be created by a human operator.
+The generated E2E test creates an empty `ProviderConfig` to reconcile the example `Foo` successfully. For a detailed guide to the [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) testing framework, test structure, and examples, see the [Service Provider test guide](../serviceprovider/testing). The same testing principles apply to Platform Services.
+
+In a real deployment the Config is typically expected to be created by a human operator.
 
 ## Edit the Platform Service Controller
 
@@ -196,6 +234,10 @@ func (r *FooReconciler) Reconcile(ctx context.Context, req reconcile.Request) (r
 }
 ```
 
+:::info
+Note that if you generated your Platform Service with `watch=onboarding`, the `Reconcile` function will use `r.onboardingCluster.Client().Get(...)` to fetch `Foo` from the onboarding API server.
+:::
+
 For running your controller locally outside the cluster and troubleshooting common issues, see the [Service Provider Debug guide](../serviceprovider/debugging). Platform Services require the same local OpenControlPlane setup and provide the same options, especially the `DEV_DEBUG` flag if you created your Platform Service with `watch=onboarding`. `DEV_DEBUG` creates an onboarding cluster client that is configured to work outside the Kubernetes cluster.
 
 ## Taskfile Usage
@@ -237,7 +279,3 @@ jobs:
 ### Resource Names
 
 If your Platform Service creates resources in a namespace where other controllers or users operate, any created resource must have a carefully chosen name to avoid conflicts. For a complete overview of namespaces across all cluster types, see [Clusters and Namespaces](../clusters-and-namespaces.md).
-
-## References
-
-- For a detailed guide to the [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) testing framework, test structure, and examples, see the [Service Provider test guide](../serviceprovider/testing). The same testing principles apply to Platform Services.
