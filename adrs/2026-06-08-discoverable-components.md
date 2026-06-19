@@ -5,7 +5,7 @@ authors:
   - MaximilianTechritz
 ---
 
-# Discoverable Artifacts
+# Discoverable Components
 
 This ADR defines how consumers discover the location of OCI artifacts for different services.
 
