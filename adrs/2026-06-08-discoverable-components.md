@@ -9,16 +9,21 @@ authors:
 
 This ADR defines how consumers discover the location of OCI artifacts for different services.
 
-For example, a service provider such as `crossplane-service-provider`, running inside the openMCP platform, needs to know where to fetch the Crossplane Helm chart and container image from. This ADR defines the solution.
+For example, a service provider such as `service-provider-crossplane`, running inside the openMCP platform, needs to know where to fetch the Crossplane Helm chart and container image from. This ADR defines the solution.
 
 ## Terminology
+
+For full background on the Open Component Model, see [ocm.software](https://ocm.software). The entries below cover only what is needed to read this ADR.
 
 - **OCM** - [Open Component Model](https://ocm.software). Secure delivery for sovereign clouds - deliver and deploy your software securely, anywhere, at any scale. A specification and toolset for describing software components and their resources (images, charts, blobs) in a transport-agnostic way.
 - **OCM Component** - a single, versioned unit described by OCM. It carries a set of `resources` (e.g. an OCI image, a Helm chart) and may reference other components via [`componentReferences`](https://ocm.software/docs/reference/component-constructor/#components-componentreferences).
 - **Service OCM Component** - an OCM component that represents a single service the platform can install (e.g. `flux`, `crossplane`). It lists all OCM resources that this service needs at a given version (chart, controller images, etc.).
 - **Umbrella OCM Component** - an OCM component that contains no resources of its own and only carries `componentReferences` to other OCM components. Used to group a set of service OCM components into one entry point. In this ADR, the `Releasechannel` is the umbrella OCM component.
+- **Platform cluster** - the cluster on which the openMCP platform runs its `ServiceProvider`, `PlatformService`, and `ClusterProvider` controllers.
 
 ## Current state
+
+<!-- @Maximilian: please add a one-sentence description per construct (Service Provider, Platform Service, Cluster Provider) explaining why three exist, or link to docs. -->
 
 ### Service Providers
 
@@ -151,15 +156,13 @@ spec:
   image: "ghcr.io/openmcp-project/images/cluster-provider-gardener:v0.2.0"
 ```
 
-## New Solution
+## Requirements
 
-A centrally managed, platform-provided mechanism for resolving the location of OCI images.
-
-### Requirements
+A centrally managed, platform-provided mechanism for resolving the location of OCI images must satisfy the following.
 
 - Multiple versions of an artifact must be storable.
 - The solution must support local development.
-- Pull secrets for an artifact should be inherited.
+- Pull secrets for an artifact must be discoverable alongside the artifact itself, not configured separately by every consumer. In OCM, the controllers propagate a parent component's secret reference down to every child resource automatically, so each resolved resource carries its own pull-secret reference. For the Artifacts API the same concept applies, but expressed in-cluster: the `Artifact` resource carries its pull-secret references directly in `spec.pullsecrets`, populated by the translation layer when it materialises the OCM content.
 
 ### Flows That Must Be Supported
 
@@ -168,6 +171,8 @@ A centrally managed, platform-provided mechanism for resolving the location of O
 3. Different versions of an artifact may originate from different registries.
 
 ## Scope
+
+This ADR covers platform-internal artifact discovery only. It is sufficient on its own for `ServiceProvider`, `PlatformService`, and `ClusterProvider` to resolve where to fetch their OCI artifacts from. The user-facing API for selecting a service version is decided in a follow-up ADR and is not required to implement what is proposed here.
 
 ### In Scope
 
@@ -181,18 +186,9 @@ A centrally managed, platform-provided mechanism for resolving the location of O
 - How a `Releasechannel` is built, signed, or published. Only its structure is defined here.
 - Lifecycle and rollout of `Releasechannel` versions.
 
-## Proposal
-
-The platform builds a `Releasechannel` umbrella OCM component as the single source of truth for what is installable, in which versions, and where to fetch it from. This part is common to both approaches below.
-
-The two approaches differ only in **how consumers read from the `Releasechannel`**:
-
-- **Approach A - Direct OCM consumption.** Consumers query the `Releasechannel` through OCM controllers. Requires upstream OCM controller features that do not exist yet.
-- **Approach B - Artifacts API translation layer.** The platform translates the resolved OCM content into `Artifact` Kubernetes resources. Consumers read those instead of OCM directly. Optional addition, independent of the upstream OCM roadmap.
-
 ## Releasechannel OCM Component
 
-A single umbrella OCM component, `Releasechannel`, acts as the entry point for all artifacts the platform knows about. The cluster is configured with one piece of information - the `Releasechannel` version to consume - and discovers everything else from its content.
+A single umbrella OCM component, `Releasechannel`, acts as the entry point for all artifacts the platform knows about. The cluster is configured with one piece of information - the `Releasechannel` version to consume - and discovers everything else from its content. In practice this is expressed as an OCM `Component` resource managed by the OCM controllers, pointing at the published `Releasechannel` and pinning its version.
 
 ### Structure
 
@@ -244,7 +240,14 @@ Although the ADR is motivated by `ServiceProvider` resolving service artifacts, 
 
 In production, a `Releasechannel` is published to an OCI registry. The cluster only needs to know the registry URL and `Releasechannel` version; everything else is discovered in-cluster from the resolved component graph.
 
-For local development, kind-based e2e, or quick try-out scenarios, requiring an OCI registry to host a `Releasechannel` is a hard external dependency. The two approaches below address this differently.
+For local development, [KIND](https://kind.sigs.k8s.io/) (Kubernetes IN Docker) based e2e, or quick try-out scenarios, requiring an OCI registry to host a `Releasechannel` is a hard external dependency. The two approaches below address this differently.
+
+## Proposal
+
+The `Releasechannel` defined above is the single source of truth for what is installable, in which versions, and where to fetch it from. This is common to both approaches below; they differ only in **how consumers read from the `Releasechannel`**:
+
+- **Approach A - Direct OCM consumption.** Consumers query the `Releasechannel` through OCM controllers. Requires upstream OCM controller features that do not exist yet.
+- **Approach B - Artifacts API translation layer.** The platform translates the resolved OCM content into `Artifact` Kubernetes resources. Consumers read those instead of OCM directly. Optional addition, independent of the upstream OCM roadmap.
 
 ## Approach A - Direct OCM consumption
 
@@ -254,7 +257,7 @@ Consumers (`ServiceProvider`, `PlatformService`, `ClusterProvider`) read the `Re
 
 This approach depends on two capabilities of the upstream OCM controllers that do not exist in their current form:
 
-1. **Discovery from an umbrella component.** Today, OCM controllers require both the component name and the resource name to be specified explicitly (1:1 lookup). Approach A needs the controllers to enumerate `componentReferences` of a `Releasechannel` and, per service component, enumerate the available resources in-cluster. Tracked upstream in [open-component-model/ocm-project#1153](https://github.com/open-component-model/ocm-project/issues/1153).
+1. **Discovery from an umbrella component.** Today, OCM controllers require both the component name and the resource name to be specified explicitly (1:1 lookup). Approach A needs the controllers to enumerate `componentReferences` of a `Releasechannel` and, per service component, enumerate the available resources in-cluster. Tracked upstream in [open-component-model/ocm-project#1153](https://github.com/open-component-model/ocm-project/issues/1153) ("Make components and resources discoverable through ocm-k8s-toolkit").
 2. **Local-YAML fallback for offline scenarios.** A way to back the lookup with a plain YAML file pointing at upstream registries, so that local development and e2e tests do not require an OCI registry hosting a full `Releasechannel`. Discussed with OCM maintainers; no public issue yet.
 
 ## Approach B - Artifacts API translation layer
@@ -265,7 +268,16 @@ The `Releasechannel` remains the source of truth in production: a translation la
 
 ### Artifacts
 
-A new resource in the `platform` cluster called `Artifact`. Each `Artifact` points to exactly one OCI image.
+A new resource on the platform cluster called `Artifact`. Each `Artifact` points to exactly one OCI image. The CRD is **cluster-scoped**. Because `Artifact`s live on the platform cluster, they are not reachable by end customers.
+
+<!-- @Moritz: explain the translation layer - how do `Artifact` resources get created? Local (manually applied to a KIND cluster) and production (materialised from the resolved OCM components on a configurable interval, overwriting any local edits). -->
+
+Two version concepts appear in the examples below and must not be confused:
+
+- **`componentVersion`** is the version of the OCM service component the user selects, e.g. `crossplane v1.20.0`. This is what an `Artifact`'s `spec.version` carries. Picking a `componentVersion` resolves into a fixed set of `Artifact` resources.
+- **`artifactVersion`** is the tag of the underlying OCI image, or in OCM terms the [resource](https://ocm.software/docs/reference/component-constructor/#components-resources) version. It is what ends up in the artifact's `url` (e.g. `:v2.1.2` for the Crossplane controller image while the chart is still at `:v1.20.0`).
+
+A single `componentVersion` therefore typically pins multiple, independent `artifactVersion`s. Consumers select by `componentVersion`; the corresponding `artifactVersion`s come along automatically.
 
 ```yaml
 kind: Artifact
@@ -274,17 +286,18 @@ metadata:
 spec:
   name: crossplane-chart
   version: v1.20.0
-  url: ghcr.io/crossplane/crossplane:v1.20.0@sha:23426...
+  url: ghcr.io/crossplane/crossplane:v1.20.0@sha256:23426aabcd...
   pullsecrets:
-    - name:
-      namespace:
+    - name: ghcr-pull-secret      # required
+      namespace: openmcp-system    # optional, defaults to the Artifact's namespace
 ```
 
-The `metadata.name` of an `Artifact` is arbitrary.
+The `metadata.name` of an `Artifact` is arbitrary. As a best practice, use `<artifact-name>-<componentVersion>` (e.g. `crossplane-chart-v1.20.0`) for readability.
 Artifacts are intended to be retrieved by their `spec` fields using a `fieldSelector`.
-<!-- TODO: Valentin -->
+<!-- @Valentin: please verify if fieldSelector supports querying `spec.name` / `spec.version`. -->
 
-The `spec.version` field is not the same as the `tag` of the underlying OCI image. The version represents the version of the parent component that a user selects.
+The `spec.version` field on an `Artifact` is the **`componentVersion`**, not the OCI tag of the underlying image. The OCI tag (the `artifactVersion`) is encoded in `spec.url`.
+
 For example, `crossplane` is a component that consists of two artifacts: the `chart` and the `image`. There will therefore be two `Artifact` resources:
 
 ```yaml
@@ -294,10 +307,10 @@ metadata:
 spec:
   name: crossplane-image
   version: v2.1.2
-  url: ghcr.io/crossplane/crossplane:v2.1.2@sha:23426...
+  url: ghcr.io/crossplane/crossplane:v2.1.2@sha256:23426aabcd...
   pullsecrets:
-    - name:
-      namespace:
+    - name: ghcr-pull-secret
+      namespace: openmcp-system
 ---
 kind: Artifact
 metadata:
@@ -305,10 +318,10 @@ metadata:
 spec:
   name: crossplane-chart
   version: v1.20.0
-  url: ghcr.io/crossplane/crossplane-chart:v1.20.0@sha:23426...
+  url: ghcr.io/crossplane/crossplane-chart:v1.20.0@sha256:23426aabcd...
   pullsecrets:
-    - name:
-      namespace:
+    - name: ghcr-pull-secret
+      namespace: openmcp-system
 ```
 
 Both artifacts carry different image tags but share the same component version. A consuming entity can therefore resolve: "for component version `v1.20.0`, use chart tag `v1.20.0` and image tag `v2.1.2`."
@@ -343,9 +356,6 @@ spec:
         crossplane.open-control-plane.io/type: "functions"
 ```
 
-
-<!-- TODO: Point out difference between artifactVersion and componentVersion -->
-
 ## Pros and Cons
 
 Both approaches share the `Releasechannel` OCM component as the source of truth. The trade-off is purely in the consumption path.
@@ -360,16 +370,16 @@ Both approaches share the `Releasechannel` OCM component as the source of truth.
 
 **Cons**
 
-- Blocked on upstream OCM controller features that do not yet exist (umbrella-component discovery, see [open-component-model/ocm-project#1153](https://github.com/open-component-model/ocm-project/issues/1153); local-YAML fallback for offline use).
-- Local development, kind-based e2e, and try-out scenarios are only viable once the local-YAML fallback exists upstream.
+- Blocked on upstream OCM controller features that do not yet exist (umbrella-component discovery, see [open-component-model/ocm-project#1153](https://github.com/open-component-model/ocm-project/issues/1153) "Make components and resources discoverable through ocm-k8s-toolkit"; local-YAML fallback for offline use).
+- Local development, KIND-based e2e, and try-out scenarios are only viable once the local-YAML fallback exists upstream.
 - Platform's delivery timeline is coupled to the OCM upstream roadmap.
 
 ### Approach B - Artifacts API translation layer
 
 **Pros**
 
-- Decouples the platform from the upstream OCM roadmap: ships independently of [open-component-model/ocm-project#1153](https://github.com/open-component-model/ocm-project/issues/1153) and the local-YAML fallback.
-- Local development and e2e tests work by applying `Artifact` resources directly into a kind cluster - no OCI registry, no OCM controller features required.
+- Decouples the platform from the upstream OCM roadmap: ships independently of [open-component-model/ocm-project#1153](https://github.com/open-component-model/ocm-project/issues/1153) ("Make components and resources discoverable through ocm-k8s-toolkit") and the local-YAML fallback.
+- Local development and e2e tests work by applying `Artifact` resources directly into a KIND cluster - no OCI registry, no OCM controller features required.
 - Consumers see a plain Kubernetes API with selectors, familiar to anyone working with CRDs.
 
 **Cons**
