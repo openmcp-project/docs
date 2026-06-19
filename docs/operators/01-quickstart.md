@@ -238,11 +238,11 @@ kubectl config use-context "kind-$CONTROLPLANE_CLUSTER"
 
 Flux installation can take a few minutes while the `ControlPlane` cluster finishes bootstrapping. Wait for all pods to reach `Running`:
 
+:::apply-to-controlplane
+
 ```shell
 kubectl get pods -n flux-system
 ```
-
-You should see Flux controllers running:
 
 ```
 NAME                                           READY   STATUS    RESTARTS   AGE
@@ -253,6 +253,8 @@ kustomize-controller-7587bc49f9-m47nv          1/1     Running   0          2m8s
 notification-controller-d7d89cdb9-sht7p        1/1     Running   0          2m8s
 source-controller-7f6f4dd77d-vmxvv             1/1     Running   0          2m8s
 ```
+
+:::
 
 The team now has a fully functional control plane with Flux, provisioned through a simple API request.
 
