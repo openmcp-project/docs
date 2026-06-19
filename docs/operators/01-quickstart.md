@@ -169,8 +169,6 @@ spec:
 EOF
 ```
 
-:::
-
 Wait for it to become ready:
 
 ```shell
@@ -184,6 +182,7 @@ Once provisioning completes, you will see:
 NAME              PHASE
 my-controlplane   Ready
 ```
+:::
 
 The platform has provisioned an isolated `ControlPlane` cluster. Behind the scenes, OpenControlPlane asked `cluster-provider-kind` to create a new Kind cluster for this `ControlPlane`. The cluster is assigned a generated name of the form `mcp-<hash>.<random>` — for example `mcp-ad2klitc.f52190f9`. The hash is derived from the environment name; the suffix is random per provisioning run. You will need this name in Step 3.
 
