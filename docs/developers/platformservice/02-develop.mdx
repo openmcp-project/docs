@@ -49,6 +49,10 @@ Run `generate-service` without `dryrun` to apply the result to disk, e.g.:
 task template:generate-service name=foo api=Foo watch=platform module=github.com/yourorg/platform-service-foo
 ```
 
+:::info
+For the remainder of this guide, we will use `Foo` to refer to the generated API type. Replace `Foo` with the `api` value you used when generating the service.
+:::
+
 The template generates a fully functional controller that can be executed and deployed on your local machine using [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
 
 To run the generated end-to-end test, init the [build](https://github.com/openmcp-project/build) submodule and execute `task test-e2e`:
@@ -137,7 +141,7 @@ The generated E2E test creates an empty `ProviderConfig` to reconcile the exampl
 
 ## Edit the Platform Service Controller
 
-Finally you need to implement your platform service specific logic inside `controller.go`. The template generates a basic `Reconcile` function for the e2e test to successfully create and delete an API object on the target cluster you choose when executing `template:generate-service`.
+Finally you need to implement your platform service specific logic inside `controller.go`. The template generates a basic `Reconcile` function for the e2e test to successfully create and delete an `Foo` object on the target cluster you choose when executing `template:generate-service`.
 
 It fetches the `Foo` object referenced by the reconcile request, handles the [operation annotation](../general#operation-annotations), fetches the `ProviderConfig` and finally reports successful reconciliation by updating the status:
 
