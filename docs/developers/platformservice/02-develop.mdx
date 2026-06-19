@@ -221,7 +221,7 @@ func (r *FooReconciler) Reconcile(ctx context.Context, req reconcile.Request) (r
 			Type:    "Ready",
 			Status:  metav1.ConditionTrue,
 			Reason:  "ReconcileSuccess",
-			Message: "Platform Service is ready",
+			Message: "Foo is ready",
 		})
 		obj.Status.ObservedGeneration = obj.GetGeneration()
 		obj.Status.Phase = "Ready"
