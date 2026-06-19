@@ -41,7 +41,7 @@ The `generate-service` task supports the following arguments to customize the re
 - `watch`: The cluster to watch, allowed values are "platform" or "onboarding" (default "platform")
 - `module` The go module name of your platform service (default "github.com/openmcp-project/platform-service-example")
 
-The important part is to choose whether you expose an external ([End User](../../users/00-getting-started.md) facing) API or an internal ([Platform Owner](../../users/00-getting-started.md) facing) API via the `watch` argument (see [deployment model](./design#deployment-model)).
+The most important part at this point is to choose whether you expose an external ([End User](../../users/00-getting-started.md) facing) API or an internal ([Platform Owner](../../users/00-getting-started.md) facing) API via the `watch` argument (see [deployment model](./design#deployment-model)).
 
 Run `generate-service` without `dryrun` to apply the result to disk, e.g.:
 
