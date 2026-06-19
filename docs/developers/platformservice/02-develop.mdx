@@ -227,7 +227,7 @@ func (r *FooReconciler) Reconcile(ctx context.Context, req reconcile.Request) (r
 		obj.Status.Phase = "Ready"
 	}
 	if err := r.platformCluster.Client().Status().Update(ctx, obj); err != nil {
-		log.Error(err, "Failed to update Example status")
+		log.Error(err, "Failed to update Foo status")
 		return ctrl.Result{}, err
 	}
 	return reconcile.Result{}, nil
