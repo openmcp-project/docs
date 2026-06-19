@@ -255,6 +255,45 @@ The team now has a fully functional control plane with Flux, provisioned through
 
 ---
 
+## Next Steps
+
+### Add more services
+
+Beyond Flux, you can offer [Crossplane](https://www.crossplane.io/), [External Secrets Operator](https://external-secrets.io/), [Velero](https://velero.io/), and more to your teams. Each service is a [`ServiceProvider`](/developers/serviceprovider/deploy) deployed on the platform cluster.
+
+You can start to offer Crossplane to your development teams by applying this Service
+
+:::apply-to-platform
+
+```shell
+kubectl config use-context kind-local-platform
+kubectl apply -f - <<EOF
+apiVersion: openmcp.cloud/v1alpha1
+kind: ServiceProvider
+metadata:
+  name: crossplane
+  namespace: openmcp-system
+spec:
+  image: ghcr.io/openmcp-project/images/service-provider-crossplane:v1.0.1
+EOF
+```
+
+:::
+
+
+### Managed team access
+Learn how [Projects and Workspaces](/users/concepts/projects-and-workspaces) let you organize teams and `ControlPlanes`.
+
+:::note
+MORE COMING SOON
+:::
+
+### Deploy on real infrastrcture
+
+Follow the [Production Setup](./production-setup/00-overview.md) guide to run OpenControlPlane on Gardener.
+
+---
+
 ## Clean up
 
 ```shell
@@ -263,12 +302,3 @@ ocpctl env delete local
 
 Removes all Kind clusters and resources created by `ocpctl env apply local`.
 
----
-
-## Next Steps
-
-Your platform is running. Here's what to explore next:
-
-- **Add more services** — beyond Flux, you can offer [Crossplane](https://www.crossplane.io/), [External Secrets Operator](https://external-secrets.io/), [Velero](https://velero.io/), and more to your teams. Each service is a [`ServiceProvider`](/developers/serviceprovider/deploy) deployed on the platform cluster.
-- **Deploy on real infrastructure** — follow the [Production Setup](./production-setup/00-overview.md) guide to run OpenControlPlane on Gardener.
-- **Manage team access** — learn how [Projects and Workspaces](/users/concepts/projects-and-workspaces) let you organize teams and `ControlPlanes`.
