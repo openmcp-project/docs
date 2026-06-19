@@ -22,7 +22,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   crdUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-landscaper/main/api/crds/manifests/landscaper.services.open-control-plane.io_landscapers.yaml"
   name="Landscaper"
   description="Landscaper service provider resource"
-  exampleUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-landscaper/main/config/samples/v1alpha2_landscaper.yaml"
+  exampleUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-landscaper/main/docs/resources/landscaper.yaml"
 />
 
 ## Usage

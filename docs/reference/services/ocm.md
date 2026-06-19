@@ -22,6 +22,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   crdUrl="https://raw.githubusercontent.com/open-component-model/service-provider-ocm/main/api/crds/manifests/ocm.services.open-control-plane.io_ocms.yaml"
   name="OCM"
   description="OCM service provider resource"
+  exampleUrl="https://raw.githubusercontent.com/open-component-model/service-provider-ocm/main/test/e2e/onboarding/ocm.yaml"
 />
 
 ## Usage

@@ -22,7 +22,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   crdUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-velero/main/api/crds/manifests/velero.services.open-control-plane.io_veleroes.yaml"
   name="Velero"
   description="Velero service provider resource"
-  exampleUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-velero/main/config/samples/v1alpha1_velero.yaml"
+  exampleUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-velero/main/test/e2e/onboarding/test-aws-a.yaml"
 />
 
 ## Usage
