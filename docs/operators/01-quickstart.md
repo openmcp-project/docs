@@ -131,16 +131,6 @@ EOF
 
 This controls exactly which versions teams can request in Step 3. Add more entries to the `versions` list to offer additional versions.
 
-:::note Error
-You might receive the following error message:
-
-```shell
-error: resource mapping not found for name: "flux" namespace: "" from "STDIN": no matches for kind "ProviderConfig" in version "flux.services.open-control-plane.io/v1alpha1"
-ensure CRDs are installed first
-```
-Please wait for a couple of seconds and then try again. Continue when the output says: `providerconfig.flux.services.open-control-plane.io/flux created`.
-:::
-
 ---
 
 ## Step 2: Create a ControlPlane
