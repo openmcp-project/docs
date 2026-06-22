@@ -232,7 +232,7 @@ To install the Kro operator for your ControlPlane, create a `Kro` resource in th
 :::apply-to-onboarding-api
 
 ```yaml
-apiVersion: kro.services.open-control-plane.iov1alpha1
+apiVersion: kro.services.open-control-plane.io/v1alpha1
 kind: Kro
 metadata:
   name: my-controlplane
