@@ -336,7 +336,7 @@ Learn how [Projects and Workspaces](/users/concepts/projects-and-workspaces) let
 MORE COMING SOON
 :::
 
-### Deploy on real infrastrcture
+### Deploy on real infrastructure
 
 Follow the [Production Setup](./production-setup/00-overview.md) guide to run OpenControlPlane on Gardener.
 
