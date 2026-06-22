@@ -9,7 +9,7 @@ authors:
 
 This ADR defines how consumers discover the location of OCI artifacts for different services.
 
-For example, a service provider such as `service-provider-crossplane`, running inside the openMCP platform, needs to know where to fetch the Crossplane Helm chart and container image from. This ADR defines the solution.
+For example, a service provider such as `service-provider-crossplane`, running inside the OpenControlPlane platform, needs to know where to fetch the Crossplane Helm chart and container image from. This ADR defines the solution.
 
 ## Terminology
 
@@ -19,7 +19,7 @@ For full background on the Open Component Model, see [ocm.software](https://ocm.
 - **OCM Component** - a single, versioned unit described by OCM. It carries a set of `resources` (e.g. an OCI image, a Helm chart) and may reference other components via [`componentReferences`](https://ocm.software/docs/reference/component-constructor/#components-componentreferences).
 - **Service OCM Component** - an OCM component that represents a single service the platform can install (e.g. `flux`, `crossplane`). It lists all OCM resources that this service needs at a given version (chart, controller images, etc.).
 - **Umbrella OCM Component** - an OCM component that contains no resources of its own and only carries `componentReferences` to other OCM components. Used to group a set of service OCM components into one entry point. In this ADR, the `Releasechannel` is the umbrella OCM component.
-- **Platform cluster** - the cluster on which the openMCP platform runs its `ServiceProvider`, `PlatformService`, and `ClusterProvider` controllers.
+- **Platform cluster** - the cluster on which the OpenControlPlane platform runs its `ServiceProvider`, `PlatformService`, and `ClusterProvider` controllers.
 
 ## Current state
 
@@ -230,7 +230,7 @@ The choice of OCM as the underlying mechanism is deliberate. OCM gives the platf
 
 Building a comparable mechanism on top of plain OCI references would mean re-implementing transport, signing, and integrity checks that OCM already provides.
 
-These same properties are the reason the whole openMCP platform is itself bundled and released as one umbrella OCM component - see [openmcp-project/openmcp](https://github.com/openmcp-project/openmcp). Using OCM for the `Releasechannel` keeps the discovery layer aligned with how the platform itself is delivered.
+These same properties are the reason the whole OpenControlPlane platform is itself bundled and released as one umbrella OCM component - see [openmcp-project/openmcp](https://github.com/openmcp-project/openmcp). Using OCM for the `Releasechannel` keeps the discovery layer aligned with how the platform itself is delivered.
 
 ### Scope of consumers
 
