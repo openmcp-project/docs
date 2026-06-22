@@ -23,7 +23,10 @@ For full background on the Open Component Model, see [ocm.software](https://ocm.
 
 ## Current state
 
-<!-- @Maximilian: please add a one-sentence description per construct (Service Provider, Platform Service, Cluster Provider) explaining why three exist, or link to docs. -->
+The platform cluster runs three types of controllers, each operating at a different scope — see [Plug & Play](/users/concepts/providers) for a full overview:
+- **Service Providers** add functionality to individual `ControlPlanes` (e.g. GitOps tooling, cloud provider APIs).
+- **Platform Services** add functionality to the OpenControlPlane environment as a whole (e.g. network services, audit logs).
+- **Cluster Providers** handle the dynamic creation and deletion of Kubernetes clusters behind a homogeneous interface.
 
 ### Service Providers
 
