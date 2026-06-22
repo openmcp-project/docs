@@ -107,7 +107,7 @@ Please wait for a couple of seconds and then try execute `ocpctl env apply local
 
 ### Configure allowed Flux versions
 
-In order that end users can request Flux getting installed in a `ControlPlane`, as Platform Owner, we need to make sure to configure allowed versions of Flux. We can configure them via a `ProviderConfig`:
+To enable end users to request Flux for a `ControlPlane`, as Platform Owner, we need to make sure to configure allowed versions of Flux. We can configure them via a `ProviderConfig`:
 
 :::apply-to-platform
 
