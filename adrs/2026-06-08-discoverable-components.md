@@ -335,7 +335,7 @@ Every `ServiceProvider` has a `ProviderConfig` resource. To inform the `ServiceP
 Example for the `ServiceProvider` Crossplane:
 
 ```yaml
-apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+apiVersion: crossplane.services.open-control-plane.io/v1alpha1
 kind: ProviderConfig
 spec:
   chart:
