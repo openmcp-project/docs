@@ -58,6 +58,17 @@ ocpctl env apply local
 
 This takes a few minutes. It creates a local Kind-based environment with the full OpenControlPlane stack: `openmcp-operator`, `cluster-provider-kind`, plus an onboarding cluster and pre-installed services that you can consume.
 
+:::note Error
+We might see that Platform Service Gateway (`ps-gateway-5db88d9474-6sxsp`) has an ERROR.
+
+```shell
+...
+Error: applying resources: applying Unstructured//gateway: no matches for kind "GatewayServiceConfig" in version "gateway.openmcp.cloud/v1alpha1"
+```
+
+Please wait for a couple of seconds and then try execute `ocpctl env apply local` again. This will restart the Pod. All Pods above should be running eventually.
+:::
+
 Verify the platform is running:
 
 :::apply-to-platform
@@ -70,40 +81,30 @@ kubectl get pods -n openmcp-system
 You should see these pods in `Running` state:
 
 ```
-NAME                                      READY   STATUS      RESTARTS   AGE
-cp-kind-5cf448bb88-trj47                  1/1     Running     0          106s
-cp-kind-init-wxsbg                        0/1     Completed   0          113s
-openmcp-operator-5b7f788ddb-474tg         1/1     Running     0          2m15s
-ps-gateway-5db88d9474-6sxsp               1/1     Running     0          67s
-ps-gateway-init-hpjqq                     0/1     Completed   0          113s
-ps-helmdeployer-644d7454fc-zr2h5          1/1     Running     0          110s
-ps-helmdeployer-init-lmjxr                0/1     Completed   0          113s
-ps-managedcontrolplane-7958959559-tmlwf   1/1     Running     0          90s
-ps-managedcontrolplane-init-t46cn         0/1     Completed   0          113s
-sp-crossplane-84f8bbfb58-24lwl            1/1     Running     0          79s
-sp-crossplane-init-z657s                  0/1     Completed   0          113s
-sp-flux-844b667b9c-mhlqn                  1/1     Running     0          73s
-sp-flux-init-x5pxw                        0/1     Completed   0          112s
-sp-kro-ffbdcf787-zjrfz                    1/1     Running     0          83s
-sp-kro-init-rf5vk                         0/1     Completed   0          113s
-sp-ocm-756946b9dd-g67sd                   1/1     Running     0          70s
-sp-ocm-init-6cp5c                         0/1     Completed   0          111s
+NAME                                      READY   STATUS      RESTARTS      AGE
+cp-kind-5cf448bb88-sx2vf                  1/1     Running     0             2m30s
+cp-kind-init-xfjb8                        0/1     Completed   0             2m49s
+openmcp-operator-5b7f788ddb-5r8br         1/1     Running     0             3m14s
+ps-gateway-5db88d9474-jkgg8               1/1     Running     4 (81s ago)   2m5s
+ps-gateway-init-j556q                     0/1     Completed   0             2m48s
+ps-helmdeployer-644d7454fc-nrlv9          1/1     Running     0             2m48s
+ps-helmdeployer-init-vq5ks                0/1     Completed   0             2m51s
+ps-managedcontrolplane-7958959559-vsrtr   1/1     Running     0             2m8s
+ps-managedcontrolplane-init-2lpkt         0/1     Completed   0             2m51s
+sp-crossplane-84f8bbfb58-265pf            1/1     Running     0             2m8s
+sp-crossplane-init-97c57                  0/1     Completed   0             2m49s
+sp-flux-844b667b9c-jbfqp                  1/1     Running     0             2m
+sp-flux-init-9w45m                        0/1     Completed   0             2m49s
+sp-kro-ffbdcf787-tst4z                    1/1     Running     0             96s
+sp-kro-init-sfcjb                         0/1     Completed   0             2m47s
+sp-ocm-756946b9dd-4djgn                   1/1     Running     0             113s
+sp-ocm-init-sh8x8                         0/1     Completed   0             2m49s
 ```
 
 :::
 
 In this output we can see that openmcp-operator and multiple other services like cluster-provider-kind (cp-kind) and service providers such as Crossplane, Flux, Kro and OCM are running.
 
-:::note Error
-We might see that Platform Service Gateway (`ps-gateway-5db88d9474-6sxsp`) has an ERROR.
-
-```shell
-...
-Error: applying resources: applying Unstructured//gateway: no matches for kind "GatewayServiceConfig" in version "gateway.openmcp.cloud/v1alpha1"
-```
-
-Please wait for a couple of seconds and then try execute `ocpctl env apply local` again. This will restart the Pod. All Pods above should be running eventually.
-:::
 
 ### Configure allowed Flux versions
 
