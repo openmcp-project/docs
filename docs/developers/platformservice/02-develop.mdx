@@ -131,7 +131,8 @@ type ProviderConfigSpec struct {
 
 Modify the spec to expose the fields your config supports.
 
-The example controller watches the `ProviderConfig` and creates reconciliation requests for any existing API object on changes to the `ProviderConfig`:
+The example controller watches the `ProviderConfig` and creates reconciliation requests for any existing API object on changes to the `ProviderConfig`.
+This is implemented inside `SetupWithManager` by passing `enqueueAll` to the event handler:
 
 ```go title="internal/controller/controller.go"
 func (r *FooReconciler) SetupWithManager(mgr manager.Manager) error {
