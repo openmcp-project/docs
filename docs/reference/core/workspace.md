@@ -25,10 +25,10 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 **Kind:** `Workspace`
 
 <CRDViewerCompact
-  crdUrl="https://raw.githubusercontent.com/openmcp-project/project-workspace-operator/main/api/crds/manifests/core.openmcp.cloud_workspaces.yaml"
+  crdUrl="https://raw.githubusercontent.com/openmcp-project/platform-service-project-workspace/refs/heads/main/api/crds/manifests/core.openmcp.cloud_workspaces.yaml"
   name="Workspace"
   description="Workspace resource for environment isolation"
-  exampleUrl="https://raw.githubusercontent.com/openmcp-project/project-workspace-operator/main/config/samples/_v1alpha1_workspace.yaml"
+  exampleUrl="https://raw.githubusercontent.com/openmcp-project/platform-service-project-workspace/refs/heads/main/config/samples/_v1alpha1_workspace.yaml"
 />
 
 ## Usage

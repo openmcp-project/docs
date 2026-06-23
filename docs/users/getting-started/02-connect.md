@@ -12,7 +12,7 @@ This guide shows you how to retrieve credentials and connect to your ControlPlan
 First, verify your ControlPlane is ready:
 
 ```bash
-kubectl get managedcontrolplanev2 my-controlplane -n project-platform-team--ws-dev
+kubectl get ControlPlane my-controlplane -n project-platform-team--ws-dev
 ```
 
 Wait until the ControlPlane shows a ready status. The `status.access` field contains references to your credentials.
@@ -25,7 +25,7 @@ The ControlPlane creates secrets containing kubeconfig files for each authentica
 
 ```bash
 # Get the secret name from status
-SECRET_NAME=$(kubectl get managedcontrolplanev2 my-controlplane \
+SECRET_NAME=$(kubectl get controlplane my-controlplane \
   -n project-platform-team--ws-dev \
   -o jsonpath='{.status.access.oidc.secretRef.name}')
 
@@ -38,7 +38,7 @@ kubectl get secret $SECRET_NAME -n project-platform-team--ws-dev \
 
 ```bash
 # Get the secret name from status
-SECRET_NAME=$(kubectl get managedcontrolplanev2 my-controlplane \
+SECRET_NAME=$(kubectl get controlplane my-controlplane \
   -n project-platform-team--ws-dev \
   -o jsonpath='{.status.access.tokens[0].secretRef.name}')
 

@@ -29,8 +29,10 @@ For each of these providers, the `name` of the managed service object **must** m
 
 To install Crossplane, create a `Crossplane` resource in the same namespace as your ControlPlane:
 
+:::apply-to-onboarding-api
+
 ```yaml
-apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+apiVersion: crossplane.services.open-control-plane.io/v1alpha1
 kind: Crossplane
 metadata:
   name: my-controlplane
@@ -42,11 +44,11 @@ spec:
       version: v0.16.0
 ```
 
-The `name` must match your ControlPlane name.
-
 ```bash
 kubectl apply -f crossplane.yaml
 ```
+
+:::
 
 </TabItem>
 <TabItem value="landscaper" label="Landscaper">
@@ -55,8 +57,10 @@ kubectl apply -f crossplane.yaml
 
 To install Landscaper, create a `Landscaper` resource:
 
+:::apply-to-onboarding-api
+
 ```yaml
-apiVersion: landscaper.services.openmcp.cloud/v1alpha2
+apiVersion: landscaper.services.open-control-plane.io/v1alpha2
 kind: Landscaper
 metadata:
   name: my-controlplane
@@ -69,6 +73,8 @@ spec:
 kubectl apply -f landscaper.yaml
 ```
 
+:::
+
 </TabItem>
 <TabItem value="ocm" label="OCM">
 
@@ -76,8 +82,10 @@ The [Open Component Model (OCM)](https://ocm.software/) toolset helps you delive
 
 To install the OCM operator for your ControlPlane, create an `OCM` resource in the same namespace and with the same name as your ControlPlane object:
 
+:::apply-to-onboarding-api
+
 ```yaml
-apiVersion: ocm.services.openmcp.cloud/v1alpha1
+apiVersion: ocm.services.open-control-plane.io/v1alpha1
 kind: OCM
 metadata:
   name: my-controlplane
@@ -90,10 +98,13 @@ spec:
 kubectl apply -f ocm.yaml
 ```
 
+:::
+
 Once this object reconciles, you can verify the OCM controller is running on the ControlPlane:
 
+:::apply-to-controlplane
+
 ```bash
-# Make sure you are using the kubeconfig for the ControlPlane
 kubectl describe pod -n ocm-k8s-toolkit-system ocm-k8s-toolkit-controller-manager-
 ```
 
@@ -113,7 +124,103 @@ Events:
   Normal  Started    53s   kubelet            Started container manager
 ```
 
+:::
+
 The base OCM installation comes with a bare minimum set of RBAC settings. To extend this, follow the [custom RBAC for OCM](https://github.com/open-component-model/open-component-model/blob/main/kubernetes/controller/docs/getting-started/custom-rbac.md) guide. Since you are an admin on the ControlPlane, extending the service account's RBAC should work.
+
+</TabItem>
+<TabItem value="flux" label="Flux">
+
+[Flux](https://fluxcd.io/) is a GitOps toolkit for keeping Kubernetes clusters in sync with sources of configuration (like Git repositories) and automating updates to configuration when new code is deployed.
+
+To install Flux, create a `Flux` resource in the same namespace as your ControlPlane:
+
+:::apply-to-onboarding-api
+
+```yaml
+apiVersion: flux.services.open-control-plane.io/v1alpha1
+kind: Flux
+metadata:
+  name: my-controlplane
+  namespace: project-platform-team--ws-dev
+spec:
+  version: 2.8.3
+```
+
+```bash
+kubectl apply -f flux.yaml
+```
+
+:::
+
+Once this object reconciles, you can verify the Flux controllers are running on the ControlPlane:
+
+:::apply-to-controlplane
+
+```bash
+kubectl get pods -n flux-system
+```
+
+```
+NAME                                           READY   STATUS    RESTARTS   AGE
+helm-controller-8564d95f86-6kxlg               1/1     Running   0          2m
+kustomize-controller-7587bc49f9-m47nv          1/1     Running   0          2m
+source-controller-7f6f4dd77d-vmxvv             1/1     Running   0          2m
+```
+
+:::
+
+</TabItem>
+<TabItem value="velero" label="Velero">
+
+[Velero](https://velero.io/) provides backup and restore capabilities for your ControlPlane's workloads and persistent volumes, enabling disaster recovery and cluster migration.
+
+To install Velero, create a `Velero` resource in the same namespace as your ControlPlane:
+
+:::apply-to-onboarding-api
+
+```yaml
+apiVersion: velero.services.open-control-plane.io/v1alpha1
+kind: Velero
+metadata:
+  name: my-controlplane
+  namespace: project-platform-team--ws-dev
+spec:
+  version: v1.15.0
+```
+
+```bash
+kubectl apply -f velero.yaml
+```
+
+:::
+
+</TabItem>
+<TabItem value="external-secrets" label="External Secrets">
+
+[External Secrets Operator](https://external-secrets.io/) synchronizes secrets from external secret management systems (AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, and others) into Kubernetes `Secret` objects on your ControlPlane.
+
+To install External Secrets Operator, create an `ExternalSecrets` resource in the same namespace as your ControlPlane:
+
+:::apply-to-onboarding-api
+
+```yaml
+apiVersion: externalsecrets.services.open-control-plane.io/v1alpha1
+kind: ExternalSecrets
+metadata:
+  name: my-controlplane
+  namespace: project-platform-team--ws-dev
+spec:
+  version: 0.14.0
+```
+
+```bash
+kubectl apply -f external-secrets.yaml
+```
+
+:::
+
+Once installed, you can create `SecretStore` and `ExternalSecret` resources on the ControlPlane to pull secrets from your chosen backend.
 
 </TabItem>
 <TabItem value="kro" label="Kro">
@@ -122,8 +229,10 @@ The base OCM installation comes with a bare minimum set of RBAC settings. To ext
 
 To install the Kro operator for your ControlPlane, create a `Kro` resource in the same namespace and with the same name as your ControlPlane object:
 
+:::apply-to-onboarding-api
+
 ```yaml
-apiVersion: kro.services.openmcp.cloud/v1alpha1
+apiVersion: kro.services.open-control-plane.io/v1alpha1
 kind: Kro
 metadata:
   name: my-controlplane
@@ -136,10 +245,13 @@ spec:
 kubectl apply -f kro.yaml
 ```
 
+:::
+
 Once this object reconciles, you can verify the Kro controller is running on the ControlPlane:
 
+:::apply-to-controlplane
+
 ```bash
-# Make sure you are using the kubeconfig for the ControlPlane
 kubectl get pods -n kro-system
 ```
 
@@ -147,6 +259,8 @@ kubectl get pods -n kro-system
 NAME                              READY   STATUS    RESTARTS   AGE
 kro-7d9c6f8b54-abcde              1/1     Running   0          45s
 ```
+
+:::
 
 The chart source, image pull secret, and Helm values are configured cluster-wide through the `ProviderConfig` maintained by your platform owner. See the [service-provider-kro README](https://github.com/openmcp-project/service-provider-kro#providerconfig) for the full set of tunables.
 
@@ -165,3 +279,6 @@ Congratulations! You have a working ControlPlane with managed services. Here's w
 - **[Landscaper Service Provider](https://github.com/openmcp-project/service-provider-landscaper)** — Orchestrate complex workloads
 - **[OCM Service Provider](https://github.com/open-component-model/service-provider-ocm)** — Deliver and deploy software with the Open Component Model
 - **[Kro Service Provider](https://github.com/openmcp-project/service-provider-kro)** — Compose custom Kubernetes APIs with Kro
+- **[Flux Service Provider](https://github.com/openmcp-project/service-provider-flux)** — GitOps-driven continuous delivery
+- **[Velero Service Provider](https://github.com/openmcp-project/service-provider-velero)** — Backup and disaster recovery
+- **[External Secrets Service Provider](https://github.com/openmcp-project/service-provider-external-secrets)** — Sync secrets from external vaults

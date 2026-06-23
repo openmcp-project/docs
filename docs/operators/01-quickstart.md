@@ -43,7 +43,7 @@ The separation ensures end users never touch infrastructure. They interact only 
 ## Install ocpctl
 
 ```shell
-go install github.com/openmcp-project/ocpctl@v0.1.0-alpha.1
+go install github.com/openmcp-project/ocpctl@v0.1.3
 ```
 
 Or download a pre-built binary from the [releases page](https://github.com/openmcp-project/ocpctl/releases/latest).
@@ -56,7 +56,18 @@ Or download a pre-built binary from the [releases page](https://github.com/openm
 ocpctl env apply local
 ```
 
-This takes a few minutes. It creates a local Kind-based environment with the full OpenControlPlane stack: `openmcp-operator`, `cluster-provider-kind`, plus an onboarding cluster.
+This takes a few minutes. It creates a local Kind-based environment with the full OpenControlPlane stack: `openmcp-operator`, `cluster-provider-kind`, plus an onboarding cluster and pre-installed services that you can consume.
+
+:::note Error
+We might see that Platform Service Gateway (`ps-gateway-5db88d9474-6sxsp`) has an ERROR.
+
+```shell
+...
+Error: applying resources: applying Unstructured//gateway: no matches for kind "GatewayServiceConfig" in version "gateway.openmcp.cloud/v1alpha1"
+```
+
+Please wait for a couple of seconds and then try execute `ocpctl env apply local` again. This will restart the Pod. All Pods above should be running eventually.
+:::
 
 Verify the platform is running:
 
@@ -70,46 +81,41 @@ kubectl get pods -n openmcp-system
 You should see these pods in `Running` state:
 
 ```
-NAME                                     READY   STATUS      RESTARTS   AGE
-cp-kind-66fbf7d448-bd5xg                 1/1     Running     0          72s
-cp-kind-init-2zl9x                       0/1     Completed   0          83s
-openmcp-operator-d5c547c75-w5ngg         1/1     Running     0          2m3s
-ps-managedcontrolplane-9c848d7bc-49czl   1/1     Running     0          51s
-ps-managedcontrolplane-init-d7v4k        0/1     Completed   0          84s
+NAME                                      READY   STATUS      RESTARTS      AGE
+cp-kind-5cf448bb88-sx2vf                  1/1     Running     0             2m30s
+cp-kind-init-xfjb8                        0/1     Completed   0             2m49s
+openmcp-operator-5b7f788ddb-5r8br         1/1     Running     0             3m14s
+ps-gateway-5db88d9474-jkgg8               1/1     Running     4 (81s ago)   2m5s
+ps-gateway-init-j556q                     0/1     Completed   0             2m48s
+ps-helmdeployer-644d7454fc-nrlv9          1/1     Running     0             2m48s
+ps-helmdeployer-init-vq5ks                0/1     Completed   0             2m51s
+ps-managedcontrolplane-7958959559-vsrtr   1/1     Running     0             2m8s
+ps-managedcontrolplane-init-2lpkt         0/1     Completed   0             2m51s
+sp-crossplane-84f8bbfb58-265pf            1/1     Running     0             2m8s
+sp-crossplane-init-97c57                  0/1     Completed   0             2m49s
+sp-flux-844b667b9c-jbfqp                  1/1     Running     0             2m
+sp-flux-init-9w45m                        0/1     Completed   0             2m49s
+sp-kro-ffbdcf787-tst4z                    1/1     Running     0             96s
+sp-kro-init-sfcjb                         0/1     Completed   0             2m47s
+sp-ocm-756946b9dd-4djgn                   1/1     Running     0             113s
+sp-ocm-init-sh8x8                         0/1     Completed   0             2m49s
 ```
 
 :::
 
-### Install service-provider-flux
+In this output we can see that openmcp-operator and multiple other services like cluster-provider-kind (cp-kind) and service providers such as Crossplane, Flux, Kro and OCM are running.
 
-This guide uses Flux as an example managed service that teams can request for their `ControlPlane`. Managed service options are added to the platform as [ServiceProviders](/reference/operator/providers/serviceprovider).
+
+### Configure allowed Flux versions
+
+To enable end users to request Flux for a `ControlPlane`, as Platform Owner, we need to make sure to configure allowed versions of Flux. We can configure them via a `ProviderConfig`:
 
 :::apply-to-platform
 
 ```shell
 flux install
 kubectl apply -f - <<EOF
-apiVersion: openmcp.cloud/v1alpha1
-kind: ServiceProvider
-metadata:
-  name: flux
-  namespace: openmcp-system
-spec:
-  image: ghcr.io/openmcp-project/images/service-provider-flux:v0.2.0
-EOF
-```
-
-:::
-
-### Configure allowed Flux versions
-
-Once `ServiceProvider` Flux is running, apply a `ProviderConfig` to define which Flux versions end users may install:
-
-:::apply-to-platform
-
-```shell
-kubectl apply -f - <<EOF
-apiVersion: flux.services.openmcp.cloud/v1alpha1
+apiVersion: flux.services.open-control-plane.io/v1alpha1
 kind: ProviderConfig
 metadata:
   name: flux
@@ -125,16 +131,6 @@ EOF
 
 This controls exactly which versions teams can request in Step 3. Add more entries to the `versions` list to offer additional versions.
 
-:::note Error
-You might receive the following error message:
-
-```shell
-error: resource mapping not found for name: "flux" namespace: "" from "STDIN": no matches for kind "ProviderConfig" in version "flux.services.openmcp.cloud/v1alpha1"
-ensure CRDs are installed first
-```
-Please wait for a couple of seconds and then try again. Continue when the output says: `providerconfig.flux.services.openmcp.cloud/flux created`.
-:::
-
 ---
 
 ## Step 2: Create a ControlPlane
@@ -147,15 +143,15 @@ First, export the onboarding cluster's kubeconfig so `kubectl` can reach it:
 kind export kubeconfig --name local-onboarding
 ```
 
-See the [`ManagedControlPlaneV2` reference](/reference/core/controlplane) for the full API.
+See the [`ControlPlane` reference](/reference/core/controlplane) for the full API.
 
 :::apply-to-onboarding-api
 
 ```shell
 kubectl config use-context kind-local-onboarding
 kubectl apply -f - <<EOF
-apiVersion: core.openmcp.cloud/v2alpha1
-kind: ManagedControlPlaneV2
+apiVersion: core.open-control-plane.io/v2alpha1
+kind: ControlPlane
 metadata:
   name: my-controlplane
   namespace: default
@@ -164,13 +160,11 @@ spec:
 EOF
 ```
 
-:::
-
 Wait for it to become ready:
 
 ```shell
 kubectl config use-context kind-local-onboarding
-kubectl get managedcontrolplanev2 my-controlplane -w
+kubectl get controlplane my-controlplane -w
 ```
 
 Once provisioning completes, you will see:
@@ -179,6 +173,7 @@ Once provisioning completes, you will see:
 NAME              PHASE
 my-controlplane   Ready
 ```
+:::
 
 The platform has provisioned an isolated `ControlPlane` cluster. Behind the scenes, OpenControlPlane asked `cluster-provider-kind` to create a new Kind cluster for this `ControlPlane`. The cluster is assigned a generated name of the form `mcp-<hash>.<random>` — for example `mcp-ad2klitc.f52190f9`. The hash is derived from the environment name; the suffix is random per provisioning run. You will need this name in Step 3.
 
@@ -193,7 +188,7 @@ The team wants Flux installed on their `ControlPlane`:
 ```shell
 kubectl config use-context kind-local-onboarding
 kubectl apply -f - <<EOF
-apiVersion: flux.services.openmcp.cloud/v1alpha1
+apiVersion: flux.services.open-control-plane.io/v1alpha1
 kind: Flux
 metadata:
   name: my-controlplane
@@ -233,11 +228,11 @@ kubectl config use-context "kind-$CONTROLPLANE_CLUSTER"
 
 Flux installation can take a few minutes while the `ControlPlane` cluster finishes bootstrapping. Wait for all pods to reach `Running`:
 
-```shell
-kubectl get pods -n flux-system -w
-```
+:::apply-to-controlplane
 
-You should see Flux controllers running:
+```shell
+kubectl get pods -n flux-system
+```
 
 ```
 NAME                                           READY   STATUS    RESTARTS   AGE
@@ -249,7 +244,92 @@ notification-controller-d7d89cdb9-sht7p        1/1     Running   0          2m8s
 source-controller-7f6f4dd77d-vmxvv             1/1     Running   0          2m8s
 ```
 
+:::
+
 The team now has a fully functional control plane with Flux, provisioned through a simple API request.
+
+---
+
+## Next Steps
+
+### Add more services
+
+Beyond Flux, we can offer [Crossplane](https://www.crossplane.io/), [External Secrets Operator](https://external-secrets.io/), [Velero](https://velero.io/), and more to end users. Each service is a [`ServiceProvider`](/developers/serviceprovider/deploy) deployed on the platform cluster.
+
+Our CLI tool `ocpctl` already pre-installs a lot of these Service Providers. We can look them up via:
+
+:::apply-to-platform
+
+```shell
+kubectl config use-context kind-local-platform
+kubectl get serviceproviders
+```
+
+The output looks like this:
+
+```shell
+NAME         PHASE
+crossplane   Ready
+flux         Ready
+kro          Ready
+ocm          Ready
+```
+
+:::
+
+But we can also apply a new `ServiceProvider` to our platform to offer e.g. External Secrets Operator to end users:
+
+:::apply-to-platform
+
+```shell
+kubectl config use-context kind-local-platform
+kubectl apply -f - <<EOF
+apiVersion: openmcp.cloud/v1alpha1
+kind: ServiceProvider
+metadata:
+  name: externalsecretsoperator
+  namespace: openmcp-system
+spec:
+  image: ghcr.io/openmcp-project/images/service-provider-external-secrets:v1.0.0
+EOF
+```
+
+We can look up the status of the installation by executing:
+```shell
+kubectl config use-context kind-local-platform
+kubectl get serviceproviders
+```
+
+The output looks like this:
+
+```shell
+NAME                      PHASE
+crossplane                Ready
+externalsecretsoperator   Progressing
+flux                      Ready
+kro                       Ready
+ocm                       Ready
+```
+
+:::
+
+Next, we need to configure these `ServiceProviders` via their `ProviderConfig` API to rule which versions end users can install.
+
+:::note
+MORE COMING SOON
+:::
+
+
+### Managed team access
+Learn how [Projects and Workspaces](/users/concepts/projects-and-workspaces) let you organize teams and `ControlPlanes`.
+
+:::note
+MORE COMING SOON
+:::
+
+### Deploy on real infrastructure
+
+Follow the [Production Setup](./production-setup/00-overview.md) guide to run OpenControlPlane on Gardener.
 
 ---
 
@@ -261,12 +341,3 @@ ocpctl env delete local
 
 Removes all Kind clusters and resources created by `ocpctl env apply local`.
 
----
-
-## Next Steps
-
-Your platform is running. Here's what to explore next:
-
-- **Add more services** — beyond Flux, you can offer [Crossplane](https://www.crossplane.io/), [External Secrets Operator](https://external-secrets.io/), [Velero](https://velero.io/), and more to your teams. Each service is a [`ServiceProvider`](/developers/serviceprovider/deploy) deployed on the platform cluster.
-- **Deploy on real infrastructure** — follow the [Production Setup](./production-setup/00-overview.md) guide to run OpenControlPlane on Gardener.
-- **Manage team access** — learn how [Projects and Workspaces](/users/concepts/projects-and-workspaces) let you organize teams and `ControlPlanes`.

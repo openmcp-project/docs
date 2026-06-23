@@ -121,7 +121,7 @@ Modify the spec to expose the configuration your provider supports.
 For example, Velero allows the user to choose a version and which plugins to install:
 
 ```yaml
-apiVersion: velero.services.openmcp.cloud/v1alpha1
+apiVersion: velero.services.open-control-plane.io/v1alpha1
 kind: Velero
 metadata:
   name: test-controlplane
@@ -204,7 +204,7 @@ It is required to add this for new service providers until dedicated Registry an
 Velero's ProviderConfig currently includes both operational settings and deployment artifacts:
 
 ```yaml
-apiVersion: velero.services.openmcp.cloud/v1alpha1
+apiVersion: velero.services.open-control-plane.io/v1alpha1
 kind: ProviderConfig
 metadata:
   name: default

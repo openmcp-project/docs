@@ -14,15 +14,15 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   </div>
 </div>
 
-**API Group:** `core.openmcp.cloud`
+**API Group:** `core.open-control-plane.io`
 **API Version:** `v2alpha1`
-**Kind:** `ManagedControlPlaneV2`
+**Kind:** `ControlPlane`
 
 <CRDViewerCompact
-  crdUrl="https://raw.githubusercontent.com/openmcp-project/openmcp-operator/main/api/crds/manifests/core.openmcp.cloud_managedcontrolplanev2s.yaml"
-  name="ManagedControlPlaneV2"
+  crdUrl="https://raw.githubusercontent.com/openmcp-project/openmcp-operator/main/api/crds/manifests/core.open-control-plane.io_controlplanes.yaml"
+  name="ControlPlane"
   description="Control plane management with IAM configuration"
-  exampleUrl="https://raw.githubusercontent.com/openmcp-project/openmcp-operator/main/internal/controllers/managedcontrolplane/testdata/test-01/onboarding/mcp-01.yaml"
+  exampleUrl="https://raw.githubusercontent.com/openmcp-project/openmcp-operator/main/internal/controllers/controlplane/testdata/test-01/onboarding/mcp-01.yaml"
 />
 
 ## Usage
@@ -30,8 +30,8 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 Create a ControlPlane with IAM configuration:
 
 ```yaml
-apiVersion: core.openmcp.cloud/v2alpha1
-kind: ManagedControlPlaneV2
+apiVersion: core.open-control-plane.io/v2alpha1
+kind: ControlPlane
 metadata:
   name: my-controlplane
   namespace: default

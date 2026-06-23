@@ -53,7 +53,7 @@ The following example uses the Crossplane service provider. Other service provid
 :::apply-to-platform
 
 ```yaml title="crossplane-provider-config.yaml"
-apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+apiVersion: crossplane.services.open-control-plane.io/v1alpha1
 kind: ProviderConfig
 metadata:
   name: default
@@ -87,7 +87,7 @@ kubectl describe configmap custom-ca-bundle -n openmcp-system
 Check that the ProviderConfig of each service provider has been accepted by the operator, e.g. for Crossplane:
 
 ```shell
-kubectl get providerconfigs.crossplane.services.openmcp.cloud -n openmcp-system
+kubectl get providerconfigs.crossplane.services.open-control-plane.io -n openmcp-system
 ```
 
 Service provider pods that were already running will restart automatically to pick up the new CA configuration. If a pod does not restart, delete it manually to trigger a fresh start.

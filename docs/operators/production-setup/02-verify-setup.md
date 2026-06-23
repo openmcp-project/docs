@@ -59,8 +59,8 @@ Create a file named `my-mcp.yaml` with the following content in the configuratio
 :::apply-to-onboarding-api
 
 ```yaml title="config/my-mcp.yaml"
-apiVersion: core.openmcp.cloud/v2alpha1
-kind: ManagedControlPlaneV2
+apiVersion: core.open-control-plane.io/v2alpha1
+kind: ControlPlane
 metadata:
   name: my-mcp
   namespace: default
@@ -81,7 +81,7 @@ The openmcp-operator should start to create the necessary resources in order to 
 Wait for it to become ready:
 
 ```shell
-kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig get managedcontrolplanev2 -n default my-mcp -w
+kubectl --kubeconfig ./kubeconfigs/onboarding.kubeconfig get controlplane -n default my-mcp -w
 ```
 
 Once provisioning completes, you will see:

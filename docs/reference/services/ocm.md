@@ -14,14 +14,15 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   </div>
 </div>
 
-**API Group:** `ocm.services.openmcp.cloud`
+**API Group:** `ocm.services.open-control-plane.io`
 **API Version:** `v1alpha1`
 **Kind:** `OCM`
 
 <CRDViewerCompact
-  crdUrl="https://raw.githubusercontent.com/open-component-model/service-provider-ocm/main/api/crds/manifests/ocm.services.openmcp.cloud_ocms.yaml"
+  crdUrl="https://raw.githubusercontent.com/open-component-model/service-provider-ocm/main/api/crds/manifests/ocm.services.open-control-plane.io_ocms.yaml"
   name="OCM"
   description="OCM service provider resource"
+  exampleUrl="https://raw.githubusercontent.com/open-component-model/service-provider-ocm/main/test/e2e/onboarding/ocm.yaml"
 />
 
 ## Usage
@@ -29,7 +30,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 Deploy OCM within a control plane:
 
 ```yaml
-apiVersion: ocm.services.openmcp.cloud/v1alpha1
+apiVersion: ocm.services.open-control-plane.io/v1alpha1
 kind: OCM
 metadata:
   name: my-ocm

@@ -14,15 +14,15 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   </div>
 </div>
 
-**API Group:** `landscaper.services.openmcp.cloud`
+**API Group:** `landscaper.services.open-control-plane.io`
 **API Version:** `v1alpha2`
 **Kind:** `Landscaper`
 
 <CRDViewerCompact
-  crdUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-landscaper/main/api/crds/manifests/landscaper.services.openmcp.cloud_landscapers.yaml"
+  crdUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-landscaper/main/api/crds/manifests/landscaper.services.open-control-plane.io_landscapers.yaml"
   name="Landscaper"
   description="Landscaper service provider resource"
-  exampleUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-landscaper/main/config/samples/v1alpha2_landscaper.yaml"
+  exampleUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-landscaper/main/docs/resources/landscaper.yaml"
 />
 
 ## Usage
@@ -30,7 +30,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 Deploy Landscaper within a control plane:
 
 ```yaml
-apiVersion: landscaper.services.openmcp.cloud/v1alpha2
+apiVersion: landscaper.services.open-control-plane.io/v1alpha2
 kind: Landscaper
 metadata:
   name: my-landscaper

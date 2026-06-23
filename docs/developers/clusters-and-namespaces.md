@@ -64,7 +64,7 @@ The Onboarding Cluster is the entry point for end users. Namespaces follow a hie
 | Namespace | Created By | Contains |
 |-----------|-----------|----------|
 | `project-<project-name>` | Creating a `Project` | Workspaces, project-scoped resources |
-| `project-<project-name>--ws-<workspace-name>` | Creating a `Workspace` | `ManagedControlPlaneV2` resources, ServiceProviderAPI instances |
+| `project-<project-name>--ws-<workspace-name>` | Creating a `Workspace` | `ControlPlane` resources, service resources |
 
 
 For example, a project named `platform-team` with a workspace `dev` results in:
