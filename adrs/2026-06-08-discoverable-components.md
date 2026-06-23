@@ -20,6 +20,7 @@ For full background on the Open Component Model, see [ocm.software](https://ocm.
 - **Service OCM Component** - an OCM component that represents a single service the platform can install (e.g. `flux`, `crossplane`). It lists all OCM resources that this service needs at a given version (chart, controller images, etc.).
 - **Umbrella OCM Component** - an OCM component that contains no resources of its own and only carries `componentReferences` to other OCM components. Used to group a set of service OCM components into one entry point. In this ADR, the `Releasechannel` is the umbrella OCM component.
 - **Platform cluster** - the cluster on which the OpenControlPlane platform runs its `ServiceProvider`, `PlatformService`, and `ClusterProvider` controllers.
+- **Consumer** - in this ADR, a technical consumer of Discoverable Components. The `ServiceProvider`, `PlatformService`, and `ClusterProvider` controllers running on the platform cluster are the consumers: they resolve where to fetch their OCI artifacts from.
 
 ## Current state
 
@@ -27,10 +28,6 @@ The platform cluster runs three types of controllers, each operating at a differ
 - **Service Providers** add functionality to individual `ControlPlanes` (e.g. GitOps tooling, cloud provider APIs).
 - **Platform Services** add functionality to the OpenControlPlane environment as a whole (e.g. network services, audit logs).
 - **Cluster Providers** handle the dynamic creation and deletion of Kubernetes clusters behind a homogeneous interface.
-
-:::note
-These three controller types are the **Consumers** of Discoverable Components: they are the technical consumers that resolve where to fetch their OCI artifacts from. Wherever this ADR refers to "consumers", it refers to these.
-:::
 
 ### Service Providers
 
