@@ -5,12 +5,288 @@ id: develop
 
 # Develop
 
-:::info Coming Soon
-A comprehensive guide for developing Platform Services from scratch is coming soon.
-:::
-
 Platform Services deliver complete platform capabilities and services within the OpenControlPlane ecosystem. They follow the same general patterns as Service Providers and Cluster Providers.
 
-For now, you can:
-- Refer to the [Deploy Guide](./03-deployment.mdx) for the common deployment contract
-- Check the [Service Provider Develop Guide](../serviceprovider/02-develop.mdx) for general patterns that apply to all provider types
+In this guide, we will walk you through the steps of creating a Platform Service using the [platform-service-template](https://github.com/openmcp-project/platform-service-template).
+
+By the end of this guide, you should have a solid understanding of how the template and the resulting platform service works and be ready to build a real world service such as [platform-service-quota](https://github.com/openmcp-project/platform-service-quota).
+
+## Prerequisites
+
+Start by creating a new repository for your Platform Service using the [platform-service-template](https://github.com/openmcp-project/platform-service-template). Click "Use this template" button on the GitHub page and give your new repository a name that reflects the service it provides, e.g. `platform-service-quota` introduces a `QuotaIncrease` API to manage Kubernetes `ResourceQuota` objects in context of OpenControlPlane.
+
+Clone the newly created repository to your local machine and open it with your favorite IDE.
+
+Finally, ensure that you have the following binaries available in your path to execute the code generation of the template:
+
+- [Go](https://go.dev/dl/)
+- [task](https://taskfile.dev/)
+- [opencontrolplane-gen](https://github.com/openmcp-project/opencontrolplane-gen)
+
+## Platform Service Template Usage
+
+The template allows you to create a Platform Service without requiring deep knowledge of the underlying OpenControlPlane platform.
+
+Run the following command to verify that everything works without applying any changes to disk.
+
+```bash
+task template:generate-service dryrun=true
+```
+
+The `generate-service` task supports the following arguments to customize the resulting Platform Service:
+
+- `dryrun`: Print in-memory result to stdout without altering any files (default false)
+- `name`: Name of the platform service (default "example"). Note that it is expected to be the suffix of platform-service-x, e.g. platform-service-foo -> name=foo.
+- `api`: Name of the API to create on the watched cluster (default "Example")
+- `watch`: The cluster to watch, allowed values are "platform" or "onboarding" (default "platform")
+- `module` The go module name of your platform service (default "github.com/openmcp-project/platform-service-example")
+
+The most important part at this point is to choose whether you expose an external ([End User](../../users/00-getting-started.md) facing) API or an internal ([Platform Owner](../../users/00-getting-started.md) facing) API via the `watch` argument (see [deployment model](./design#deployment-model)).
+
+Run `generate-service` without `dryrun` to apply the result to disk, e.g.:
+
+```bash
+task template:generate-service name=foo api=Foo watch=platform module=github.com/yourorg/platform-service-foo
+```
+
+:::info
+For the remainder of this guide, we will use `Foo` to refer to the generated API type. Replace `Foo` with the `api` value you used when generating the service.
+:::
+
+The template generates a fully functional controller that can be executed and deployed on your local machine using [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
+
+To run the generated end-to-end test, init the [build](https://github.com/openmcp-project/build) submodule and execute `task test-e2e`:
+
+```bash
+git submodule update --init --recursive
+task test-e2e
+```
+
+This test bootstraps a complete local OpenControlPlane installation with all required components, including:
+
+- **The platform cluster** where your Platform Service is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
+- **The onboarding cluster** that end users interact with.
+
+For a visual overview of how a platform service fits into an OpenControlPlane installation, refer to the [platform service deployment model](../platformservice/design#deployment-model).
+
+## Project Structure
+
+The platform service template is built with [kubebuilder](https://book.kubebuilder.io/introduction), so the project structure is similar to most Kubernetes controllers:
+
+- **api/** contains the types and their CRDs which the crd manager will install during the `initCommand`.
+- **cmd/** contains the entrypoint of the controller with init + run commands expected by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) to deploy the Platform Service.
+- **internal/controller/** contains the `Reconcile` function where you implement your service specific reconcile logic.
+
+If you are new to implementing Kubernetes controllers, consider completing [building a CronJob tutorial](https://book.kubebuilder.io/cronjob-tutorial/cronjob-tutorial.html) before returning to this guide. The rest of this guide highlights the most important steps to create a service provider and the differences compared to a regular Kubernetes controller.
+
+## Edit the generated API type
+
+The API type defines the options available to users when consuming your Platform Service. This API is watched by your controller. The template starts with a simple example spec, including an optional string field `Foo`:
+
+```go title="api/v1alpha1/api_types.go"
+// FooSpec defines the desired state of Foo
+type FooSpec struct {
+ // foo is an example field of Foo. Edit api_types.go to remove/update
+ // +optional
+ Foo *string `json:"foo,omitempty"`
+}
+```
+
+Modify the spec to expose the fields your provider supports.
+
+For example platform-service-quota allows users to increase Kubernetes `ResourceQuotas`:
+
+```yaml
+apiVersion: openmcp.cloud/v1alpha1
+kind: QuotaIncrease
+metadata:
+  name: qi-project-max
+  namespace: ns-project
+spec:
+  hard:
+    count/secrets: 30
+    count/configmaps: 10
+```
+
+Each API should include the [common status fields](../general#status-reporting). These are included in the example type that is generated by the template:
+
+```go title="api/v1alpha1/api_types.go"
+// FooStatus defines the observed state of Foo.
+type FooStatus struct {
+	commonapi.Status `json:",inline"`
+}
+```
+
+Modify the status to report service specific status information.
+
+## Edit the ProviderConfig API
+
+A Platform Service may expose additional configuration options to a [Platform Owner](../../users/00-getting-started.md). The configuration is either expressed as structured API or a regular `ConfigMap`. The template provides a dedicated `ProviderConfig` API to define its configuration options.
+
+```go title="api/v1alpha1/config_types.go"
+// ProviderConfigSpec defines the desired state of ProviderConfig
+type ProviderConfigSpec struct {
+}
+```
+
+Modify the spec to expose the fields your config supports.
+
+The example controller watches the `ProviderConfig` and creates reconciliation requests for any existing API object on changes to the `ProviderConfig`.
+This is implemented inside `SetupWithManager` by passing `enqueueAll` to the event handler:
+
+```go title="internal/controller/controller.go"
+func (r *FooReconciler) SetupWithManager(mgr manager.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&v1alpha1.Foo{}).
+		WatchesRawSource(source.Kind(
+			r.platformCluster.Cluster().GetCache(),
+			&v1alpha1.ProviderConfig{},
+			handler.TypedEnqueueRequestsFromMapFunc(r.enqueueAll()),
+			ctrlutils.ToTypedPredicate[*v1alpha1.ProviderConfig](ctrlutils.ExactNamePredicate(r.providerName, "")),
+		)).
+		Named(r.providerName).
+		Complete(r)
+}
+
+func (r *FooReconciler) enqueueAll() func(ctx context.Context, _ *v1alpha1.ProviderConfig) []reconcile.Request {
+	return func(ctx context.Context, _ *v1alpha1.ProviderConfig) []reconcile.Request {
+		list := &v1alpha1.FooList{}
+		if err := r.platformCluster.Client().List(ctx, list); err != nil {
+			logf.FromContext(ctx).Error(err, "failed to list Foo objects")
+			return nil
+		}
+		reqs := make([]reconcile.Request, 0, len(list.Items))
+		for _, obj := range list.Items {
+			reqs = append(reqs, reconcile.Request{
+				NamespacedName: client.ObjectKeyFromObject(&obj),
+			})
+		}
+		return reqs
+	}
+}
+```
+
+Note that the watch defines a name predicate to only enqueue configs that match the provider name. By default a platform serivce is expected to have exactly one config per platform service deployment.
+
+Inside the `Reconcile` function the `ProviderConfig` that matches the provider name is fetched and reconciliation exits if no config is defined:
+
+```go title="internal/controller/controller.go"
+func (r *FooReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
+	...
+	config := &v1alpha1.ProviderConfig{}
+	if err := r.platformCluster.Client().Get(ctx, types.NamespacedName{Name: r.providerName}, config); err != nil {
+		if apierrors.IsNotFound(err) {
+			log.Info("No config found", "name", r.providerName)
+		}
+		return reconcile.Result{}, client.IgnoreNotFound(err)
+	}
+	...
+}
+```
+
+The generated E2E test creates an empty `ProviderConfig` to reconcile the example `Foo` successfully. For a detailed guide to the [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) testing framework, test structure, and examples, see the [Service Provider test guide](../serviceprovider/testing). The same testing principles apply to Platform Services.
+
+In a real deployment the Config is typically expected to be created by a human operator.
+
+## Edit the Platform Service Controller
+
+Finally you need to implement your platform service specific logic inside `controller.go`. The template generates a basic `Reconcile` function for the e2e test to successfully create and delete a `Foo` object on the target cluster you choose when executing `template:generate-service`.
+
+It fetches the `Foo` object referenced by the reconcile request, handles the [operation annotation](../general#operation-annotations), fetches the `ProviderConfig` and finally reports successful reconciliation by updating the status:
+
+```go title="internal/controller/controller.go"
+func (r *FooReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
+	log := logf.FromContext(ctx)
+	// 1. get obj
+	obj := &v1alpha1.Foo{}
+	if err := r.platformCluster.Client().Get(ctx, req.NamespacedName, obj); err != nil {
+		return reconcile.Result{}, client.IgnoreNotFound(err)
+	}
+	// handle operation annotation
+	if obj.GetAnnotations() != nil {
+		op, ok := obj.GetAnnotations()[apiconst.OperationAnnotation]
+		if ok {
+			switch op {
+			case apiconst.OperationAnnotationValueIgnore:
+				log.Info("Ignoring resource with operation annotation")
+				return reconcile.Result{}, nil
+			case apiconst.OperationAnnotationValueReconcile:
+				if err := ctrlutils.EnsureAnnotation(ctx, r.platformCluster.Client(), obj, apiconst.OperationAnnotation, "", true, ctrlutils.DELETE); err != nil {
+					return reconcile.Result{}, fmt.Errorf("error removing operation annotation: %w", err)
+				}
+				log.Info("Manual reconciliation triggered with operation annotation")
+			}
+		}
+	}
+	// 2. get config
+	config := &v1alpha1.ProviderConfig{}
+	if err := r.platformCluster.Client().Get(ctx, types.NamespacedName{Name: r.providerName}, config); err != nil {
+		if apierrors.IsNotFound(err) {
+			log.Info("No config found", "name", r.providerName)
+		}
+		return reconcile.Result{}, client.IgnoreNotFound(err)
+	}
+	// 3. TODO: reconcile obj and report status
+	if len(obj.Status.Conditions) == 0 {
+		meta.SetStatusCondition(&obj.Status.Conditions, metav1.Condition{
+			Type:    "Ready",
+			Status:  metav1.ConditionTrue,
+			Reason:  "ReconcileSuccess",
+			Message: "Foo is ready",
+		})
+		obj.Status.ObservedGeneration = obj.GetGeneration()
+		obj.Status.Phase = "Ready"
+	}
+	if err := r.platformCluster.Client().Status().Update(ctx, obj); err != nil {
+		log.Error(err, "Failed to update Foo status")
+		return ctrl.Result{}, err
+	}
+	return reconcile.Result{}, nil
+}
+```
+
+:::info
+Note that if you generated your Platform Service with `watch=onboarding`, the `Reconcile` function will use `r.onboardingCluster.Client().Get(...)` to fetch `Foo` from the onboarding API server.
+:::
+
+For running your controller locally outside the cluster and troubleshooting common issues, see the [Service Provider Debug guide](../serviceprovider/debugging). Platform Services require the same local OpenControlPlane setup and provide the same options, especially the `DEV_DEBUG` flag if you created your Platform Service with `watch=onboarding`. `DEV_DEBUG` creates an onboarding cluster client that is configured to work outside the Kubernetes cluster.
+
+## Taskfile Usage
+
+OpenControlPlane controllers use `task` instead of `make` to generate code, build your controller image, etc. The most important developer commands are:
+
+- **task generate** to regenerate code after API changes.
+- **task build:img:build-test** to build an image for local testing.
+- **task test-e2e** for a full pipeline run including code generation, validation and e2e test execution.
+
+Run `task -l` to see all available tasks.
+
+## Release and Publish Workflows
+
+The template includes two reusable GitHub workflows to create releases and publish build artifacts. These workflows are defined in the [build submodule](https://github.com/openmcp-project/build).
+
+To reuse these workflows outside of the [github.com/openmcp-project](https://github.com/openmcp-project) organization, you must provide your own GitHub App values as [input parameters](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows#passing-inputs-and-secrets-to-a-reusable-workflow), e.g. in /.github/workflows/release.yaml:
+
+```yaml title=".github/workflows/release.yaml"
+name: Versioned Release
+
+jobs:
+  release_tag:
+  uses: openmcp-project/build/.github/workflows/release.lib.yaml@2857d51e2d98261233de19e6df4e49f20db8bbda # main
+  with:
+    app_id: "YOUR_APP_ID"
+  secrets:
+    app_private_key: ${{ secrets.YOUR_APP_PRIVATE_KEY }}
+```
+
+## Best Practices
+
+### General Guidelines
+
+- Follow the [General Controller Guidelines](../general)
+- Follow the Kubernetes [API conventions](https://github.com/kubernetes/community/blob/main/contributors/devel/sig-architecture/api-conventions.md)
+- Consider using [Platform Service HelmDeployer](https://github.com/openmcp-project/openmcp-operator/blob/main/docs/controller/helmdeployer.md) instead of creating a custom Platform Service if you just need to install a Helm chart.
+
+### Resource Names
+
+If your Platform Service creates resources in a namespace where other controllers or users operate, any created resource must have a carefully chosen name to avoid conflicts. For a complete overview of namespaces across all cluster types, see [Clusters and Namespaces](../clusters-and-namespaces.md).
