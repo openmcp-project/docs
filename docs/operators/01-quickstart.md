@@ -316,7 +316,7 @@ ocm                       Ready
 Next, we need to configure these `ServiceProviders` via their `ProviderConfig` API to rule which versions end users can install.
 
 :::note
-MORE COMING SOON
+More coming soon
 :::
 
 
@@ -324,7 +324,14 @@ MORE COMING SOON
 Learn how [Projects and Workspaces](/users/concepts/projects-and-workspaces) let you organize teams and `ControlPlanes`.
 
 :::note
-MORE COMING SOON
+More coming soon
+:::
+
+### Configure an Identity Provider
+Learn how to set up an IdP to authenticate users against a local OpenControlPlane environment.
+
+:::note
+More coming soon
 :::
 
 ### Deploy on real infrastructure
