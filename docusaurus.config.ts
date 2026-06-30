@@ -82,6 +82,10 @@ const config: Config = {
       {
         redirects: [
           {
+            from: '/developers/overview/serviceprovider/develop',
+            to: '/developers/serviceprovider/develop',
+          },
+          {
             from: '/developers/serviceprovider/service-providers',
             to: '/developers/serviceprovider/develop',
           },
