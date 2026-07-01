@@ -446,7 +446,8 @@ There is no generic way to enumerate every CRD a domain service installs, so eac
 The [service-provider-template](https://github.com/openmcp-project/service-provider-template) does not yet provide a reference implementation for this check. Progress is tracked in [openmcp-project/service-provider-template#88](https://github.com/openmcp-project/service-provider-template/issues/88).
 :::
 
-## Restrict Cluster Access
+## Cluster Access
+### Restrict Cluster Access
 
 The template code runs the provider with full admin permissions. Before releasing your provider, restrict its required permissions using the [advanced ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/advanced/clusteraccess.go).
 
@@ -472,7 +473,7 @@ mcpTokenAccess := &clustersv1alpha1.TokenConfig{
 }
 ```
 
-## Dynamic Cluster Access
+### Dynamic Cluster Access
 
 It is also possible to dynamically generate the `TokenConfig` of your provider which is enabled through registering a [TokenAccessGenerator](https://github.com/openmcp-project/openmcp-operator/blob/045b213389c43c37bf82bf5dda37292b04b7f48d/lib/clusteraccess/advanced/clusterregistration.go#L71) and [AdditionalDataGenerators](https://github.com/openmcp-project/opencontrolplane-runtime/blob/05e1902eb97e06115c7246c6ed42f8a5ca689167/pkg/serviceprovider/apireconciler.go#L52).
 Both generators will be called during reconciliation. The `AdditionalDataGenerators` will generate additional data which is looped through the various `ClusterAccessReconciler` methods down to the `TokenAccessGenerator` where it can be used to tailor the `TokenConfig` to the permission requirements of your service provider.
@@ -480,7 +481,7 @@ This is for example useful if your service provider offers a namespace override.
 
 :::info
 Using dynamic cluster access is only possible when using the [advanced ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/advanced/clusteraccess.go).
-If your service provider is still using the legacy [simple ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/clusteraccess.go) please refer to TODO!!! on how to migrate.
+If your service provider is still using the legacy [simple ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/clusteraccess.go) please refer to the [migration guide](#migrate-from-simple-to-advanced-clusteraccessreconciler) on how to migrate.
 :::
 
 To see a real-world example on how to implement dynamic cluster access please check out the implementation of [service-provider-external-secrets](https://github.com/openmcp-project/service-provider-external-secrets) TODO add correct link.
@@ -595,6 +596,131 @@ spr := serviceprovider.NewAPIReconcilerBuilder[*fooservicesv1alpha1.FooService, 
     }).
     AdvancedClusterAccessReconciler(clusterAccessReconciler).
     AdditionalDataGenerators(resolveFooServiceNamespace).
+    MustBuild()
+```
+
+### Migrate from simple to advanced ClusterAccessReconciler
+
+This section walks through migrating a service provider from the legacy [simple ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/clusteraccess.go)
+to the [advanced ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/advanced/clusteraccess.go).
+The simple `ClusterAccessReconciler` is a facade over the advanced one and the logic we now build manually was previously hidden behind its functional options.
+
+:::info
+To see a real-world implementation have for example a look at [service-provider-flux](https://github.com/openmcp-project/service-provider-flux/blob/main/cmd/service-provider-flux/main.go)
+or [service-provider-external-secrets](https://github.com/openmcp-project/service-provider-external-secrets/blob/main/cmd/service-provider-external-secrets/main.go)
+:::
+
+#### 1. Update dependencies
+
+First we need to bump `opencontrolplane-runtime` in our `go.mod` to a version >= 0.4.0:
+
+```go
+github.com/openmcp-project/opencontrolplane-runtime >= v0.4.0
+```
+
+Then we run `go mod tidy` afterwards to update our dependencies.
+
+#### 2. Add imports
+
+Next we need to add the `advanced` sub-package and the controller-runtime `reconcile` package to our `main.go` imports:
+
+```go
+import (
+    // existing imports …
+    "github.com/openmcp-project/openmcp-operator/lib/clusteraccess/advanced"
+    "sigs.k8s.io/controller-runtime/pkg/reconcile"
+)
+```
+
+#### 3. Define a `TokenConfig`
+
+Instead of calling `WithMCPPermissions` / `WithMCPRoleRefs` on the `NewClusterAccessReconciler` we need to create a standalone `*clustersv1alpha1.TokenConfig`:
+
+```go
+tokenAccessConfig := &clustersv1alpha1.TokenConfig{
+    Permissions: []clustersv1alpha1.PermissionsRequest{
+        {
+            Rules: []rbacv1.PolicyRule{
+                {
+                    APIGroups: []string{"*"},
+                    Resources: []string{"*"},
+                    Verbs:     []string{"*"},
+                },
+            },
+        },
+    },
+    RoleRefs: []common.RoleRef{
+        {
+            Name: "cluster-admin",
+            Kind: "ClusterRole",
+        },
+    },
+}
+```
+
+:::info
+Replace the wildcard rules with the minimum set of permissions your provider actually needs.
+If you need the permissions to vary per reconcile request please refer to [Dynamic Cluster Access](#dynamic-cluster-access).
+:::
+
+#### 4. Build the `ClusterRequest`
+
+Next we need to create an `ClusterRequest` for our MCP cluster where we register our `TokenConfig`
+
+```go
+mcpClusterRequest := advanced.ExistingClusterRequest("mcp", "mcp", func(req reconcile.Request, _ ...any) (*common.ObjectReference, error) {
+    namespace, err := utils.StableMCPNamespace(req.Name, req.Namespace)
+    if err != nil {
+        return nil, err
+    }
+    return &common.ObjectReference{
+        Name:      req.Name,
+        Namespace: namespace,
+    }, nil
+}).
+    WithNamespaceGenerator(advanced.DefaultNamespaceGeneratorForMCP).
+    WithTokenAccess(tokenAccessConfig).
+    WithScheme(mcpScheme).
+    Build()
+```
+
+#### 5. Build the `ClusterAccessReconciler`
+
+Now we are ready to build our new advanced `ClusterAccessReconciler` where we register our `ClusterRequest`
+
+```go
+car := advanced.NewClusterAccessReconciler(platformCluster.Client(), "YourOperatorName").
+    WithManagedLabels(func(controllerName string, req reconcile.Request, reg advanced.ClusterRegistration) (string, string, map[string]string) {
+        _, managedPurpose, _ := advanced.DefaultManagedLabelGenerator(controllerName, req, reg)
+        return controllerName, managedPurpose, map[string]string{
+            openmcpconst.OnboardingNameLabel:      req.Name,
+            openmcpconst.OnboardingNamespaceLabel: req.Namespace,
+        }
+    }).
+    WithRetryInterval(10 * time.Second).
+    Register(mcpClusterRequest)
+```
+
+#### 6. Register with the `APIReconciler`
+
+Lastly we have to register our advanced ClusterAccessReconciler with our APIReconciler. To do that we replace the `NewAPIReconcilerBuilder.ClusterAccessReconciler` with `NewAPIReconcilerBuilder.AdvancedClusterAccessReconciler` in the builder chain and are ready to go.
+
+```go
+// Before
+spr := serviceprovider.NewAPIReconcilerBuilder[*FooService, *ProviderConfig]().
+    // …
+    ClusterAccessReconciler(clusteraccess.NewClusterAccessReconciler(platformCluster.Client(), "Foo").
+        WithMCPScheme(mcpScheme).
+        WithRetryInterval(10 * time.Second).
+        WithMCPPermissions(adminPermissions).
+        WithMCPRoleRefs([]common.RoleRef{{Name: "cluster-admin", Kind: "ClusterRole"}}).
+        SkipWorkloadCluster(),
+    ).MustBuild()
+
+// After
+spr := serviceprovider.NewAPIReconcilerBuilder[*FooService, *ProviderConfig]().
+    // …
+    AdvancedClusterAccessReconciler(car).
     MustBuild()
 ```
 
