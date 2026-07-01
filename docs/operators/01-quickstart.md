@@ -40,6 +40,19 @@ The separation ensures end users never touch infrastructure. They interact only 
 - [`flux`](https://fluxcd.io/flux/installation/#install-the-flux-cli) CLI installed
 - ~10 minutes
 
+:::note Linux: inotify limits
+The default Linux inotify limit (`fs.inotify.max_user_instances=128`) is too low when running multiple Kind clusters. If it is exhausted, `containerd` inside the ControlPlane cluster fails to initialize, which significantly delays bootstrap and can cause the `AccessRequest` controller to build up a long exponential backoff before the cluster becomes reachable.
+
+Raise the limit before you start:
+
+```shell
+sudo sysctl -w fs.inotify.max_user_instances=512
+sudo sysctl -w fs.inotify.max_user_watches=524288
+```
+
+To persist across reboots, add both lines to `/etc/sysctl.d/99-kind.conf`.
+:::
+
 ## Install ocpctl
 
 ```shell
