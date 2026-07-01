@@ -471,6 +471,129 @@ mcpTokenAccess := &clustersv1alpha1.TokenConfig{
 }
 ```
 
+## Dynamic Cluster Access
+
+It is also possible to dynamically generate the TokenConfig of your provider which is enabled through registering a [TokenAccessGenerator](https://github.com/openmcp-project/openmcp-operator/blob/045b213389c43c37bf82bf5dda37292b04b7f48d/lib/clusteraccess/advanced/clusterregistration.go#L71) and [AdditionalDataGenerators](https://github.com/openmcp-project/opencontrolplane-runtime/blob/05e1902eb97e06115c7246c6ed42f8a5ca689167/pkg/serviceprovider/apireconciler.go#L52).
+Both generators will be called during reconciliation. The AdditionalDataGenerators will generate additional data which is looped through the various ClusterAccessReconciler methods down to the TokenAccessGenerator where it can be used to tailor the TokenConfig to the needs of your service provider.
+This if for example useful if your service provider offers a namespace override. The namespace is only known during reconciliation and using a TokenAccessGenerator allows you to take that information into account.
+
+:::info
+Using the TokenAccessGenerator is only possible when using the [advanced ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/advanced/clusteraccess.go).
+If your service provider is still using the legacy simple ClusterAccessReconciler please refer to TODO!!! on how to migrate.
+:::
+
+As an example we will demonstrate how you can dynamically insert an overridden namespace into your TokenConfig. To achieve this we first need to create a named type which will hold the namespace and function which determines it.
+
+```go
+type fooServiceNamespace string
+
+func resolveFooServiceNamespace(_ context.Context, obj *fooservicesv1alpha1.FooService, providerConfig *fooservicesv1alpha1.ProviderConfig) (any, error) {
+	namespace := fooService.DefaultNamespace
+
+	if obj != nil && providerConfig != nil {
+		for _, version := range providerConfig.Spec.Versions {
+			if version.Version != obj.Spec.Version {
+				continue
+			}
+
+			helmValues, err := fooservice.ExtractHelmValues(version.HelmValues)
+			if err != nil {
+				return nil, fmt.Errorf("failed to extract helm values: %w", err)
+			}
+
+			if helmValues.NamespaceOverride != "" {
+				namespace = helmValues.NamespaceOverride
+			}
+			break
+		}
+	}
+
+	return fooServiceNamespace(namespace), nil
+}
+```
+
+Now we define a tokenAccessGenerator in the service providers main function. Here we first try to fetch the namespace from the provided additionalData and then use that in the Permissions of our TokenConfig.
+
+```go
+tokenAccessGenerator := func(req reconcile.Request, additionalData ...any) (*clustersv1alpha1.TokenConfig, error) {
+    namespace := fooService.DefaultNamespace
+    for _, data := range additionalData {
+        accessScope, ok := data.(*accessScopeData)
+        if ok && accessScope != nil && accessScope.namespace != "" {
+            namespace = accessScope.namespace
+            break
+        }
+    }
+    return &clustersv1alpha1.TokenConfig{
+        Permissions: []clustersv1alpha1.PermissionsRequest{
+            {
+                Namespace: namespace,
+                Rules: []rbacv1.PolicyRule{
+                    {
+                        APIGroups: []string{"*"},
+                        Resources: []string{"*"},
+                        Verbs:     []string{"*"},
+                    },
+                },
+            },
+        },
+    }, nil
+}
+```
+
+Next we need to register the `TokenAccessGenerator` with our `ClusterRequest`...
+
+```go
+mcpClusterRequest := advanced.ExistingClusterRequest("mcp", "mcp", func(req reconcile.Request, _ ...any) (*common.ObjectReference, error) {
+    namespace, err := utils.StableMCPNamespace(req.Name, req.Namespace)
+    if err != nil {
+        return nil, err
+    }
+    return &common.ObjectReference{
+        Name:      req.Name,
+        Namespace: namespace,
+    }, nil
+}).
+    WithNamespaceGenerator(advanced.DefaultNamespaceGeneratorForMCP).
+    WithTokenAccessGenerator(tokenAccesGenerator).
+    WithScheme(mcpScheme).
+    Build()
+```
+
+... and our `ClusterRequest` with our `ClusterAccessReconciler`.
+
+```go
+clusterAccessReconciler := advanced.NewClusterAccessReconciler(platformCluster.Client(), "FooServiceOperator").
+    WithManagedLabels(func(controllerName string, req reconcile.Request, reg advanced.ClusterRegistration) (string, string, map[string]string) {
+        _, managedPurpose, _ := advanced.DefaultManagedLabelGenerator(controllerName, req, reg)
+        return controllerName, managedPurpose, map[string]string{
+            openmcpconst.OnboardingNameLabel:      req.Name,
+            openmcpconst.OnboardingNamespaceLabel: req.Namespace,
+        }
+    }).
+    WithRetryInterval(10 * time.Second).
+    Register(mcpClusterRequest)
+```
+
+To tie it all together we have to register `resolveFooServiceNamespace` as `AdditionalDataGenerator` with our `APIReconciler` along with our `ClusterAccessReconciler`.
+
+```go
+spr := serviceprovider.NewAPIReconcilerBuilder[*externalsecretsoperatorsv1alpha1.ExternalSecretsOperator, *externalsecretsoperatorsv1alpha1.ProviderConfig]().
+    EmptyObjectProvider(func() *externalsecretsoperatorsv1alpha1.ExternalSecretsOperator {
+        return &externalsecretsoperatorsv1alpha1.ExternalSecretsOperator{}
+    }).
+    PlatformCluster(platformCluster).
+    OnboardingCluster(onboardingCluster).
+    Reconciler(&controller.ExternalSecretsOperatorReconciler{
+        OnboardingCluster: onboardingCluster,
+        PlatformCluster:   platformCluster,
+        PodNamespace:      podNamespace,
+    }).
+    AdvancedClusterAccessReconciler(clusterAccessReconciler).
+    AdditionalDataGenerators(resolveFooServiceNamespace).
+    MustBuild()
+```
+
 ## Taskfile Usage
 
 OpenControlPlane controllers use `task` instead of `make` to generate code, build your controller image, etc. The most important developer commands are:
