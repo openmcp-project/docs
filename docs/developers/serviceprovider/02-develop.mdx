@@ -447,20 +447,28 @@ The [service-provider-template](https://github.com/openmcp-project/service-provi
 :::
 
 ## Restrict Cluster Access
-
-The template code runs the provider with full admin permissions. Before releasing you provider, restrict its required permissions with the [ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/clusteraccess.go#L103). There are multiple occurrences in the `main.go` service provider setup.
+The template code runs the provider with full admin permissions. Before releasing your provider, restrict its required permissions using the [advanced ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/advanced/clusteraccess.go).
 
 ```go
- spr := serviceprovider.NewAPIReconcilerBuilder[*fooservicesv1alpha1.FooService, *fooservicesv1alpha1.ProviderConfig]().
-  EmpyObjectProvider(func() *fooservicesv1alpha1.FooService { return &fooservicesv1alpha1.FooService{} }).
-  ClusterAccessReconciler(clusteraccess.NewClusterAccessReconciler(platformCluster.Client(), "FooService").
-   WithMCPScheme(mcpScheme).
-   WithMCPPermissions(adminPermissions).WithMCPRoleRefs([]common.RoleRef{
-   {
-    Name: "cluster-admin",
-    Kind: "ClusterRole",
-   }})).
-   MustBuild()
+mcpTokenAccess := &clustersv1alpha1.TokenConfig{
+    Permissions: []clustersv1alpha1.PermissionsRequest{
+        {
+            Rules: []rbacv1.PolicyRule{
+                {
+                    APIGroups: []string{"*"},
+                    Resources: []string{"*"},
+                    Verbs:     []string{"*"},
+                },
+            },
+        },
+    },
+    RoleRefs: []common.RoleRef{
+        {
+            Name: "cluster-admin",
+            Kind: "ClusterRole",
+        },
+    },
+}
 ```
 
 ## Taskfile Usage
