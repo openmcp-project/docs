@@ -298,7 +298,7 @@ spec:
 
 The `metadata.name` of an `Artifact` is arbitrary. As a best practice, use `<artifact-name>-<componentVersion>` (e.g. `crossplane-chart-v1.20.0`) for readability.
 Artifacts are intended to be retrieved by their `spec` fields using a `fieldSelector`.
-<!-- @Valentin: please verify if fieldSelector supports querying `spec.name` / `spec.version`. -->
+For this to work, the `Artifact` CRD must declare `spec.name` and `spec.version` in `spec.versions[*].selectableFields` (see [CRD selectable fields](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#crd-selectable-fields)).
 
 The `spec.version` field on an `Artifact` is the **`componentVersion`**, not the OCI tag of the underlying image. The OCI tag (the `artifactVersion`) is encoded in `spec.url`.
 
