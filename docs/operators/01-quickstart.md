@@ -43,7 +43,7 @@ The separation ensures end users never touch infrastructure. They interact only 
 ## Install ocpctl
 
 ```shell
-go install github.com/openmcp-project/ocpctl@v0.1.4
+go install github.com/openmcp-project/ocpctl@v0.2.0
 ```
 
 Or download a pre-built binary from the [releases page](https://github.com/openmcp-project/ocpctl/releases/latest).
