@@ -448,7 +448,7 @@ The [service-provider-template](https://github.com/openmcp-project/service-provi
 
 ## Cluster Access
 
-This section covers all things related on how to control what your service provider is allowed to do on target clusters.
+This section covers all things related on how to control what your service provider is allowed to do on a target control plane.
 
 ### Restrict Cluster Access
 
@@ -457,7 +457,7 @@ The template code runs the provider with full admin permissions. Before releasin
 #### Before
 
 ```go
-mcpTokenAccess := &clustersv1alpha1.TokenConfig{
+controlPlaneTokenAccess := &clustersv1alpha1.TokenConfig{
     Permissions: []clustersv1alpha1.PermissionsRequest{
         {
             Rules: []rbacv1.PolicyRule{
@@ -481,7 +481,7 @@ mcpTokenAccess := &clustersv1alpha1.TokenConfig{
 #### After
 
 ```go
-mcpTokenAccess := &clustersv1alpha1.TokenConfig{
+controlPlaneTokenAccess := &clustersv1alpha1.TokenConfig{
     Permissions: []clustersv1alpha1.PermissionsRequest{
         {
             Rules: []rbacv1.PolicyRule{
@@ -586,7 +586,7 @@ tokenAccessGenerator := func(_ reconcile.Request, additionalData ...any) (*clust
 When we build our `ClusterRequest` we need to register our `TokenAccessGenerator`.
 
 ```go
-mcpClusterRequest := advanced.ExistingClusterRequest("mcp", "mcp", func(req reconcile.Request, _ ...any) (*common.ObjectReference, error) {
+controlPlaneClusterRequest := advanced.ExistingClusterRequest("mcp", "mcp", func(req reconcile.Request, _ ...any) (*common.ObjectReference, error) {
     namespace, err := utils.StableMCPNamespace(req.Name, req.Namespace)
     if err != nil {
         return nil, err
@@ -598,7 +598,7 @@ mcpClusterRequest := advanced.ExistingClusterRequest("mcp", "mcp", func(req reco
 }).
     WithNamespaceGenerator(advanced.DefaultNamespaceGeneratorForMCP).
     WithTokenAccessGenerator(tokenAccessGenerator).
-    WithScheme(mcpScheme).
+    WithScheme(controlPlaneScheme).
     Build()
 ```
 
@@ -616,7 +616,7 @@ clusterAccessReconciler := advanced.NewClusterAccessReconciler(platformCluster.C
         }
     }).
     WithRetryInterval(10 * time.Second).
-    Register(mcpClusterRequest)
+    Register(controlPlaneClusterRequest)
 ```
 
 #### 5. Register with the `APIReconciler`
@@ -706,10 +706,10 @@ If you need the permissions to vary per reconcile please refer to [Dynamic Clust
 
 #### 4. Build the `ClusterRequest`
 
-Next we need to create a `ClusterRequest` for our MCP cluster where we register our `TokenConfig`
+Next we need to create a `ClusterRequest` for our Control Plane cluster where we register our `TokenConfig`
 
 ```go
-mcpClusterRequest := advanced.ExistingClusterRequest("mcp", "mcp", func(req reconcile.Request, _ ...any) (*common.ObjectReference, error) {
+controlPlaneClusterRequest := advanced.ExistingClusterRequest("mcp", "mcp", func(req reconcile.Request, _ ...any) (*common.ObjectReference, error) {
     namespace, err := utils.StableMCPNamespace(req.Name, req.Namespace)
     if err != nil {
         return nil, err
@@ -721,7 +721,7 @@ mcpClusterRequest := advanced.ExistingClusterRequest("mcp", "mcp", func(req reco
 }).
     WithNamespaceGenerator(advanced.DefaultNamespaceGeneratorForMCP).
     WithTokenAccess(tokenAccessConfig).
-    WithScheme(mcpScheme).
+    WithScheme(controlPlaneScheme).
     Build()
 ```
 
@@ -739,7 +739,7 @@ clusterAccessReconciler := advanced.NewClusterAccessReconciler(platformCluster.C
         }
     }).
     WithRetryInterval(10 * time.Second).
-    Register(mcpClusterRequest)
+    Register(controlPlaneClusterRequest)
 ```
 
 #### 6. Register with the `APIReconciler`
@@ -751,7 +751,7 @@ Lastly we have to register our advanced ClusterAccessReconciler with our APIReco
 spr := serviceprovider.NewAPIReconcilerBuilder[*FooService, *ProviderConfig]().
     // …
     ClusterAccessReconciler(clusteraccess.NewClusterAccessReconciler(platformCluster.Client(), "Foo").
-        WithMCPScheme(mcpScheme).
+        WithMCPScheme(controlPlaneScheme).
         WithRetryInterval(10 * time.Second).
         WithMCPPermissions(adminPermissions).
         WithMCPRoleRefs([]common.RoleRef{{Name: "cluster-admin", Kind: "ClusterRole"}}).
