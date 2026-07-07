@@ -278,57 +278,80 @@ A new resource on the platform cluster called `Artifact`. Each `Artifact` points
 
 Two version concepts appear in the examples below and must not be confused:
 
-- **`componentVersion`** is the version of the OCM service component the user selects, e.g. `crossplane v1.20.0`. This is what an `Artifact`'s `spec.version` carries. Picking a `componentVersion` resolves into a fixed set of `Artifact` resources.
-- **`artifactVersion`** is the tag of the underlying OCI image, or in OCM terms the [resource](https://ocm.software/docs/reference/component-constructor/#components-resources) version. It is what ends up in the artifact's `url` (e.g. `:v2.1.2` for the Crossplane controller image while the chart is still at `:v1.20.0`).
+- **`componentVersion`** is the version of the OCM service component the user selects, e.g. `flux v2.8.8`. This is what an `Artifact`'s `spec.version` carries. Picking a `componentVersion` resolves into a fixed set of `Artifact` resources.
+- **`artifactVersion`** is the tag of the underlying OCI image, or in OCM terms the [resource](https://ocm.software/docs/reference/component-constructor/#components-resources) version. It is what ends up in the artifact's `url` (e.g. `:v1.5.5` for the flux helm-controller image while the chart is at `:v2.18.4`).
 
 A single `componentVersion` therefore typically pins multiple, independent `artifactVersion`s. Consumers select by `componentVersion`; the corresponding `artifactVersion`s come along automatically.
 
 ```yaml
 kind: Artifact
 metadata:
-  name: crossplane-chart-v1.20.0
+  name: flux-chart-v2.8.8
 spec:
-  name: crossplane-chart
-  version: v1.20.0
-  url: ghcr.io/crossplane/crossplane:v1.20.0@sha256:23426aabcd...
-  pullsecrets:
-    - name: ghcr-pull-secret      # required
-      namespace: openmcp-system    # optional, defaults to the Artifact's namespace
+  name: flux-chart
+  version: v2.8.8
+  url: example-reg.io/charts/flux:v2.18.4@sha256:23426aabcd...
+  pullsecrets:                      # if from authenticated registry
+    - name: registry-pull-secret    # required. `Artifact` is cluster-scoped, so namespace is mandatory.
+      namespace: openmcp-system
 ```
 
-The `metadata.name` of an `Artifact` is arbitrary. As a best practice, use `<artifact-name>-<componentVersion>` (e.g. `crossplane-chart-v1.20.0`) for readability.
+The `metadata.name` of an `Artifact` is arbitrary. As a best practice, use `<artifact-name>-<componentVersion>` (e.g. `flux-chart-v2.8.8`) for readability.
 Artifacts are intended to be retrieved by their `spec` fields using a `fieldSelector`.
 For this to work, the `Artifact` CRD must declare `spec.name` and `spec.version` in `spec.versions[*].selectableFields` (see [CRD selectable fields](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#crd-selectable-fields)).
 
 The `spec.version` field on an `Artifact` is the **`componentVersion`**, not the OCI tag of the underlying image. The OCI tag (the `artifactVersion`) is encoded in `spec.url`.
 
-For example, `crossplane` is a component that consists of two artifacts: the `chart` and the `image`. There will therefore be two `Artifact` resources:
+For example, `flux` at `componentVersion` `v2.8.8` is a component that consists of one chart and multiple controller images at independent `artifactVersion`s. The resulting `Artifact` resources are:
 
 ```yaml
 kind: Artifact
 metadata:
-  name: crossplane-image-v1.20.0
+  name: flux-chart-v2.8.8
 spec:
-  name: crossplane-image
-  version: v2.1.2
-  url: ghcr.io/crossplane/crossplane:v2.1.2@sha256:23426aabcd...
-  pullsecrets:
-    - name: ghcr-pull-secret
+  name: flux-chart
+  version: v2.8.8
+  url: example-reg.io/charts/flux:v2.18.4@sha256:23426aabcd...
+  pullsecrets:                      # if from authenticated registry
+    - name: registry-pull-secret
       namespace: openmcp-system
 ---
 kind: Artifact
 metadata:
-  name: crossplane-chart-v1.20.0
+  name: flux-helm-controller-v2.8.8
 spec:
-  name: crossplane-chart
-  version: v1.20.0
-  url: ghcr.io/crossplane/crossplane-chart:v1.20.0@sha256:23426aabcd...
-  pullsecrets:
-    - name: ghcr-pull-secret
+  name: flux-helm-controller
+  version: v2.8.8
+  url: ghcr.io/fluxcd/helm-controller:v1.5.5@sha256:23426aabcd...
+  pullsecrets:                      # if from authenticated registry
+    - name: registry-pull-secret
       namespace: openmcp-system
+---
+kind: Artifact
+metadata:
+  name: flux-kustomize-controller-v2.8.8
+spec:
+  name: flux-kustomize-controller
+  version: v2.8.8
+  url: ghcr.io/fluxcd/kustomize-controller:v1.8.5@sha256:23426aabcd...
+  pullsecrets:                      # if from authenticated registry
+    - name: registry-pull-secret
+      namespace: openmcp-system
+---
+kind: Artifact
+metadata:
+  name: flux-source-controller-v2.8.8
+spec:
+  name: flux-source-controller
+  version: v2.8.8
+  url: ghcr.io/fluxcd/source-controller:v1.8.5@sha256:23426aabcd...
+  pullsecrets:                      # if from authenticated registry
+    - name: registry-pull-secret
+      namespace: openmcp-system
+# ... additional controller Artifacts (image-automation, image-reflector, notification, ...) follow the same shape.
 ```
 
-Both artifacts carry different image tags but share the same component version. A consuming entity can therefore resolve: "for component version `v1.20.0`, use chart tag `v1.20.0` and image tag `v2.1.2`."
+All `Artifact` resources share the same `componentVersion` `v2.8.8` while carrying independent `artifactVersion`s in their `url`. A consuming entity can therefore resolve: "for component version `v2.8.8`, pull chart tag `v2.18.4`, helm-controller tag `v1.5.5`, kustomize-controller tag `v1.8.5`, source-controller tag `v1.8.5`, ..."
 
 ![Discoverable Artifacts](./2026-06-08-discoverable-components.excalidraw.svg)
 
@@ -336,7 +359,45 @@ Both artifacts carry different image tags but share the same component version. 
 
 Every `ServiceProvider` has a `ProviderConfig` resource. To inform the `ServiceProvider` how to locate the relevant `Artifact` resources, selectors are defined in the `ProviderConfig`.
 
-Example for the `ServiceProvider` Crossplane:
+Multiple `componentVersion`s of the same service coexist as independent `Artifact` sets on the platform cluster. A single `ProviderConfig` selects across all of them via `fieldSelector` on `spec.name`; the end user then picks the concrete `componentVersion` per `ControlPlane` (out of scope for this ADR).
+
+Example: crossplane at `componentVersion` `v1.20.1` and `v2.0.2`. Both versions ship a matching chart and image `artifactVersion`, so eight `Artifact` resources exist on the platform cluster:
+
+```yaml
+kind: Artifact
+metadata:
+  name: crossplane-chart-v1.20.1
+spec:
+  name: crossplane-chart
+  version: v1.20.1
+  url: example-reg.io/charts/crossplane:v1.20.1@sha256:23426aabcd...
+---
+kind: Artifact
+metadata:
+  name: crossplane-image-v1.20.1
+spec:
+  name: crossplane-image
+  version: v1.20.1
+  url: xpkg.crossplane.io/crossplane/crossplane:v1.20.1@sha256:23426aabcd...
+---
+kind: Artifact
+metadata:
+  name: crossplane-chart-v2.0.2
+spec:
+  name: crossplane-chart
+  version: v2.0.2
+  url: example-reg.io/charts/crossplane:v2.0.2@sha256:23426aabcd...
+---
+kind: Artifact
+metadata:
+  name: crossplane-image-v2.0.2
+spec:
+  name: crossplane-image
+  version: v2.0.2
+  url: xpkg.crossplane.io/crossplane/crossplane:v2.0.2@sha256:23426aabcd...
+```
+
+A single `ProviderConfig` selects both versions by matching on `spec.name` only:
 
 ```yaml
 apiVersion: crossplane.services.open-control-plane.io/v1alpha1
@@ -353,12 +414,14 @@ spec:
   providers:
     selectors:
       matchLabels:
-        crossplane.open-control-plane.io/type: "provider"
+        crossplane.services.open-control-plane.io/type: "provider"
   functions:
     selectors:
       matchLabels:
-        crossplane.open-control-plane.io/type: "functions"
+        crossplane.services.open-control-plane.io/type: "functions"
 ```
+
+Each selector resolves to multiple `Artifact` resources (one per `componentVersion`). The consumer picks the concrete `spec.version` per `ControlPlane` at request time.
 
 ## Pros and Cons
 
