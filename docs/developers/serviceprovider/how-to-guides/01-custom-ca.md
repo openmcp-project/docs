@@ -7,7 +7,7 @@ This guide covers the developer side. For the operator side (creating the CA bun
 ## Prerequisites
 
 - A service provider created from the [service-provider-template](https://github.com/openmcp-project/service-provider-template)
-- Familiarity with the [ProviderConfig design guidelines](../02-develop.mdx#edit-the-providerconfig-api)
+- Familiarity with the [ProviderConfig design guidelines](../develop#edit-the-providerconfig-api)
 
 ## Step 1 — Add `caBundleRef` to your ProviderConfig API
 
