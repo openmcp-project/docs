@@ -9,14 +9,14 @@ This document defines the terminology for Platform Services within the OpenContr
 
 ## Domain
 
-Platform services deliver platform capabilities within the OpenControlPlane ecosystem. They follow similar architectural patterns to [Service Providers](../serviceprovider/01-design.mdx) and [Cluster Providers](../clusterprovider/04-design.mdx).
+Platform services deliver platform capabilities within the OpenControlPlane ecosystem. They follow similar architectural patterns to [Service Providers](../serviceprovider/design) and [Cluster Providers](../clusterprovider/design).
 
-When mapped to a layered architecture using the personas of **Platform Owner**, **Service Provider** and **User**, Platform Services operate in the **Platform Owner** layer. Together with [Cluster Providers](../clusterprovider/04-design.mdx) they build the foundation of OpenControlPlane:
+When mapped to a layered architecture using the personas of **Platform Owner**, **Service Provider** and **User**, Platform Services operate in the **Platform Owner** layer. Together with [Cluster Providers](../clusterprovider/design) they build the foundation of OpenControlPlane:
 
 | Persona | OpenControlPlane Concept | Responsibility |
 | :------ | :--------------- | :------------------- |
-| Platform Owner | Platform Service and [Cluster Provider](../clusterprovider/04-design.mdx) | Provide platform capabilities consumed by the layers below |
-| Service Provider | [Service Providers](../serviceprovider/01-design.mdx) | Provide managed services consumed by the layer below |
+| Platform Owner | Platform Service and [Cluster Provider](../clusterprovider/design) | Provide platform capabilities consumed by the layers below |
+| Service Provider | [Service Providers](../serviceprovider/design) | Provide managed services consumed by the layer below |
 | User | Not an OpenControlPlane concept but a human end user | Generate value from the services provided by Platform Owners and Service Providers |
 
 Some Platform Services are required to operate OpenControlPlane, such as those included in the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator). Others are optional and extend the platform's capabilities to support specific use cases.
@@ -99,5 +99,5 @@ The following table distinguishes Platform Services and Service Providers based 
 ❌ MUST NOT introduce API on that cluster type.
 
 :::info
-Note that the Service Provider [Config](../serviceprovider/01-design.mdx#config) is not considered a service.
+Note that the Service Provider [Config](../serviceprovider/design#config) is not considered a service.
 :::
