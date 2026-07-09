@@ -5,10 +5,236 @@ id: design
 
 # Design
 
-:::info Coming Soon
-Detailed design documentation for Cluster Providers is coming soon.
+This document defines the terminology for Cluster Providers within the OpenControlPlane project and clarifies their scope and responsibilities.
+
+Cluster Providers decouple OpenControlPlane from a specific cloud vendor or bare-metal Kubernetes solution, allowing [platform owners](../../operators/overview) to switch providers if needed.
+
+## Domain
+
+Cluster Providers are responsible for managing Kubernetes clusters and providing access to them within the OpenControlPlane ecosystem.
+
+All Cluster Providers use the same set of core cluster APIs provided by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator):
+
+- ClusterProfile: Defines profiles like small, medium, large, etc.
+- Cluster: Represents a Kubernetes cluster in OpenControlPlane.
+- AccessRequest: Allows users and controllers to request cluster access.
+
+OpenControlPlane currently distinguishes between platform, onboarding, control plane and workload clusters (see [Clusters Overview](../clusters-and-namespaces#cluster-overview)).
+These clusters serve different purposes in the context of OpenControlPlane and are subject to change in future iterations. Therefore, Cluster Providers must be purpose agnostic to allow OpenControlPlane to introduce new cluster kinds or remove existing ones.
+
+### Cluster Lifecycle
+
+Clusters are provisioned via cluster requests. Multiple cluster requests may be assigned to the same cluster:
+
+```mermaid
+graph LR
+    CR[ClusterRequest]
+    C[Cluster]
+    CR ---|1..n reference 1|C
+```
+
+A Cluster Provider is responsible for creating, updating and eventually deleting Kubernetes clusters based on the desired cluster state.
+
+```mermaid
+graph LR
+    C[Cluster]
+    CP(ClusterProvider)
+    KC((Kubernetes Cluster))
+    CP -->|manages|KC
+    CP -->|reconciles|C
+```
+
+A Cluster Provider is not responsible for accepting or rejecting cluster requests or managing cluster definitions. This is handled by the [openmcp-operator cluster scheduling](https://github.com/openmcp-project/openmcp-operator#cluster-scheduler).
+
+```mermaid
+graph LR
+    CR[ClusterRequest]
+    C[Cluster]
+    CS(openmcp-operator)
+    CS -->|reconciles|CR
+    CS -->|manages|C
+```
+
+A cluster with no cluster requests is eligible for deletion.
+
+:::info
+The initial platform cluster of an OpenControlPlane installation has to be manually [bootstrapped](../../operators/quickstart).
 :::
 
-Cluster Providers are responsible for managing Kubernetes clusters and providing access to them within the OpenControlPlane ecosystem. They follow similar architectural patterns to Service Providers.
+### Cluster Access
 
-For reference, you can review the [Service Provider Design Documentation](../serviceprovider/design) which outlines concepts that apply to all provider types in the OpenControlPlane ecosystem.
+Users request cluster access by creating an access request. Multiple users may access the same cluster, resulting in multiple access requests for the same cluster:
+
+```mermaid
+graph LR
+    AR[AccessRequest]
+    C[Cluster]
+    AR -->|1..n reference 1|C
+```
+
+A Cluster Provider is responsible for providing access to a cluster.
+
+```mermaid
+graph LR
+    AR[AccessRequest]
+    CP(ClusterProvider)
+    CP -->|reconciles|AR
+```
+
+:::info
+Note that a user can be a human operator or any system/controller with the permissions to create access requests.
+:::
+
+### Cluster Provider Configuration
+
+A Cluster Provider must create at least one cluster profile to be available for cluster scheduling. Cluster profiles are a config abstraction for the cluster scheduler to work with independent of any Cluster Provider specifics. They enable platform owners to configure a mapping between cluster requests and resulting clusters.
+
+Most Cluster Providers will allow dynamic profile creation based on provider specific configuration. But a Cluster Provider may also provide a set of predefined cluster profiles.
+
+```mermaid
+graph LR
+    P(ClusterProvider)
+    CFG[Config]
+    CP[ClusterProfile]
+    CS(openmcp-operator)
+
+    P -->|1 reconciles n|CFG
+    P -->|1 manages 1..n|CP
+    CP -->|1..n references 1|CFG
+    CS -->|1 uses 1..n|CP
+```
+
+A Cluster Provider can choose the cardinality between config and profiles as long as a profile uniquely identifies the config that produced it.
+
+### Cluster Provider Assignment
+
+Clusters get assigned to a Cluster Provider by the cluster scheduler based on a platform owner defined purpose mapping. Each cluster request specifies a purpose which is mapped to a cluster profile, resulting in the Cluster Provider assignment.
+
+A cluster purpose is a an arbitrary label and not a real object in OpenControlPlane.
+
+```mermaid
+graph LR
+    PU>Cluster Purpose]
+    CP[ClusterProfile]
+    P(ClusterProvider)
+
+    PU -->|1 maps to 1|CP -->|1 maps to 1|P
+```
+
+## Deployment Model
+
+A Cluster Provider runs on the platform cluster and reconciles its `ProviderConfig` plus `Cluster` and `AccessRequest` resources. It creates and manages Kubernetes clusters.
+
+```mermaid
+graph TD
+    %% Kubernetes Cluster
+    KC((KubernetesCluster))
+
+    %% Platform Cluster
+    subgraph PlatformCluster
+        OP[openmcp-operator]
+        CP[ClusterProvider]
+        CFG[Config]
+        C[Cluster]
+        AR[AccessRequest]
+        PFL[ClusterProfile]
+    end
+
+    %% edges
+    CP -->|reconciles|C
+    CP -->|reconciles|AR
+    CP -->|reconciles|CFG
+    OP-->|reconciles|CP
+    CP -->|manages|KC
+    CP -->|manages|PFL
+```
+
+For more details on cluster types, see [Clusters and Namespaces](../clusters-and-namespaces.md).
+
+## Example
+
+The following diagram shows the onboarding cluster provisioning path through the OpenControlPlane system.
+
+```mermaid
+sequenceDiagram
+    participant PSCP as platform-service-control-plane
+    participant PC as platform-cluster
+    participant OCPOP as openmcp-operator
+    participant CP as cluster-provider-gardener
+
+    PSCP->>PC: create cluster request with purpose onboarding
+
+    OCPOP->>PC: pick up cluster request
+    OCPOP->>PC: approve/deny request
+    OCPOP->>PC: lookup purpose mapping and find matching cluster profile
+    OCPOP->>PC: create cluster resource and assign cp-gardener based on matching profile
+
+    CP->>PC: pick up assigned cluster resource and create cluster
+    CP->>CP: create kubernetes cluster
+    CP->>PC: update cluster resource with kubernetes cluster endpoints
+
+    PSCP->>PC: request onboarding cluster access
+
+    CP->>PC: pick up access request based on assignment label
+    CP->>PC: create kubeconfig
+    CP->>PC: update access request status with kubeconfig reference
+
+    PSCP->>PSCP: watch onboarding cluster for new control plane resources
+```
+
+## Access Management (Draft)
+
+The previous sections described the current state of OpenControlPlane access management where Cluster Providers are responsible for granting or rejecting access to clusters. 
+This approach currently lacks fine-grained access control, such as granting access to only a subset of clusters across several cluster providers.
+
+This section proposes aligning the access request flow to the cluster request flow by introducing an `Access` resource for clear separation of concerns.
+
+### Access Abstraction
+
+This separates authorization from access provisioning using dedicated resources, mirroring the Cluster / ClusterRequest pattern:
+
+```mermaid
+graph LR
+    AR[AccessRequest]
+    A[Access]
+    AR ---|1 reference 1|A
+```
+
+Cluster Providers watch access resources instead of access requests.
+
+### Updated Example
+
+The example flow from above changes as follows:
+
+```mermaid
+sequenceDiagram
+    participant PSCP as platform-service-control-plane
+    participant PC as platform-cluster
+    participant OCPOP as openmcp-operator
+    participant CP as cluster-provider-gardener
+
+    PSCP->>PC: create cluster request with purpose onboarding
+
+    OCPOP->>PC: pick up cluster request
+    OCPOP->>PC: approve/deny request
+    OCPOP->>PC: lookup purpose mapping and find matching cluster profile
+    OCPOP->>PC: create cluster resource and assign cp-gardener based on matching profile
+
+    CP->>PC: pick up assigned cluster resource and create cluster
+    CP->>CP: create kubernetes cluster
+    CP->>PC: update cluster resource with kubernetes cluster endpoints
+
+    PSCP->>PC: request onboarding cluster access
+    rect rgb(191, 223, 255)
+    OCPOP->>PC: pick up access request
+    OCPOP->>PC: approve/deny request
+    OCPOP->>PC: create access resource and assign Cluster Provider
+    CP->>PC: pick up access based on assignment label
+    CP->>PC: create kubeconfig
+    CP->>PC: update access status with kubeconfig reference
+    end
+
+    PSCP->>PSCP: watch onboarding cluster for new control plane resources
+```
+
+Similar to the Cluster abstraction, this change allows implementing authorization inside a core operator and moving access request handling out of the Cluster Provider scope.
