@@ -274,7 +274,10 @@ The `Releasechannel` remains the source of truth in production: a translation la
 
 A new resource on the platform cluster called `Artifact`. Each `Artifact` points to exactly one OCI image. The CRD is **cluster-scoped**. Because `Artifact`s live on the platform cluster, they are not reachable by end customers.
 
-<!-- @Moritz: explain the translation layer - how do `Artifact` resources get created? Local (manually applied to a KIND cluster) and production (materialised from the resolved OCM components on a configurable interval, overwriting any local edits). -->
+`Artifact` resources are created in one of two ways, depending on environment:
+
+- **Local / e2e.** `Artifact`s are applied manually to the (KIND) cluster. No OCM registry or translation layer is involved.
+- **Production.** A translation layer materialises `Artifact`s from the resolved OCM components on a configurable interval. On each reconcile it overwrites any local edits, keeping the `Releasechannel` the single source of truth.
 
 Two version concepts appear in the examples below and must not be confused:
 
