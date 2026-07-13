@@ -36,7 +36,7 @@ Each component should ship its own deployment configuration as part of its relea
 
 The setup experience should scale in both directions: straightforward enough for a single developer running a local environment, and manageable enough for a team operating multiple landscapes without needing dedicated tooling expertise. Local and production setups should follow the same model.
 
-Finally, the platform should provide clear, machine-readable status reporting — both for the overall platform health and for individual components — so operators have a reliable way to understand what is running and whether it is healthy.
+Finally, the platform should provide clear, machine-readable status reporting - both for the overall platform health and for individual components - so operators have a reliable way to understand what is running and whether it is healthy.
 
 ## Terms
 
@@ -67,21 +67,35 @@ spec:
     group: bootstrap.open-control-plane.io
     kind: OpenMCPOperator
     spec:
-      ocmComponentName: string
+      ocmRepoName: string
       environment: string | default="main"
       configData: string
     # status:
 
   # Define the resources this API will manage.
   resources:
+    - id: ocmrepo
+      externalRef:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Repository
+        metadata:
+          name: ${schema.spec.ocmRepoName}
+
     - id: component
       readyWhen:
         - ${component.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True')}
-      externalRef:
+      template:
         apiVersion: delivery.ocm.software/v1alpha1
         kind: Component
         metadata:
-          name: ${schema.spec.ocmComponentName}
+          name: openmcp-operator
+        spec:
+          repositoryRef:
+            name: ${ocmrepo.metadata.name}
+          component: github.com/openmcp-project/openmcp-operator
+          semver: v0.19.1
+          interval: 1m
+
     - id: resourceImage
       readyWhen:
         - ${resourceImage.status.conditions.exists(c, c.type == 'Ready' && c.status == 'True')}
@@ -261,19 +275,19 @@ metadata:
   name: openmcp-repository
 spec:
   repositorySpec:
-    baseUrl: ghcr.io./openmcp-project/components
+    baseUrl: ghcr.io/openmcp-project/components
     type: OCIRegistry
   interval: 1m
 ---
 apiVersion: delivery.ocm.software/v1alpha1
 kind: Component
 metadata:
-  name: openmcp-operator
+  name: openmcp-operator-rgd
 spec:
   repositoryRef:
     name: openmcp-repository
-  component: github.com/openmcp-project/openmcp-operator
-  semver: v0.19.1
+  component: github.com/openmcp-project/openmcp-operator-rgd
+  semver: v0.0.2
   interval: 1m
 ---
 apiVersion: delivery.ocm.software/v1alpha1
@@ -282,19 +296,17 @@ metadata:
   name: openmcp-operator-rgd
 spec:
   componentRef:
-    name: openmcp-operator
+    name: openmcp-operator-rgd
   resource:
     byReference:
       resource:
-        name: openmcp-operator-rgd
-  additionalStatusFields:
-    oci: resource.access.toOCI()
+        name: rgd
 ---
 # Once the RGD is installed in the cluster, create an instance to install the OpenMCP Operator.
 apiVersion: delivery.ocm.software/v1alpha1
 kind: Deployer
 metadata:
-  name: openmcp-operator
+  name: openmcp-operator-rgd
 spec:
   resourceRef:
     name: openmcp-operator-rgd
@@ -306,7 +318,7 @@ kind: OpenMCPOperator
 metadata:
   name: default
 spec:
-  ocmComponentName: openmcp-operator
+  ocmRepoName: openmcp-repository
   environment: local
   configData: |
     managedControlPlane:
@@ -357,7 +369,9 @@ The core principle is that all components ship their deployment configuration al
 
 ### Distributions
 
-Using a top-level RGD, the entire OpenControlPlane platform can be bundled into a single resource graph, enabling the platform to be bootstrapped with a small number of Kubernetes resources.
+A distribution bundles a set of components into a single top-level RGD, so the whole platform is described as one resource graph and bootstrapped from a handful of Kubernetes resources.
+
+The distribution RGD does not repeat each component's install logic. Instead it instantiates the per-component RGDs (`OpenMCPOperator`, `ClusterProviderKind`, `PlatformService`, ...), passing each the OCM repository to pull from. Each instance triggers its own component's RGD, which handles the actual install as shown in the previous section.
 
 The following example shows a Kind distribution of OpenControlPlane.
 
@@ -365,7 +379,7 @@ The following example shows a Kind distribution of OpenControlPlane.
 apiVersion: kro.run/v1alpha1
 kind: ResourceGraphDefinition
 metadata:
-  name: openmcp-platform-kind
+  name: open-control-plane-platform
   annotations:
     kro.run/allow-breaking-changes: "true"
 spec:
@@ -374,9 +388,10 @@ spec:
   schema:
     apiVersion: v1alpha1
     group: bootstrap.open-control-plane.io
-    kind: OpenMCPPlatform
+    kind: OpenControlPlanePlatform
     spec:
       ocmRepoName: string
+    # status:
 
   # Define the resources this API will manage.
   resources:
@@ -387,46 +402,6 @@ spec:
         metadata:
           name: ${schema.spec.ocmRepoName}
 
-    - id: openmcpoperatorcomponent
-      template:
-        apiVersion: delivery.ocm.software/v1alpha1
-        kind: Component
-        metadata:
-          name: openmcp-operator
-        spec:
-          repositoryRef:
-            name: ${ocmrepo.metadata.name}
-          component: github.com/openmcp-project/openmcp-operator
-          semver: v0.19.1
-          interval: 1m
-
-    - id: openmcpoperatorresource
-      template:
-        apiVersion: delivery.ocm.software/v1alpha1
-        kind: Resource
-        metadata:
-          name: openmcp-operator-rgd
-        spec:
-          componentRef:
-            name: ${openmcpoperatorcomponent.metadata.name}
-          resource:
-            byReference:
-              resource:
-                name: openmcp-operator-rgd
-          additionalStatusFields:
-            oci: resource.access.toOCI()
-
-    # Once the RGD is installed in the cluster, create an instance to install the OpenMCP Operator.
-    - id: openmcpoperatordeployer
-      template:
-        apiVersion: delivery.ocm.software/v1alpha1
-        kind: Deployer
-        metadata:
-          name: openmcp-operator
-        spec:
-          resourceRef:
-            name: ${openmcpoperatorresource.metadata.name}
-
     - id: openmcpoperator
       template:
         apiVersion: bootstrap.open-control-plane.io/v1alpha1
@@ -434,7 +409,7 @@ spec:
         metadata:
           name: default
         spec:
-          ocmComponentName: ${openmcpoperatorcomponent.metadata.name}
+          ocmRepoName: ${ocmrepo.metadata.name}
           environment: local
           configData: |
             managedControlPlane:
@@ -476,45 +451,6 @@ spec:
                       profile: kind
                       tenancy: Shared
 
-    - id: clusterproviderkindcomponent
-      template:
-        apiVersion: delivery.ocm.software/v1alpha1
-        kind: Component
-        metadata:
-          name: cluster-provider-kind
-        spec:
-          repositoryRef:
-            name: ${ocmrepo.metadata.name}
-          component: github.com/openmcp-project/cluster-provider-kind
-          semver: v0.5.0
-          interval: 1m
-
-    - id: clusterproviderkindresource
-      template:
-        apiVersion: delivery.ocm.software/v1alpha1
-        kind: Resource
-        metadata:
-          name: cluster-provider-kind-rgd
-        spec:
-          componentRef:
-            name: ${clusterproviderkindcomponent.metadata.name}
-          resource:
-            byReference:
-              resource:
-                name: cluster-provider-kind-rgd
-          additionalStatusFields:
-            oci: resource.access.toOCI()
-
-    - id: clusterproviderkinddeployer
-      template:
-        apiVersion: delivery.ocm.software/v1alpha1
-        kind: Deployer
-        metadata:
-          name: cluster-provider-kind
-        spec:
-          resourceRef:
-            name: ${clusterproviderkindresource.metadata.name}
-
     - id: clusterprovider
       template:
         apiVersion: bootstrap.open-control-plane.io/v1alpha1
@@ -522,12 +458,34 @@ spec:
         metadata:
           name: default
         spec:
-          ocmComponentName: ${clusterproviderkindcomponent.metadata.name}
+          ocmRepoName: ${schema.spec.ocmRepoName}
+
+    - id: platformservicegateway
+      template:
+        apiVersion: bootstrap.open-control-plane.io/v1alpha1
+        kind: PlatformService
+        metadata:
+          name: platform-service-gateway
+        spec:
+          ocmRepoName: ${schema.spec.ocmRepoName}
+          ocmComponent:
+            name: github.com/openmcp-project/platform-service-gateway
+            semver: v0.0.10
+
+    - id: platformservicedns
+      template:
+        apiVersion: bootstrap.open-control-plane.io/v1alpha1
+        kind: PlatformService
+        metadata:
+          name: platform-service-dns
+        spec:
+          ocmRepoName: ${schema.spec.ocmRepoName}
+          ocmComponent:
+            name: github.com/openmcp-project/platform-service-dns
+            semver: v0.0.5
 ```
 
-Once this RGD is installed in the cluster, the following instance bootstraps the full platform suite for a Kind setup with a default configuration.
-
-The RGD itself is also shipped as an OCM component (`openmcp-platform-kind`), so the cluster only needs to bootstrap the OCM `Repository`, pull the distribution component, deploy its RGD, and then instantiate `OpenMCPPlatform`. Everything from this point on is upgradeable through OCM.
+The distribution RGD is itself shipped as an OCM component (`open-control-plane-platform`) whose component references pull in the per-component RGD components transitively. Bootstrapping the platform then reduces to: register the OCM `Repository`, pull the distribution component, deploy its RGD, and instantiate `OpenControlPlanePlatform`. From that point on the whole graph is upgradeable through OCM.
 
 ```yaml
 apiVersion: delivery.ocm.software/v1alpha1
@@ -536,50 +494,65 @@ metadata:
   name: openmcp-repository
 spec:
   repositorySpec:
-    baseUrl: ghcr.io./openmcp-project/components
+    baseUrl: ghcr.io/openmcp-project/components
     type: OCIRegistry
   interval: 1m
 ---
-# Pull the distribution component which carries the OpenMCPPlatform RGD.
+# Pull the distribution component which carries the OpenControlPlanePlatform RGD.
 apiVersion: delivery.ocm.software/v1alpha1
 kind: Component
 metadata:
-  name: openmcp-platform-kind
+  name: open-control-plane-platform
 spec:
   repositoryRef:
     name: openmcp-repository
-  component: github.com/openmcp-project/openmcp-platform-kind
-  semver: v0.1.0
+  component: github.com/openmcp-project/open-control-plane-platform
+  semver: v0.0.4
   interval: 1m
 ---
 apiVersion: delivery.ocm.software/v1alpha1
 kind: Resource
 metadata:
-  name: openmcp-platform-kind-rgd
+  name: open-control-plane-platform-rgd
 spec:
   componentRef:
-    name: openmcp-platform-kind
+    name: open-control-plane-platform
   resource:
     byReference:
       resource:
-        name: openmcp-platform-kind-rgd
-  additionalStatusFields:
-    oci: resource.access.toOCI()
+        name: rgd
 ---
 # Installs the RGD shown above into the cluster.
 apiVersion: delivery.ocm.software/v1alpha1
 kind: Deployer
 metadata:
-  name: openmcp-platform-kind
+  name: open-control-plane-platform-rgd
 spec:
   resourceRef:
-    name: openmcp-platform-kind-rgd
+    name: open-control-plane-platform-rgd
 ---
 # Once the RGD is registered, instantiating it bootstraps the whole platform.
 apiVersion: bootstrap.open-control-plane.io/v1alpha1
-kind: OpenMCPPlatform
+kind: OpenControlPlanePlatform
 metadata:
   name: default
 spec:
   ocmRepoName: openmcp-repository
 ```
+
+#### Current limitation: staged bootstrap
+
+The single-apply flow above is the target shape, but it is not yet achievable with kro. kro resolves the schema of **all** resources in an RGD up front. The `ClusterProviderKind` and `PlatformService` instances expand to RGDs that reference `openmcp.cloud/*` CRDs, and those CRDs only exist after the `OpenMCPOperator` has booted and registered them. kro therefore hard-fails the distribution RGD before its own CRD is ever created, so no instance can be applied.
+
+This is tracked upstream in [kro#1293](https://github.com/kubernetes-sigs/kro/issues/1293) (deferred schema resolution). Until it lands, the platform is bootstrapped in stages, ordering the applies by dependency and waiting between them:
+
+1. Register the OCM `Repository`, the RBAC binding for the OCM controller, and the distribution `Component`.
+2. Deploy the per-component RGDs (`OpenMCPOperator`, `ClusterProviderKind`, `PlatformService`). Their kro CRDs become Established; the `ClusterProviderKind` and `PlatformService` RGDs stay inactive because the `openmcp.cloud/*` CRDs they reference do not exist yet.
+3. Apply the `OpenMCPOperator` instance on its own. Once it is Ready the operator registers the `openmcp.cloud/*` CRDs, kro re-resolves the pending schemas, and the two stuck RGDs flip to active.
+4. Apply the `ClusterProviderKind` and `PlatformService` instances.
+
+Steps 3 and 4 are separate because the OCM `Deployer` applies its manifest atomically: bundling the operator instance together with the platform instances fails on the first apply, since the platform kinds are still unknown at that point.
+
+Once kro#1293 is resolved, this collapses back into the single-apply flow above: one `Deployer` for the distribution RGD plus one `OpenControlPlanePlatform` instance, with the ordering handled inside kro.
+
+An additional caveat is RBAC: the OCM controller applies the RGDs, kro instances, and downstream `openmcp.cloud/*` resources, so it needs broad permissions on the platform cluster. The reference implementation grants it `cluster-admin` via a `ClusterRoleBinding`, which is acceptable for a demo but should be scoped down for production.
