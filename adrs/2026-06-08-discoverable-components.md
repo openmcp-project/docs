@@ -461,4 +461,8 @@ Both approaches share the `Releasechannel` OCM component as the source of truth.
 
 ## Decision
 
-_To be discussed with the team. Intentionally left empty._
+The team decided on **Approach A - Direct OCM consumption**.
+
+Consumers (`ServiceProvider`, `PlatformService`, `ClusterProvider`) resolve the `Releasechannel` directly via OCM controllers, with no intermediate Kubernetes API on the platform side. This keeps a single source of truth and a single read path, avoids maintaining an additional CRD and translation layer, and keeps the discovery layer aligned with how the platform itself is delivered as an umbrella OCM component.
+
+This choice depends on the upstream OCM controller capabilities described above - umbrella-component discovery (tracked in [open-component-model/ocm-project#1153](https://github.com/open-component-model/ocm-project/issues/1153)) and the local-YAML fallback for offline scenarios.
