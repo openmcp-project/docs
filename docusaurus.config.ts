@@ -130,6 +130,7 @@ const config: Config = {
           position: 'left',
           label: 'Build Together',
         },
+        {to: '/adrs', label: 'ADRs', position: 'left'},
         {
           type: 'docSidebar',
           sidebarId: 'communitySidebar',
