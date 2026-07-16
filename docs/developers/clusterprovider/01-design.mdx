@@ -22,6 +22,20 @@ All Cluster Providers use the same set of core cluster APIs provided by the [ope
 OpenControlPlane currently distinguishes between platform, onboarding, control plane and workload clusters (see [Clusters Overview](../clusters-and-namespaces#cluster-overview)).
 These clusters serve different purposes in the context of OpenControlPlane and are subject to change in future iterations. Therefore, Cluster Providers must be purpose agnostic to allow OpenControlPlane to introduce new cluster kinds or remove existing ones.
 
+### Terminology and Visual Notation
+
+The diagrams in the following sections use the following visual notation:
+
+```mermaid
+graph
+    O[Objects]
+    C(Controllers)
+```
+
+Edge semantics:
+- `reconcile` denotes that a controller reconciles an object by reading and updating its state.
+- `manage` denotes that a controller has full lifecycle management of an object (create, read, update and delete).
+
 ### Cluster Lifecycle
 
 Clusters are provisioned via cluster requests. Multiple cluster requests may be assigned to the same cluster:
@@ -114,11 +128,12 @@ A cluster purpose is a an arbitrary label and not a real object in OpenControlPl
 
 ```mermaid
 graph LR
-    PU>Cluster Purpose]
+    CR[ClusterRequest]
+    PU>Purpose]
     CP[ClusterProfile]
     P(ClusterProvider)
 
-    PU -->|1 maps to 1|CP -->|1 maps to 1|P
+    CR -->|specifies| PU -->|1 maps to 1|CP -->|1 maps to 1|P
 ```
 
 ## Deployment Model
@@ -132,8 +147,9 @@ graph TD
 
     %% Platform Cluster
     subgraph PlatformCluster
-        OP[openmcp-operator]
-        CP[ClusterProvider]
+        OP(openmcp-operator)
+        CPO[ClusterProvider]
+        CPF(ClusterProviderFoo)
         CFG[Config]
         C[Cluster]
         AR[AccessRequest]
@@ -141,12 +157,13 @@ graph TD
     end
 
     %% edges
-    CP -->|reconciles|C
-    CP -->|reconciles|AR
-    CP -->|reconciles|CFG
-    OP-->|reconciles|CP
-    CP -->|manages|KC
-    CP -->|manages|PFL
+    CPF -->|reconciles|C
+    CPF -->|reconciles|AR
+    CPF -->|reconciles|CFG
+    OP-->|reconciles|CPO
+    OP-->|deploys|CPF
+    CPF -->|manages|KC
+    CPF -->|manages|PFL
 ```
 
 For more details on cluster types, see [Clusters and Namespaces](../clusters-and-namespaces.md).
@@ -158,7 +175,7 @@ The following diagram shows the onboarding cluster provisioning path through the
 ```mermaid
 sequenceDiagram
     participant PSCP as platform-service-control-plane
-    participant PC as platform-cluster
+    participant PC as platform-cluster (API server)
     participant OCPOP as openmcp-operator
     participant CP as cluster-provider-gardener
 
@@ -182,7 +199,11 @@ sequenceDiagram
     PSCP->>PSCP: watch onboarding cluster for new control plane resources
 ```
 
-## Access Management (Draft)
+## Access Management (Draft Design)
+
+:::info
+Status: Draft - subject to discussion and change.
+:::
 
 The previous sections described the current state of OpenControlPlane access management where Cluster Providers are responsible for granting or rejecting access to clusters. 
 This approach currently lacks fine-grained access control, such as granting access to only a subset of clusters across several cluster providers.
@@ -209,7 +230,7 @@ The example flow from above changes as follows:
 ```mermaid
 sequenceDiagram
     participant PSCP as platform-service-control-plane
-    participant PC as platform-cluster
+    participant PC as platform-cluster (API server)
     participant OCPOP as openmcp-operator
     participant CP as cluster-provider-gardener
 
