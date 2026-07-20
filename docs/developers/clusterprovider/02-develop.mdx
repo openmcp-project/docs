@@ -5,16 +5,71 @@ id: develop
 
 # Develop
 
-:::info Coming Soon
-A comprehensive guide for developing Cluster Providers from scratch is coming soon.
-:::
-
 Cluster Providers manage Kubernetes clusters and provide access to them within the OpenControlPlane ecosystem. They follow the same general patterns as Service Providers.
 
-For now, you can:
-- Review existing implementations: [cluster-provider-gardener](https://github.com/openmcp-project/cluster-provider-gardener) and [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind)
-- Refer to the [Deploy Guide](./deploy) for the common deployment contract
-- Check the [Service Provider Develop Guide](../serviceprovider/develop) for general patterns that apply to all provider types
+In this guide, we will walk you through the steps of creating a Cluster Provider using the [cluster-provider-template](https://github.com/openmcp-project/cluster-provider-template).
+
+By the end of this guide, you should have a solid understanding of how the template and the resulting cluster provider works and be ready to build a real world service such as [cluster-provider-gardener](https://github.com/openmcp-project/cluster-provider-gardener).
+
+## Prerequisites
+
+Start by creating a new repository for your Cluster Provider using the [cluster-provider-template](https://github.com/openmcp-project/cluster-provider-template). Click "Use this template" button on the GitHub page and give your new repository a name that reflects the cluster kind it provides, e.g. `cluster-provider-kind` creates Kubernetes clusters using [kind](https://kind.sigs.k8s.io/).
+
+Clone the newly created repository to your local machine and open it with your favorite IDE.
+
+Finally, ensure that you have the following binaries available in your path to execute the code generation of the template:
+
+- [Go](https://go.dev/dl/)
+- [task](https://taskfile.dev/)
+- [opencontrolplane-gen](https://github.com/openmcp-project/opencontrolplane-gen)
+
+## Cluster Provider Template Usage
+
+The template provides a no-op Cluster Provider that can be deployed by the openmcp-operator and lays out how to test a cluster provider with a test skeleton that uses [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) as an example how to validate a Cluster Provider with [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
+
+Run the following command to verify that everything works without applying any changes to disk.
+
+```bash
+task template:generate-provider dryrun=true
+```
+
+The `generate-provider` task supports the following arguments to customize the resulting Cluster Provider:
+
+- `dryrun`: Print in-memory result to stdout without altering any files (default false)
+- `name`: Name of the platform service (default "example"). Note that it is expected to be the suffix of platform-service-x, e.g. platform-service-foo -> name=foo.
+- `module` The go module name of your platform service (default "github.com/openmcp-project/platform-service-example")
+
+Run `generate-provider` without `dryrun` to apply the result to disk, e.g.:
+
+```bash
+task template:generate-provider name=foo module=github.com/yourorg/cluster-provider-foo
+```
+
+The template generates a fully functional provider with 3 controllers that can be executed and deployed on your local machine using [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
+
+To run the generated end-to-end test, init the [build](https://github.com/openmcp-project/build) submodule and execute `task test-e2e`:
+
+```bash
+git submodule update --init --recursive
+task test-e2e
+```
+
+This test bootstraps a complete local OpenControlPlane installation with all required components, including:
+
+- **The platform cluster** where your Platform Service is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
+- **The onboarding cluster** that end users interact with.
+
+For a visual overview of how a cluster provider fits into an OpenControlPlane installation, refer to the [cluster provider deployment model](../clusterprovider/design#deployment-model).
+
+## Project Structure
+
+The cluster provider template is built with [kubebuilder](https://book.kubebuilder.io/introduction), so the project structure is similar to most Kubernetes controllers:
+
+- **api/** contains the types and their CRDs which the crd manager will install during the `initCommand`.
+- **cmd/** contains the entrypoint of the controller with init + run commands expected by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) to deploy the Platform Service.
+- **internal/controller/** contains `Reconcile` functions for each controller where you implement your provider specific reconcile logic.
+
+If you are new to implementing Kubernetes controllers, consider completing [building a CronJob tutorial](https://book.kubebuilder.io/cronjob-tutorial/cronjob-tutorial.html) before returning to this guide. The rest of this guide highlights the most important steps to create a cluster provider and the differences compared to a regular Kubernetes controller.
 
 ## Implementing a ClusterProvider
 
