@@ -75,11 +75,19 @@ If you are new to implementing Kubernetes controllers, consider completing [buil
 
 ### Provider Configuration
 
-Most ClusterProviders will probably require some form of configuration (see [Cluster Provider Design](../clusterprovider/design#cluster-provider-configuration)). Since the provider deployment does not allow passing in configuration via an argument to the binary directly, they need to read the configuration from a k8s resource. Depending on the provider, it might even allow multiple configuration resources and/or reconcile them instead of just reading them statically.
+Most ClusterProviders will require some form of configuration (see [Cluster Provider Design](../clusterprovider/design#cluster-provider-configuration)). Since the provider deployment does not allow passing in configuration via an argument to the binary directly, they need to read the configuration from a k8s resource. Depending on the provider, it might even allow multiple configuration resources and/or reconcile them instead of just reading them statically.
 
-The template generates an empty `ProviderConfig` API that is installed by the init job:
+The template contains a basic config controller and an empty `ProviderConfig` API that is installed by the init job:
 
-```go
+```go title="api/v1alpha1/config_types.go"
+// ProviderConfigSpec defines the desired state of ProviderConfig
+type ProviderConfigSpec struct {
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+	// Important: Run "task generate" to regenerate code after modifying this file
+}
+```
+
+```go title="cmd/cluster-provider-foo/app/init.go"
 func (o *InitOptions) Run(ctx context.Context) error {
   ...
 	clusterAccessManager := clusteraccess.NewClusterAccessManager(o.PlatformCluster.Client(), o.ProviderName, providerSystemNamespace)
@@ -100,7 +108,14 @@ func (o *InitOptions) Run(ctx context.Context) error {
 }
 ```
 
-The template also generates a basic config controller to reconcile the `ProviderConfig` and create `ClusterProfile` resources.
+The template controller contains a a basic reconcile implementation where you need to add your provider specific logic (see the following [Cluster Profiles section](#cluster-profiles)):
+
+```go title="internal/controller/config/controller.go"
+func (r *ProviderConfigReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
+  ...
+}
+```
+
 
 ### Cluster Profiles
 
@@ -181,7 +196,7 @@ Some information about the different fields:
 
 The template generates a basic cluster controller with an additional cluster profile watch to create reconcile requests on profile changes:
 
-```go
+```go title="internal/controller/cluster/controller.go"
 func (r *ClusterReconciler) SetupWithManager(mgr manager.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&clustersv1alpha1.Cluster{}).
@@ -211,7 +226,15 @@ func (r *ClusterReconciler) SetupWithManager(mgr manager.Manager) error {
 
 #### Reconciliation Logic
 
-Before doing anything in a reconciliation, the ClusterProvider needs to check whether it is responsible for the `Cluster` resource or not. For this, it has to check if it created the `ClusterProfile` that is referenced in `spec.profile` itself or if it was created by a different ClusterProvider. It can either keep track of created `ClusterProfile` resources internally or compare `spec.providerRef.name` in the profile to its own name (passed in via the `--provider-name` argument). If the name differs, another ClusterProvider is responsible for this resource and the ClusterProvider must not touch it.
+The reconciliation logic has to be placed in the `Reconcile` function:
+
+```go title="internal/controller/cluster/controller.go"
+func (r *ClusterReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
+  ...
+}
+```
+
+Before doing anything in a reconciliation, the ClusterProvider needs to check the [operation annotation](../general#operation-annotations) and whether it is responsible for the `Cluster` resource or not. For this, it has to check if it created the `ClusterProfile` that is referenced in `spec.profile` itself or if it was created by a different ClusterProvider. It can either keep track of created `ClusterProfile` resources internally or compare `spec.providerRef.name` in the profile to its own name (passed in via the `--provider-name` argument). If the name differs, another ClusterProvider is responsible for this resource and the ClusterProvider must not touch it.
 
 The rest of the reconciliation logic is pretty much provider specific: If the `Cluster` resource has a deletion timestamp, delete the k8s cluster and everything that belongs to it and then remove the finalizer. Otherwise, ensure that there is a finalizer on the `Cluster` resource and create/update the actual k8s cluster.
 
@@ -327,27 +350,21 @@ It modifies the `AccessRequest` in the following way:
 
 This means that the AccessRequest controller in a ClusterProvider must only act on AccessRequests that have both of the aforementioned labels set. They can then expect `spec.clusterRef` to be set and don't need to check for `spec.requestRef`.
 
-It is recommended to use event filtering to avoid reconciling AccessRequests that belong to another provider or have not yet been prepared by the generic controller. The controller-utils library contains a `HasLabelPredicate` filter that can be used for both, verifying existence of a label as well as checking if it has a specific value:
-```go
-import (
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/predicate"
-	ctrlutils "github.com/openmcp-project/controller-utils/pkg/controller"
-	clustersv1alpha1 "github.com/openmcp-project/openmcp-operator/api/clusters/v1alpha1"
-)
+It is recommended to use event filtering to avoid reconciling AccessRequests that belong to another provider or have not yet been prepared by the generic controller. The template configures the access request controller accordingly with the `IsClusterProviderResponsibleForAccessRequest` filter:
 
-// SetupWithManager sets up the controller with the Manager.
-func (r *AccessRequestReconciler) SetupWithManager(mgr ctrl.Manager) error {
-  return ctrl.NewControllerManagedBy(mgr).
-    For(&clustersv1alpha1.AccessRequest{}).
-    WithEventFilter(predicate.And(
-      // this checks whether the provider label exists and has the correct value
-      // 'providerName' holds the value that was passed into the ClusterProvider via the '--provider-name' argument
-      ctrlutils.HasLabelPredicate(clustersv1alpha1.ProviderLabel, providerName),
-      // this just checks whether the label exists, independent from its value
-      ctrlutils.HasLabelPredicate(clustersv1alpha1.ProfileLabel, ""),
-      // <potentially more event filters>
-    )).
-    Complete(r)
+```go title="internal/controller/accessrequest/controller.go"
+func (r *AccessRequestReconciler) SetupWithManager(mgr manager.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&clustersv1alpha1.AccessRequest{}, builder.WithPredicates(
+			predicate.NewPredicateFuncs(func(obj client.Object) bool {
+				ar, ok := obj.(*clustersv1alpha1.AccessRequest)
+				if !ok {
+					return false
+				}
+				return libutils.IsClusterProviderResponsibleForAccessRequest(ar, r.providerName)
+			}),
+		)).
+		Owns(&corev1.Secret{}). // watch the managed kubeconfig
+		Complete(r)
 }
 ```
