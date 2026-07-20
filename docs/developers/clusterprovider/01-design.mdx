@@ -47,6 +47,10 @@ graph LR
     CR ---|1..n reference 1|C
 ```
 
+:::info
+The initial platform cluster of an OpenControlPlane installation has to be manually [bootstrapped](../../operators/quickstart).
+:::
+
 A Cluster Provider is responsible for creating, updating and eventually deleting Kubernetes clusters based on the desired cluster state.
 
 ```mermaid
@@ -72,7 +76,7 @@ graph LR
 A cluster with no cluster requests is eligible for deletion.
 
 :::info
-The initial platform cluster of an OpenControlPlane installation has to be manually [bootstrapped](../../operators/quickstart).
+For detailed cluster deletion behavior and configuration options, see the [openmcp-operator scheduler documentation](https://github.com/openmcp-project/openmcp-operator/blob/main/docs/controller/scheduler.md#deletion-of-clusters).
 :::
 
 ### Cluster Access
@@ -101,7 +105,8 @@ Note that a user can be a human operator or any system/controller with the permi
 
 ### Cluster Provider Configuration
 
-A Cluster Provider must create at least one cluster profile to be available for cluster scheduling. Cluster profiles are a config abstraction for the cluster scheduler to work with independent of any Cluster Provider specifics. They enable platform owners to configure a mapping between cluster requests and resulting clusters.
+A Cluster Provider must create at least one cluster profile to be available for cluster scheduling. Cluster profiles are a config abstraction for the cluster scheduler to work with independent of any Cluster Provider specifics.
+They enable implementation of advanced scheduling based on profile attributes and allow platform owners to define a mapping between cluster requests and resulting clusters.
 
 Most Cluster Providers will allow dynamic profile creation based on provider specific configuration. But a Cluster Provider may also provide a set of predefined cluster profiles.
 
