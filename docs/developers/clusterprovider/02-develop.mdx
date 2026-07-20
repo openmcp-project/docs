@@ -66,7 +66,7 @@ For a visual overview of how a cluster provider fits into an OpenControlPlane in
 The cluster provider template is built with [kubebuilder](https://book.kubebuilder.io/introduction), so the project structure is similar to most Kubernetes controllers:
 
 - **api/** contains the types and their CRDs which the crd manager will install during the `initCommand`.
-- **cmd/** contains the entrypoint of the controller with init + run commands expected by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) to deploy the Platform Service.
+- **cmd/** contains the entrypoint of the provider with init + run commands expected by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) to deploy the Platform Service.
 - **internal/controller/** contains `Reconcile` functions for each controller where you implement your provider specific reconcile logic.
 
 If you are new to implementing Kubernetes controllers, consider completing [building a CronJob tutorial](https://book.kubebuilder.io/cronjob-tutorial/cronjob-tutorial.html) before returning to this guide. The rest of this guide highlights the most important steps to create a cluster provider and the differences compared to a regular Kubernetes controller.
@@ -75,7 +75,32 @@ If you are new to implementing Kubernetes controllers, consider completing [buil
 
 ### Provider Configuration
 
-Most ClusterProviders will probably require some form of configuration. Since the provider deployment does not allow passing in configuration via an argument to the binary directly, they need to read the configuration from a k8s resource. Depending on the provider, it might even allow multiple configuration resources and/or reconcile them instead of just reading them statically.
+Most ClusterProviders will probably require some form of configuration (see [Cluster Provider Design](../clusterprovider/design#cluster-provider-configuration)). Since the provider deployment does not allow passing in configuration via an argument to the binary directly, they need to read the configuration from a k8s resource. Depending on the provider, it might even allow multiple configuration resources and/or reconcile them instead of just reading them statically.
+
+The template generates an empty `ProviderConfig` API that is installed by the init job:
+
+```go
+func (o *InitOptions) Run(ctx context.Context) error {
+  ...
+	clusterAccessManager := clusteraccess.NewClusterAccessManager(o.PlatformCluster.Client(), o.ProviderName, providerSystemNamespace)
+	clusterAccessManager.WithLogger(&log).
+		WithInterval(10 * time.Second).
+		WithTimeout(30 * time.Minute)
+
+	// apply CRDs
+	log.Info("Creating/updating CRDs")
+	crdManager := crdutil.NewCRDManager(openmcpconst.ClusterLabel, crds.CRDs)
+	crdManager.AddCRDLabelToClusterMapping(clustersv1alpha1.PURPOSE_PLATFORM, o.PlatformCluster)
+	if err := crdManager.CreateOrUpdateCRDs(ctx, &log); err != nil {
+		return fmt.Errorf("error creating/updating CRDs: %w", err)
+	}
+
+	log.Info("Finished init command")
+	return nil
+}
+```
+
+The template also generates a basic config controller to reconcile the `ProviderConfig` and create `ClusterProfile` resources.
 
 ### Cluster Profiles
 
@@ -153,6 +178,36 @@ Some information about the different fields:
     - The profile is immutable.
   - This can also contain further configuration, e.g. for the Gardener ClusterProvider, each provider configuration (which is referenced in the profile) can specify a different Gardener landscape and/or project to use.
 - `spec.purposes` and `spec.tenancy` are mostly relevant for the scheduler and usually don't need to be evaluated by the ClusterProvider.
+
+The template generates a basic cluster controller with an additional cluster profile watch to create reconcile requests on profile changes:
+
+```go
+func (r *ClusterReconciler) SetupWithManager(mgr manager.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&clustersv1alpha1.Cluster{}).
+		Watches(&clustersv1alpha1.ClusterProfile{}, handler.EnqueueRequestsFromMapFunc(func(ctx context.Context, obj client.Object) []reconcile.Request {
+			if obj == nil {
+				return nil
+			}
+			// reconcile all clusters that reference this profile
+			clusters := &clustersv1alpha1.ClusterList{}
+			if err := r.platformCluster.Client().List(ctx, clusters, client.MatchingFields{
+				"spec.profile": obj.GetName(),
+			}); err != nil {
+				logf.FromContext(ctx).Error(err, "failed to list cluster profiles")
+				return nil
+			}
+			reqs := make([]reconcile.Request, len(clusters.Items))
+			for i, cluster := range clusters.Items {
+				reqs[i] = reconcile.Request{
+					NamespacedName: client.ObjectKeyFromObject(&cluster),
+				}
+			}
+			return reqs
+		})).
+		Complete(r)
+}
+```
 
 #### Reconciliation Logic
 
