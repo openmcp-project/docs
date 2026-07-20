@@ -8,6 +8,8 @@ id: develop
 Cluster Providers manage Kubernetes clusters and provide access to them within the OpenControlPlane ecosystem. They follow the same general patterns as Service Providers.
 
 In this guide, we will walk you through the steps of creating a Cluster Provider using the [cluster-provider-template](https://github.com/openmcp-project/cluster-provider-template).
+The template provides a no-op Cluster Provider that is ready to be deployed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) in a real OpenControlPlane environment.
+It also provides a test skeleton that uses [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) to demonstrate how a Cluster Provider can be validate with [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
 
 By the end of this guide, you should have a solid understanding of how the template and the resulting cluster provider works and be ready to build a real world service such as [cluster-provider-gardener](https://github.com/openmcp-project/cluster-provider-gardener).
 
@@ -25,8 +27,6 @@ Finally, ensure that you have the following binaries available in your path to e
 
 ## Cluster Provider Template Usage
 
-The template provides a no-op Cluster Provider that can be deployed by the openmcp-operator and lays out how to test a cluster provider with a test skeleton that uses [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) as an example how to validate a Cluster Provider with [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
-
 Run the following command to verify that everything works without applying any changes to disk.
 
 ```bash
@@ -36,8 +36,8 @@ task template:generate-provider dryrun=true
 The `generate-provider` task supports the following arguments to customize the resulting Cluster Provider:
 
 - `dryrun`: Print in-memory result to stdout without altering any files (default false)
-- `name`: Name of the platform service (default "example"). Note that it is expected to be the suffix of platform-service-x, e.g. platform-service-foo -> name=foo.
-- `module` The go module name of your platform service (default "github.com/openmcp-project/platform-service-example")
+- `name`: Name of the Cluster Provider (default "example"). Note that it is expected to be the suffix of cluster-provider-x, e.g. cluster-provider-foo -> name=foo.
+- `module` The go module name of your Cluster Provider (default "github.com/openmcp-project/cluster-provider-example")
 
 Run `generate-provider` without `dryrun` to apply the result to disk, e.g.:
 
@@ -56,7 +56,7 @@ task test-e2e
 
 This test bootstraps a complete local OpenControlPlane installation with all required components, including:
 
-- **The platform cluster** where your Platform Service is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
+- **The platform cluster** where your Cluster Provider is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
 - **The onboarding cluster** that end users interact with.
 
 For a visual overview of how a cluster provider fits into an OpenControlPlane installation, refer to the [cluster provider deployment model](../clusterprovider/design#deployment-model).
@@ -66,7 +66,7 @@ For a visual overview of how a cluster provider fits into an OpenControlPlane in
 The cluster provider template is built with [kubebuilder](https://book.kubebuilder.io/introduction), so the project structure is similar to most Kubernetes controllers:
 
 - **api/** contains the types and their CRDs which the crd manager will install during the `initCommand`.
-- **cmd/** contains the entrypoint of the provider with init + run commands expected by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) to deploy the Platform Service.
+- **cmd/** contains the entrypoint of the provider with init + run commands expected by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) to deploy the Cluster Provider.
 - **internal/controller/** contains `Reconcile` functions for each controller where you implement your provider specific reconcile logic.
 
 If you are new to implementing Kubernetes controllers, consider completing [building a CronJob tutorial](https://book.kubebuilder.io/cronjob-tutorial/cronjob-tutorial.html) before returning to this guide. The rest of this guide highlights the most important steps to create a cluster provider and the differences compared to a regular Kubernetes controller.
