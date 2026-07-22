@@ -90,11 +90,6 @@ type ProviderConfigSpec struct {
 ```go title="cmd/cluster-provider-foo/app/init.go"
 func (o *InitOptions) Run(ctx context.Context) error {
   ...
-	clusterAccessManager := clusteraccess.NewClusterAccessManager(o.PlatformCluster.Client(), o.ProviderName, providerSystemNamespace)
-	clusterAccessManager.WithLogger(&log).
-		WithInterval(10 * time.Second).
-		WithTimeout(30 * time.Minute)
-
 	// apply CRDs
 	log.Info("Creating/updating CRDs")
 	crdManager := crdutil.NewCRDManager(openmcpconst.ClusterLabel, crds.CRDs)
@@ -226,7 +221,7 @@ func (r *ClusterReconciler) SetupWithManager(mgr manager.Manager) error {
 
 #### Reconciliation Logic
 
-The reconciliation logic has to be placed in the `Reconcile` function:
+The reconciliation logic has to be placed into the `Reconcile` function of the cluster controller:
 
 ```go title="internal/controller/cluster/controller.go"
 func (r *ClusterReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
@@ -320,6 +315,14 @@ spec:
 ```
 
 Note that, while the example shows both, an `AccessRequest` must have exactly one of `spec.token` and `spec.oidc` set, not both.
+
+The reconciliation logic has to be placed into the `Reconcile` function of the access request controller:
+
+```go title="internal/controller/accessrequest/controller.go"
+func (r *AccessRequest) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
+  ...
+}
+```
 
 #### Token-based Access
 
