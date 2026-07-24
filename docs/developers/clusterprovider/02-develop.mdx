@@ -5,22 +5,112 @@ id: develop
 
 # Develop
 
-:::info Coming Soon
-A comprehensive guide for developing Cluster Providers from scratch is coming soon.
-:::
-
 Cluster Providers manage Kubernetes clusters and provide access to them within the OpenControlPlane ecosystem. They follow the same general patterns as Service Providers.
 
-For now, you can:
-- Review existing implementations: [cluster-provider-gardener](https://github.com/openmcp-project/cluster-provider-gardener) and [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind)
-- Refer to the [Deploy Guide](./deploy) for the common deployment contract
-- Check the [Service Provider Develop Guide](../serviceprovider/develop) for general patterns that apply to all provider types
+In this guide, we will walk you through the steps of creating a Cluster Provider using the [cluster-provider-template](https://github.com/openmcp-project/cluster-provider-template).
+The template provides a no-op Cluster Provider that is ready to be deployed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) in a real OpenControlPlane environment.
+It also provides a test skeleton that uses [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) to demonstrate how a Cluster Provider can be validate with [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
+
+By the end of this guide, you should have a solid understanding of how the template and the resulting cluster provider works and be ready to build a real world service such as [cluster-provider-gardener](https://github.com/openmcp-project/cluster-provider-gardener).
+
+## Prerequisites
+
+Start by creating a new repository for your Cluster Provider using the [cluster-provider-template](https://github.com/openmcp-project/cluster-provider-template). Click "Use this template" button on the GitHub page and give your new repository a name that reflects the cluster kind it provides, e.g. `cluster-provider-kind` creates Kubernetes clusters using [kind](https://kind.sigs.k8s.io/).
+
+Clone the newly created repository to your local machine and open it with your favorite IDE.
+
+Finally, ensure that you have the following binaries available in your path to execute the code generation of the template:
+
+- [Go](https://go.dev/dl/)
+- [task](https://taskfile.dev/)
+- [opencontrolplane-gen](https://github.com/openmcp-project/opencontrolplane-gen)
+
+## Cluster Provider Template Usage
+
+Run the following command to verify that everything works without applying any changes to disk.
+
+```bash
+task template:generate-provider dryrun=true
+```
+
+The `generate-provider` task supports the following arguments to customize the resulting Cluster Provider:
+
+- `dryrun`: Print in-memory result to stdout without altering any files (default false)
+- `name`: Name of the Cluster Provider (default "example"). Note that it is expected to be the suffix of cluster-provider-x, e.g. cluster-provider-foo -> name=foo.
+- `module` The go module name of your Cluster Provider (default "github.com/openmcp-project/cluster-provider-example")
+
+Run `generate-provider` without `dryrun` to apply the result to disk, e.g.:
+
+```bash
+task template:generate-provider name=foo module=github.com/yourorg/cluster-provider-foo
+```
+
+The template generates a fully functional provider with 3 controllers that can be executed and deployed on your local machine using [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
+
+To run the generated end-to-end test, init the [build](https://github.com/openmcp-project/build) submodule and execute `task test-e2e`:
+
+```bash
+git submodule update --init --recursive
+task test-e2e
+```
+
+This test bootstraps a complete local OpenControlPlane installation with all required components, including:
+
+- **The platform cluster** where your Cluster Provider is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator).
+- **The onboarding cluster** that end users interact with.
+
+For a visual overview of how a cluster provider fits into an OpenControlPlane installation, refer to the [cluster provider deployment model](../clusterprovider/design#deployment-model).
+
+## Project Structure
+
+The cluster provider template is built with [kubebuilder](https://book.kubebuilder.io/introduction), so the project structure is similar to most Kubernetes controllers:
+
+- **api/** contains the types and their CRDs which the crd manager will install during the `initCommand`.
+- **cmd/** contains the entrypoint of the provider with init + run commands expected by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator) to deploy the Cluster Provider.
+- **internal/controller/** contains `Reconcile` functions for each controller where you implement your provider specific reconcile logic.
+
+If you are new to implementing Kubernetes controllers, consider completing [building a CronJob tutorial](https://book.kubebuilder.io/cronjob-tutorial/cronjob-tutorial.html) before returning to this guide. The rest of this guide highlights the most important steps to create a cluster provider and the differences compared to a regular Kubernetes controller.
 
 ## Implementing a ClusterProvider
 
 ### Provider Configuration
 
-Most ClusterProviders will probably require some form of configuration. Since the provider deployment does not allow passing in configuration via an argument to the binary directly, they need to read the configuration from a k8s resource. Depending on the provider, it might even allow multiple configuration resources and/or reconcile them instead of just reading them statically.
+Most ClusterProviders will require some form of configuration (see [Cluster Provider Design](../clusterprovider/design#cluster-provider-configuration)). Since the provider deployment does not allow passing in configuration via an argument to the binary directly, they need to read the configuration from a k8s resource. Depending on the provider, it might even allow multiple configuration resources and/or reconcile them instead of just reading them statically.
+
+The template contains a basic config controller and an empty `ProviderConfig` API that is installed by the init job:
+
+```go title="api/v1alpha1/config_types.go"
+// ProviderConfigSpec defines the desired state of ProviderConfig
+type ProviderConfigSpec struct {
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+	// Important: Run "task generate" to regenerate code after modifying this file
+}
+```
+
+```go title="cmd/cluster-provider-foo/app/init.go"
+func (o *InitOptions) Run(ctx context.Context) error {
+  ...
+	// apply CRDs
+	log.Info("Creating/updating CRDs")
+	crdManager := crdutil.NewCRDManager(openmcpconst.ClusterLabel, crds.CRDs)
+	crdManager.AddCRDLabelToClusterMapping(clustersv1alpha1.PURPOSE_PLATFORM, o.PlatformCluster)
+	if err := crdManager.CreateOrUpdateCRDs(ctx, &log); err != nil {
+		return fmt.Errorf("error creating/updating CRDs: %w", err)
+	}
+
+	log.Info("Finished init command")
+	return nil
+}
+```
+
+The template controller contains a a basic reconcile implementation where you need to add your provider specific logic (see the following [Cluster Profiles section](#cluster-profiles)):
+
+```go title="internal/controller/config/controller.go"
+func (r *ProviderConfigReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
+  ...
+}
+```
+
 
 ### Cluster Profiles
 
@@ -99,9 +189,47 @@ Some information about the different fields:
   - This can also contain further configuration, e.g. for the Gardener ClusterProvider, each provider configuration (which is referenced in the profile) can specify a different Gardener landscape and/or project to use.
 - `spec.purposes` and `spec.tenancy` are mostly relevant for the scheduler and usually don't need to be evaluated by the ClusterProvider.
 
+The template generates a basic cluster controller with an additional cluster profile watch to create reconcile requests on profile changes:
+
+```go title="internal/controller/cluster/controller.go"
+func (r *ClusterReconciler) SetupWithManager(mgr manager.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&clustersv1alpha1.Cluster{}).
+		Watches(&clustersv1alpha1.ClusterProfile{}, handler.EnqueueRequestsFromMapFunc(func(ctx context.Context, obj client.Object) []reconcile.Request {
+			if obj == nil {
+				return nil
+			}
+			// reconcile all clusters that reference this profile
+			clusters := &clustersv1alpha1.ClusterList{}
+			if err := r.platformCluster.Client().List(ctx, clusters, client.MatchingFields{
+				"spec.profile": obj.GetName(),
+			}); err != nil {
+				logf.FromContext(ctx).Error(err, "failed to list cluster profiles")
+				return nil
+			}
+			reqs := make([]reconcile.Request, len(clusters.Items))
+			for i, cluster := range clusters.Items {
+				reqs[i] = reconcile.Request{
+					NamespacedName: client.ObjectKeyFromObject(&cluster),
+				}
+			}
+			return reqs
+		})).
+		Complete(r)
+}
+```
+
 #### Reconciliation Logic
 
-Before doing anything in a reconciliation, the ClusterProvider needs to check whether it is responsible for the `Cluster` resource or not. For this, it has to check if it created the `ClusterProfile` that is referenced in `spec.profile` itself or if it was created by a different ClusterProvider. It can either keep track of created `ClusterProfile` resources internally or compare `spec.providerRef.name` in the profile to its own name (passed in via the `--provider-name` argument). If the name differs, another ClusterProvider is responsible for this resource and the ClusterProvider must not touch it.
+The reconciliation logic has to be placed into the `Reconcile` function of the cluster controller:
+
+```go title="internal/controller/cluster/controller.go"
+func (r *ClusterReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
+  ...
+}
+```
+
+Before doing anything in a reconciliation, the ClusterProvider needs to check the [operation annotation](../general#operation-annotations) and whether it is responsible for the `Cluster` resource or not. For this, it has to check if it created the `ClusterProfile` that is referenced in `spec.profile` itself or if it was created by a different ClusterProvider. It can either keep track of created `ClusterProfile` resources internally or compare `spec.providerRef.name` in the profile to its own name (passed in via the `--provider-name` argument). If the name differs, another ClusterProvider is responsible for this resource and the ClusterProvider must not touch it.
 
 The rest of the reconciliation logic is pretty much provider specific: If the `Cluster` resource has a deletion timestamp, delete the k8s cluster and everything that belongs to it and then remove the finalizer. Otherwise, ensure that there is a finalizer on the `Cluster` resource and create/update the actual k8s cluster.
 
@@ -188,6 +316,14 @@ spec:
 
 Note that, while the example shows both, an `AccessRequest` must have exactly one of `spec.token` and `spec.oidc` set, not both.
 
+The reconciliation logic has to be placed into the `Reconcile` function of the access request controller:
+
+```go title="internal/controller/accessrequest/controller.go"
+func (r *AccessRequest) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
+  ...
+}
+```
+
 #### Token-based Access
 
 If `spec.token` is set, a token-based access is requested. The ClusterProvider is expected to create a `ServiceAccount`, create `Role` (if `namespace` is not empty) and `ClusterRole` (if `namespace` is empty) resources for each entry in `spec.token.permissions`, and create `RoleBinding` and `ClusterRoleBinding` resources for each entry in `spec.token.permissions` and each entry in `spec.token.roleRefs`.
@@ -217,27 +353,21 @@ It modifies the `AccessRequest` in the following way:
 
 This means that the AccessRequest controller in a ClusterProvider must only act on AccessRequests that have both of the aforementioned labels set. They can then expect `spec.clusterRef` to be set and don't need to check for `spec.requestRef`.
 
-It is recommended to use event filtering to avoid reconciling AccessRequests that belong to another provider or have not yet been prepared by the generic controller. The controller-utils library contains a `HasLabelPredicate` filter that can be used for both, verifying existence of a label as well as checking if it has a specific value:
-```go
-import (
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/predicate"
-	ctrlutils "github.com/openmcp-project/controller-utils/pkg/controller"
-	clustersv1alpha1 "github.com/openmcp-project/openmcp-operator/api/clusters/v1alpha1"
-)
+It is recommended to use event filtering to avoid reconciling AccessRequests that belong to another provider or have not yet been prepared by the generic controller. The template configures the access request controller accordingly with the `IsClusterProviderResponsibleForAccessRequest` filter:
 
-// SetupWithManager sets up the controller with the Manager.
-func (r *AccessRequestReconciler) SetupWithManager(mgr ctrl.Manager) error {
-  return ctrl.NewControllerManagedBy(mgr).
-    For(&clustersv1alpha1.AccessRequest{}).
-    WithEventFilter(predicate.And(
-      // this checks whether the provider label exists and has the correct value
-      // 'providerName' holds the value that was passed into the ClusterProvider via the '--provider-name' argument
-      ctrlutils.HasLabelPredicate(clustersv1alpha1.ProviderLabel, providerName),
-      // this just checks whether the label exists, independent from its value
-      ctrlutils.HasLabelPredicate(clustersv1alpha1.ProfileLabel, ""),
-      // <potentially more event filters>
-    )).
-    Complete(r)
+```go title="internal/controller/accessrequest/controller.go"
+func (r *AccessRequestReconciler) SetupWithManager(mgr manager.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&clustersv1alpha1.AccessRequest{}, builder.WithPredicates(
+			predicate.NewPredicateFuncs(func(obj client.Object) bool {
+				ar, ok := obj.(*clustersv1alpha1.AccessRequest)
+				if !ok {
+					return false
+				}
+				return libutils.IsClusterProviderResponsibleForAccessRequest(ar, r.providerName)
+			}),
+		)).
+		Owns(&corev1.Secret{}). // watch the managed kubeconfig
+		Complete(r)
 }
 ```
