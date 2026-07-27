@@ -103,7 +103,7 @@ func (o *InitOptions) Run(ctx context.Context) error {
 }
 ```
 
-The template controller contains a a basic reconcile implementation where you need to add your provider specific logic (see the following [Cluster Profiles section](#cluster-profiles)):
+The template controller contains a basic reconcile implementation where you need to add your provider specific logic (see the following [Cluster Profiles section](#cluster-profiles)):
 
 ```go title="internal/controller/config/controller.go"
 func (r *ProviderConfigReconciler) Reconcile(ctx context.Context, req reconcile.Request) (reconcile.Result, error) {
