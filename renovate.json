@@ -1,6 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "gitIgnoredAuthors": [
+    "github-actions[bot]@users.noreply.github.com"
+  ],
   "extends": [
-    "config:recommended"
-  ]
+    "config:recommended",
+    "config:best-practices",
+    "security:openssf-scorecard",
+    "helpers:pinGitHubActionDigests",
+    ":rebaseStalePrs",
+    ":enableVulnerabilityAlerts"
+  ],
 }

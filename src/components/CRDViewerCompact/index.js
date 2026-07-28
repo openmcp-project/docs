@@ -3,7 +3,7 @@ import CodeBlock from '@theme/CodeBlock';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { Search } from 'lucide-react';
-import yaml from 'js-yaml';
+import { load as yamlLoad } from 'js-yaml';
 
 const SchemaField = ({ field, depth = 0, searchTerm }) => {
   const hasChildren = field.children && field.children.length > 0;
@@ -91,7 +91,7 @@ export default function CRDViewerCompact({ crdUrl, name, description, exampleUrl
         const crdText = await crdResponse.text();
         setCrdData(crdText);
 
-        const crdObject = yaml.load(crdText);
+        const crdObject = yamlLoad(crdText);
         const specSchema = crdObject?.spec?.versions?.[0]?.schema?.openAPIV3Schema?.properties?.spec;
         const statusSchema = crdObject?.spec?.versions?.[0]?.schema?.openAPIV3Schema?.properties?.status;
 

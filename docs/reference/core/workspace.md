@@ -10,8 +10,8 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 <div className="crd-header-container">
   <div className="crd-header-icon-custom">
     <div className="reference-icon-group reference-icon-group-workspace">
-      <img src="/docs/img/cp2.png" alt="" className="reference-icon-medium reference-icon-left" />
-      <img src="/docs/img/cp3.png" alt="" className="reference-icon-medium reference-icon-right" />
+      <img src="/img/cp2.png" alt="" className="reference-icon-medium reference-icon-left" />
+      <img src="/img/cp3.png" alt="" className="reference-icon-medium reference-icon-right" />
     </div>
     <div className="reference-icon-label">dev</div>
   </div>
@@ -25,10 +25,10 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 **Kind:** `Workspace`
 
 <CRDViewerCompact
-  crdUrl="https://raw.githubusercontent.com/openmcp-project/project-workspace-operator/main/api/crds/manifests/core.openmcp.cloud_workspaces.yaml"
+  crdUrl="https://raw.githubusercontent.com/openmcp-project/platform-service-project-workspace/refs/heads/main/api/crds/manifests/core.openmcp.cloud_workspaces.yaml"
   name="Workspace"
   description="Workspace resource for environment isolation"
-  exampleUrl="https://raw.githubusercontent.com/openmcp-project/project-workspace-operator/main/config/samples/_v1alpha1_workspace.yaml"
+  exampleUrl="https://raw.githubusercontent.com/openmcp-project/platform-service-project-workspace/refs/heads/main/config/samples/_v1alpha1_workspace.yaml"
 />
 
 ## Usage

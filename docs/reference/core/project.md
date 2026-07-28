@@ -11,13 +11,13 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
   <div className="crd-header-icon-project">
     <div className="reference-icon-project-container">
       <div className="reference-icon-workspace-mini reference-icon-workspace-dev">
-        <img src="/docs/img/cp1.png" alt="" className="reference-icon-small reference-icon-left" />
-        <img src="/docs/img/cp2.png" alt="" className="reference-icon-small reference-icon-right" />
+        <img src="/img/cp1.png" alt="" className="reference-icon-small reference-icon-left" />
+        <img src="/img/cp2.png" alt="" className="reference-icon-small reference-icon-right" />
         <div className="reference-icon-label-mini">dev</div>
       </div>
       <div className="reference-icon-workspace-mini reference-icon-workspace-prod">
-        <img src="/docs/img/cp3.png" alt="" className="reference-icon-small reference-icon-left" />
-        <img src="/docs/img/cp4.png" alt="" className="reference-icon-small reference-icon-right" />
+        <img src="/img/cp3.png" alt="" className="reference-icon-small reference-icon-left" />
+        <img src="/img/cp4.png" alt="" className="reference-icon-small reference-icon-right" />
         <div className="reference-icon-label-mini">prod</div>
       </div>
     </div>
@@ -33,10 +33,10 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 **Kind:** `Project`
 
 <CRDViewerCompact
-  crdUrl="https://raw.githubusercontent.com/openmcp-project/project-workspace-operator/main/api/crds/manifests/core.openmcp.cloud_projects.yaml"
+  crdUrl="https://raw.githubusercontent.com/openmcp-project/platform-service-project-workspace/refs/heads/main/api/crds/manifests/core.openmcp.cloud_projects.yaml"
   name="Project"
   description="Project resource for multi-tenancy"
-  exampleUrl="https://raw.githubusercontent.com/openmcp-project/project-workspace-operator/main/config/samples/_v1alpha1_project.yaml"
+  exampleUrl="https://raw.githubusercontent.com/openmcp-project/platform-service-project-workspace/refs/heads/main/config/samples/_v1alpha1_project.yaml"
 />
 
 ## Usage

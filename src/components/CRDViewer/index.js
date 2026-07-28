@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import yaml from 'js-yaml';
+import { load as yamlLoad } from 'js-yaml';
 
 export default function CRDViewer({ crdUrl, name, description, exampleUrl }) {
   const [crdData, setCrdData] = useState(null);
@@ -21,7 +21,7 @@ export default function CRDViewer({ crdUrl, name, description, exampleUrl }) {
         setCrdData(crdText);
 
         // Parse CRD YAML to extract OpenAPI schema
-        const crdObject = yaml.load(crdText);
+        const crdObject = yamlLoad(crdText);
         const specSchema = crdObject?.spec?.versions?.[0]?.schema?.openAPIV3Schema?.properties?.spec;
 
         if (specSchema) {

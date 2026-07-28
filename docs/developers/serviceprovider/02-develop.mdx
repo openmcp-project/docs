@@ -17,7 +17,7 @@ Let's get started!
 
 A service provider consists of the following two major parts, similar to a regular kubernetes controller:
 
-- **A user-facing ServiceProviderAPI**: This allows end users to request a `DomainService` for a `ManagedControlPlane`, e.g. `FooService` or `Velero`.
+- **A user-facing ServiceProviderAPI**: This allows end users to request a `DomainService` for a `ControlPlane`, e.g. `FooService` or `Velero`.
 - **A controller that reconciles the ServiceProviderAPI**: This controller manages the lifecycle of the provided `DomainService` and its API (such as `Foo` or the CRDs of Velero).
 
 For a visual overview of how these components fit into an OpenControlPlane installation, refer to the [service provider deployment model](https://openmcp-project.github.io/docs/about/design/service-provider#deployment-model).
@@ -30,8 +30,12 @@ A service provider operates across multiple clusters. The following table shows 
 |-------------|---------|------------------|
 | `r.PlatformCluster` | Platform Cluster | ProviderConfig (cluster-scoped); image pull secrets (in pod namespace); AccessRequests and kubeconfig secrets (in the per-tenant `mcp--<uuid>` namespace) |
 | `r.OnboardingCluster` | Onboarding Cluster | ServiceProviderAPI objects in `project-<p>--ws-<w>` workspace namespaces |
-| `clusters.MCPCluster` | MCP Cluster (per tenant) | DomainServiceAPI CRDs and deployed resources in a namespace you choose (e.g., `crossplane-system`) |
+| `clusters.MCPCluster` | ControlPlane cluster (per tenant) | DomainServiceAPI CRDs and deployed resources in a namespace you choose (e.g., `crossplane-system`) |
 | `clusters.WorkloadCluster` | Workload Cluster (shared, optional) | DomainService controller workloads in a namespace you choose |
+
+:::info
+In the previous table, `r` refers to the receiver of the [CreateOrUpdate](#createorupdate-operation) and [Delete](#delete-operation) methods, while `clusters` refers to the parameter of type `ClusterContext`.
+:::
 
 For a complete overview of namespaces across all cluster types, including real-world examples, see [Clusters and Namespaces](../clusters-and-namespaces.md).
 
@@ -66,12 +70,12 @@ git submodule update --init --recursive
 task test-e2e
 ```
 
-This test bootstraps a complete local openMCP installation with all required components, including:
+This test bootstraps a complete local OpenControlPlane installation with all required components, including:
 
 - **The platform cluster** where your service provider is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator)
 - **The onboarding cluster** where end users request the domain service you provider offers.
-- **A managed control plane cluster (MCP)** where your service provider installs its [DomainServiceAPI](https://openmcp-project.github.io/docs/about/design/service-provider#api) and optionally its workload.
-- **An optional workload cluster**, provisioned when using the template flag `-w`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the MCP. This will result in another kind cluster.
+- **A ControlPlane cluster** where your service provider installs its [DomainServiceAPI](https://openmcp-project.github.io/docs/about/design/service-provider#api) and optionally its workload.
+- **An optional workload cluster**, provisioned when using the template flag `-w`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the ControlPlane. This will result in another kind cluster.
 
 :::info
 This means running the above command from the [Service Provider Template Usage](#service-provider-template-usage) section with `-w` like this:
@@ -79,6 +83,8 @@ This means running the above command from the [Service Provider Template Usage](
 go run ./cmd/template -v -w -module github.com/openmcp-project/service-provider-velero -kind Velero -group velero
 ```
 :::
+
+For a detailed guide to the [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) testing framework, test structure, and examples, see the [Testing guide](./testing). For running your controller locally outside the cluster and troubleshooting common issues, see the [Debug guide](./debugging).
 
 The template generator removes its own code after execution. If you want to revert your changes and start fresh, simply use git and delete any generated untracked files. For this reason, remove template-generation step from the e2e test `.github/workflows/go.yaml` before committing your changes (otherwise your workflow will fail).
 
@@ -94,7 +100,6 @@ The service provider template is built with [kubebuilder](https://book.kubebuild
 
 - **api/** includes generated types and their CRDs which the crd manager will install during the `initCommand`.
 - **internal/controller/** contains the `Reconciler` where you implement your domain specific reconcile logic.
-- **pkg/runtime** contains generic reconcilers that handle openMCP specific logic such as cluster access management and provider config updates. You normally should not modify this package. If you encounter any issues, create an issue in the template repository.
 
 If you are new to implementing Kubernetes controllers, consider completing [building a CronJob tutorial](https://book.kubebuilder.io/cronjob-tutorial/cronjob-tutorial.html) before returning to this guide. The rest of this guide highlights the most important steps to create a service provider and the differences compared to a regular Kubernetes controller.
 
@@ -116,10 +121,10 @@ Modify the spec to expose the configuration your provider supports.
 For example, Velero allows the user to choose a version and which plugins to install:
 
 ```yaml
-apiVersion: velero.services.openmcp.cloud/v1alpha1
+apiVersion: velero.services.open-control-plane.io/v1alpha1
 kind: Velero
 metadata:
-  name: test-mcp
+  name: test-controlplane
 spec:
   version: "v1.17.1"
   plugins:
@@ -127,20 +132,16 @@ spec:
       version: "v1.13.0"
 ```
 
-Each onboarding API type must include [common status fields](https://openmcp-project.github.io/docs/developers/general/#status-reporting). These are included in the template and you can add additional optional fields.
+Each onboarding API type must include [common status fields](/developers/general#status-reporting). These are included in the template via the `commonapi.Status` inline struct and you can add additional optional fields.
 
 ```go
+import (
+ commonapi "github.com/openmcp-project/openmcp-operator/api/common"
+)
+
 // FooServiceStatus defines the observed state of FooService.
 type FooServiceStatus struct {
- // The status of each condition is one of True, False, or Unknown.
- // +listType=map
- // +listMapKey=type
- // +optional
- Conditions []metav1.Condition `json:"conditions,omitempty"`
- // ObservedGeneration is the generation of this resource that was last reconciled by the controller.
- ObservedGeneration int64 `json:"observedGeneration"`
- // Phase is the current phase of the resource.
- Phase string `json:"phase"`
+ commonapi.Status `json:",inline"`
 }
 ```
 
@@ -158,15 +159,7 @@ const (
 )
 
 type VeleroStatus struct {
- // The status of each condition is one of True, False, or Unknown.
- // +listType=map
- // +listMapKey=type
- // +optional
- Conditions []metav1.Condition `json:"conditions,omitempty"`
- // ObservedGeneration is the generation of this resource that was last reconciled by the controller.
- ObservedGeneration int64 `json:"observedGeneration"`
- // Phase is the current phase of the resource.
- Phase string `json:"phase"`
+ commonapi.Status `json:",inline"`
  // Resources managed by this velero instance
  // +optional
  Resources []ManagedResource `json:"resources,omitempty"`
@@ -187,40 +180,19 @@ Service providers must expose a `ProviderConfig` which platform operators use to
 
 ### ProviderConfig Guidelines
 
-When designing your `ProviderConfig`, **only include controller operational settings** - configuration that controls how your controller reconciles, not what it deploys or what tenants can use.
-Operational settings include reconciliation behavior, timeouts, observability, feature toggles, and trust configuration (CA bundles).
+At the time of writing, the design of a `ProviderConfig` must address the following concerns:
 
-**Do not include** deployment artifacts (images, charts, versions) or tenant constraints (version policies, available providers).
+1. Deployment prerequisites for restricted environments: A `ProviderConfig` **must** expose the configuration required to deploy a service provider in private or aig-gapped environments, for example by specifying image and Helm chart pull secrets.
+2. Constraining deployable domain service versions: A `ProviderConfig` **must** expose configuration that constraints which versions of a domain service the service provider is allowed to deploy. This enables platform operators to explicitly define an approved set of versions.
+It is required to add this for new service providers until dedicated Registry and TenantPolicy systems will replace this in the future (see [Discoverability of OpenControlPlane components](https://github.com/openmcp-project/backlog/issues/384)).
+3. Runtime behavior: A `ProviderConfig` **may** expose configuration settings that influence the runtime behavior of a service provider, such as the poll interval used in the service provider template or [support for custom CA bundles](./how-to-guides/01-custom-ca.md).
 
-:::info Temporary Necessity
-Information about deployment artifacts and tenant constraints will move to dedicated Registry and TenantPolicy systems in the future (see [Discoverability of OpenControlPlane components](https://github.com/openmcp-project/backlog/issues/384)). Until then, some Service Providers include these concerns in their `ProviderConfig` as a temporary measure. Structure your API to allow graceful deprecation of deployment artifact and tenant constraint fields when the Registry and TenantPolicy systems become available.
-:::
+### ProviderConfig Example
 
-
-### Ideal Minimal ProviderConfig
-
-A well-designed `ProviderConfig` contains **only controller operational settings**:
+Velero's ProviderConfig currently includes both operational settings and deployment artifacts:
 
 ```yaml
-apiVersion: myservice.services.openmcp.cloud/v1alpha1
-kind: ProviderConfig
-metadata:
-  name: default
-spec:
-  # Reconciliation behavior
-  pollInterval: 1m
-  maxConcurrentReconciles: 5
-
-  # Timeouts
-  helmReleaseTimeout: 10m
-```
-
-### Current State: When You Need More
-
-For example, Velero's ProviderConfig currently includes both operational settings and deployment artifacts:
-
-```yaml
-apiVersion: velero.services.openmcp.cloud/v1alpha1
+apiVersion: velero.services.open-control-plane.io/v1alpha1
 kind: ProviderConfig
 metadata:
   name: default
@@ -250,7 +222,7 @@ Velero implements this synchronization as follows:
 
 ```go
 // internal/controller/velero_controller.go
-func (r *VeleroReconciler) CreateOrUpdate(ctx context.Context, obj *apiv1alpha1.Velero, pc *apiv1alpha1.ProviderConfig, clusters spruntime.ClusterContext) (ctrl.Result, error) {
+func (r *VeleroReconciler) CreateOrUpdate(ctx context.Context, obj *apiv1alpha1.Velero, pc *apiv1alpha1.ProviderConfig, clusters clusteraccess.ClusterContext) (ctrl.Result, error) {
  ...
  workloadCluster := resources.NewManagedCluster(clusters.WorkloadCluster.Client(), clusters.WorkloadCluster.RESTConfig(), instance.Namespace(obj), resources.WorkloadCluter)
  secret.Configure(workloadCluster, r.PlatformCluster, pc.Spec.ImagePullSecrets, r.PodNamespace)
@@ -292,7 +264,7 @@ Finally, ensure that the synchronized image pull secrets are [referenced in any 
 
 ## Watch Secrets for Changes
 
-If your service provider references secrets on the platform cluster (e.g. image pull secrets configured in the `ProviderConfig`), you may want to automatically trigger reconciliation when those secrets change. The service-provider-runtime provides an optional `SecretWatcher` interface for this purpose.
+If your service provider references secrets on the platform cluster (e.g. image pull secrets configured in the `ProviderConfig`), you may want to automatically trigger reconciliation when those secrets change. The [opencontrolplane-runtime](https://github.com/openmcp-project/opencontrolplane-runtime) provides an optional `serviceprovider.SecretWatcher` interface for this purpose.
 
 When enabled, the runtime watches Kubernetes `Secret` objects in a configured namespace on the platform cluster. Whenever a secret changes, it calls your `IsReferencedSecret` method to determine whether the change is relevant. If it is, all `ServiceProviderAPI` objects are re-enqueued for reconciliation, ensuring that your provider picks up the updated secret data.
 
@@ -310,11 +282,11 @@ This generates:
 
 ### Implement `IsReferencedSecret`
 
-Your reconciler must implement the `SecretWatcher` interface by providing an `IsReferencedSecret` method. This method receives the changed secret and the current `ProviderConfig`, and returns `true` if the secret should trigger reconciliation.
+Your reconciler must implement the `serviceprovider.SecretWatcher` interface by providing an `IsReferencedSecret` method. This method receives the changed secret and the current `ProviderConfig`, and returns `true` if the secret should trigger reconciliation.
 
 ```go
 // IsReferencedSecret returns true if the given secret should trigger
-// reconciliation. See spruntime.SecretWatcher for details.
+// reconciliation. See serviceprovider.SecretWatcher for details.
 func (r *VeleroReconciler) IsReferencedSecret(ctx context.Context, secret *corev1.Secret, pc *apiv1alpha1.ProviderConfig) bool {
     if pc == nil {
         return false
@@ -337,34 +309,33 @@ The `pc` parameter may be `nil` if the `ProviderConfig` has not been loaded yet.
 In your `main.go`, chain `WithSecretNamespace` when building the `SPReconciler`. The namespace should be the pod's own namespace on the platform cluster, which is where secrets like image pull secrets are typically stored:
 
 ```go
-spr := spruntime.NewSPReconciler[*velerosv1alpha1.Velero, *velerosv1alpha1.ProviderConfig](
-    func() *velerosv1alpha1.Velero { return &velerosv1alpha1.Velero{} },
-).
-    WithPlatformCluster(platformCluster).
-    WithOnboardingCluster(onboardingCluster).
-    WithSecretNamespace(podNamespace).
-    WithServiceProviderReconciler(&controller.VeleroReconciler{...}).
+spr := serviceprovider.NewAPIReconcilerBuilder[*velerosv1alpha1.Velero, *velerosv1alpha1.ProviderConfig]().
+    EmpyObjectProvider(func() *velerosv1alpha1.Velero { return &velerosv1alpha1.Velero{} }).
+    PlatformCluster(platformCluster).
+    OnboardingCluster(onboardingCluster).
+    SecretNamespace(podNamespace).
+    Reconciler(&controller.VeleroReconciler{...}).
     // ...
 ```
 
 The watch is only active when both conditions are met:
-1. Your reconciler implements the `SecretWatcher` interface
-2. `WithSecretNamespace` is configured with a non-empty namespace
+1. Your reconciler implements the `serviceprovider.SecretWatcher` interface
+2. `SecretNamespace` is configured with a non-empty namespace
 
 When a referenced secret changes, the runtime lists all `ServiceProviderAPI` objects from the onboarding cluster and enqueues them for reconciliation. This ensures every service instance picks up the latest secret data during its next reconcile cycle.
 
 ## Edit the ServiceProviderReconciler
 
-Your `Reconciler` must implement two functions: `CreateOrUpdate` and `Delete`. The template sets up your reconciler together with the generic reconciler from `pkg/runtime`, which handles openMCP-specifics (cluster access, config updates, etc.).
+Your `Reconciler` must implement two methods: `CreateOrUpdate` and `Delete`. The template sets up your reconciler together with the generic reconciler from `pkg/runtime`, which handles OpenControlPlane-specifics (cluster access, config updates, etc.).
 
 ### CreateOrUpdate Operation
 
-The template example contains a basic implementation that installs a CRD into the tenant MCP.
+The template example contains a basic implementation that installs a CRD into the tenant ControlPlane.
 
 ```go
 // CreateOrUpdate is called on every add or update event
-func (r *FooServiceReconciler) CreateOrUpdate(ctx context.Context, svcobj *apiv1alpha1.FooService, _ *apiv1alpha1.ProviderConfig, clusters spruntime.ClusterContext) (ctrl.Result, error) {
- spruntime.StatusProgressing(svcobj, "Reconciling", "Reconcile in progress")
+func (r *FooServiceReconciler) CreateOrUpdate(ctx context.Context, svcobj *apiv1alpha1.FooService, _ *apiv1alpha1.ProviderConfig, clusters clusteraccess.ClusterContext) (ctrl.Result, error) {
+ serviceprovider.StatusProgressing(svcobj, "Reconciling", "Reconcile in progress")
  managedObj := &apiextensionsv1.CustomResourceDefinition{
   ObjectMeta: metav1.ObjectMeta{
    Name: "foos.example.domain",
@@ -375,19 +346,23 @@ func (r *FooServiceReconciler) CreateOrUpdate(ctx context.Context, svcobj *apiv1
   return nil
  })
  if err == nil {
-  spruntime.StatusReady(svcobj)
+  serviceprovider.StatusReady(svcobj)
  }
  return ctrl.Result{}, err
 }
 ```
 
-In a real world example like Velero, this step contains installing and reconciling every required resource, including CRDs, namespace(s), service account(s), deployments(s), etc. into the MCP and workload cluster.
+In a real world example like Velero, this step contains installing and reconciling every required resource, including CRDs, namespace(s), service account(s), deployment(s), etc. into the ControlPlane and workload cluster.
 
-The `ClusterContext` provides access to all request specific clusters. This always includes the managed control plane and, when requested, the workload cluster associated with the current request.
+The `ClusterContext` provides access to all request specific clusters. This always includes the ControlPlane and, when requested, the workload cluster associated with the current request.
 
-The workload cluster is optional and will not be available for providers that deploy their workload directly to the managed control plane.
+The workload cluster is optional and will not be available for providers that deploy their workload directly to the ControlPlane.
 
-In addition, `ClusterContext` exposes two `ObjectKeys` that can be used to retrieve the kubeconfig for either the managed control plane or the workload cluster. These kubeconfigs can be passed to a [HelmReleases spec](https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.HelmReleaseSpec) when a service provider uses Flux to deploy its service.
+:::info
+[Cluster and Namespace Context](#cluster-and-namespace-context) provides an overview of available clusters, their purpose and how to access them.
+:::
+
+In addition, `ClusterContext` exposes two `ObjectKeys` that can be used to retrieve the kubeconfig for either the ControlPlane or the workload cluster. These kubeconfigs can be passed to a [HelmReleases spec](https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.HelmReleaseSpec) when a service provider uses Flux to deploy its service.
 
 ```go
 type ClusterContext struct {
@@ -411,14 +386,16 @@ Any update to either the `ServiceProviderAPI` or `ProviderConfig` triggers recon
 
 ### Delete Operation
 
-When a user removes a service, the provider must delete all managed resources.
+When a user removes a service, the provider must delete all managed resources. A managed resource is any resource the service provider explicitly creates in its [CreateOrUpdate Operation](#createorupdate-operation).
+For example, the `HelmRelease` in [Flux based](#for-complex-deployments-with-lot-of-moving-parts) service providers is considered a managed resource.
+The Kubernetes objects created by Flux from that `HelmRelease` are managed by Flux and not by the service provider.
 
 The basic template example deletes the `Foo` CRD:
 
 ```go
-func (r *FooServiceReconciler) Delete(ctx context.Context, obj *apiv1alpha1.FooService, _ *apiv1alpha1.ProviderConfig, clusters spruntime.ClusterContext) (ctrl.Result, error) {
+func (r *FooServiceReconciler) Delete(ctx context.Context, obj *apiv1alpha1.FooService, _ *apiv1alpha1.ProviderConfig, clusters clusteraccess.ClusterContext) (ctrl.Result, error) {
  l := logf.FromContext(ctx)
- spruntime.StatusTerminating(obj)
+ serviceprovider.StatusTerminating(obj)
  managedObj := fooCRD()
  if err := clusters.MCPCluster.Client().Delete(ctx, managedObj); client.IgnoreNotFound(err) != nil {
   l.Error(err, "delete object failed")
@@ -434,26 +411,351 @@ func (r *FooServiceReconciler) Delete(ctx context.Context, obj *apiv1alpha1.FooS
 }
 ```
 
-## Restrict Cluster Access
+### Block deletion while user resources exist
 
-The template code runs the provider with full admin permissions. Before releasing you provider, restrict its required permissions with the [ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/clusteraccess.go#L103). There are multiple occurrences in the `main.go` service provider setup.
+End users interact with two clusters in this context:
+
+- The **Onboarding cluster**, where they create the `ServiceProviderAPI` object that requests the service. This object is controlled by the service provider.
+- The tenant **`ControlPlane` cluster**, where they create domain custom resources (e.g. `GitRepository`, `Bucket`, `ExternalSecret`) of the CRDs your provider installs. These CRs are controlled by the domain controllers your provider manages.
+
+A naive `Delete` implementation removes those domain CRDs from the `ControlPlane` cluster as soon as the user deletes the `ServiceProviderAPI` object on the Onboarding cluster. If the domain controller does not protect its CRs with finalizers removing the CRDs while user instances still exist may orphan those resources and leave external systems (object storage, git repositories, secrets in vaults) outside platform control.
+
+A service provider can improve the user experience and prevent silent data loss by blocking its own deletion until the user has cleaned up the domain CRs first. Quality criterion [Deletion behaviour](./quality-criteria#1-deletion-behaviour) asks providers to do this whenever the underlying domain controller lacks its own deletion safeguards. The expected flow inside `Delete`:
+
+1. Look up the user's domain custom resources on `clusters.MCPCluster` for the CRDs your provider installs (e.g. `GitRepository` for a Flux provider, `ClusterPolicy` for a Kyverno provider).
+2. If any are still there, set `Status.Phase = Terminating` on the `ServiceProviderAPI` object, add a condition that names the kinds blocking deletion, and requeue. Skip the rest of `Delete`.
+3. If none are left, run your normal teardown.
+
+:::warning
+There is no generic way to enumerate every CRD a domain service installs, so each provider must list the kinds it knows it owns. A force-delete escape hatch is intentionally not offered today; if you need one, raise it as a [discussion](https://github.com/orgs/openmcp-project/discussions) before implementing it ad-hoc.
+:::
+
+:::info
+The [service-provider-template](https://github.com/openmcp-project/service-provider-template) does not yet provide a reference implementation for this check. Progress is tracked in [openmcp-project/service-provider-template#88](https://github.com/openmcp-project/service-provider-template/issues/88).
+:::
+
+## Cluster Access
+
+This section covers all things related on how to control what your service provider is allowed to do on a target control plane.
+
+### Restrict Cluster Access
+
+The template code runs the provider with full admin permissions. Before releasing your provider, restrict its required permissions using the [advanced ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/advanced/clusteraccess.go).
+
+#### Before
 
 ```go
- spr := spruntime.NewSPReconciler[*fooservicesv1alpha1.FooService, *fooservicesv1alpha1.ProviderConfig](
-  func() *fooservicesv1alpha1.FooService { return &fooservicesv1alpha1.FooService{} },
- ).
-  WithClusterAccessReconciler(clusteraccess.NewClusterAccessReconciler(platformCluster.Client(), "FooService").
-   WithMCPScheme(mcpScheme).
-   WithMCPPermissions(adminPermissions).WithMCPRoleRefs([]common.RoleRef{
-   {
-    Name: "cluster-admin",
-    Kind: "ClusterRole",
-   }}))
+controlPlaneTokenAccess := &clustersv1alpha1.TokenConfig{
+    Permissions: []clustersv1alpha1.PermissionsRequest{
+        {
+            Rules: []rbacv1.PolicyRule{
+                {
+                    APIGroups: []string{"*"},
+                    Resources: []string{"*"},
+                    Verbs:     []string{"*"},
+                },
+            },
+        },
+    },
+    RoleRefs: []common.RoleRef{
+        {
+            Name: "cluster-admin",
+            Kind: "ClusterRole",
+        },
+    },
+}
+```
+
+#### After
+
+```go
+controlPlaneTokenAccess := &clustersv1alpha1.TokenConfig{
+    Permissions: []clustersv1alpha1.PermissionsRequest{
+        {
+            Rules: []rbacv1.PolicyRule{
+                {
+                    APIGroups: []string{""},
+                    Resources: []string{"configmaps"},
+                    Verbs:     []string{"get", "list", "watch"},
+                },
+                {
+                    APIGroups: []string{"coordination.k8s.io"},
+                    Resources: []string{"leases"},
+                    Verbs:     []string{"get", "create", "patch", "update"},
+                },
+                {
+                    APIGroups: []string{""},
+                    Resources: []string{"events"},
+                    Verbs:     []string{"create", "patch"},
+                },
+                ...
+            },
+        },
+    },
+}
+```
+
+### Dynamic Cluster Access
+
+It is also possible to dynamically generate the `TokenConfig` of your provider which is enabled through registering a [TokenAccessGenerator](https://github.com/openmcp-project/openmcp-operator/blob/045b213389c43c37bf82bf5dda37292b04b7f48d/lib/clusteraccess/advanced/clusterregistration.go#L71) and [AdditionalDataGenerators](https://github.com/openmcp-project/opencontrolplane-runtime/blob/05e1902eb97e06115c7246c6ed42f8a5ca689167/pkg/serviceprovider/apireconciler.go#L52).
+These generators will be called during reconciliation. The `AdditionalDataGenerators` can generate arbitrary data which is looped through the various `ClusterAccessReconciler` methods down to the `TokenAccessGenerator`. There it can be used to tailor the `TokenConfig` to the permission requirements of your service provider.
+
+This is for example useful if your service provider offers a namespace override meaning the namespace is only known during reconciliation and using a `TokenAccessGenerator` allows you to take that information into account.
+
+:::info
+Using dynamic cluster access is only possible when using the [advanced ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/advanced/clusteraccess.go).
+If your service provider is still using the legacy [simple ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/clusteraccess.go) please refer to the [migration guide](#migrate-from-simple-to-advanced-clusteraccessreconciler) on how to migrate.
+:::
+
+To see a real-world example on how to implement dynamic cluster access please check out the implementation of [service-provider-external-secrets](https://github.com/openmcp-project/service-provider-external-secrets/blob/main/cmd/service-provider-external-secrets/main.go).
+
+As an example we will demonstrate how you can dynamically insert an overridden namespace into your `TokenConfig` in the following code snippets.
+
+#### 1. Define a Namespace Resolver
+
+We first need to define a function which resolves a potential overridden namespace from the ProviderConfig.
+
+```go
+type fooServiceNamespace string
+
+func resolveFooServiceNamespace(_ context.Context, obj *fooservicesv1alpha1.FooService, providerConfig *fooservicesv1alpha1.ProviderConfig) (any, error) {
+    namespace := "fooservice-system"
+
+    if obj != nil && providerConfig != nil {
+        for _, version := range providerConfig.Spec.Versions {
+            if version.Version != obj.Spec.Version {
+                continue
+            }
+
+            if version.NamespaceOverride != "" {
+                namespace = version.NamespaceOverride
+            }
+            break
+        }
+    }
+
+    return fooServiceNamespace(namespace), nil
+}
+```
+
+#### 2. Define a `TokenAccessGenerator`
+
+Now we define a `TokenAccessGenerator` which will replace our static `TokenAccess` definition. It reads the namespace from the provided `additionalData` and then sets the `Namespace` of our `Permissions`.
+
+```go
+tokenAccessGenerator := func(_ reconcile.Request, additionalData ...any) (*clustersv1alpha1.TokenConfig, error) {
+    namespace := "fooservice-system"
+    for _, data := range additionalData {
+        ns, ok := data.(fooServiceNamespace)
+        if ok && ns != "" {
+            namespace = string(ns)
+            break
+        }
+    }
+    return &clustersv1alpha1.TokenConfig{
+        Permissions: []clustersv1alpha1.PermissionsRequest{
+            {
+                Namespace: namespace,
+                Rules: []rbacv1.PolicyRule{
+                    {
+                        APIGroups: []string{"*"},
+                        Resources: []string{"*"},
+                        Verbs:     []string{"*"},
+                    },
+                },
+            },
+        },
+    }, nil
+}
+```
+
+#### 3. Build the `ClusterRequest`
+
+When we build our `ClusterRequest` we need to register our `TokenAccessGenerator`.
+
+```go
+controlPlaneClusterRequest := advanced.ExistingClusterRequest("mcp", "mcp", func(req reconcile.Request, _ ...any) (*common.ObjectReference, error) {
+    namespace, err := utils.StableMCPNamespace(req.Name, req.Namespace)
+    if err != nil {
+        return nil, err
+    }
+    return &common.ObjectReference{
+        Name:      req.Name,
+        Namespace: namespace,
+    }, nil
+}).
+    WithNamespaceGenerator(advanced.DefaultNamespaceGeneratorForMCP).
+    WithTokenAccessGenerator(tokenAccessGenerator).
+    WithScheme(controlPlaneScheme).
+    Build()
+```
+
+#### 4. Build the `ClusterAccessReconciler`
+
+When building our `ClusterAccessReconciler` we need to register our `ClusterRequest`.
+
+```go
+clusterAccessReconciler := advanced.NewClusterAccessReconciler(platformCluster.Client(), "FooServiceOperator").
+    WithManagedLabels(func(controllerName string, req reconcile.Request, reg advanced.ClusterRegistration) (string, string, map[string]string) {
+        _, managedPurpose, _ := advanced.DefaultManagedLabelGenerator(controllerName, req, reg)
+        return controllerName, managedPurpose, map[string]string{
+            openmcpconst.OnboardingNameLabel:      req.Name,
+            openmcpconst.OnboardingNamespaceLabel: req.Namespace,
+        }
+    }).
+    WithRetryInterval(10 * time.Second).
+    Register(controlPlaneClusterRequest)
+```
+
+#### 5. Register with the `APIReconciler`
+
+To tie it all together we have to register `resolveFooServiceNamespace` as `AdditionalDataGenerator` with our `APIReconciler` along with our just created `ClusterAccessReconciler`.
+
+```go
+spr := serviceprovider.NewAPIReconcilerBuilder[*fooservicesv1alpha1.FooService, *fooservicesv1alpha1.ProviderConfig]().
+    EmptyObjectProvider(func() *fooservicesv1alpha1.FooService {
+        return &fooservicesv1alpha1.FooService{}
+    }).
+    PlatformCluster(platformCluster).
+    OnboardingCluster(onboardingCluster).
+    Reconciler(&controller.FooServiceReconciler{
+        OnboardingCluster: onboardingCluster,
+        PlatformCluster:   platformCluster,
+        PodNamespace:      podNamespace,
+    }).
+    AdvancedClusterAccessReconciler(clusterAccessReconciler).
+    AdditionalDataGenerators(resolveFooServiceNamespace).
+    MustBuild()
+```
+
+### Migrate from simple to advanced ClusterAccessReconciler
+
+This section walks through migrating a service provider from the legacy [simple ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/clusteraccess.go)
+to the [advanced ClusterAccessReconciler](https://github.com/openmcp-project/openmcp-operator/blob/main/lib/clusteraccess/advanced/clusteraccess.go).
+The simple `ClusterAccessReconciler` is a facade over the advanced one and the logic we now build manually was previously hidden behind its functional options.
+
+:::info
+To see a real-world implementation have for example a look at [service-provider-flux](https://github.com/openmcp-project/service-provider-flux/blob/main/cmd/service-provider-flux/main.go)
+or [service-provider-external-secrets](https://github.com/openmcp-project/service-provider-external-secrets/blob/main/cmd/service-provider-external-secrets/main.go)
+:::
+
+#### 1. Update dependencies
+
+First we need to bump `opencontrolplane-runtime` in our `go.mod` to a version >= 0.4.0:
+
+```go
+github.com/openmcp-project/opencontrolplane-runtime >= v0.4.0
+```
+
+Then run `go mod tidy` to update our dependencies.
+
+#### 2. Add imports
+
+Next we need to add the `advanced` and `reconcile` package `main.go` imports:
+
+```go
+import (
+    // existing imports …
+    "github.com/openmcp-project/openmcp-operator/lib/clusteraccess/advanced"
+    "sigs.k8s.io/controller-runtime/pkg/reconcile"
+)
+```
+
+#### 3. Define a `TokenConfig`
+
+Instead of calling `WithMCPPermissions` / `WithMCPRoleRefs` on the `NewClusterAccessReconciler` we need to create a standalone `*clustersv1alpha1.TokenConfig`:
+
+```go
+tokenAccessConfig := &clustersv1alpha1.TokenConfig{
+    Permissions: []clustersv1alpha1.PermissionsRequest{
+        {
+            Rules: []rbacv1.PolicyRule{
+                {
+                    APIGroups: []string{"*"},
+                    Resources: []string{"*"},
+                    Verbs:     []string{"*"},
+                },
+            },
+        },
+    },
+    RoleRefs: []common.RoleRef{
+        {
+            Name: "cluster-admin",
+            Kind: "ClusterRole",
+        },
+    },
+}
+```
+
+:::info
+Replace the wildcard rules with the minimum set of permissions your provider actually needs.
+If you need the permissions to vary per reconcile please refer to [Dynamic Cluster Access](#dynamic-cluster-access).
+:::
+
+#### 4. Build the `ClusterRequest`
+
+Next we need to create a `ClusterRequest` for our Control Plane cluster where we register our `TokenConfig`
+
+```go
+controlPlaneClusterRequest := advanced.ExistingClusterRequest("mcp", "mcp", func(req reconcile.Request, _ ...any) (*common.ObjectReference, error) {
+    namespace, err := utils.StableMCPNamespace(req.Name, req.Namespace)
+    if err != nil {
+        return nil, err
+    }
+    return &common.ObjectReference{
+        Name:      req.Name,
+        Namespace: namespace,
+    }, nil
+}).
+    WithNamespaceGenerator(advanced.DefaultNamespaceGeneratorForMCP).
+    WithTokenAccess(tokenAccessConfig).
+    WithScheme(controlPlaneScheme).
+    Build()
+```
+
+#### 5. Build the `ClusterAccessReconciler`
+
+Now we are ready to build our new advanced `ClusterAccessReconciler` where we register our `ClusterRequest`
+
+```go
+clusterAccessReconciler := advanced.NewClusterAccessReconciler(platformCluster.Client(), "YourOperatorName").
+    WithManagedLabels(func(controllerName string, req reconcile.Request, reg advanced.ClusterRegistration) (string, string, map[string]string) {
+        _, managedPurpose, _ := advanced.DefaultManagedLabelGenerator(controllerName, req, reg)
+        return controllerName, managedPurpose, map[string]string{
+            openmcpconst.OnboardingNameLabel:      req.Name,
+            openmcpconst.OnboardingNamespaceLabel: req.Namespace,
+        }
+    }).
+    WithRetryInterval(10 * time.Second).
+    Register(controlPlaneClusterRequest)
+```
+
+#### 6. Register with the `APIReconciler`
+
+Lastly we have to register our advanced ClusterAccessReconciler with our APIReconciler. To do that we replace the `NewAPIReconcilerBuilder.ClusterAccessReconciler` with `NewAPIReconcilerBuilder.AdvancedClusterAccessReconciler` in the builder chain.
+
+```go
+// Before
+spr := serviceprovider.NewAPIReconcilerBuilder[*FooService, *ProviderConfig]().
+    // …
+    ClusterAccessReconciler(clusteraccess.NewClusterAccessReconciler(platformCluster.Client(), "Foo").
+        WithMCPScheme(controlPlaneScheme).
+        WithRetryInterval(10 * time.Second).
+        WithMCPPermissions(adminPermissions).
+        WithMCPRoleRefs([]common.RoleRef{{Name: "cluster-admin", Kind: "ClusterRole"}}).
+        SkipWorkloadCluster(),
+    ).MustBuild()
+
+// After
+spr := serviceprovider.NewAPIReconcilerBuilder[*FooService, *ProviderConfig]().
+    // …
+    AdvancedClusterAccessReconciler(clusterAccessReconciler).
+    MustBuild()
 ```
 
 ## Taskfile Usage
 
-OpenMCP controllers use `task` instead of `make` to generate code, build your controller image, etc. The most important developer commands are:
+OpenControlPlane controllers use `task` instead of `make` to generate code, build your controller image, etc. The most important developer commands are:
 
 - **task generate** to regenerate code after API changes
 - **task build:img:build-test** to build an image for local testing
@@ -477,36 +779,6 @@ jobs:
     app_id: "YOUR_APP_ID"
   secrets:
     app_private_key: ${{ secrets.YOUR_APP_PRIVATE_KEY }}
-```
-
-## openmcp-testing
-
-The template includes an e2e test suite built with [kubernetes e2e framework](https://github.com/kubernetes-sigs/e2e-framework) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing). It provides helper functions such as:
-
-- `ConfigByPrefix` to get a config for `platform`, `mcp`, `onboarding` or `onboarding` clusters.
-- `CreateObjectFromDir` to apply manifests to a cluster
-
-Example:
-
-```go
-Assess("verify service can be consumed", func(ctx context.Context, t *testing.T, c *envconf.Config) context.Context {
-   onboardingConfig, err := clusterutils.ConfigByPrefix("onboarding", "test")
-   if err != nil {
-    t.Error(err)
-    return ctx
-   }
-   objList, err := resources.CreateObjectsFromDir(ctx, onboardingConfig, "onboarding")
-   if err != nil {
-    t.Errorf("failed to create onboarding cluster objects: %v", err)
-    return ctx
-   }
-   for _, obj := range objList.Items {
-    if err := wait.For(openmcpconditions.Match(&obj, onboardingConfig, "Ready", corev1.ConditionTrue)); err != nil {
-     t.Error(err)
-    }
-   }
-   return ctx
-})
 ```
 
 ## Best Practices
@@ -552,9 +824,9 @@ And then, during `CreateOrUpdate` or the `Delete` flows, you could call them as 
 
 ```go
 // CreateOrUpdate is called on every add or update event
-func (r *VeleroReconciler) CreateOrUpdate(ctx context.Context, obj *apiv1alpha1.Velero, pc *apiv1alpha1.ProviderConfig, clusters spruntime.ClusterContext) (ctrl.Result, error) {
+func (r *VeleroReconciler) CreateOrUpdate(ctx context.Context, obj *apiv1alpha1.Velero, pc *apiv1alpha1.ProviderConfig, clusters clusteraccess.ClusterContext) (ctrl.Result, error) {
 	l := log.FromContext(ctx)
-	spruntime.StatusProgressing(obj, "Reconciling", "Reconcile in progress")
+	serviceprovider.StatusProgressing(obj, "Reconciling", "Reconcile in progress")
 	err := r.ensureInstanceID(ctx, obj)
 	if err != nil {
 		return ctrl.Result{}, err
@@ -574,7 +846,7 @@ func (r *VeleroReconciler) CreateOrUpdate(ctx context.Context, obj *apiv1alpha1.
 	managedResources := resultsToResources(results)
 	obj.Status.Resources = managedResources
 	if allResourcesReady(managedResources) {
-		spruntime.StatusReady(obj)
+		serviceprovider.StatusReady(obj)
 	}
 	if errRes {
 		return ctrl.Result{}, errors.New("reconciliation result contains errors")
@@ -674,14 +946,14 @@ In here, the values, for example, could come from the `ProviderConfig`. Or furth
 being created as a first step.
 
 :::warning
-If secrets need to be copied into tenant namespaces on the platform cluster (e.g. to access an OCIRepository with a Helm chart), the secret name must be adjusted to avoid conflicts with other service providers.
-Use a service‑provider–specific prefix for the copied secret, e.g. rename privateregcred to sp-crossplane-privateregcred. Make sure the resulting name does not exceed the allowed [max name length](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).
+Any resource created in a tenant namespace on the platform cluster (e.g. a pull secret to access an OCIRepository with a Helm chart) must have a carefully chosen name to avoid conflicts with other service providers.
+Use a service‑provider–specific prefix for the resource, e.g. rename privateregcred to sp-crossplane-privateregcred for pull secret copies. Make sure the resulting name does not exceed the allowed [max name length](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names).
 :::
 
 Also notice the `KubeConfig` section. Your service provider controller is deployed in the Platform cluster. The target controller that your provider is deploying
-will run in either the MCP or the Workload cluster. This depends on your choice, however, it is recommended to deploy into the workload cluster as documented [here](https://openmcp-project.github.io/docs/about/design/service-provider/#non-goals).
+will run in either the ControlPlane or the Workload cluster. This depends on your choice, however, it is recommended to deploy into the workload cluster as documented [here](https://openmcp-project.github.io/docs/about/design/service-provider/#non-goals).
 
-This means that Flux will need a KubeConfig in order to deploy to the ManagedControlPlane cluster. And this is the KubeConfig that is given to Flux in this section.
+This means that Flux will need a KubeConfig in order to deploy to the ControlPlane cluster. And this is the KubeConfig that is given to Flux in this section.
 
 :::info
 Note, that as of this writing, it's a bit difficult to obtain the KubeConfig for the Workload Cluster. MCPCluster KubeConfig is obtained via a AccessRequest. For an example,

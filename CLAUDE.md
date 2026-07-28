@@ -23,6 +23,28 @@ The resulting URL will be `/operators/setup` (folder path + id).
 
 Pages without an `id:` field will use the filename as-is, including any numeric prefixes — always add one when creating or renaming a page.
 
+### Avoiding breaking URLs
+
+When changing an existing `id:`, you **must** add a redirect in `docusaurus.config.ts` to preserve the old URL:
+
+```ts
+plugins: [
+  [
+    '@docusaurus/plugin-client-redirects',
+    {
+      redirects: [
+        {
+          from: '/old/path',
+          to: '/new/path',
+        },
+      ],
+    },
+  ],
+],
+```
+
+This ensures external links and bookmarks continue to work after ID changes.
+
 ## Branch workflow
 
 Work on feature branches based on `main`. Merge via PR.

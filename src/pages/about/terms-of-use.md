@@ -1,17 +1,17 @@
 ---
 title: Terms of Use
-description: Terms of Use for Open Control Plane
+description: Terms of Use for OpenControlPlane
 ---
 
 # Terms of Use
 
 ## Introduction
 
-This website ([openmcp-project.github.io/docs](https://openmcp-project.github.io/docs)) is maintained by Linux Foundation Europe as part of the Open Control Plane project. By accessing or using this website, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use this website.
+This website ([open-control-plane.io](https://open-control-plane.io/)) is maintained by Linux Foundation Europe as part of the OpenControlPlane project. By accessing or using this website, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use this website.
 
 ## Trademarks
 
-Open Control Plane and its associated logos and trademarks are trademarks of Linux Foundation Europe. Use of these trademarks must comply with the Linux Foundation Europe [Trademark Usage Guidelines](https://linuxfoundation.eu/policies). You may not use these trademarks without prior written permission, except as permitted by applicable law.
+OpenControlPlane and its associated logos and trademarks are trademarks of Linux Foundation Europe. Use of these trademarks must comply with the Linux Foundation Europe [Trademark Usage Guidelines](https://linuxfoundation.eu/policies). You may not use these trademarks without prior written permission, except as permitted by applicable law.
 
 All other trademarks, service marks, and trade names referenced on this site are the property of their respective owners.
 
@@ -23,7 +23,7 @@ Except where otherwise noted, content on this site is licensed under the [Creati
 
 ### Software
 
-Software source code published by the Open Control Plane project is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0), unless otherwise noted in the respective repository. You may obtain a copy of the license at the link above.
+Software source code published by the OpenControlPlane project is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0), unless otherwise noted in the respective repository. You may obtain a copy of the license at the link above.
 
 ## Disclaimer of Warranties
 
@@ -43,4 +43,4 @@ These Terms of Use are governed by the laws of Belgium, without regard to confli
 
 If any provision of these Terms of Use is found to be unenforceable, the remaining provisions will continue in full force and effect.
 
-If you have questions about these terms, please contact the Open Control Plane project through [GitHub](https://github.com/openmcp-project).
+If you have questions about these terms, please contact the OpenControlPlane project through [GitHub](https://github.com/openmcp-project).

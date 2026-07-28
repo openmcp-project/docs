@@ -41,7 +41,7 @@
 - [x] End user getting started: Prerequisites (platform installed)
 - [x] End user getting started: authentication/authorization
 - [x] End user getting started: pictures (hierarchy diagram)
-- [x] Double check no openMCP → OpenControlPlane (cleanup legacy naming)
+- [x] Double check no OpenMCP → OpenControlPlane (cleanup legacy naming)
 - [x] SIGs mit rein (include SIGs)
 - [x] Community seite - how to participate
 - [x] Contributing: Wie kann ich partizipieren (How can I participate) - an der community

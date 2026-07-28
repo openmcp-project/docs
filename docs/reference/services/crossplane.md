@@ -8,18 +8,18 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 # Crossplane
 
 <div className="crd-header-container">
-  <img src="/docs/img/platform/tower_crossplane.png" alt="Crossplane" className="crd-header-icon" />
+  <img src="/img/platform/tower_crossplane.png" alt="Crossplane" className="crd-header-icon" />
   <div className="crd-header-text">
-    <p>Delivers Crossplane as a service within ManagedControlPlanes, enabling infrastructure provisioning through composition.</p>
+    <p>Delivers Crossplane as a service within ControlPlanes, enabling infrastructure provisioning through composition.</p>
   </div>
 </div>
 
-**API Group:** `crossplane.services.openmcp.cloud`
+**API Group:** `crossplane.services.open-control-plane.io`
 **API Version:** `v1alpha1`
 **Kind:** `Crossplane`
 
 <CRDViewerCompact
-  crdUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-crossplane/main/api/crds/manifests/crossplane.services.openmcp.cloud_crossplanes.yaml"
+  crdUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-crossplane/main/api/crds/manifests/crossplane.services.open-control-plane.io_crossplanes.yaml"
   name="Crossplane"
   description="Crossplane service provider resource"
   exampleUrl="https://raw.githubusercontent.com/openmcp-project/service-provider-crossplane/main/config/samples/v1alpha1_crossplane.yaml"
@@ -30,7 +30,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 Deploy Crossplane within a control plane:
 
 ```yaml
-apiVersion: crossplane.services.openmcp.cloud/v1alpha1
+apiVersion: crossplane.services.open-control-plane.io/v1alpha1
 kind: Crossplane
 metadata:
   name: my-crossplane

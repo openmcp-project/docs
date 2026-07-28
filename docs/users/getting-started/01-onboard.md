@@ -8,7 +8,7 @@ id: onboard
 This guide walks you through creating the foundational resources for your OpenControlPlane setup: Project, Workspace, and ControlPlane.
 
 :::info Prerequisites
-Requires a deployed OpenControlPlane platform. Operators: see [setup guide](/operators/setup) → [verify setup](/operators/verify-setup).
+Requires a deployed OpenControlPlane platform. Operators: see the [Operators section](/operators/quickstart).
 :::
 
 ## Understanding the Hierarchy
@@ -64,7 +64,7 @@ Before you begin, ensure you have:
 | **kubeconfig** | Configured to connect to the Onboarding API |
 
 :::tip Platform Access
-If you don't have access to an OpenControlPlane installation, contact your platform operator. Operators can follow the [Bootstrapping Guide](../../operators/00-overview.md) to set up a new environment.
+If you don't have access to an OpenControlPlane installation, contact your platform operator. Operators can follow the [Operators guide](/operators/quickstart) to set up a new environment.
 :::
 
 :::note Limited Access
@@ -219,8 +219,8 @@ Grab that namespace and continue with creating the ControlPlane resource.
 The `ControlPlane` resource is the heart of OpenControlPlane. Each ControlPlane has its own Kubernetes API endpoint and data store. You can use the `iam` property to define who can access the ControlPlane.
 
 ```yaml
-apiVersion: core.openmcp.cloud/v2alpha1
-kind: ManagedControlPlaneV2
+apiVersion: core.open-control-plane.io/v2alpha1
+kind: ControlPlane
 metadata:
   name: my-controlplane
   namespace: project-platform-team--ws-dev
@@ -307,8 +307,8 @@ Name:         my-controlplane
 Namespace:    project-platform-team--ws-dev
 Labels:       <none>
 Annotations:  <none>
-API Version:  core.openmcp.cloud/v2alpha1
-Kind:         ManagedControlPlaneV2
+API Version:  core.open-control-plane.io/v2alpha1
+Kind:         ControlPlane
 Metadata:
   Creation Timestamp:  2026-03-13T09:36:31Z
   ...

@@ -1,0 +1,46 @@
+---
+sidebar_position: 1
+id: controlplane
+---
+
+import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
+
+# ControlPlane
+
+<div className="crd-header-container">
+  <img src="/img/cp2.png" alt="ControlPlane" className="crd-header-icon" />
+  <div className="crd-header-text">
+    <p>The primary resource for creating and managing control planes in OpenControlPlane. Supports IAM configuration with OIDC and token-based authentication.</p>
+  </div>
+</div>
+
+**API Group:** `core.open-control-plane.io`
+**API Version:** `v2alpha1`
+**Kind:** `ControlPlane`
+
+<CRDViewerCompact
+  crdUrl="https://raw.githubusercontent.com/openmcp-project/openmcp-operator/main/api/crds/manifests/core.open-control-plane.io_controlplanes.yaml"
+  name="ControlPlane"
+  description="Control plane management with IAM configuration"
+  exampleUrl="https://raw.githubusercontent.com/openmcp-project/openmcp-operator/main/internal/controllers/controlplane/testdata/test-01/onboarding/mcp-01.yaml"
+/>
+
+## Usage
+
+Create a ControlPlane with IAM configuration:
+
+```yaml
+apiVersion: core.open-control-plane.io/v2alpha1
+kind: ControlPlane
+metadata:
+  name: my-controlplane
+  namespace: default
+spec:
+  iam:
+    oidc:
+      defaultProvider:
+        roleBindings:
+          - role: cluster-admin
+```
+
+Access the control plane after creation using the kubeconfig from the status field.

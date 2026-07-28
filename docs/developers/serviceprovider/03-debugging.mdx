@@ -1,0 +1,236 @@
+---
+sidebar_position: 3
+id: debugging
+---
+
+# Debug
+
+This guide helps you run and debug your service provider during local development. It assumes you are developing based on the [service-provider-template](https://github.com/openmcp-project/service-provider-template) and running a local OpenControlPlane installation via [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind).
+
+## Local Development Setup
+
+### Deploy a Local Installation
+
+Use the `local-dev.sh` script from [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) to spin up a full local OpenControlPlane environment:
+
+```bash
+./hack/local-dev.sh deploy
+```
+
+This creates a KinD-based Platform cluster with the OpenControlPlane operator, cluster provider, and any configured service providers.
+
+To tear everything down and start fresh:
+
+```bash
+./hack/local-dev.sh reset --force
+```
+
+:::tip
+Run `./hack/local-dev.sh help` to see all available subcommands and environment variables. The script allows you to override images and versions for multiple components (operator, cluster provider, service providers) via environment variables.
+:::
+
+
+## Accessing Clusters
+
+A service provider operates across multiple clusters. During debugging, you need to switch between them frequently to inspect resources, read logs, or check status. However, you will be mainly working with the **Platform Cluster**, as that's where service providers run.
+
+### Cluster Contexts
+
+| Cluster | What to look for |
+|---------|-----------------|
+| **Platform** | ProviderConfig, AccessRequests, kubeconfig secrets, SP pod logs |
+| **Onboarding** | ControlPlane and ServiceProviderAPI objects |
+| **ControlPlane** | DomainService CRDs and deployed resources |
+| **Workload** (optional) | DomainService controller workloads |
+
+For a full overview, see [Clusters and Namespaces](../clusters-and-namespaces.md).
+
+### Switch to the Platform Cluster
+By default, `./hack/local-dev.sh` will set the current context to the **Onboarding** cluster context when it's done. This is because this is the expected user entrypoint to the system. However, as a service provider developer, you will probably need to access the **Platform** cluster. You can use the script to quickly switch to its context:
+
+```bash
+./hack/local-dev.sh access-platform-cluster --force
+```
+This switches your current kubectl context to the Platform cluster. Your previous context is saved so you can restore it later.
+
+To obtain the Platform cluster kubeconfig:
+
+```bash
+./hack/local-dev.sh access-platform-cluster
+```
+
+This prints the path and the exact `export` command to use, e.g. `export KUBECONFIG=/tmp/platform-kubeconfig-AP8A8l`. You can use this later to run your service provider outside of the cluster.
+
+### Managing Multiple Kubeconfigs with kw
+
+For complex providers, you will find that you need to jump between multiple clusters. For this case, you can use [kw (KubeSwitcher)](https://github.com/Diaphteiros/kw) which will help you manage multiple kubeconfigs per shell session:
+
+```bash
+# Switch to a kubeconfig file
+kw custom <path-to-kubeconfig>
+
+# Bookmark the current cluster for quick access later
+kw bookmark save platform
+
+# Flip back to the previous cluster
+kw flip
+
+# Load a bookmarked cluster
+kw bookmark load platform
+```
+
+This is especially useful when you need to cross-reference resources across the platform, ControlPlane, and workload clusters during a debugging session. See the [kw repo](https://github.com/Diaphteiros/kw) for the full list of commands and features.
+
+## Running Your Controller Locally
+
+For faster iteration, you can run your controller outside the cluster. This lets you use a debugger, see logs directly in your terminal, and skip the image build/load cycle.
+
+### Subcommands and Flags
+
+In production, the operator runs your service provider binary with two subcommands (see [Deployment Contract](deploy#common-provider-contract)):
+
+- **`init`** — runs as a Job to install CRDs whenever the provider version changes.
+- **`run`** — runs as a Deployment to start the reconciliation loop.
+
+Both subcommands receive the following flags from the operator:
+
+| Flag | Description |
+|------|-------------|
+| `--environment` | Name of the environment (e.g. `canary`, `live`) |
+| `--provider-name` | Name of the `ServiceProvider` resource |
+| `--verbosity` | Logging verbosity: `ERROR`, `INFO`, or `DEBUG` |
+
+The operator also injects these environment variables into the pod:
+
+| Variable | Description |
+|----------|-------------|
+| `POD_NAME` | Name of the pod |
+| `POD_NAMESPACE` | Namespace of the pod (used to locate secrets), set by the operator (typically `openmcp-system`) |
+| `POD_IP` | IP address of the pod |
+| `POD_SERVICE_ACCOUNT_NAME` | Service account running the pod |
+
+You need to supply the flags and environment variables that the operator would normally provide, plus enable debug mode to use locally-reachable cluster addresses:
+
+```bash
+KUBECONFIG=<path-to-platform-kubeconfig> \
+POD_NAMESPACE=openmcp-system \
+DEV_DEBUG=true \
+go run ./cmd/<your-service-provider>/main.go run \
+  --environment local \
+  --provider-name <your-provider-name> \
+  --verbosity DEBUG
+```
+
+The `DEV_DEBUG=true` flag activates local debug mode: instead of using the in-cluster API server addresses for the Onboarding, ControlPlane or Workload clusters, the controller reads the `kind.clusters.openmcp.cloud/localhost` annotation from the corresponding `AccessRequest` objects and uses those locally-reachable addresses instead.
+:::tip
+Before running the `run` subcommand for the first time, you need to initialize the CRDs on the target clusters by running the `init` subcommand with the same environment variables and flags:
+
+```bash
+KUBECONFIG=<path-to-platform-kubeconfig> \
+POD_NAMESPACE=openmcp-system \
+DEV_DEBUG=true \
+go run ./cmd/<your-service-provider>/main.go init \
+  --environment local \
+  --provider-name <your-provider-name> \
+  --verbosity DEBUG
+```
+
+Re-run `init` whenever you change your CRD definitions.
+:::
+
+### Additional Logging Flags
+
+On top of the `--verbosity` flag passed by the operator, every service provider binary registers additional logging flags via the shared [`controller-utils/pkg/logging`](https://github.com/openmcp-project/controller-utils/tree/main/pkg/logging) package. These are useful during local development:
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--dev` | Development mode (sets verbosity to `debug`) | `false` |
+| `--cli` | Colored, human-readable output without timestamps | `false` |
+| `-f` / `--format` | Output format: `text` or `json` | `text` if `--dev` or `--cli`, `json` otherwise |
+| `--disable-stacktrace` | Suppress error stacktraces | `true` |
+| `--disable-caller` | Suppress caller info | `true` |
+| `--disable-timestamp` | Suppress timestamps | `false` |
+
+For example, to get colored debug output during local development:
+
+```bash
+POD_NAMESPACE=<provider-pod-namespace> go run ./cmd/<your-service-provider>/main.go run \
+  --environment local \
+  --provider-name <your-provider-name> \
+  --dev \
+  --cli
+```
+
+## Inspecting Resources and Status
+
+### Status Fields
+
+Every service provider resource should report its state through a standard set of status fields:
+
+| Field | Meaning |
+|-------|---------|
+| `phase` | Aggregated state: `Ready`, `Progressing`, or `Uninstalling` |
+| `conditions` | Detailed condition list — check here first when `phase` is not `Ready` |
+| `observedGeneration` | Last `.metadata.generation` the controller reconciled — if it lags behind, the controller hasn't picked up the latest spec yet |
+
+Inspect the status of your resources:
+
+```bash
+kubectl get <resource> -A
+kubectl describe <resource> -n <namespace> <name>
+```
+
+### Triggering or Preventing Reconciliation
+
+Use the `openmcp.cloud/operation` annotation to manually control reconciliation:
+
+```bash
+# Force a reconciliation (annotation is removed automatically afterwards)
+kubectl annotate <resource> -n <namespace> <name> openmcp.cloud/operation=reconcile
+
+# Prevent reconciliation entirely (useful for inspecting state without interference)
+kubectl annotate <resource> -n <namespace> <name> openmcp.cloud/operation=ignore
+```
+
+To resume normal reconciliation after `ignore`, remove the annotation:
+
+```bash
+kubectl annotate <resource> -n <namespace> <name> openmcp.cloud/operation-
+```
+
+:::note
+Support for operation annotations is service-provider-dependent. Even though the [service-provider-template](https://github.com/openmcp-project/service-provider-template) runtime currently respects these annotations, they were not initially supported.  Currently, not all existing service providers include this implementation. You should check the provider's reconciler code to confirm support.
+:::
+
+## Common Issues
+
+### CRD Updates Not Reflected on the Clusters
+
+If you changed your CRD definitions but the clusters still have the old version, the `init` subcommand needs to run again. In a deployed environment, `init` runs automatically as a Job whenever the provider version changes. During local development, you need to re-run it manually:
+
+```bash
+POD_NAMESPACE=<provider-pod-namespace> go run ./cmd/<your-service-provider>/main.go init \
+  --environment local \
+  --provider-name <your-provider-name> \
+  --verbosity DEBUG
+```
+
+If `init` fails, check its logs for errors (e.g. schema validation failures or missing cluster access).
+
+### Cluster Access or Kubeconfig Secrets Missing
+
+If your controller fails to connect to the ControlPlane or workload cluster, verify that the AccessRequest was created and that the corresponding kubeconfig secret exists:
+
+```bash
+# On the Platform cluster, in the tenant namespace
+kubectl get accessrequests -n mcp--<uuid>
+kubectl get secrets -n mcp--<uuid>
+```
+
+### Reconciliation Not Triggering
+
+If your controller is not reacting to changes:
+
+- Check that `observedGeneration` is up to date — if it matches `.metadata.generation`, the controller saw the change but may have decided no action is needed.
+- Verify your watch predicates aren't filtering out the event.
+- Use the `openmcp.cloud/operation=reconcile` annotation to force a run and observe the logs.
