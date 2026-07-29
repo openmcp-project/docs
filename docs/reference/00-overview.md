@@ -67,9 +67,9 @@ Resources that end users interact with to consume platform capabilities.
 
 </div>
 
-## Service Providers
+## Services
 
-Available service providers that can be deployed within control planes.
+Available services that can be deployed within control planes.
 
 <div className="reference-grid">
 
@@ -197,7 +197,7 @@ CRD definitions are maintained across multiple repositories:
 
 - **Core & Operator CRDs**: [openmcp-operator](https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests)
 - **Project & Workspace CRDs**: [project-workspace-operator](https://github.com/openmcp-project/project-workspace-operator/tree/main/api/crds/manifests)
-- **Service Providers**:
+- **Services**:
   - Crossplane: [service-provider-crossplane](https://github.com/openmcp-project/service-provider-crossplane/tree/main/api/crds/manifests)
   - Landscaper: [service-provider-landscaper](https://github.com/openmcp-project/service-provider-landscaper/tree/main/api/crds/manifests)
   - Velero: [service-provider-velero](https://github.com/openmcp-project/service-provider-velero/tree/main/api/crds/manifests)
