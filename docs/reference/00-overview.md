@@ -56,14 +56,6 @@ Resources that end users interact with to consume platform capabilities.
   <a href="/reference/core/project" className="reference-link">View CRD →</a>
 </div>
 
-<div className="reference-card">
-  <div className="reference-icon-container reference-icon-container-standard">
-    <img src="/img/platform/tower.png" alt="ServiceProvider" className="reference-icon-large" />
-  </div>
-  <h3>ServiceProvider</h3>
-  <p>Delivers consumable services to customers via ControlPlanes.</p>
-  <a href="/reference/operator/providers/serviceprovider" className="reference-link">View CRD →</a>
-</div>
 
 </div>
 
@@ -136,6 +128,15 @@ Resources that platform operators use to configure and manage the platform infra
 ### General resources
 
 <div className="reference-grid">
+
+<div className="reference-card">
+  <div className="reference-icon-container reference-icon-container-standard">
+    <img src="/img/platform/tower.png" alt="ServiceProvider" className="reference-icon-large" />
+  </div>
+  <h3>ServiceProvider</h3>
+  <p>Delivers consumable services to end users via ControlPlanes.</p>
+  <a href="/reference/operator/providers/serviceprovider" className="reference-link">View CRD →</a>
+</div>
 
 <div className="reference-card">
   <div className="reference-icon-container reference-icon-container-standard">
