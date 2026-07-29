@@ -93,6 +93,15 @@ Available service providers that can be deployed within control planes.
 
 <div className="reference-card">
   <div className="reference-icon-container reference-icon-container-standard">
+    <img src="/img/platform/tower.png" alt="External Secrets Operator" className="reference-icon-large" />
+  </div>
+  <h3>External Secrets Operator</h3>
+  <p>Secrets synchronisation service using the External Secrets Operator.</p>
+  <a href="/reference/services/external-secrets" className="reference-link">View CRD →</a>
+</div>
+
+<div className="reference-card">
+  <div className="reference-icon-container reference-icon-container-standard">
     <img src="/img/platform/tower_velero.png" alt="Velero" className="reference-icon-large" />
   </div>
   <h3>Velero</h3>
@@ -194,3 +203,4 @@ CRD definitions are maintained across multiple repositories:
   - Velero: [service-provider-velero](https://github.com/openmcp-project/service-provider-velero/tree/main/api/crds/manifests)
   - OCM: [service-provider-ocm](https://github.com/open-component-model/service-provider-ocm/tree/main/api/crds/manifests)
   - kro: [service-provider-kro](https://github.com/openmcp-project/service-provider-kro/tree/main/api/crds/manifests)
+  - External Secrets Operator: [service-provider-external-secrets](https://github.com/openmcp-project/service-provider-external-secrets/tree/main/api/crds/manifests)
