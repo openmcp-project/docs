@@ -34,11 +34,14 @@ apiVersion: crossplane.services.open-control-plane.io/v1alpha1
 kind: Crossplane
 metadata:
   name: my-crossplane
-  namespace: my-workspace
 spec:
-  crossplaneVersion: "1.14.0"
-  providerConfigs:
-    - name: default
+  version: "1.19.0"
+  providers:
+    - name: provider-aws
+      version: "1.0.0"
+  functions:
+    - name: function-patch-and-transform
+      version: "0.8.0"
 ```
 
-The Crossplane service provider manages the installation and lifecycle of Crossplane and its providers within your control plane.
+The Crossplane service provider manages the installation and lifecycle of Crossplane, its providers, and functions within your control plane.
