@@ -56,20 +56,12 @@ Resources that end users interact with to consume platform capabilities.
   <a href="/reference/core/project" className="reference-link">View CRD →</a>
 </div>
 
-<div className="reference-card">
-  <div className="reference-icon-container reference-icon-container-standard">
-    <img src="/img/platform/tower.png" alt="ServiceProvider" className="reference-icon-large" />
-  </div>
-  <h3>ServiceProvider</h3>
-  <p>Delivers consumable services to customers via ControlPlanes.</p>
-  <a href="/reference/operator/providers/serviceprovider" className="reference-link">View CRD →</a>
-</div>
 
 </div>
 
-## Service Providers
+## Services
 
-Available service providers that can be deployed within control planes.
+Available services that can be deployed within control planes.
 
 <div className="reference-grid">
 
@@ -89,6 +81,15 @@ Available service providers that can be deployed within control planes.
   <h3>Landscaper</h3>
   <p>Declarative deployment orchestration service using Landscaper.</p>
   <a href="/reference/services/landscaper" className="reference-link">View CRD →</a>
+</div>
+
+<div className="reference-card">
+  <div className="reference-icon-container reference-icon-container-standard">
+    <img src="/img/platform/tower.png" alt="External Secrets Operator" className="reference-icon-large" />
+  </div>
+  <h3>External Secrets Operator</h3>
+  <p>Secrets synchronisation service using the External Secrets Operator.</p>
+  <a href="/reference/services/external-secrets" className="reference-link">View CRD →</a>
 </div>
 
 <div className="reference-card">
@@ -127,6 +128,15 @@ Resources that platform operators use to configure and manage the platform infra
 ### General resources
 
 <div className="reference-grid">
+
+<div className="reference-card">
+  <div className="reference-icon-container reference-icon-container-standard">
+    <img src="/img/platform/tower.png" alt="ServiceProvider" className="reference-icon-large" />
+  </div>
+  <h3>ServiceProvider</h3>
+  <p>Delivers consumable services to end users via ControlPlanes.</p>
+  <a href="/reference/operator/providers/serviceprovider" className="reference-link">View CRD →</a>
+</div>
 
 <div className="reference-card">
   <div className="reference-icon-container reference-icon-container-standard">
@@ -188,9 +198,10 @@ CRD definitions are maintained across multiple repositories:
 
 - **Core & Operator CRDs**: [openmcp-operator](https://github.com/openmcp-project/openmcp-operator/tree/main/api/crds/manifests)
 - **Project & Workspace CRDs**: [project-workspace-operator](https://github.com/openmcp-project/project-workspace-operator/tree/main/api/crds/manifests)
-- **Service Providers**:
+- **Services**:
   - Crossplane: [service-provider-crossplane](https://github.com/openmcp-project/service-provider-crossplane/tree/main/api/crds/manifests)
   - Landscaper: [service-provider-landscaper](https://github.com/openmcp-project/service-provider-landscaper/tree/main/api/crds/manifests)
   - Velero: [service-provider-velero](https://github.com/openmcp-project/service-provider-velero/tree/main/api/crds/manifests)
   - OCM: [service-provider-ocm](https://github.com/open-component-model/service-provider-ocm/tree/main/api/crds/manifests)
   - kro: [service-provider-kro](https://github.com/openmcp-project/service-provider-kro/tree/main/api/crds/manifests)
+  - External Secrets Operator: [service-provider-external-secrets](https://github.com/openmcp-project/service-provider-external-secrets/tree/main/api/crds/manifests)
