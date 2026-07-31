@@ -57,17 +57,6 @@ ocpctl env apply local
 
 This takes a few minutes. It creates a local Kind-based environment with the full OpenControlPlane stack: `openmcp-operator`, `cluster-provider-kind`, plus an onboarding cluster and pre-installed [service providers](/developers/serviceprovider/examples) that you can consume.
 
-:::note Error
-We might see that Platform Service Gateway (`ps-gateway-5db88d9474-6sxsp`) has an ERROR.
-
-```shell
-...
-Error: applying resources: applying Unstructured//gateway: no matches for kind "GatewayServiceConfig" in version "gateway.openmcp.cloud/v1alpha1"
-```
-
-Please wait for a couple of seconds and then try execute `ocpctl env apply local` again. This will restart the Pod. All Pods above should be running eventually.
-:::
-
 Verify the platform is running:
 
 :::apply-to-platform
