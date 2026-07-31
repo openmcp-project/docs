@@ -23,9 +23,9 @@ OpenControlPlane creates three clusters that work together:
 
 | Cluster | Who uses it | Purpose |
 |---------|-------------|---------|
-| 🟢 **Platform** | Platform operators | Runs platform services, cluster providers, and service providers |
-| 🔵 **Onboarding** | End users (teams) | API surface where teams create `ControlPlanes` |
-| 🟣 **ControlPlane** | End users (teams) | One per team, isolated workspace with requested services |
+| 🟠 **Platform** | [Platform Owners](/operators/overview) | Runs platform services, cluster providers, and service providers |
+| 🟢 **Onboarding** | [End users](/users/getting-started) (teams) | API surface where teams create `ControlPlanes` |
+| 🟣 **ControlPlane** | [End users](/users/getting-started) (teams) | One per team, isolated workspace with requested services |
 
 The separation ensures end users never touch infrastructure. They interact only with the Onboarding cluster to request resources, and their services appear on their own `ControlPlane` cluster.
 
@@ -37,13 +37,12 @@ The separation ensures end users never touch infrastructure. They interact only 
 - [Go](https://go.dev/doc/install) installed
 - [`kubectl`](https://kubernetes.io/docs/tasks/tools/) CLI installed
 - [`kind`](https://kind.sigs.k8s.io/docs/user/quick-start/#installation) CLI installed
-- [`flux`](https://fluxcd.io/flux/installation/#install-the-flux-cli) CLI installed
 - ~10 minutes
 
 ## Install ocpctl
 
 ```shell
-go install github.com/openmcp-project/ocpctl@v0.2.0
+go install github.com/openmcp-project/ocpctl@v0.3.0
 ```
 
 Or download a pre-built binary from the [releases page](https://github.com/openmcp-project/ocpctl/releases/latest).
@@ -56,7 +55,7 @@ Or download a pre-built binary from the [releases page](https://github.com/openm
 ocpctl env apply local
 ```
 
-This takes a few minutes. It creates a local Kind-based environment with the full OpenControlPlane stack: `openmcp-operator`, `cluster-provider-kind`, plus an onboarding cluster and pre-installed services that you can consume.
+This takes a few minutes. It creates a local Kind-based environment with the full OpenControlPlane stack: `openmcp-operator`, `cluster-provider-kind`, plus an onboarding cluster and pre-installed [service providers](/developers/serviceprovider/examples) that you can consume.
 
 :::note Error
 We might see that Platform Service Gateway (`ps-gateway-5db88d9474-6sxsp`) has an ERROR.
@@ -82,23 +81,23 @@ You should see these pods in `Running` state:
 
 ```
 NAME                                      READY   STATUS      RESTARTS      AGE
-cp-kind-5cf448bb88-sx2vf                  1/1     Running     0             2m30s
-cp-kind-init-xfjb8                        0/1     Completed   0             2m49s
-openmcp-operator-5b7f788ddb-5r8br         1/1     Running     0             3m14s
-ps-gateway-5db88d9474-jkgg8               1/1     Running     4 (81s ago)   2m5s
-ps-gateway-init-j556q                     0/1     Completed   0             2m48s
-ps-helmdeployer-644d7454fc-nrlv9          1/1     Running     0             2m48s
-ps-helmdeployer-init-vq5ks                0/1     Completed   0             2m51s
-ps-managedcontrolplane-7958959559-vsrtr   1/1     Running     0             2m8s
-ps-managedcontrolplane-init-2lpkt         0/1     Completed   0             2m51s
-sp-crossplane-84f8bbfb58-265pf            1/1     Running     0             2m8s
-sp-crossplane-init-97c57                  0/1     Completed   0             2m49s
-sp-flux-844b667b9c-jbfqp                  1/1     Running     0             2m
-sp-flux-init-9w45m                        0/1     Completed   0             2m49s
-sp-kro-ffbdcf787-tst4z                    1/1     Running     0             96s
-sp-kro-init-sfcjb                         0/1     Completed   0             2m47s
-sp-ocm-756946b9dd-4djgn                   1/1     Running     0             113s
-sp-ocm-init-sh8x8                         0/1     Completed   0             2m49s
+cp-kind-5dbd475459-6zgfr                  1/1     Running     0             88s
+cp-kind-init-ps7f7                        0/1     Completed   0             96s
+openmcp-operator-654568c654-4fhfk         1/1     Running     0             2m10s
+ps-gateway-57db9fdb9-68hzz                1/1     Running     2 (73s ago)   74s
+ps-gateway-init-wxcjw                     0/1     Completed   0             91s
+ps-helmdeployer-689b98cd99-vfvs5          1/1     Running     0             93s
+ps-helmdeployer-init-6nmxk                0/1     Completed   0             96s
+ps-managedcontrolplane-796ff64877-l2mhx   1/1     Running     0             72s
+ps-managedcontrolplane-init-mr7q9         0/1     Completed   0             96s
+sp-crossplane-67659f97f5-n5v9m            1/1     Running     0             64s
+sp-crossplane-init-hqccq                  0/1     Completed   0             91s
+sp-flux-77db5c6cbb-7nnmc                  1/1     Running     0             60s
+sp-flux-init-k4knn                        0/1     Completed   0             91s
+sp-kro-78b4cbf89b-djrbs                   1/1     Running     0             51s
+sp-kro-init-btzww                         0/1     Completed   0             90s
+sp-ocm-7f97797fc7-dxq4r                   1/1     Running     0             57s
+sp-ocm-init-r9kmx                         0/1     Completed   0             91s
 ```
 
 :::
@@ -113,7 +112,7 @@ To enable end users to request Flux for a `ControlPlane`, as Platform Owner, we 
 :::apply-to-platform
 
 ```shell
-flux install
+kubectl config use-context kind-local-platform
 kubectl apply -f - <<EOF
 apiVersion: flux.services.open-control-plane.io/v1alpha1
 kind: ProviderConfig
@@ -200,7 +199,57 @@ EOF
 
 :::
 
-`ServiceProvider` Flux on the platform cluster detects this request and installs Flux into the `ControlPlane` cluster automatically.
+`ServiceProvider` Flux on the platform cluster detects this request and installs Flux into the `ControlPlane` cluster called "my-controlplane" automatically.
+
+You can check the installation status of Flux via the `status` sub-resource of the `Flux` object:
+
+:::apply-to-onboarding-api
+
+```shell
+kubectl config use-context kind-local-onboarding
+kubectl get flux my-controlplane -n default -o yaml
+```
+
+The output looks like this:
+
+```yaml
+apiVersion: flux.services.open-control-plane.io/v1alpha1
+kind: Flux
+metadata:
+  ...
+  finalizers:
+  - flux.services.open-control-plane.io/finalizer
+  name: my-controlplane
+  namespace: default
+spec:
+  version: 2.8.3
+status:
+  conditions:
+  - lastTransitionTime: "2026-07-31T14:40:59Z"
+    message: Reconcile in progress
+    observedGeneration: 1
+    reason: Reconciling
+    status: "False"
+    type: Ready
+  observedGeneration: 1
+  phase: Progressing # The installation is currently ongoing, "Ready" indicates successful installation
+  resources:
+  - kind: OCIRepository
+    location: PlatformCluster
+    message: Resource is not ready
+    name: flux
+    namespace: mcp--76d5b02a-48a3-8952-8fc9-20577e724f47
+    phase: Pending
+  - kind: HelmRelease
+    location: PlatformCluster
+    message: Resource is not ready
+    name: flux
+    namespace: mcp--76d5b02a-48a3-8952-8fc9-20577e724f47
+    phase: Pending
+```
+
+
+:::
 
 ### Connect to the ControlPlane cluster
 
