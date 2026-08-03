@@ -31,6 +31,6 @@ Now follow the complete guide at [Crossplane BTP provider docs](https://sap.gith
 ## Further reading
 
 - [SAP BTP Crossplane provider docs](https://sap.github.io/crossplane-provider-docs/)
-- [Crossplane compositions](https://docs.crossplane.io/latest/concepts/compositions/) — alternative to kro for composing BTP resources
+- [Crossplane compositions](https://docs.crossplane.io/latest/composition) — alternative to kro for composing BTP resources
 - [Configure → Crossplane](../getting-started/configure) — enabling Crossplane on your `ControlPlane`
 - [Configure → Kro](../getting-started/configure) — enabling Kro on your `ControlPlane`
