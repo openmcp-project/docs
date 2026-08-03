@@ -17,7 +17,6 @@ Your `ControlPlane` manages infrastructure — **it does not run your workloads 
 | **OCM** ✓ recommended   | Yes — built-in localization | Yes    | Yes          | Medium     |
 | **Flux**                | No                          | Yes    | Yes          | Low        |
 | **ArgoCD**              | No                          | Yes    | Yes          | Medium     |
-| **kubectl / kustomize** | Yes (manual)                | No     | No           | Low        |
 
 **TL;DR**: If you operate in regulated or sovereign-cloud environments, or need to transport components across air-gapped networks, use OCM. For standard internet-connected clusters with simple GitOps needs, Flux is a quick win.
 
