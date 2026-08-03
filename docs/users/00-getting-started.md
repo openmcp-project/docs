@@ -25,7 +25,7 @@ Learn the basics of working with OpenControlPlane:
 - **[Onboarding](./getting-started/onboard)** - Create your first project and workspace
 - **[Connect](./getting-started/connect)** - Access your control plane
 - **[Configure](./getting-started/configure)** - Set up services and resources
-- **Deploy**
+- **Usage**
   - **[to Kubernetes](./usage/usage-kubernetes)** - OCM, Flux, ArgoCD, or kubectl
   - **[to SAP BTP](./usage/usage-btp)** - Provision BTP services via Crossplane
 
