@@ -271,7 +271,9 @@ The chart source, image pull secret, and Helm values are configured cluster-wide
 
 ## Next Steps
 
-Congratulations! You have a working ControlPlane with managed services. Here's what you can explore next:
+Congratulations! You have a working ControlPlane with managed services. Ready to deploy workloads? See **[Deploy to Kubernetes](../usage/usage-kubernetes)** for a comparison of OCM, Flux, ArgoCD, and kubectl, or **[Deploy to SAP BTP](../usage/usage-btp)** to provision BTP services via Crossplane.
+
+Other things to explore:
 
 - **[What is a ControlPlane?](../concepts/controlplane)** — Deeper understanding of ControlPlanes
 - **[Service Providers](../concepts/providers)** — How managed services work
