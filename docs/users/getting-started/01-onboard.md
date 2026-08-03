@@ -256,6 +256,10 @@ The `spec.iam` section controls who can access your ControlPlane and what they c
 
 For users authenticating through your identity provider:
 
+:::tip Custom Access Roles
+There are no pre-built roles like `viewer`. Use custom RBAC `ClusterRole` resources to define exactly the permissions you want to give your users — read-only, scoped, or anything in between. See the [Kubernetes RBAC documentation](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) to get started.
+:::
+
 ```yaml
 iam:
   oidc:
