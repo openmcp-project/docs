@@ -36,7 +36,7 @@ metadata:
   name: my-controlplane
   namespace: project-platform-team--ws-dev
 spec:
-  version: "v0.13.0"
+  version: "v1.0.0"
 ```
 
 The MetricsOperator service provider manages the installation and lifecycle of [metrics-operator](https://github.com/openmcp-project/service-provider-metrics-operator) within your ControlPlane, enabling Prometheus-based metrics collection and alerting for managed workloads.
