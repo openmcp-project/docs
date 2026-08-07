@@ -8,7 +8,7 @@ import CRDViewerCompact from '@site/src/components/CRDViewerCompact';
 # Metrics Operator
 
 <div className="crd-header-container">
-  <img src="/img/platform/tower.png" alt="Metrics Operator" className="crd-header-icon" />
+  <img src="/img/logos/metrics.svg" alt="Metrics Operator" className="crd-header-icon" />
   <div className="crd-header-text">
     <p>Delivers the Prometheus metrics-operator as a service within ControlPlanes, enabling metrics collection and alerting for managed workloads.</p>
   </div>
