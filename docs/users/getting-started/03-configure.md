@@ -225,7 +225,7 @@ Once installed, you can create `SecretStore` and `ExternalSecret` resources on t
 </TabItem>
 <TabItem value="metrics-operator" label="Metrics Operator">
 
-[Metrics Operator](https://github.com/openmcp-project/service-provider-metrics-operator) installs the Prometheus-based metrics-operator into your ControlPlane, enabling metrics collection and alerting for managed workloads.
+[Metrics Operator](https://github.com/openmcp-project/service-provider-metrics-operator) installs the OTel-based metrics-operator into your ControlPlane, enabling metrics collection and alerting for managed workloads.
 
 To install the Metrics Operator, create a `MetricsOperator` resource in the same namespace and with the same name as your `ControlPlane`:
 
