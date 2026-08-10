@@ -10,19 +10,19 @@ The goal of this proposal is to streamline and simplify the bootstrapping and li
 
 ## Current state
 
-The current setup uses the `openmcp-bootstrapper` CLI to bootstrap a production installation. Before running it, an operator must manually provision a target Kubernetes cluster, set up a non-empty Git repository, and ensure access to the OCI registry. The bootstrapper then pulls component versions and manifest templates from the OCI registry, generates and writes rendered manifests into the Git repository, and deploys FluxCD to the cluster pointing at that repository. From that point on, FluxCD continuously reconciles the cluster state with what is in Git.
+The current setup uses the `openmcp-bootstrapper` CLI to bootstrap a production installation. Before running it, a platform owner must manually provision a target Kubernetes cluster, set up a non-empty Git repository, and ensure access to the OCI registry. The bootstrapper then pulls component versions and manifest templates from the OCI registry, generates and writes rendered manifests into the Git repository, and deploys FluxCD to the cluster pointing at that repository. From that point on, FluxCD continuously reconciles the cluster state with what is in Git.
 
 This means the Git repository is a required external dependency that must be maintained alongside the cluster. The manifests written into it are generated and templated (similar to Helm output), making them difficult to read, understand, or modify by hand. Any configuration change requires re-running the bootstrapper or editing large generated YAML files directly.
 
-Verifying the setup is also a manual process: an operator must check that FluxCD's `GitRepository` and `Kustomization` resources are in a Ready state, confirm that core components are running in the `openmcp-system` namespace, and create a test `ManagedControlPlaneV2` resource to validate end-to-end functionality.
+Verifying the setup is also a manual process: a platform owner must check that FluxCD's `GitRepository` and `Kustomization` resources are in a Ready state, confirm that core components are running in the `openmcp-system` namespace, and create a test `ControlPlane` resource to validate end-to-end functionality.
 
 ### Learnings
 
 Operating the platform across multiple landscapes has shown that the Git repository introduces meaningful overhead. Because manifests are generated from a single large configuration file, they are not easy to inspect or adjust by hand, and any change requires going back through the bootstrapper. This adds friction during initial setup, local development, and for smaller teams who want to operate a landscape without the need for complex configurations.
 
-Lifecycle management is currently spread across three layers: the bootstrapper generates and writes manifests before FluxCD takes over, FluxCD manages the base operators and infrastructure, and the OpenMCP operators handle service providers, platform services, and cluster providers. This split has served its purpose but means there is no single place where the full operational state of a platform is described.
+Lifecycle management is currently spread across three layers: the bootstrapper generates and writes manifests before FluxCD takes over, FluxCD manages the base operators and infrastructure, and the different OpenControlPlane operators handle service providers, platform services, and cluster providers. This split has served its purpose but means there is no single place where the full operational state of a platform is described.
 
-A related pattern is that deployment configuration lives separately from the release artifacts themselves. Operators need to follow external guides to understand how to install or upgrade a given version, rather than the components carrying that information with them.
+A related pattern is that deployment configuration lives separately from the release artifacts themselves. Platform Owners need to follow external guides to understand how to install or upgrade a given version, rather than the components carrying that information with them.
 
 These observations point toward a model where the cluster itself holds and reconciles its own configuration, components ship their own deployment instructions, and the overall setup is simpler to get started with regardless of scale.
 
