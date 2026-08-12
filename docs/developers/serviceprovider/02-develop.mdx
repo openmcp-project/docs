@@ -50,22 +50,22 @@ Finally, ensure that you have Go installed. You can download it from [go.dev](ht
 
 The template allows you to create a service provider without requiring deep knowledge of the underlying OpenControlPlane platform. Run the following commands to generate a new provider.
 
-Initiallize the [build](https://github.com/openmcp-project/build) submodule
+Initiallize the [build](https://github.com/openmcp-project/build) submodule:
 
 ```bash
 git submodule update --init --recursive
 ```
 
-Replace api, name and module with something fitting your service:
+Replace api, name and module with names fitting to your service:
 
 ```bash
 task template:generate-provider api=Velero name=velero module=github.com/openmcp-project/service-provider-velero samplecode=true
 ```
 
 Optional flags:
-- `workloadcluster` enables workload cluster support (see below) 
-- `secretwatcher` generates a [secret watcher](#watch-secrets-for-changes) implementation
-- `samplecode` generates sample code to get started quickly
+- `workloadcluster=true` enables workload cluster support (see below) 
+- `secretwatcher=true` generates a [secret watcher](#watch-secrets-for-changes) implementation
+- `samplecode=true` generates sample code to get started quickly
 
 The template generates a fully functional service provider that can be executed and deployed on your local machine using [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
 
@@ -94,18 +94,12 @@ For a detailed guide to the [openmcp-testing](https://github.com/openmcp-project
 If you want to revert your changes and start fresh, simply use git and delete any generated untracked files. 
 
 :::info
-Rendering the template moves the contents of cmd/service-provider-template into a new directory cmd/service-provider-<name>. This directory needs to be removed manually before rendering the template again as reverting changes via git does not remove the stale directory.
+Rendering the template moves the contents of cmd/service-provider-template into a new directory cmd/service-provider-&lt;name&gt;. This directory needs to be removed manually before rendering the template again as reverting changes via git does not remove the stale directory.
 :::
 
-The template contains a Taskfile_template.yaml which can be removed after the template was rendered. If you want to 
-
-The template generator removes its own code after execution. If you want to revert your changes and start fresh, simply use git and delete any generated untracked files. For this reason, remove template-generation step from the e2e test `.github/workflows/go.yaml` before committing your changes (otherwise your workflow will fail).
-
-```yaml
-      - name: Generate template
-        run: |
-          go run ./cmd/template -v -w
-```
+:::info
+`Taskfile_template.yaml` is only needed for template rendering and can be safely deleted afterwards.
+:::
 
 ## Project Structure
 
@@ -283,10 +277,10 @@ When enabled, the runtime watches Kubernetes `Secret` objects in a configured na
 
 ### Generate with the template
 
-Pass the `-s` flag to the template generator to scaffold the secret watcher:
+Pass the `secretwatcher=true` flag to the template generator to scaffold the secret watcher:
 
 ```bash
-go run ./cmd/template -v -s -module github.com/openmcp-project/service-provider-velero -kind Velero -group velero
+task template:generate-provider api=Velero name=velero module=github.com/openmcp-project/service-provider-velero samplecode=true secretwatcher=true
 ```
 
 This generates:
