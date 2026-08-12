@@ -48,25 +48,30 @@ Finally, ensure that you have Go installed. You can download it from [go.dev](ht
 
 ## Service Provider Template Usage
 
-The template allows you to create a service provider without requiring deep knowledge of the underlying OpenControlPlane platform.
+The template allows you to create a service provider without requiring deep knowledge of the underlying OpenControlPlane platform. Run the following commands to generate a new provider.
 
-Run the following command to generate a new provider. Replace `velero` with the kind of your service:
-
-```bash
-go run ./cmd/template -v -module github.com/openmcp-project/service-provider-velero -kind Velero -group velero
-```
-
-Optional flags:
-- `-v` generates sample code to get started quickly
-- `-w` enables workload cluster support (see below)
-- `-s` generates a [secret watcher](#watch-secrets-for-changes) implementation
-
-The template generates a fully functional service provider that can be executed and deployed on your local machine using [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
-
-To run the the generated end-to-end test using [task](https://taskfile.dev/), init the [build](https://github.com/openmcp-project/build) submodule and execute the e2e test:
+Initiallize the [build](https://github.com/openmcp-project/build) submodule
 
 ```bash
 git submodule update --init --recursive
+```
+
+Replace api, name and module with something fitting your service:
+
+```bash
+task template:generate-provider api=Velero name=velero module=github.com/openmcp-project/service-provider-velero samplecode=true
+```
+
+Optional flags:
+- `workloadcluster` enables workload cluster support (see below) 
+- `secretwatcher` generates a [secret watcher](#watch-secrets-for-changes) implementation
+- `samplecode` generates sample code to get started quickly
+
+The template generates a fully functional service provider that can be executed and deployed on your local machine using [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
+
+To run the the generated end-to-end test using [task](https://taskfile.dev/)
+
+```bash
 task test-e2e
 ```
 
@@ -75,16 +80,24 @@ This test bootstraps a complete local OpenControlPlane installation with all req
 - **The platform cluster** where your service provider is managed by the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator)
 - **The onboarding cluster** where end users request the domain service you provider offers.
 - **A ControlPlane cluster** where your service provider installs its [DomainServiceAPI](https://openmcp-project.github.io/docs/about/design/service-provider#api) and optionally its workload.
-- **An optional workload cluster**, provisioned when using the template flag `-w`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the ControlPlane. This will result in another kind cluster.
+- **An optional workload cluster**, provisioned when using the template flag `workloadcluster=true`. Your service provider then requests a workload cluster from the `openmcp-operator` to deploy its workload outside the ControlPlane. This will result in another kind cluster.
 
 :::info
-This means running the above command from the [Service Provider Template Usage](#service-provider-template-usage) section with `-w` like this:
+This means running the above command from the [Service Provider Template Usage](#service-provider-template-usage) section with `workloadcluster=true` like this:
 ```bash
-go run ./cmd/template -v -w -module github.com/openmcp-project/service-provider-velero -kind Velero -group velero
+task template:generate-provider api=Velero name=velero module=github.com/openmcp-project/service-provider-velero samplecode=true workloadcluster=true
 ```
 :::
 
 For a detailed guide to the [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) testing framework, test structure, and examples, see the [Testing guide](./testing). For running your controller locally outside the cluster and troubleshooting common issues, see the [Debug guide](./debugging).
+
+If you want to revert your changes and start fresh, simply use git and delete any generated untracked files. 
+
+:::info
+Rendering the template moves the contents of cmd/service-provider-template into a new directory cmd/service-provider-<name>. This directory needs to be removed manually before rendering the template again as reverting changes via git does not remove the stale directory.
+:::
+
+The template contains a Taskfile_template.yaml which can be removed after the template was rendered. If you want to 
 
 The template generator removes its own code after execution. If you want to revert your changes and start fresh, simply use git and delete any generated untracked files. For this reason, remove template-generation step from the e2e test `.github/workflows/go.yaml` before committing your changes (otherwise your workflow will fail).
 
