@@ -223,6 +223,33 @@ kubectl apply -f external-secrets.yaml
 Once installed, you can create `SecretStore` and `ExternalSecret` resources on the ControlPlane to pull secrets from your chosen backend.
 
 </TabItem>
+<TabItem value="metrics-operator" label="Metrics Operator">
+
+[Metrics Operator](https://github.com/openmcp-project/service-provider-metrics-operator) installs the OTel-based metrics-operator into your ControlPlane, enabling metrics collection and alerting for managed workloads.
+
+To install the Metrics Operator, create a `MetricsOperator` resource in the same namespace and with the same name as your `ControlPlane`:
+
+:::apply-to-onboarding-api
+
+```yaml
+apiVersion: metrics.services.open-control-plane.io/v1alpha1
+kind: MetricsOperator
+metadata:
+  name: my-controlplane
+  namespace: project-platform-team--ws-dev
+spec:
+  version: "v1.0.0"
+```
+
+```bash
+kubectl apply -f metrics-operator.yaml
+```
+
+:::
+
+The chart version and Helm values are configured by your platform owner via the `ProviderConfig`. See the [MetricsOperator CRD reference](/reference/services/metrics-operator) for the full API.
+
+</TabItem>
 <TabItem value="kro" label="Kro">
 
 [Kro](https://kro.run) (Kube Resource Orchestrator) lets you create custom Kubernetes APIs by composing existing resources into higher-level abstractions. The service provider installs the Kro controller into the `kro-system` namespace on your ControlPlane via a Flux `HelmRelease`.
@@ -282,3 +309,4 @@ Congratulations! You have a working ControlPlane with managed services. Here's w
 - **[Flux Service Provider](https://github.com/openmcp-project/service-provider-flux)** — GitOps-driven continuous delivery
 - **[Velero Service Provider](https://github.com/openmcp-project/service-provider-velero)** — Backup and disaster recovery
 - **[External Secrets Service Provider](https://github.com/openmcp-project/service-provider-external-secrets)** — Sync secrets from external vaults
+- **[Metrics Operator Service Provider](https://github.com/openmcp-project/service-provider-metrics-operator)** — Prometheus metrics collection and alerting
