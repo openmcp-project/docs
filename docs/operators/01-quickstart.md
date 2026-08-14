@@ -36,7 +36,7 @@ The separation ensures end users never touch infrastructure. They interact only 
 - [Docker](https://docs.docker.com/get-started/get-docker/) running (8 GB RAM allocated to it)
 - [Go](https://go.dev/doc/install) installed
 - [`kubectl`](https://kubernetes.io/docs/tasks/tools/) CLI installed
-- [`kind`](https://kind.sigs.k8s.io/docs/user/quick-start/#installation) CLI installed
+
 - ~10 minutes
 
 :::note Linux: inotify limits
@@ -55,7 +55,7 @@ To persist across reboots, add both lines to `/etc/sysctl.d/99-kind.conf`.
 ## Install ocpctl
 
 ```shell
-go install github.com/openmcp-project/ocpctl@v0.3.0
+go install github.com/openmcp-project/ocpctl@v0.4.0
 ```
 
 Or download a pre-built binary from the [releases page](https://github.com/openmcp-project/ocpctl/releases/latest).
@@ -141,7 +141,7 @@ Now switch to the **end-user perspective**. A team wants their own `ControlPlane
 First, export the onboarding cluster's kubeconfig so `kubectl` can reach it:
 
 ```shell
-kind export kubeconfig --name local-onboarding
+ocpctl clusters kubeconfig export --environment local --name onboarding
 ```
 
 See the [`ControlPlane` reference](/reference/core/controlplane) for the full API.
@@ -258,22 +258,40 @@ status:
 The `ControlPlane` cluster runs as its own Kind cluster with a generated name. Find it:
 
 ```shell
-kind get clusters
+ocpctl clusters list
 ```
 
 ```
-local-onboarding
-local-platform
-mcp-ad2klitc.f52190f9     <- your ControlPlane cluster
+local
+  ├── platform
+  ├── onboarding
+  └── mcp-ad2klitc     <- your ControlPlane cluster
 ```
 
 Export its kubeconfig and switch context:
 
 ```shell
-CONTROLPLANE_CLUSTER=$(kind get clusters | grep '^mcp-')
-kind export kubeconfig --name "$CONTROLPLANE_CLUSTER"
-kubectl config use-context "kind-$CONTROLPLANE_CLUSTER"
+ocpctl clusters kubeconfig export --environment local --name mcp-ad2klitc
+CONTROLPLANE_CLUSTER=$(kubectl config get-contexts -o name | grep '^kind-mcp-')
+kubectl config use-context "$CONTROLPLANE_CLUSTER"
 ```
+
+:::note Why cluster names differ across tools
+
+`ocpctl` shows logical cluster names as registered in the platform, not the actual kind names derived by `cluster-provider-kind`. Two transformations happen between what you see in `ocpctl clusters list` and the kubectl context you need to use:
+
+1. **Environment prefix & uniqueness suffix** — Platform and Onboarding cluster names include the environment (e.g. `local-`) as a prefix and ControlPlane clusters get a random suffix to guarantee uniqueness across environments.
+2. **`kind-` prefix** — when kind exports a kubeconfig, it prepends `kind-` to every context name.
+
+This is why the command above uses `grep '^kind-mcp-'` to find the right context because the name from `ocpctl clusters list` will not match directly. An example of all three name forms for the same clusters is shown below:
+
+| `ocpctl` name  | kind cluster name         | kubectl context               |
+|----------------|---------------------------|-------------------------------|
+| `platform`     | `local-platform`          | `kind-local-platform`         |
+| `onboarding`   | `local-onboarding`        | `kind-local-onboarding`       |
+| `mcp-ad2klitc` | `mcp-ad2klitc.f52190f9`   | `kind-mcp-ad2klitc.f52190f9`  |
+:::
+
 
 ### Verify Flux is running
 
