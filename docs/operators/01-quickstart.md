@@ -36,7 +36,6 @@ The separation ensures end users never touch infrastructure. They interact only 
 - [Docker](https://docs.docker.com/get-started/get-docker/) running (8 GB RAM allocated to it)
 - [Go](https://go.dev/doc/install) installed
 - [`kubectl`](https://kubernetes.io/docs/tasks/tools/) CLI installed
-
 - ~10 minutes
 
 :::note Linux: inotify limits
