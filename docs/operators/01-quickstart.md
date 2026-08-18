@@ -54,7 +54,7 @@ To persist across reboots, add both lines to `/etc/sysctl.d/99-kind.conf`.
 ## Install ocpctl
 
 ```shell
-go install github.com/openmcp-project/ocpctl@v0.4.0
+go install github.com/openmcp-project/ocpctl@v0.4.1
 ```
 
 Or download a pre-built binary from the [releases page](https://github.com/openmcp-project/ocpctl/releases/latest).
