@@ -12,7 +12,7 @@ a tenant creates a Service API object on the onboarding cluster, the service pro
 picks it up, orders cluster access (MCP + optional workload cluster), and installs the service.
 
 There is no defined way for a service provider to expose its service into a kcp workspace. kcp
-(Kubernetes Control Plane) lets tenants work in isolated logical workspaces rather than on a shared
+(Kubernetes-like Control Plane) lets tenants work in isolated logical workspaces rather than on a shared
 cluster. A tenant in a kcp workspace should be able to request a service the same way a tenant on
 the onboarding cluster does - by creating a Service API object - and receive the same result.
 
@@ -86,7 +86,7 @@ migrate from. The flow is:
      workload can reach back at the workspace.
    - Resolves (or orders) a workload cluster if the provider requested one.
    - Calls the provider's `Reconciler.CreateOrUpdate` with all credentials pre-resolved.
-3. The provider installs the service exactly as it would in standard mode - it receives a customer
+3. The provider installs the service exactly as it would in standard mode - it receives an end user
    cluster client and kubeconfig, a workload cluster client and kubeconfig, and a stable tenant
    identity. No kcp-specific code in the provider.
 
@@ -95,16 +95,19 @@ migrate from. The flow is:
 Both discovery paths (onboarding cluster and kcp workspace) funnel into the same two methods:
 
 ```
-CreateOrUpdate(ctx, serviceAPIObject, providerConfig, clusterContext) -> (result, error)
-Delete(ctx, serviceAPIObject, providerConfig, clusterContext) -> (result, error)
+CreateOrUpdate(ctx, serviceAPIObject) -> (result, error)
+Delete(ctx, serviceAPIObject) -> (result, error)
 ```
 
-`ClusterContext` carries pre-resolved credentials:
+The runtime carries pre-resolved credentials and config on `ctx`, and the framework offers
+functions to retrieve them, e.g. `cluster.WorkloadFromCtx(ctx)`.
 
-- `MCPCluster` - ready client for the customer cluster. In standard mode: the MCP control plane.
+The context carries:
+
+- `MCPCluster` - ready client for the end user cluster. In standard mode: the MCP control plane.
   In kcp mode: the tenant's kcp workspace. Same field, same type, either mode.
-- `MCPKubeconfig` - raw customer kubeconfig. Providers embed this into child resources (e.g. a
-  HelmRelease whose worker needs KUBECONFIG pointing at the customer cluster).
+- `MCPKubeconfig` - raw end user kubeconfig. Providers embed this into child resources (e.g. a
+  HelmRelease whose worker needs KUBECONFIG pointing at the end user cluster).
 - `WorkloadCluster` - ready client for the workload cluster (nil if not requested or not yet
   granted). Workload clusters are shared: the platform may grant access to an existing cluster
   rather than provisioning a new one.
@@ -139,11 +142,11 @@ same process (each with its own manager and leader election ID).
 There are two deployment patterns:
 
 - **Workerless:** The service worker runs on a separate workload cluster, with its kubeconfig
-  pointed at the customer control plane or kcp workspace. The customer cluster is only used as an
+  pointed at the end user control plane or kcp workspace. The end user cluster is only used as an
   API server - no pods run on it. This pattern is kcp-compatible because kcp workspaces are
   API servers and can serve the service's API surface without running compute.
 
-- **Classic (not kcp-compatible):** The service worker runs directly on the customer control plane,
+- **Classic (not kcp-compatible):** The service worker runs directly on the end user control plane,
   on the same cluster the service is operating on. This pattern cannot support kcp because kcp
   workspaces have no compute - pods cannot be scheduled in a kcp workspace.
 
@@ -162,13 +165,13 @@ deployment patterns described above:
 
 - `WorkloadCluster(true)` (workerless - kcp-compatible): the runtime places a `ClusterRequest` +
   `AccessRequest` and waits until a cluster is granted before calling `CreateOrUpdate`. The service
-  worker runs on this separate workload cluster with its kubeconfig pointing at the customer control
+  worker runs on this separate workload cluster with its kubeconfig pointing at the end user control
   plane or kcp workspace. The granted cluster may be shared with other tenants.
 - `WorkloadCluster(false)` (classic - not kcp-compatible): no workload cluster is ordered. The
-  service worker runs directly on the customer control plane. This pattern cannot be used with kcp.
+  service worker runs directly on the end user control plane. This pattern cannot be used with kcp.
 
 In kcp mode the runtime additionally mints a workspace ServiceAccount token so the workload
-controller can authenticate back to the customer workspace.
+controller can authenticate back to the end user workspace.
 
 ### 6. Provider declares its kcp API surface (kcp mode only)
 
@@ -189,7 +192,7 @@ On deletion the runtime:
 
 1. Calls `provider.Delete` with the same resolved `ClusterContext`.
 2. Removes the workload cluster access (ClusterRequest + AccessRequest, or kcp workspace SA/RBAC).
-3. Removes the customer cluster access (MCP AccessRequest or workspace token cleanup).
+3. Removes the end user cluster access (MCP AccessRequest or workspace token cleanup).
 4. Removes the finalizer.
 
 The provider is not responsible for any access cleanup.
@@ -204,7 +207,8 @@ The provider is not responsible for any access cleanup.
 - APIExport provisioning lifecycle (schema immutability, upsert).
 - Workspace token minting or refresh.
 - Workload cluster ordering and wait loop.
-- Status patching.
+- Kubernetes status patching. The provider reports status content; the runtime writes it to the
+  object.
 - Mode detection or branching.
 - Deletion sequencing (access teardown before finalizer removal).
 
