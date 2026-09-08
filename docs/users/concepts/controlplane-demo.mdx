@@ -1,0 +1,37 @@
+---
+sidebar_position: 10
+id: controlplane-demo
+title: Interactive Demo — ControlPlane
+---
+
+import ControlPlaneDemo from '@site/src/components/ControlPlaneDemo';
+
+# Interactive Demo: ControlPlane Lifecycle
+
+Experience how **OpenControlPlane** provisions and manages a `ControlPlane` — entirely in your browser, no cluster required.
+
+This demo walks you through the full lifecycle:
+
+1. **Apply** a `ControlPlane` manifest to the Onboarding Cluster
+2. **Watch** the operator reconcile and delegate to the Cluster Provider
+3. **See** the new ControlPlane cluster come up
+4. **Connect** and start deploying your resources
+
+---
+
+<ControlPlaneDemo />
+
+---
+
+## What just happened?
+
+- You wrote a **single manifest** declaring the desired state of a `ControlPlane`.
+- The **openmcp-operator** on the Platform Cluster picked it up and orchestrated cluster creation via the configured Cluster Provider (e.g. Gardener).
+- Once ready, a dedicated Kubernetes cluster was spun up — your **ControlPlane** — isolated from other tenants.
+- You connected to it directly using `kubectl` with the context written by the operator.
+
+## Next steps
+
+- [ControlPlane CRD reference](/reference/core/controlplane)
+- [Getting started guide](/users/getting-started)
+- [Configure a Cluster Provider](/operators/overview)
