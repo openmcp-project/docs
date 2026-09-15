@@ -66,6 +66,7 @@ Optional flags:
 - `workloadcluster=true` enables workload cluster support (see below) 
 - `secretwatcher=true` generates a [secret watcher](#watch-secrets-for-changes) implementation
 - `samplecode=true` generates sample code to get started quickly
+- `webhook=true` generates [admission webhooks](#admission-webhooks) for your API type
 
 The template generates a fully functional service provider that can be executed and deployed on your local machine using [cluster-provider-kind](https://github.com/openmcp-project/cluster-provider-kind) and [openmcp-testing](https://github.com/openmcp-project/openmcp-testing).
 
@@ -759,6 +760,19 @@ spr := serviceprovider.NewAPIReconcilerBuilder[*FooService, *ProviderConfig]().
     AdvancedClusterAccessReconciler(clusterAccessReconciler).
     MustBuild()
 ```
+
+## Admission Webhooks
+
+The `template:generate-provider` task provides a `webhook` option if you need to implement any defaulting or validation logic based on webhooks. Note that it is recommended to use [CEL-based admission control](https://kubernetes.io/docs/concepts/cluster-administration/admission-webhooks-good-practices/#choose-admission-mechanism) instead of implementing webhooks when possible.
+
+The challenge of implementing and deploying webhooks in context of OpenControlPlane is that you typically want to realize one of the following two scenarios as a Service Provider:
+
+- A) Deploying a webhook service on the platform cluster that is reachable by the onboarding cluster API server to perform defaulting/validation logic for your service provider API type (see [platform-service-project-workspace](https://github.com/openmcp-project/platform-service-project-workspace) for a real world implementation).
+- B) Deploying webhooks that are part of your managed domain service to a workload cluster and realize the routing between tenant control planes and the webhook service (see [service-provider-landscaper](https://github.com/openmcp-project/service-provider-landscaper) for a real world implementation).
+
+Both scenarios can be realized with [platform-service-gateway](https://github.com/openmcp-project/platform-service-gateway) and [platform-service-dns](https://github.com/openmcp-project/platform-service-dns) in OpenControlPlane.
+
+The template provides a fully functional example for scenario A) and uses [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) to realize the routing without a dedicated DNS service in [kind](https://kind.sigs.k8s.io/) managed control planes.
 
 ## Taskfile Usage
 
