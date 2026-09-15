@@ -13,7 +13,7 @@ The team worked on the following two topics during the event.
 
 Two recurring asks from platform teams shaped this track: "How do we keep onboarding resources in sync with a git repository without running our own GitOps infrastructure?" and "How do our ControlPlanes get access to secrets without storing long-lived credentials anywhere?" During the hackathon, we tackled both.
 
-### GitOps for ControlPlanes
+### GitOps for Onboarding
 
 Getting GitOps to work with OpenControlPlane's onboarding was technically possible before, but it required a lot of self-managed overhead. Teams either had to run their own Flux instance or set up a dedicated "operations" control plane just to call the onboarding API. Getting Flux up and running *inside* a ControlPlane and connecting it to git repositories was yet another set of manual steps per cluster.
 
