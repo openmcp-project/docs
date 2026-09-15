@@ -180,11 +180,20 @@ For kcp mode the provider supplies a `Provisionable` implementation that defines
 - The `APIResourceSchema` (the kcp equivalent of a CRD) for the Service API, derived from the same
   Go type as the onboarding CRD.
 - The `APIExport` (name, resource list, permission claims).
+- Optional metadata (labels and annotations) for the generated `APIExport`, taken from the
+  provider configuration.
 - The watched GVK for the multicluster controller.
 
 The runtime calls `Provision` once at startup. After that the provider never touches kcp
 infrastructure again - reconciliation is driven by workspace events, resolved by the runtime, and
 delivered as a standard `ClusterContext`.
+
+The runtime owns the provisioned kcp objects exclusively and stamps the configured metadata at
+provisioning time. This gives an embedding platform a declarative way to attach its marker labels
+to the export (for example, Platform Mesh wires its marketplace and UI through a
+`ui.platform-mesh.io/content-for` label on the `APIExport`) without a second writer competing
+over the object. Today such labels have to be re-applied externally every time the export is
+reconciled, which is exactly the class of ownership conflict this runtime should eliminate.
 
 ### 7. Deletion
 
@@ -241,6 +250,17 @@ The provider is not responsible for any access cleanup.
    per workspace is active. Default policy: oldest wins - if multiple objects exist, the oldest
    is reconciled and newer ones are rejected with a status message. In standard mode this is not
    needed as the object is named after the corresponding cluster, ensuring uniqueness by convention.
+
+   Proposed resolution: keep the standard-mode name convention as the rule instead of
+   limiting cardinality. A service object is bound to the ControlPlane of the same name;
+   uniqueness per target then comes for free from Kubernetes name uniqueness, with no
+   enforcement code and no API change, and the identity derivation used for cluster access
+   stays untouched. Workspaces with several ControlPlanes keep working (Flux `prod` and
+   Flux `dev` serve ControlPlanes `prod` and `dev`). The one hard requirement: an object
+   without a matching ControlPlane must not be ignored silently - it stays `Progressing`
+   with a visible condition (e.g. `NoMatchingControlPlane`), and reconciles once the
+   ControlPlane appears. An explicit `targetRef` field (defaulting to `metadata.name`)
+   remains a compatible later extension if free naming is ever wanted.
 
 ---
 
