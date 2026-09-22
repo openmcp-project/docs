@@ -1,12 +1,12 @@
 ---
-sidebar_position: 2
-id: platform-owner-observability
+sidebar_position: 0
+id: operator-observability
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Platform-owner observability
+# Observability
 
 This guide shows you how to monitor the OpenControlPlane platform itself — controller health, API server availability, and fleet-wide resource state across ControlPlanes.
 
@@ -204,7 +204,7 @@ Configure these in your backend's alerting system.
 
 ## What's next
 
-- [End-user observability](./end-user-observability) — monitoring resources on a ControlPlane
+- [End-user observability](/users/observability/end-user-observability) — monitoring resources on a ControlPlane
 - [Metrics Operator architecture](https://github.com/openmcp-project/metrics-operator/blob/main/docs/architecture.md)
 - [FederatedClusterAccess setup](https://github.com/openmcp-project/metrics-operator/blob/main/docs/remote-cluster-access.md)
 - [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)

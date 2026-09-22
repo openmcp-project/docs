@@ -48,7 +48,7 @@ Observability responsibilities differ depending on your role:
 | Perspective | Focus | Guide |
 |---|---|---|
 | **End user** | Monitor the resources you deploy on your ControlPlane — managed resources, workloads, HelmReleases. | [End-user observability](./end-user-observability) |
-| **Platform owner** | Monitor the platform itself — controller health, API server availability, fleet-wide resource state. | [Platform-owner observability](./platform-owner-observability) |
+| **Platform owner** | Monitor the platform itself — controller health, API server availability, fleet-wide resource state. | [Platform-owner observability](/operators/observability/operator-observability) |
 
 ## Learn more
 

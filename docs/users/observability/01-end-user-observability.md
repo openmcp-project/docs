@@ -273,4 +273,4 @@ Alert configuration depends on your backend. Consult your backend's documentatio
 - [Metrics Operator usage examples](https://github.com/openmcp-project/metrics-operator/blob/main/docs/usage.md)
 - [Dimensions configuration](https://github.com/openmcp-project/metrics-operator/blob/main/docs/dimensions-configuration.md) — projections, valueFrom, cardinality
 - [Remote cluster access](https://github.com/openmcp-project/metrics-operator/blob/main/docs/remote-cluster-access.md) — federated monitoring
-- [Platform-owner observability](./platform-owner-observability) — monitoring the platform itself
+- [Platform-owner observability](/operators/observability/operator-observability) — monitoring the platform itself
