@@ -54,8 +54,8 @@ The service provider defines:
 
 - Its **Service API** type - the CRD a tenant creates to request the service (e.g. `Kro`,
   `Crossplane`). One type is used for both onboarding and kcp modes.
-- Its **ProviderConfig** type - platform-operator configuration (available versions, kcp settings,
-  workload cluster preferences).
+- Its **ProviderConfig** type - service configuration such as available versions and workload
+  cluster preferences. It does not select the runtime mode.
 - Its **install/delete logic** - a single `Reconciler` with two methods: `CreateOrUpdate` (install
   or update) and `Delete`.
 
@@ -67,10 +67,11 @@ kcp onboarding is a new capability this ADR introduces. There is no existing imp
 migrate from. The flow is:
 
 **Provider side (one-time setup):**
-1. The provider defines an `APIExport` in its kcp provider workspace, backed by an
-   `APIResourceSchema` derived from the same Service API type used on the onboarding cluster.
-   One API type, two delivery surfaces.
-2. The runtime provisions this `APIExport` at startup from the provider's `ProviderConfig`.
+1. The provider defines an `APIResourceSchema` from the same Service API type used on the
+   onboarding cluster. One API type has two delivery surfaces.
+2. The platform deployment applies the schema and `APIExport` in the kcp provider workspace.
+   It supplies workspace credentials to the provider process. The runtime does not provision
+   the export from `ProviderConfig`.
 
 **Tenant side:**
 1. A tenant's workspace creates an `APIBinding` to the provider's `APIExport`.
@@ -82,143 +83,108 @@ migrate from. The flow is:
 1. The runtime watches for Service API objects across all bound consumer workspaces via the
    `APIExport` virtual workspace (multicluster-runtime).
 2. When a Service API object appears in a workspace, the runtime:
-   - Mints a scoped `ServiceAccount` token in the consumer workspace (via TokenRequest API) so the
-     workload can reach back at the workspace.
+   - Uses the workspace credential provided by the deployment and obtains request-scoped
+     access through the common cluster-access reconciler.
    - Resolves (or orders) a workload cluster if the provider requested one.
-   - Calls the provider's `Reconciler.CreateOrUpdate` with all credentials pre-resolved.
-3. The provider installs the service exactly as it would in standard mode - it receives an end user
-   cluster client and kubeconfig, a workload cluster client and kubeconfig, and a stable tenant
-   identity. No kcp-specific code in the provider.
+   - Calls the provider's `Reconciler.CreateOrUpdate` with the resolved cluster clients and
+     keys for their kubeconfig Secrets.
+3. The provider installs the service with the same reconcile method as in standard mode.
+   The multicluster request carries the workspace identity when names must be unique across tenants.
 
 ### 3. Unified provider seam
 
 Both discovery paths (onboarding cluster and kcp workspace) funnel into the same two methods:
 
 ```
-CreateOrUpdate(ctx, serviceAPIObject) -> (result, error)
-Delete(ctx, serviceAPIObject) -> (result, error)
+CreateOrUpdate(ctx, serviceAPIObject, providerConfig, clusterContext) -> (result, error)
+Delete(ctx, serviceAPIObject, providerConfig, clusterContext) -> (result, error)
 ```
 
-The runtime carries pre-resolved credentials and config on `ctx`, and the framework offers
-functions to retrieve them, e.g. `cluster.WorkloadFromCtx(ctx)`.
+The runtime supplies the same `clusteraccess.ClusterContext` in both modes. It contains the
+MCP cluster client, the key for its kubeconfig Secret, and the equivalent workload cluster
+fields when a workload cluster is present. In kcp mode, the MCP cluster is the tenant's
+workspace. The multicluster request includes the logical workspace identity so access
+objects from different workspaces cannot collide.
 
-The context carries:
+### 4. Deployment selects the runtime mode
 
-- `MCPCluster` - ready client for the end user cluster. In standard mode: the MCP control plane.
-  In kcp mode: the tenant's kcp workspace. Same field, same type, either mode.
-- `MCPKubeconfig` - raw end user kubeconfig. Providers embed this into child resources (e.g. a
-  HelmRelease whose worker needs KUBECONFIG pointing at the end user cluster).
-- `WorkloadCluster` - ready client for the workload cluster (nil if not requested or not yet
-  granted). Workload clusters are shared: the platform may grant access to an existing cluster
-  rather than provisioning a new one.
-- `WorkloadKubeconfig` - raw workload kubeconfig.
-- `Identity` - stable per-tenant identifier (MCP object key in standard mode, kcp logical cluster
-  name in kcp mode). Used for deriving stable per-tenant resource names.
-- `Mode` - `standard` or `kcp`. Most providers ignore this; it exists for the rare case where
-  install logic must genuinely differ.
+The service provider deployment selects one mode when the process starts. A standard deployment
+uses the onboarding cluster and `MustBuild`. A kcp deployment receives registered workspace
+credentials, creates a multicluster manager, and uses `MustBuildMulticluster`. The same binary
+can support both paths, but a `ProviderConfig` change does not switch a running process between
+them. A platform can run separate deployments when it needs both modes.
 
-### 4. ProviderConfig drives mode selection
-
-The `ProviderConfig` CRD is defined by the provider. Adding a `kcp` section activates kcp mode.
-No change to `main.go` code is required:
-
-```yaml
-spec:
-  versions:
-    - name: v1.2.3
-      chartURL: oci://...
-  kcp:
-    providerWorkspace: root:my-org:services
-    kubeconfigSecret:
-      name: kcp-kubeconfig
-      namespace: my-provider-ns
-```
-
-When `spec.kcp` is absent the provider runs standard mode only. When present, both modes run in the
-same process (each with its own manager and leader election ID).
+The initial Flux and External Secrets integrations select the kcp path with the
+`--onboarding-kubeconfig-label` startup flag. The operator registers labeled credentials in
+the provider namespace. Without that flag, each provider uses the standard onboarding path.
 
 **kcp compatibility depends on how the service deploys its worker.**
 
 There are two deployment patterns:
 
-- **Workerless:** The service worker runs on a separate workload cluster, with its kubeconfig
-  pointed at the end user control plane or kcp workspace. The end user cluster is only used as an
-  API server - no pods run on it. This pattern is kcp-compatible because kcp workspaces are
-  API servers and can serve the service's API surface without running compute.
+- **Separate worker:** The service worker runs on the platform cluster or a workload cluster.
+  Its kubeconfig points at the end user control plane or kcp workspace. No pods run in the
+  kcp workspace, so this pattern supports kcp.
 
 - **Classic (not kcp-compatible):** The service worker runs directly on the end user control plane,
   on the same cluster the service is operating on. This pattern cannot support kcp because kcp
   workspaces have no compute - pods cannot be scheduled in a kcp workspace.
 
 A provider using the classic pattern must explicitly opt out of kcp:
-- Omit the `kcp` field from its `ProviderConfig` CRD schema entirely, so platform operators cannot
-  accidentally configure it.
-- Not supply a `Provisionable` or kcp wiring in its `main.go`.
+- Do not enable the kcp deployment path.
+- Keep its binary on the standard manager until it can run its worker on a separate cluster.
 
 The runtime will not start kcp mode unless the provider explicitly wires it up. kcp support is
 opt-in, not default.
 
-### 5. Workload cluster ordering
+### 5. Workload cluster access
 
-The provider declares at startup whether it needs a workload cluster. This maps directly to the two
-deployment patterns described above:
+The provider registers the cluster access it needs when it starts. The common access reconciler
+obtains MCP access and, when configured, workload cluster access before it calls
+`CreateOrUpdate`. The workload cluster may be shared with other tenants. A provider can also
+run its worker on the platform cluster without ordering a separate workload cluster.
 
-- `WorkloadCluster(true)` (workerless - kcp-compatible): the runtime places a `ClusterRequest` +
-  `AccessRequest` and waits until a cluster is granted before calling `CreateOrUpdate`. The service
-  worker runs on this separate workload cluster with its kubeconfig pointing at the end user control
-  plane or kcp workspace. The granted cluster may be shared with other tenants.
-- `WorkloadCluster(false)` (classic - not kcp-compatible): no workload cluster is ordered. The
-  service worker runs directly on the end user control plane. This pattern cannot be used with kcp.
+In kcp mode, the worker must not run inside the tenant workspace. A workspace is an API server,
+not a compute cluster.
 
-In kcp mode the runtime additionally mints a workspace ServiceAccount token so the workload
-controller can authenticate back to the end user workspace.
+In kcp mode, the platform operator supplies workspace credentials. The runtime's cluster-access
+reconciler gives the service provider request-scoped access to that workspace.
 
 ### 6. Provider declares its kcp API surface (kcp mode only)
 
-For kcp mode the provider supplies a `Provisionable` implementation that defines:
+The provider supplies the Service API schema and watched GVK. The platform deployment applies
+the `APIResourceSchema` and `APIExport` in the provider workspace. It owns the export's labels
+and annotations in the same declarative source. For example, Platform Mesh can set
+`ui.platform-mesh.io/content-for` on the `APIExport` there. The runtime consumes the export
+through the multicluster manager; it does not create or update the export at startup.
 
-- The `APIResourceSchema` (the kcp equivalent of a CRD) for the Service API, derived from the same
-  Go type as the onboarding CRD.
-- The `APIExport` (name, resource list, permission claims).
-- Optional metadata (labels and annotations) for the generated `APIExport`, taken from the
-  provider configuration.
-- The watched GVK for the multicluster controller.
-
-The runtime calls `Provision` once at startup. After that the provider never touches kcp
-infrastructure again - reconciliation is driven by workspace events, resolved by the runtime, and
-delivered as a standard `ClusterContext`.
-
-The runtime owns the provisioned kcp objects exclusively and stamps the configured metadata at
-provisioning time. This gives an embedding platform a declarative way to attach its marker labels
-to the export (for example, Platform Mesh wires its marketplace and UI through a
-`ui.platform-mesh.io/content-for` label on the `APIExport`) without a second writer competing
-over the object. Today such labels have to be re-applied externally every time the export is
-reconciled, which is exactly the class of ownership conflict this runtime should eliminate.
+This keeps export ownership with the deployment that chooses kcp mode. A `ProviderConfig` holds
+service settings, not infrastructure metadata or deployment mode.
 
 ### 7. Deletion
 
 On deletion the runtime:
 
-1. Calls `provider.Delete` with the same resolved `ClusterContext`.
-2. Removes the workload cluster access (ClusterRequest + AccessRequest, or kcp workspace SA/RBAC).
-3. Removes the end user cluster access (MCP AccessRequest or workspace token cleanup).
+1. Calls the provider's `Reconciler.Delete` with the resolved `ClusterContext`.
+2. Calls the common cluster-access `ReconcileDelete` with the same request identity and
+   additional data used for creation. It waits for the access requests to finish deletion.
+3. Leaves workspace token and RBAC cleanup to the operator that owns the workspace runtime.
 4. Removes the finalizer.
 
 The provider is not responsible for any access cleanup.
 
 ---
 
-## What the provider does NOT need to write
+## What provider install and delete logic does not need to write
 
 - Finalizer add/remove logic.
 - ProviderConfig loading or watching.
-- kcp multicluster manager setup.
-- APIExport provisioning lifecycle (schema immutability, upsert).
-- Workspace token minting or refresh.
+- APIExport provisioning or workspace token management. These belong to the platform deployment
+  and operator, not to the service's install and delete logic.
 - Workload cluster ordering and wait loop.
 - Kubernetes status patching. The provider reports status content; the runtime writes it to the
   object.
-- Mode detection or branching.
+- Mode selection. The provider process selects its manager during startup.
 - Deletion sequencing (access teardown before finalizer removal).
 
 ---
