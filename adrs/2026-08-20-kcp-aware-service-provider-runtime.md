@@ -63,8 +63,9 @@ Everything else is the runtime's responsibility.
 
 ### 2. How kcp onboarding works
 
-kcp onboarding is a new capability this ADR introduces. There is no existing implementation to
-migrate from. The flow is:
+This section proposes Service API discovery through an `APIExport` virtual workspace. The
+initial Flux and External Secrets providers use a different, Secret-backed shared onboarding
+path. Section 4 describes that deployed path.
 
 **Provider side (one-time setup):**
 1. The provider defines an `APIResourceSchema` from the same Service API type used on the
@@ -103,20 +104,26 @@ Delete(ctx, serviceAPIObject, providerConfig, clusterContext) -> (result, error)
 The runtime supplies the same `clusteraccess.ClusterContext` in both modes. It contains the
 MCP cluster client, the key for its kubeconfig Secret, and the equivalent workload cluster
 fields when a workload cluster is present. In kcp mode, the MCP cluster is the tenant's
-workspace. The multicluster request includes the logical workspace identity so access
-objects from different workspaces cannot collide.
+workspace. For virtual-workspace discovery, the runtime includes the logical workspace
+identity in access keys. The deployed shared onboarding path uses an account-specific
+registered namespace for each access key.
 
 ### 4. Deployment selects the runtime mode
 
-The service provider deployment selects one mode when the process starts. A standard deployment
-uses the onboarding cluster and `MustBuild`. A kcp deployment receives registered workspace
-credentials, creates a multicluster manager, and uses `MustBuildMulticluster`. The same binary
-can support both paths, but a `ProviderConfig` change does not switch a running process between
-them. A platform can run separate deployments when it needs both modes.
+The service provider deployment selects its manager when the process starts. A standard
+deployment uses the onboarding cluster and `MustBuild`. Both multicluster paths use
+`MustBuildMulticluster`, but they discover service requests differently:
 
-The initial Flux and External Secrets integrations select the kcp path with the
-`--onboarding-kubeconfig-label` startup flag. The operator registers labeled credentials in
-the provider namespace. Without that flag, each provider uses the standard onboarding path.
+- In the proposed APIExport path, the manager watches bound workspaces through the export's
+  virtual workspace.
+- In the deployed shared onboarding path, the platform operator registers a labeled
+  kubeconfig Secret for each account. The manager watches those registered clusters. Flux
+  and External Secrets select this path with `--onboarding-kubeconfig-label`. Without the
+  flag, they use the standard onboarding path. Their current APIExports publish worker APIs,
+  not the Service API objects consumed by these controllers.
+
+The same binary can support both paths, but a `ProviderConfig` change does not switch a
+running process between them. A platform can run separate deployments when needed.
 
 **kcp compatibility depends on how the service deploys its worker.**
 
@@ -152,7 +159,8 @@ reconciler gives the service provider request-scoped access to that workspace.
 
 ### 6. Provider declares its kcp API surface (kcp mode only)
 
-The provider supplies the Service API schema and watched GVK. The platform deployment applies
+For the proposed APIExport discovery path, the provider supplies the Service API schema and
+watched GVK. The platform deployment applies
 the `APIResourceSchema` and `APIExport` in the provider workspace. It owns the export's labels
 and annotations in the same declarative source. For example, Platform Mesh can set
 `ui.platform-mesh.io/content-for` on the `APIExport` there. The runtime consumes the export
