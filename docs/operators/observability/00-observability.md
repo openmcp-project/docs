@@ -46,6 +46,9 @@ Key metrics to watch:
 
 If you run the Prometheus Operator, create `ServiceMonitor` resources for each controller:
 
+
+:::apply-to-platform
+
 ```yaml title="flux-servicemonitor.yaml"
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -60,11 +63,13 @@ spec:
     matchLabels:
       app.kubernetes.io/part-of: flux
 ```
+:::
 
 ### Scrape with OpenTelemetry Collector
 
 Configure a `prometheus` receiver with Kubernetes service discovery:
 
+:::apply-to-platform
 ```yaml
 receivers:
   prometheus:
@@ -84,6 +89,7 @@ receivers:
               regex: ([^:]+)(?::\d+)?
               replacement: $1:$2
 ```
+:::
 
 ## Monitor resources across the fleet
 
@@ -92,7 +98,7 @@ Use `FederatedMetric` and `FederatedManagedMetric` to aggregate signals from mul
 ### Federated managed resource health
 
 Track `Ready` and `Synced` conditions across all ControlPlanes:
-
+:::apply-to-platform
 ```yaml title="federated-managed-metric.yaml"
 apiVersion: metrics.openmcp.cloud/v1alpha1
 kind: FederatedManagedMetric
@@ -106,10 +112,12 @@ spec:
     name: fleet-access
     namespace: default
 ```
+:::
 
 ### Federated resource inventory
 
 Count Crossplane providers across clusters:
+:::apply-to-platform
 
 ```yaml title="federated-providers.yaml"
 apiVersion: metrics.openmcp.cloud/v1alpha1
@@ -131,7 +139,7 @@ spec:
     name: fleet-access
     namespace: default
 ```
-
+:::
 See [Remote cluster access](https://github.com/openmcp-project/metrics-operator/blob/main/docs/remote-cluster-access.md) for setting up `FederatedClusterAccess`.
 
 ## Deploy an OpenTelemetry Collector for the platform
@@ -186,7 +194,7 @@ service:
       exporters: [otlp]
 ```
 
-See the [OpenTelemetry Collector documentation](https://opentelemetry.io/docs/collector/configuration/) for the full reference.
+This is just a snippet, see the [OpenTelemetry Collector documentation](https://opentelemetry.io/docs/collector/configuration/) for the full reference.
 
 ## Set up platform alerts
 

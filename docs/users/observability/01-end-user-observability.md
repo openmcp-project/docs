@@ -13,30 +13,8 @@ This guide shows you how to monitor the resources you deploy on your ControlPlan
 ## Prerequisites
 
 - You have a running ControlPlane.
-- You have [installed the Metrics Operator](/users/getting-started/configure) in the ControlPlane.
+- You have [installed the Metrics Operator](/users/getting-started/configure?service=metrics-operator) service in the ControlPlane.
 - You have an OpenTelemetry-compatible backend (any OTLP endpoint) or a Prometheus-compatible scraper.
-
-## Install the Metrics Operator
-
-Request the [Metrics Operator](https://github.com/openmcp-project/metrics-operator) as a managed service on your ControlPlane:
-
-```yaml title="metrics-operator.yaml"
-apiVersion: metrics.services.open-control-plane.io/v1alpha1
-kind: MetricsOperator
-metadata:
-  name: my-controlplane
-  namespace: project-platform-team--ws-dev
-spec:
-  version: "v1.1.0"
-```
-
-```shell title="Run in terminal"
-kubectl apply -f metrics-operator.yaml
-```
-
-Choose the latest version from [Metrics Operator releases](https://github.com/openmcp-project/metrics-operator/releases).
-
-You can also install the operator directly via Helm — see the [installation docs](https://github.com/openmcp-project/metrics-operator/blob/main/docs/installation.md).
 
 ## Export metrics
 
@@ -47,7 +25,9 @@ The operator supports two export modes: push via OpenTelemetry and pull via Prom
 
 Create a `DataSink` that points to your OTLP endpoint. Store credentials in a Kubernetes Secret in the same namespace.
 
-```yaml title="datasink.yaml"
+:::apply-to-controlplane
+
+```yaml title="data-sink.yaml"
 apiVersion: metrics.openmcp.cloud/v1alpha1
 kind: DataSink
 metadata:
@@ -61,16 +41,18 @@ spec:
       secretKeyRef:
         name: metrics-credentials
         key: api-token
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: metrics-credentials
+  namespace: metrics-operator-system
+type: Opaque
+stringData:
+  api-token: <api-token>
 ```
 
-Create the Secret and apply:
-
-```shell title="Run in terminal"
-kubectl create secret generic metrics-credentials \
-  --namespace metrics-operator-system \
-  --from-literal=api-token=<api-token>
-kubectl apply -f datasink.yaml
-```
+:::
 
 A metric without `dataSinkRef` uses the `DataSink` named `default`. Set `dataSinkRef.name` to target a different sink.
 
@@ -93,11 +75,14 @@ authentication:
   </TabItem>
   <TabItem value="pull" label="Prometheus pull">
 
-Install the [Prometheus Operator](https://github.com/prometheus-operator/prometheus-operator), then apply the Metrics Operator `ServiceMonitor`:
+**Prerequisites**
+ * Installed [Prometheus Operator](https://github.com/prometheus-operator/prometheus-operator)
 
-```shell title="Run in terminal"
+:::apply-to-controlplane
+```shell
 kubectl apply -f https://raw.githubusercontent.com/openmcp-project/metrics-operator/main/config/prometheus/monitor.yaml
 ```
+:::
 
 The `ServiceMonitor` scrapes the operator's HTTPS `/metrics` endpoint. It exposes `metrics_operator_resource_count` alongside standard controller-runtime metrics.
 
@@ -110,12 +95,12 @@ See [Metrics Export](https://github.com/openmcp-project/metrics-operator/blob/ma
 
 The Metrics Operator provides four resource types:
 
-| Kind | What it monitors |
-|---|---|
-| `Metric` | Kubernetes resources in the local cluster |
-| `ManagedMetric` | Crossplane managed resources (categories `crossplane` + `managed`) |
-| `FederatedMetric` | Kubernetes resources across multiple clusters |
-| `FederatedManagedMetric` | Crossplane managed resources across clusters |
+| Kind                     | What it monitors                                                   |
+| ------------------------ | ------------------------------------------------------------------ |
+| `Metric`                 | Kubernetes resources in the local cluster                          |
+| `ManagedMetric`          | Crossplane managed resources (categories `crossplane` + `managed`) |
+| `FederatedMetric`        | Kubernetes resources across multiple clusters                      |
+| `FederatedManagedMetric` | Crossplane managed resources across clusters                       |
 
 ### Monitor managed resource health
 
@@ -244,15 +229,15 @@ The [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) collects
 
 Deploy the collector as a `Deployment` or `DaemonSet` in your ControlPlane. Configure receivers for your signal types:
 
-| Receiver | Signal | Description |
-|---|---|---|
-| `filelog` | Logs | Reads container log files from `/var/log/pods` |
-| `k8sobjects` | Logs | Watches Kubernetes Events |
-| `hostmetrics` | Metrics | CPU, memory, disk, network from the node |
-| `kubeletstats` | Metrics | Pod and container metrics from kubelet |
-| `k8s_cluster` | Metrics | Cluster-level resource metrics |
-| `otlp` | All | Receives OTLP from instrumented applications |
-| `prometheus` | Metrics | Scrapes Prometheus endpoints |
+| Receiver       | Signal  | Description                                    |
+| -------------- | ------- | ---------------------------------------------- |
+| `filelog`      | Logs    | Reads container log files from `/var/log/pods` |
+| `k8sobjects`   | Logs    | Watches Kubernetes Events                      |
+| `hostmetrics`  | Metrics | CPU, memory, disk, network from the node       |
+| `kubeletstats` | Metrics | Pod and container metrics from kubelet         |
+| `k8s_cluster`  | Metrics | Cluster-level resource metrics                 |
+| `otlp`         | All     | Receives OTLP from instrumented applications   |
+| `prometheus`   | Metrics | Scrapes Prometheus endpoints                   |
 
 See the [OpenTelemetry Collector documentation](https://opentelemetry.io/docs/collector/configuration/) for the full configuration reference.
 
