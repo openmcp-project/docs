@@ -1,0 +1,8 @@
+{
+  "label": "Observability",
+  "position": 3,
+  "link": {
+    "type": "doc",
+    "id": "operator-observability"
+  }
+}
