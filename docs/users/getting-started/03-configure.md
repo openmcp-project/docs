@@ -252,7 +252,7 @@ The chart version and Helm values are configured by your platform owner via the 
 
 <TabItem value="otel-operator" label="OTEL Operator">
 
-[OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator) automates the deployment and lifecycle of the OpenTelemetry Collector and instrumentation within your ControlPlane, enabling distributed tracing, metrics, and logs.
+The [opentelemetry-kube-stack](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-kube-stack) Helm chart deploys the [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator) into your ControlPlane, enabling automated telemetry collection and instrumentation. The `spec.version` field selects the chart version; the OpenTelemetry Operator version is determined by the chart.
 
 To install the OpenTelemetry Operator, create an `OtelOperator` resource in the same namespace and with the same name as your `ControlPlane`:
 
@@ -265,6 +265,7 @@ metadata:
   name: my-controlplane
   namespace: project-platform-team--ws-dev
 spec:
+  # opentelemetry-kube-stack chart version (see https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-kube-stack)
   version: "0.20.1"
 ```
 
