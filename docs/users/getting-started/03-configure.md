@@ -249,6 +249,48 @@ kubectl apply -f metrics-operator.yaml
 
 The chart version and Helm values are configured by your platform owner via the `ProviderConfig`. See the [MetricsOperator CRD reference](/reference/services/metrics-operator) for the full API.
 
+
+<TabItem value="otel-operator" label="OTEL Operator">
+
+[OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator) automates the deployment and lifecycle of the OpenTelemetry Collector and instrumentation within your ControlPlane, enabling distributed tracing, metrics, and logs.
+
+To install the OpenTelemetry Operator, create an `OtelOperator` resource in the same namespace and with the same name as your `ControlPlane`:
+
+:::apply-to-onboarding-api
+
+```yaml
+apiVersion: oteloperator.services.openmcp.cloud/v1alpha1
+kind: OtelOperator
+metadata:
+  name: my-controlplane
+  namespace: project-platform-team--ws-dev
+spec:
+  version: "0.20.1"
+```
+
+```bash
+kubectl apply -f otel-operator.yaml
+```
+
+:::
+
+Once this object reconciles, you can verify the OpenTelemetry Operator is running on the ControlPlane:
+
+:::apply-to-controlplane
+
+```bash
+kubectl get pods -n opentelemetry-operator-system
+```
+
+```
+NAME                                        READY   STATUS    RESTARTS   AGE
+opentelemetry-operator-7d9c6f8b54-abcde     2/2     Running   0          45s
+```
+
+:::
+
+The chart version and Helm values are configured by your platform owner via the `ProviderConfig`. See the [OtelOperator CRD reference](/reference/services/otel-operator) for the full API.
+
 </TabItem>
 <TabItem value="kro" label="Kro">
 
@@ -310,3 +352,4 @@ Congratulations! You have a working ControlPlane with managed services. Here's w
 - **[Velero Service Provider](https://github.com/openmcp-project/service-provider-velero)** — Backup and disaster recovery
 - **[External Secrets Service Provider](https://github.com/openmcp-project/service-provider-external-secrets)** — Sync secrets from external vaults
 - **[Metrics Operator Service Provider](https://github.com/openmcp-project/service-provider-metrics-operator)** — Prometheus metrics collection and alerting
+- **[OTEL Operator Service Provider](https://github.com/openmcp-project/service-provider-otel-operator)** — OpenTelemetry-based distributed tracing and instrumentation
