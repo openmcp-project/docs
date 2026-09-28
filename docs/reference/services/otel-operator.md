@@ -36,7 +36,8 @@ metadata:
   name: my-controlplane
   namespace: project-platform-team--ws-dev
 spec:
+  # opentelemetry-kube-stack chart version — see https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-kube-stack
   version: "0.20.1"
 ```
 
-The OtelOperator service provider manages the installation and lifecycle of the [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator) within your ControlPlane, enabling OpenTelemetry-based telemetry collection and instrumentation for managed workloads.
+The OtelOperator service provider installs the [opentelemetry-kube-stack](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-kube-stack) Helm chart into your ControlPlane. The `spec.version` field selects the chart version; the [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator) version is determined by the chart.
