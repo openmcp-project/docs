@@ -249,7 +249,7 @@ kubectl apply -f metrics-operator.yaml
 
 The chart version and Helm values are configured by your platform owner via the `ProviderConfig`. See the [MetricsOperator CRD reference](/reference/services/metrics-operator) for the full API.
 
-
+</TabItem>
 <TabItem value="otel-operator" label="OTEL Operator">
 
 The [opentelemetry-kube-stack](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-kube-stack) Helm chart deploys the [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator) into your ControlPlane, enabling automated telemetry collection and instrumentation. The `spec.version` field selects the chart version; the OpenTelemetry Operator version is determined by the chart.
