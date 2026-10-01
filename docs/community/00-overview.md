@@ -36,32 +36,45 @@ Welcome to the OpenControlPlane community! We're building an open platform for m
 
 ## Special Interest Groups (SIG)
 
-<div className="reference-grid">
+<div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
 
-<div className="reference-card reference-card-featured" style={{gridColumn: 'span 2'}}>
-  <IconContainer size={60} compact>
-    <Puzzle size={60} strokeWidth={2} />
-  </IconContainer>
-  <h3>SIG Extensibility</h3>
-  <p>Make it easy to build, share, and adopt extensions - service providers, cluster providers, and platform services.</p>
+<div className="reference-card" style={{flexDirection: 'row', alignItems: 'flex-start', gap: '20px', padding: '24px 28px', textAlign: 'left', borderLeft: '4px solid #049f9a'}}>
+  <div style={{flexShrink: 0, color: '#049f9a', paddingTop: '2px'}}>
+    <Server size={32} strokeWidth={1.75} />
+  </div>
+  <div style={{flex: 1}}>
+    <h3 style={{marginBottom: '4px', fontSize: '1.1rem'}}>SIG Core</h3>
+    <p style={{marginBottom: '12px', fontSize: '0.9rem'}}>Owns the foundational APIs and controllers of OpenControlPlane — including `ControlPlane`, `ServiceProvider`, `ClusterProvider`, and `PlatformService`.</p>
+    <div style={{display: 'flex', gap: '16px', fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-700)', marginBottom: '14px', flexWrap: 'wrap'}}>
+      <span><strong>Leads:</strong> Radek Schekalla, Maximilian Techritz</span>
+      <span><strong>Meetings:</strong> Bi-weekly · Wed 3PM CET</span>
+      <span><strong>Focus:</strong> Core APIs · Controllers</span>
+    </div>
+    <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+      <a href="https://lists.neonephos.org/g/opencontrolplane-core/" className="reference-link" style={{fontSize: '0.85rem'}}>Subscribe to Mailing List →</a>
+      <a href="https://github.com/openmcp-project/community/tree/main/sig-core" className="reference-link" style={{fontSize: '0.85rem'}}>Charter on GitHub →</a>
+      <a href="https://github.com/orgs/openmcp-project/discussions/categories/community-calls" className="reference-link" style={{fontSize: '0.85rem'}}>Community Calls →</a>
+    </div>
+  </div>
+</div>
 
-  <dl className="sig-meta">
-    <div><dt>Leads</dt><dd>Maximilian Techritz, Christopher Junk (SAP)</dd></div>
-    <div><dt>Meetings</dt><dd>Bi-weekly &middot; Wednesday 3PM CET</dd></div>
-    <div><dt>Focus</dt><dd>Service providers &middot; Cluster providers &middot; Platform services</dd></div>
-  </dl>
-
-  <div className="sig-actions">
-    <a href="https://lists.neonephos.org/g/opencontrolplane-extensibility/" className="subscribe-button">
-      <Mail size={18} strokeWidth={2.5} className="subscribe-button-icon" />
-      <span>Subscribe to Mailing List</span>
-      <span className="subscribe-button-arrow" aria-hidden="true">→</span>
-    </a>
-    <a href="https://github.com/openmcp-project/community/tree/main/sig-extensibility" className="sig-secondary-button">
-      <BookOpen size={18} strokeWidth={2.5} className="sig-secondary-button-icon" />
-      <span>View charter on GitHub</span>
-      <ExternalLink size={14} strokeWidth={2.5} aria-hidden="true" />
-    </a>
+<div className="reference-card" style={{flexDirection: 'row', alignItems: 'flex-start', gap: '20px', padding: '24px 28px', textAlign: 'left', borderLeft: '4px solid #049f9a'}}>
+  <div style={{flexShrink: 0, color: '#049f9a', paddingTop: '2px'}}>
+    <Puzzle size={32} strokeWidth={1.75} />
+  </div>
+  <div style={{flex: 1}}>
+    <h3 style={{marginBottom: '4px', fontSize: '1.1rem'}}>SIG Extensibility</h3>
+    <p style={{marginBottom: '12px', fontSize: '0.9rem'}}>Make it easy to build, share, and adopt extensions — service providers, cluster providers, and platform services.</p>
+    <div style={{display: 'flex', gap: '16px', fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-700)', marginBottom: '14px', flexWrap: 'wrap'}}>
+      <span><strong>Leads:</strong> Maximilian Techritz, Christopher Junk</span>
+      <span><strong>Meetings:</strong> Bi-weekly · Wed 3PM CET</span>
+      <span><strong>Focus:</strong> Providers · Extensions</span>
+    </div>
+    <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+      <a href="https://lists.neonephos.org/g/opencontrolplane-extensibility/" className="reference-link" style={{fontSize: '0.85rem'}}>Subscribe to Mailing List →</a>
+      <a href="https://github.com/openmcp-project/community/tree/main/sig-extensibility" className="reference-link" style={{fontSize: '0.85rem'}}>Charter on GitHub →</a>
+      <a href="https://github.com/orgs/openmcp-project/discussions/categories/community-calls" className="reference-link" style={{fontSize: '0.85rem'}}>Community Calls →</a>
+    </div>
   </div>
 </div>
 
