@@ -36,9 +36,36 @@ Welcome to the OpenControlPlane community! We're building an open platform for m
 
 ## Special Interest Groups (SIG)
 
-<div className="reference-grid">
+<div className="reference-grid" style={{gridTemplateColumns: '1fr'}}>
 
-<div className="reference-card reference-card-featured" style={{gridColumn: 'span 2'}}>
+<div className="reference-card reference-card-featured">
+  <IconContainer size={60} compact>
+    <Server size={60} strokeWidth={2} />
+  </IconContainer>
+  <h3>SIG Core</h3>
+  <p>Owns the foundational APIs and controllers of OpenControlPlane — including ControlPlane, ServiceProvider, ClusterProvider, and PlatformService.</p>
+
+  <dl className="sig-meta">
+    <div><dt>Leads</dt><dd>Radek Schekalla, Maximilian Techritz (SAP)</dd></div>
+    <div><dt>Meetings</dt><dd>Bi-weekly &middot; Wednesday 3PM CET</dd></div>
+    <div><dt>Focus</dt><dd>Core APIs &middot; Controllers &middot; Platform services</dd></div>
+  </dl>
+
+  <div className="sig-actions">
+    <a href="https://lists.neonephos.org/g/opencontrolplane-core/" className="subscribe-button">
+      <Mail size={18} strokeWidth={2.5} className="subscribe-button-icon" />
+      <span>Subscribe to Mailing List</span>
+      <span className="subscribe-button-arrow" aria-hidden="true">→</span>
+    </a>
+    <a href="https://github.com/openmcp-project/community/tree/main/sig-core" className="sig-secondary-button">
+      <BookOpen size={18} strokeWidth={2.5} className="sig-secondary-button-icon" />
+      <span>View charter on GitHub</span>
+      <ExternalLink size={14} strokeWidth={2.5} aria-hidden="true" />
+    </a>
+  </div>
+</div>
+
+<div className="reference-card reference-card-featured">
   <IconContainer size={60} compact>
     <Puzzle size={60} strokeWidth={2} />
   </IconContainer>
