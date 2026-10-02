@@ -1,6 +1,7 @@
 ---
-sidebar_position: 1
-id: end-user-observability
+sidebar_position: 3
+id: observability
+title: Observability
 ---
 
 import Tabs from '@theme/Tabs';
@@ -8,7 +9,38 @@ import TabItem from '@theme/TabItem';
 
 # End-user observability
 
-This guide shows you how to monitor the resources you deploy on your ControlPlane — Crossplane managed resources, Deployments, HelmReleases, and other Kubernetes objects.
+This guide shows you how to monitor the resources you deploy on your ControlPlane — Crossplane managed resources, Deployments, HelmReleases, and other Kubernetes objects. If you are new to Observability, the [Observability Primer](https://opentelemetry.io/docs/concepts/observability-primer/#what-is-observability) is a good read.
+This guide focuses on the end-user perspective of observability within a ControlPlane. Platform owners can refer to [Platform-owner observability](/operators/observability) for monitoring the platform itself.
+
+## How observability fits together
+
+```mermaid
+graph LR
+    A[Collect] --> B[Store]
+    B --> C[Analyze & Alert]
+
+    classDef stageType fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    class A,B,C stageType
+```
+
+**Collect:** Gather telemetry from Kubernetes resources, controllers, and workloads. Use open standards — [OpenTelemetry](https://opentelemetry.io/) for metrics, logs, and traces.
+
+**Store:** Send telemetry to an OTLP-compatible backend or let Prometheus scrape it. You choose the backend.
+
+**Analyze & Alert:** Build dashboards, set thresholds, and create alerts so failures surface before users notice.
+
+## What to monitor
+
+Start with the signals that have the highest impact:
+
+| Signal                      | Why it matters                                                                                                                                        |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Managed resource health** | Crossplane `Ready` and `Synced` conditions tell you whether provisioned resources are healthy. Without telemetry, errors hide inside cluster objects. |
+| **Controller health**       | Reconcile error rate, duration, and work queue depth detect throttling or scaling issues before they cascade.                                         |
+| **Resource inventory**      | Counts by kind and version support upgrade planning and compliance.                                                                                   |
+| **Backup status**           | Silent backup failures are discovered only when it's too late.                                                                                        |
+| **Workload availability**   | Deployment and workload conditions show whether services are reachable.                                                                               |
+
 
 ## Prerequisites
 
@@ -104,7 +136,7 @@ The Metrics Operator provides four resource types:
 
 ### Monitor managed resource health
 
-This is the most important signal. Crossplane managed resources expose `Ready` and `Synced` conditions — without metrics, failures stay hidden inside cluster objects.
+Crossplane managed resources expose `Ready` and `Synced` conditions — without metrics, failures stay hidden inside cluster objects.
 
 ```yaml title="managed-resource-condition.yaml"
 apiVersion: metrics.openmcp.cloud/v1alpha1
@@ -258,4 +290,4 @@ Alert configuration depends on your backend. Consult your backend's documentatio
 - [Metrics Operator usage examples](https://github.com/openmcp-project/metrics-operator/blob/main/docs/usage.md)
 - [Dimensions configuration](https://github.com/openmcp-project/metrics-operator/blob/main/docs/dimensions-configuration.md) — projections, valueFrom, cardinality
 - [Remote cluster access](https://github.com/openmcp-project/metrics-operator/blob/main/docs/remote-cluster-access.md) — federated monitoring
-- [Platform-owner observability](/operators/observability/operator-observability) — monitoring the platform itself
+- [Platform-owner observability](/operators/observability) — monitoring the platform itself

@@ -1,51 +1,52 @@
 ---
-sidebar_position: 0
-id: operator-observability
+sidebar_position: 3
+id: observability
+title: Observability
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Observability
+# Platform Observability
 
-This guide shows you how to monitor the OpenControlPlane platform itself — controller health, API server availability, and fleet-wide resource state across ControlPlanes.
+This guide shows you how to monitor the [OpenControlPlane platform](/operators/overview) itself — controller health, API server availability, and fleet-wide resource state across ControlPlanes.
 
 ## Prerequisites
 
 - You have operator-level access to the platform cluster.
-- You have an OpenTelemetry-compatible backend or a Prometheus-compatible scraper.
+- You have installed the [Observability Stack](https://github.com/openmcp-project/observability-stack) on the platform cluster
+- You have an [OpenTelemetry-compatible](https://opentelemetry.io/ecosystem/vendors/) backend or a [Prometheus-compatible](https://prometheus.io/docs/introduction/overview/) scraper.
 
 ## What to monitor as a platform owner
 
 As a platform owner you care about signals that end users can't see — the health of the controllers, operators, and infrastructure that keep ControlPlanes running.
 
-| Signal | Source | Why it matters |
-|---|---|---|
-| Reconcile error rate | Controller-runtime `/metrics` | Detects controllers that are failing silently |
-| Reconcile duration | Controller-runtime `/metrics` | Surfaces slow reconciliation before it cascades |
-| Work queue depth | Controller-runtime `/metrics` | Warns about throttling and scaling pressure |
-| API server availability | Synthetic probes | Catches connectivity and certificate problems early |
-| Resource counts across the fleet | Metrics Operator `FederatedMetric` | Gives fleet-wide inventory for capacity planning |
+| Signal                           | Source                                                                                    | Why it matters                                      |
+| -------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Reconcile error rate             | Controller-runtime `/metrics`                                                             | Detects controllers that are failing silently       |
+| Reconcile duration               | Controller-runtime `/metrics`                                                             | Surfaces slow reconciliation before it cascades     |
+| Work queue depth                 | Controller-runtime `/metrics`                                                             | Warns about throttling and scaling pressure         |
+| API server availability          | Synthetic probes                                                                          | Catches connectivity and certificate problems early |
+| Resource counts across the fleet | [Metrics Operator](https://github.com/openmcp-project/metrics-operator) `FederatedMetric` | Gives fleet-wide inventory for capacity planning    |
 
 ## Monitor controller health
 
-Every controller built on [controller-runtime](https://github.com/kubernetes-sigs/controller-runtime) exposes a `/metrics` endpoint with reconcile counts, error counts, and durations. This includes Crossplane, Flux, and the Metrics Operator itself.
+Every controller built on [controller-runtime](https://github.com/kubernetes-sigs/controller-runtime) exposes a `/metrics` endpoint with reconcile counts, error counts, and durations. This includes Crossplane, Flux, and the [Metrics Operator](https://github.com/openmcp-project/metrics-operator) itself.
 
 Scrape these endpoints with a Prometheus-compatible stack or an OpenTelemetry Collector using the `prometheus` receiver.
 
 Key metrics to watch:
 
-| Metric | Type | Signal |
-|---|---|---|
-| `controller_runtime_reconcile_errors_total` | Counter | Reconcile failures per controller |
-| `controller_runtime_reconcile_time_seconds` | Histogram | Reconcile latency |
-| `workqueue_depth` | Gauge | Items waiting for reconciliation |
-| `workqueue_adds_total` | Counter | Rate of new work items |
+| Metric                                      | Type      | Signal                            |
+| ------------------------------------------- | --------- | --------------------------------- |
+| `controller_runtime_reconcile_errors_total` | Counter   | Reconcile failures per controller |
+| `controller_runtime_reconcile_time_seconds` | Histogram | Reconcile latency                 |
+| `workqueue_depth`                           | Gauge     | Items waiting for reconciliation  |
+| `workqueue_adds_total`                      | Counter   | Rate of new work items            |
 
 ### Scrape with ServiceMonitor
 
-If you run the Prometheus Operator, create `ServiceMonitor` resources for each controller:
-
+If you run the Prometheus Operator, create [`ServiceMonitor`](https://prometheus-operator.dev/docs/developer/getting-started/#using-servicemonitors) resources for each controller:
 
 :::apply-to-platform
 
@@ -65,8 +66,9 @@ spec:
 ```
 :::
 
-### Scrape with OpenTelemetry Collector
+### Scrape with [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector)
 
+The Otel-Collector is not part of the Observability stack. You can install it from the [kube-stack helm chart](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-kube-stack).
 Configure a `prometheus` receiver with Kubernetes service discovery:
 
 :::apply-to-platform
@@ -200,19 +202,19 @@ This is just a snippet, see the [OpenTelemetry Collector documentation](https://
 
 Alerts a platform owner should define:
 
-| Alert | Condition | Severity |
-|---|---|---|
-| Controller reconcile failures | `controller_runtime_reconcile_errors_total` rate > threshold | Critical |
-| High work queue depth | `workqueue_depth` > threshold for > 5 min | Warning |
-| Slow reconciliation | `controller_runtime_reconcile_time_seconds` p99 > threshold | Warning |
-| Fleet-wide managed resource failures | `fleet-managed-resources` with `Ready=False` count > 0 | Critical |
-| Backup failures across fleet | Federated backup metric with `phase != Completed` | Critical |
+| Alert                                | Condition                                                    | Severity |
+| ------------------------------------ | ------------------------------------------------------------ | -------- |
+| Controller reconcile failures        | `controller_runtime_reconcile_errors_total` rate > threshold | Critical |
+| High work queue depth                | `workqueue_depth` > threshold for > 5 min                    | Warning  |
+| Slow reconciliation                  | `controller_runtime_reconcile_time_seconds` p99 > threshold  | Warning  |
+| Fleet-wide managed resource failures | `fleet-managed-resources` with `Ready=False` count > 0       | Critical |
+| Backup failures across fleet         | Federated backup metric with `phase != Completed`            | Critical |
 
 Configure these in your backend's alerting system.
 
 ## What's next
 
-- [End-user observability](/users/observability/end-user-observability) — monitoring resources on a ControlPlane
+- [End-user observability](/users/observability) — monitoring resources on a ControlPlane
 - [Metrics Operator architecture](https://github.com/openmcp-project/metrics-operator/blob/main/docs/architecture.md)
 - [FederatedClusterAccess setup](https://github.com/openmcp-project/metrics-operator/blob/main/docs/remote-cluster-access.md)
 - [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
