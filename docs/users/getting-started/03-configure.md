@@ -22,7 +22,7 @@ In order to install any of the below offerings, their `ProviderConfig` object mu
 For each of these providers, the `name` of the managed service object **must** match your ControlPlane object's name. This ensures a single ControlPlane cannot have multiple installations of the same provider.
 :::
 
-<Tabs>
+<Tabs queryString="service">
 <TabItem value="crossplane" label="Crossplane" default>
 
 [Crossplane](https://www.crossplane.io/) enables you to manage cloud infrastructure using Kubernetes-style declarative configuration.
