@@ -250,6 +250,49 @@ kubectl apply -f metrics-operator.yaml
 The chart version and Helm values are configured by your platform owner via the `ProviderConfig`. See the [MetricsOperator CRD reference](/reference/services/metrics-operator) for the full API.
 
 </TabItem>
+<TabItem value="otel-operator" label="OTEL Operator">
+
+The [opentelemetry-kube-stack](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-kube-stack) Helm chart deploys the [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator) into your ControlPlane, enabling automated telemetry collection and instrumentation. The `spec.version` field selects the chart version; the OpenTelemetry Operator version is determined by the chart.
+
+To install the OpenTelemetry Operator, create an `OtelOperator` resource in the same namespace and with the same name as your `ControlPlane`:
+
+:::apply-to-onboarding-api
+
+```yaml
+apiVersion: oteloperator.services.openmcp.cloud/v1alpha1
+kind: OtelOperator
+metadata:
+  name: my-controlplane
+  namespace: project-platform-team--ws-dev
+spec:
+  # opentelemetry-kube-stack chart version (see https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-kube-stack)
+  version: "0.20.1"
+```
+
+```bash
+kubectl apply -f otel-operator.yaml
+```
+
+:::
+
+Once this object reconciles, you can verify the OpenTelemetry Operator is running on the ControlPlane:
+
+:::apply-to-controlplane
+
+```bash
+kubectl get pods -n opentelemetry-operator-system
+```
+
+```
+NAME                                        READY   STATUS    RESTARTS   AGE
+opentelemetry-operator-7d9c6f8b54-abcde     2/2     Running   0          45s
+```
+
+:::
+
+The chart version and Helm values are configured by your platform owner via the `ProviderConfig`. See the [OtelOperator CRD reference](/reference/services/otel-operator) for the full API.
+
+</TabItem>
 <TabItem value="kro" label="Kro">
 
 [Kro](https://kro.run) (Kube Resource Orchestrator) lets you create custom Kubernetes APIs by composing existing resources into higher-level abstractions. The service provider installs the Kro controller into the `kro-system` namespace on your ControlPlane via a Flux `HelmRelease`.
@@ -310,3 +353,4 @@ Congratulations! You have a working ControlPlane with managed services. Here's w
 - **[Velero Service Provider](https://github.com/openmcp-project/service-provider-velero)** — Backup and disaster recovery
 - **[External Secrets Service Provider](https://github.com/openmcp-project/service-provider-external-secrets)** — Sync secrets from external vaults
 - **[Metrics Operator Service Provider](https://github.com/openmcp-project/service-provider-metrics-operator)** — Prometheus metrics collection and alerting
+- **[OTEL Operator Service Provider](https://github.com/openmcp-project/service-provider-otel-operator)** — OpenTelemetry-based distributed tracing and instrumentation
