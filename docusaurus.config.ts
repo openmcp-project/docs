@@ -9,6 +9,15 @@ const config: Config = {
   tagline: 'Part of ApeiroRA and NeoNephos.',
   favicon: 'img/favicon.ico',
 
+  headTags: [
+    {
+      tagName: 'script',
+      attributes: {
+        src: 'https://cmp.osano.com/16A0DbT9yDNIaQkvZ/af2b9f1f-3ac7-4a18-a99a-e487d04f08e6/osano.js',
+      },
+    },
+  ],
+
   // Set the production url of your site here
   url: 'https://open-control-plane.io',
   // Set the /<baseUrl>/ pathname under which your site is served
