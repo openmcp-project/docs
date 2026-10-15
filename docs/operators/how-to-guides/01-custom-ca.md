@@ -132,3 +132,7 @@ A successful TLS handshake confirms your custom CA bundle is correct. If `curl` 
 :::warning Container runtime
 The CA bundle is propagated to service provider components running inside ControlPlanes, but **not** to the container runtime on the cluster nodes. If your private OCI registry uses a custom CA, you must also install the CA certificate directly on the cluster nodes so the kubelet can pull images. Refer to your cluster provider's documentation for node-level CA configuration.
 :::
+
+:::warning Certificate Rotation
+When rotating the CA bundle on the **platform cluster**, the updated bundle is automatically propagated to the ConfigMap on the **controlplane cluster**. However, processes running in the deployed service provider pods typically **do not** dynamically reload CA configuration. They must be restarted to pick up the changes which is done easiest by delete the affected pods manually to trigger a redeployment.
+:::
