@@ -4,6 +4,17 @@
  * work well for content-centric websites.
  */
 
+/* Prevent horizontal scroll site-wide */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Stronger clip for browsers that treat html/body scroll independently */
+html {
+  overflow-x: clip;
+}
+
 /* ===== Design tokens & IFM vars ===== */
 :root {
   /* Landing Page Core Colors */
@@ -196,7 +207,7 @@
   gap: 16px;
   max-width: 1152px;
   width: 100%;
-  height: 60vh;
+  min-height: 60vh;
   margin: 0 auto;
   padding: 0 24px;
 }
@@ -268,8 +279,8 @@
 
 .lp-home .image-container {
   position: relative;
-  width: 450px;
-  height: 450px;
+  width: min(450px, 90vw);
+  height: min(450px, 90vw);
   margin: 60px auto 0;
 }
 
@@ -326,27 +337,72 @@
   }
   .lp-home .flex-container {
     flex-direction: column;
-    height: 80vh;
+    height: auto;
+    padding: 16px 16px 0;
+    gap: 24px;
+  }
+  .lp-home .main {
+    order: 1;
+  }
+  .lp-home .image {
+    order: 2;
+  }
+  .lp-home .image-container {
+    width: min(280px, 80vw);
+    height: min(280px, 80vw);
+    margin: 0 auto;
+  }
+  .lp-home .name {
+    font-size: 32px;
+  }
+  .lp-home .text {
+    font-size: 18px !important;
   }
   .lp-home .actions {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 8px;
     width: 100%;
   }
+  .lp-home .actions .action:last-child {
+    grid-column: span 2;
+  }
   .action a {
-    padding: 6px 8px;
-    font-size: 12px;
+    padding: 8px 12px;
+    font-size: 13px;
   }
 }
 
 @media (min-width: 481px) and (max-width: 959px) {
   .lp-home .image-container {
-    width: 280px;
-    height: 280px;
+    width: min(280px, 70vw);
+    height: min(280px, 70vw);
+    margin: 0 auto;
   }
   .lp-home .flex-container {
     flex-direction: column;
+    height: auto;
+    padding: 24px 24px 0;
+    gap: 24px;
+  }
+  .lp-home .main {
+    order: 1;
+    text-align: center;
+    width: 100%;
+  }
+  .lp-home .image {
+    order: 2;
+  }
+  .lp-home .actions {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  /* Make the transparent developers button visible on mobile */
+  .lp-home .action a[href*="/developers/"],
+  html[data-theme="light"] .lp-home .action a[href*="/developers/"] {
+    border: 1px solid currentColor !important;
   }
 }
 
@@ -3561,6 +3617,7 @@ article[data-role="enduser"] {
   background: rgba(4, 159, 154, 0.02);
   border-radius: 16px;
   padding: 60px 40px;
+  overflow: hidden;
 }
 
 [data-theme='dark'] .essentials-visual-standalone {
@@ -3728,6 +3785,7 @@ article[data-role="enduser"] {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .unified-cp {
@@ -3920,6 +3978,7 @@ article[data-role="enduser"] {
   min-height: 550px;
   padding: 60px 40px;
   background: rgba(4, 159, 154, 0.02);
+  overflow: hidden;
 }
 
 /* Descriptions below animations */
@@ -5626,6 +5685,7 @@ article[data-role="enduser"] {
 .providers-section {
   padding: 67px 0 0 0;
   background: linear-gradient(225deg, rgba(7, 131, 143, 0.12) 0%, rgba(17, 112, 124, 0.08) 40%, rgba(2, 65, 76, 0.15) 100%);
+  overflow-x: hidden;
 }
 
 [data-theme='dark'] .providers-section {
@@ -5673,6 +5733,12 @@ article[data-role="enduser"] {
   border-radius: 16px;
   padding: 48px 32px;
   overflow: visible;
+}
+
+@media (max-width: 959px) {
+  .visual {
+    overflow: hidden;
+  }
 }
 
 .providers-section .visual {
@@ -6116,6 +6182,7 @@ article[data-role="enduser"] {
   justify-content: center;
   border-radius: 16px;
   padding: 48px 32px;
+  overflow: hidden;
 }
 
 [data-theme='dark'] .providers-visual-unified {
@@ -6485,6 +6552,7 @@ article[data-role="enduser"] {
 .anywhere-section {
   padding: 96px 0 48px 0;
   background: linear-gradient(180deg, rgba(135, 206, 235, 0.1) 0%, rgba(7, 131, 143, 0.08) 30%, rgba(14, 89, 99, 0.12) 70%, rgba(2, 65, 76, 0.15) 100%);
+  overflow-x: hidden;
 }
 
 [data-theme='dark'] .anywhere-section {
@@ -6687,6 +6755,7 @@ article[data-role="enduser"] {
   justify-content: center;
   border-radius: 16px;
   padding: 48px 32px;
+  overflow: hidden;
 }
 
 [data-theme='dark'] .anywhere-visual-unified {
