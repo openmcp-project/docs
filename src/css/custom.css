@@ -332,6 +332,9 @@ html {
 
 /* Hero media queries */
 @media (max-width: 480px) {
+  .lp-home {
+    overflow-x: clip;
+  }
   .lp-home .container {
     gap: var(--nav-pad-x) !important;
   }
@@ -3234,6 +3237,72 @@ article[data-role="enduser"] {
   .cp-cloud-2-2 {
     bottom: 38%;
     right: -8%;
+    left: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .lp-home .image-container {
+    width: min(380px, 96vw);
+    height: min(420px, 110vw);
+    margin: 0 auto;
+  }
+
+  .cp-cloud-projection {
+    width: 220px;
+    height: 154px;
+  }
+
+  .flying-cp {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* EU-gov: links Mitte */
+  .cp-cloud-1 {
+    bottom: 30%;
+    left: 0%;
+  }
+
+  /* dev: oben Mitte links */
+  .cp-cloud-2-1 {
+    bottom: 60%;
+    left: 12%;
+    right: auto;
+  }
+
+  /* prod: oben Mitte rechts */
+  .cp-cloud-2-2 {
+    bottom: 60%;
+    right: 5%;
+    left: auto;
+  }
+
+  /* EU-public: rechts Mitte */
+  .cp-cloud-3 {
+    display: block !important;
+    bottom: 30%;
+    right: -10%;
+    left: auto;
+  }
+
+  .flying-cp-1 {
+    bottom: 10%;
+    left: 2%;
+  }
+
+  .flying-cp-2 {
+    bottom: 40%;
+    left: 38%;
+    right: auto;
+    transform: none;
+  }
+
+  /* EU-public ship */
+  .flying-cp-3 {
+    display: block !important;
+    bottom: 10%;
+    right: 2%;
     left: auto;
   }
 }
