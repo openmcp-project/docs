@@ -134,5 +134,5 @@ The CA bundle is propagated to service provider components running inside Contro
 :::
 
 :::warning Certificate Rotation
-When rotating the CA bundle on the **platform cluster**, the updated bundle is automatically propagated to the ConfigMap on the **controlplane cluster**. However, processes running in the deployed service provider pods typically **do not** dynamically reload CA configuration. They must be restarted to pick up the changes which is done easiest by delete the affected pods manually to trigger a redeployment.
+When rotating the CA bundle on the **platform cluster**, the updated bundle is automatically propagated to the ConfigMap on the **controlplane cluster**. However, processes running in the deployed service provider pods typically **do not** dynamically reload CA configuration. They must be restarted to pick up the changes which is done easiest by manually deleting the affected pods to trigger a redeployment.
 :::
