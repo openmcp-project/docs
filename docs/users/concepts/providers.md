@@ -19,7 +19,7 @@ Service Providers add functionality to individual **`ControlPlanes`** — exampl
 - **Platform Owners** install and configure which service providers are available in the environment.
 - **End users** choose which of those providers to activate for their own `ControlPlane`.
 
-**CRD Reference:** [ServiceProvider](/reference/operator/providers/serviceprovider) · [Available services](/reference/overview#service-providers)
+**CRD Reference:** [ServiceProvider](/reference/operator/providers/serviceprovider) · [Available services](/reference/overview#services)
 
 **Developer guide:** [Build a Service Provider](/developers/serviceprovider/develop)
 
