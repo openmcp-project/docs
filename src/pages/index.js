@@ -247,7 +247,7 @@ export default function Home() {
         <div className="flex-container">
           <div className="main">
             <h1 className="heading">
-              <span className="name clip">OpenControlPlane docs</span>
+              <span className="name clip">OpenControlPlane</span>
               <span className="text">Give your teams the power to run robust, compliant clouds. Public, private, or Sovereign.</span>
             </h1>
             <div className="container" style={{ padding: "0" }}>
