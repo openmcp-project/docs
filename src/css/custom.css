@@ -338,14 +338,14 @@ html {
   .lp-home .flex-container {
     flex-direction: column;
     height: auto;
-    padding: 16px 16px 0;
+    padding: 56px 16px 0;
     gap: 24px;
   }
   .lp-home .main {
-    order: 1;
+    order: 2;
   }
   .lp-home .image {
-    order: 2;
+    order: 1;
   }
   .lp-home .image-container {
     width: min(280px, 80vw);
