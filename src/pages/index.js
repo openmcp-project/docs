@@ -674,7 +674,8 @@ export default function Home() {
           </span>
         </section>
 
-        <section className="essentials-section" ref={section1Ref}>
+        {/* essentials / providers / anywhere sections removed — to be re-added later */}
+        {false && <><section className="essentials-section" ref={section1Ref}>
           <div className="container">
             {/* Full-width title header */}
             <div className="section-header">
@@ -1212,7 +1213,7 @@ spec:
               </div>
             </div>
           </div>
-        </section>
+        </section></>}
 
         <section className="open-source-section">
           <div className={clsx("col col--8")}>
