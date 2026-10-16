@@ -247,7 +247,7 @@ export default function Home() {
         <div className="flex-container">
           <div className="main">
             <h1 className="heading">
-              <span className="name clip">OpenControlPlane docs</span>
+              <span className="name clip">OpenControlPlane</span>
               <span className="text">Give your teams the power to run robust, compliant clouds. Public, private, or Sovereign.</span>
             </h1>
             <div className="container" style={{ padding: "0" }}>
@@ -674,7 +674,8 @@ export default function Home() {
           </span>
         </section>
 
-        <section className="essentials-section" ref={section1Ref}>
+        {/* essentials / providers / anywhere sections removed — to be re-added later */}
+        {false && <><section className="essentials-section" ref={section1Ref}>
           <div className="container">
             {/* Full-width title header */}
             <div className="section-header">
@@ -1212,7 +1213,7 @@ spec:
               </div>
             </div>
           </div>
-        </section>
+        </section></>}
 
         <section className="open-source-section">
           <div className={clsx("col col--8")}>
