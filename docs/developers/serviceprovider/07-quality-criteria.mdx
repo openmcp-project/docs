@@ -39,6 +39,10 @@ When reconciliation fails, the cause appears on a Condition's `message` and as a
 
 The service provider honours the [operation annotations](/developers/general#operation-annotations) defined in the controller guidelines. These annotations allow platform owners and end users to pause or force-reconcile a `ServiceProviderAPI` or `ServiceProviderConfig` without modifying its spec.
 
+:::tip
+If you use the `opencontrolplane-runtime` package, this behaviour is implemented centrally in [`pkg/serviceprovider/apireconciler.go`](https://github.com/openmcp-project/opencontrolplane-runtime/blob/main/pkg/serviceprovider/apireconciler.go).
+:::
+
 ### 4. API stability policy
 
 The provider declares its API maturity per CRD (`v1alpha1`, `v1beta1`, `v1`) and follows the matching change policy. Breaking changes at `v1beta1`+ require a deprecation cycle. Conversion webhooks exist when multiple versions are served. See the Kubernetes [API conventions](https://github.com/kubernetes/community/blob/main/contributors/devel/sig-architecture/api-conventions.md) and [API change guidelines](https://github.com/kubernetes/community/blob/main/contributors/devel/sig-architecture/api_changes.md) for the expectations this criterion builds on.
@@ -57,7 +61,15 @@ The [openmcp-project/build](https://github.com/openmcp-project/build) repository
 
 The service provider is tested against a real cluster covering the full lifecycle: install, reconcile, and delete a `DomainService` in a `ControlPlane`. The [openmcp-testing](https://github.com/openmcp-project/openmcp-testing) framework provides tooling for this within the OpenControlPlane ecosystem. A dedicated integration test suite to verify that a service provider is well-behaved is planned for the future.
 
-### 8. Ownership and maintenance documentation
+### 8. Private OCI registry support
+
+The provider supports pulling OCI artifacts from private registries by using registry credentials. Platform operators can reference credentials (for example through Kubernetes image pull secrets) without hardcoding them into manifests. Authentication failures are surfaced as actionable status conditions and events so operators can diagnose missing, invalid, or expired credentials quickly.
+
+:::tip
+This can be achieved by using pre-built functions from [openmcp-project/extensibility-utils](https://github.com/openmcp-project/extensibility-utils) or by using [openmcp-project/platform-service-resource-replicator](https://github.com/openmcp-project/platform-service-resource-replicator).
+:::
+
+### 9. Ownership and maintenance documentation
 
 A `MAINTAINERS.md` or `CODEOWNERS` file names responsible humans or teams. Contribution and issue reporting instructions are documented in `CONTRIBUTING.md` or the project README.
 
@@ -100,6 +112,7 @@ A link back to this page so anyone reading the table can find the definitions.
 | Custom CA support                 |   ❌    |
 | Release artifacts (image + OCM)   |   ✅    |
 | Testing                           |   ✅    |
+| Private OCI registry support      |   ❌    |
 | Ownership and maintenance docs    |   ✅    |
 
 See the [OpenControlPlane Quality Criteria](https://open-control-plane.io/developers/serviceprovider/quality-criteria) for definitions.
