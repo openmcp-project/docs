@@ -22,6 +22,7 @@
     "@docusaurus/preset-classic": "^3.8.1",
     "@docusaurus/theme-mermaid": "^3.8.1",
     "@mdx-js/react": "^3.0.0",
+    "@plausible-analytics/tracker": "0.4.6",
     "clsx": "^2.0.0",
     "js-yaml": "^5.0.0",
     "lucide-react": "^1.0.0",
