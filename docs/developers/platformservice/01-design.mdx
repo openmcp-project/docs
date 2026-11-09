@@ -9,9 +9,8 @@ This document defines the terminology for Platform Services within the OpenContr
 
 ## Domain
 
-Platform services deliver platform capabilities within the OpenControlPlane ecosystem. They follow similar architectural patterns to [Service Providers](../serviceprovider/design) and [Cluster Providers](../clusterprovider/design).
-
-In the layered architecture defined by the [OpenControlPlane personas](../../users/concepts/personas), Platform Services operate in the Platform Owner layer. Together with [Cluster Providers](../clusterprovider/design) they build the foundation of OpenControlPlane.
+Platform Services deliver platform capabilities within the OpenControlPlane ecosystem. They follow similar architectural patterns to [Service Providers](../serviceprovider/design) and [Cluster Providers](../clusterprovider/design).
+Unlike Service Providers, Platform Services are not necessarily providing end-user facing functionality (see [comparison](#comparison-to-service-providers)).
 
 Some Platform Services are required to operate OpenControlPlane, such as those included in the [openmcp-operator](https://github.com/openmcp-project/openmcp-operator). Others are optional and extend the platform's capabilities to support specific use cases.
 
