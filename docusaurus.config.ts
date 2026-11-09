@@ -37,6 +37,7 @@ const config: Config = {
     }
   },
   themes: ['@docusaurus/theme-mermaid', '@cmfcmf/docusaurus-search-local'],
+  clientModules: ['./src/clientModules/analytics.js'],
 
   presets: [
     [
