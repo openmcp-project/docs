@@ -105,6 +105,7 @@ kubectl create -f project.yaml
 
 :::note
 We use `kubectl create` rather than `apply` throughout this guide.
+This is required for `Project` resources, where the `GET` permissions required for `kubectl apply` are only granted after project creation, and only for the projects the user has permissions for.
 :::
 
 Once the project reconciles, check its status. It should contain a `namespace` that the project generated:
