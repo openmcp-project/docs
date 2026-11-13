@@ -354,3 +354,5 @@ Congratulations! You have a working ControlPlane with managed services. Here's w
 - **[External Secrets Service Provider](https://github.com/openmcp-project/service-provider-external-secrets)** — Sync secrets from external vaults
 - **[Metrics Operator Service Provider](https://github.com/openmcp-project/service-provider-metrics-operator)** — Prometheus metrics collection and alerting
 - **[OTEL Operator Service Provider](https://github.com/openmcp-project/service-provider-otel-operator)** — OpenTelemetry-based distributed tracing and instrumentation
+
+Or continue to [4. Offboard](./04-offboard.md) to learn how to get rid of single services or the whole ControlPlane again.
