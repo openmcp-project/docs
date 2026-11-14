@@ -1,0 +1,21 @@
+---
+sidebar_position: 2
+id: personas
+slug: /users/concepts/personas
+---
+
+import { User, Settings, Puzzle, Wrench } from 'lucide-react';
+
+# Personas
+
+| | Persona | Description | Common Tasks | Starting Point |
+| :-: | :------ | :---------- | :----------- | :------------- |
+| <Settings size={28} color="var(--teal-6)" /> | **Platform Owner** | **Hosts and operates the platform for their organization.** Selects and configures the [Cluster](../../developers/clusterprovider/design), [Platform](../../developers/platformservice/design), and [Service Providers](../../developers/serviceprovider/design) to match their company's needs. | <ul><li>Sets up the platform</li><li>Enables services on the platform</li><li>Ensures health of the platform</li></ul> | [Operators Guide →](/operators/overview) |
+| <User size={28} color="var(--teal-6)" /> | **End User** | **Orders `ControlPlanes` from the platform.** Picks from the available services to choose the best tools for orchestrating their cloud landscapes. | <ul><li>Orders `ControlPlanes` on the platform</li><li>Orchestrates their cloud landscapes using `ControlPlanes`</li><li>Ensures health of cloud landscapes</li></ul> | [End User Guide →](/users/getting-started) |
+| <Puzzle size={28} color="var(--teal-6)" /> | **(Platform) Service Provider** | Teams **providing a service** _(e.g. OCM, Flux, any APIs)_ to end users on the platform. | <ul><li>Offers services on the platform</li><li>Contributes to service providers</li><li>Ensures health of services offered</li></ul> | [Developer Docs →](/developers/overview) |
+| <Wrench size={28} color="var(--teal-6)" /> | **Contributor** | Extends, fixes, or adjusts Cluster, Platform, or Service Providers. | <ul><li>Enriches service features, security and stability</li></ul> | [Community →](/community/overview) |
+
+---
+
+### Recommended Reading
+- [Why Kubernetes Is Inappropriate for Platforms, and How to Make It Better](https://www.youtube.com/watch?v=7op_r9R0fCo)
