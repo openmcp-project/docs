@@ -51,6 +51,11 @@ Force-deleting a `ControlPlane` should only be done as a last resort and with pr
 It skips the proper service cleanup and **will** leak any managed resources which are not on the ControlPlane's cluster itself, such as DNS records, S3 buckets, and so on.
 :::
 
+:::info Force-Deletion Blockers
+For technical reasons, not all services can be force-deleted. In some cases, force-deletion might even be blocked completely.
+A corresponding condition on the `ControlPlane` will inform you if one or more service resources cannot be force-deleted.
+:::
+
 #### Timed Force-Deletion
 
 Instead of using `true` as the value for the `open-control-plane.io/force-delete` annotation, it also accepts a [go-parsable duration](https://pkg.go.dev/time#ParseDuration), e.g. `3h`. If configured this way, the force-deletion only kicks in after that amount of time has passed since _the initial deletion of the `ControlPlane`_ (what is displayed under `metadata.deletionTimestamp`).
