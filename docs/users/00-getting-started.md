@@ -25,6 +25,7 @@ Learn the basics of working with OpenControlPlane:
 - **[Onboarding](./getting-started/onboard)** - Create your first project and workspace
 - **[Connect](./getting-started/connect)** - Access your control plane
 - **[Configure](./getting-started/configure)** - Set up services and resources
+- **[Offboarding](./getting-started/offboard)** - Deleting services and ControlPlanes
 
 ### Core Concepts
 
