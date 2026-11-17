@@ -28,7 +28,7 @@ The end-user adds services to the `ControlPlane` by creating their corresponding
 
 #### 3. Service Usage
 
-The end-user uses the installed services.
+The end-user uses the installed services on the `ControlPlane` cluster by creating custom resources based on Custom Resource Definitions (CRDs).
 
 #### 4. Service Removal
 
