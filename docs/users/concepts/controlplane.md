@@ -20,7 +20,7 @@ This section shortly summarizes the usual lifecycle of a `ControlPlane`. For a m
 
 #### 1. ControlPlane Creation
 
-The end-user creates a new `ControlPlane`. This results in a (mostly) empty kubernetes cluster that has RBAC resources (`ClusterRole`, `ClusterRoleBinding`, etc.) configured as specified in the `ControlPlane`.
+The end user creates a new `ControlPlane` at the Onboarding cluster. This results in a (mostly) empty Kubernetes cluster that has RBAC resources (`ClusterRole`, `ClusterRoleBinding`, etc.) configured as specified in the `ControlPlane` object.
 
 #### 2. Service Installation
 
