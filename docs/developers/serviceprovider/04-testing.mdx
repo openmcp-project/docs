@@ -215,3 +215,90 @@ task test-e2e
 :::info
 Rebuild before re-running. `LoadImageToCluster` only loads the tag named in the bootstrap struct; if you skip `task build:img:build-test` after a code change, and, for example, run the tests using `go test` or the IDE run test feature, the test cluster will keep using the old image. And your changes will not be tested.
 :::
+
+## Testing against existing environments
+
+Instead of bootstrapping an OpenControlPlane environment from scratch, [testing against existing environments](https://github.com/openmcp-project/openmcp-testing#testing-against-existing-environments) can be achieved by replacing the `OpenMCPSetup.Bootstrap` with `OpenMCPSetup.Verify` to verify that an existing environment meets the requested OpenControlPlane setup before executing a test suite.
+
+Applied to the earlier [example](#starting-from-the-template) this would result in the following main test setup:
+
+```go
+func TestMain(m *testing.M) {
+	openmcp := setup.OpenMCPSetup{
+		Namespace: "openmcp-system",
+		Operator: setup.OpenMCPOperatorSetup{
+			Name:         "openmcp-operator",
+			Image:        "ghcr.io/openmcp-project/images/openmcp-operator:v0.18.1",
+			Environment:  "debug",
+			PlatformName: "platform",
+		},
+		ClusterProviders: []providers.ClusterProviderSetup{
+			{Name: "kind", Image: "ghcr.io/openmcp-project/images/cluster-provider-kind:v0.2.0"}, // <--- this can be any cluster provider; kind allows you to run tests against an environment bootstrapped with ocpctl
+		},
+		ServiceProviders: []providers.ServiceProviderSetup{
+			{
+				Name:  "foo",
+				Image: "ghcr.io/openmcp-project/images/service-provider-foo:v0.1.0", // <--- reference an existing provider version instead of loading a locally built dev image
+			},
+		},
+	}
+	testenv = env.NewWithConfig(envconf.New().WithNamespace(openmcp.Namespace))
+	openmcp.Verify(testenv) // <--- verify an existing environment instead of bootstrapping a new one
+	os.Exit(testenv.Run(m))
+}
+```
+
+The current kubeconfig context must point to the OpenControlPlane [platform cluster](../clusters-and-namespaces#cluster-overview). To interact with additional clusters, e.g. to create resources on the onboarding or a control plane cluster,
+use `clusterutils.ConfigByEnv` or the [ClusterAccess Library](https://github.com/openmcp-project/openmcp-operator/blob/main/docs/libraries/clusteraccess.md) instead of the kind-based `clusterutils` functions.
+
+## Testing performance
+
+The [Prometheus extension](https://github.com/openmcp-project/openmcp-testing/tree/main/pkg/setup/extensions/prometheus) enables performance testing via [PromQL](https://prometheus.io/docs/prometheus/latest/querying/basics/) queries.
+It can be used to test service providers and domain services in the context of OpenControlPlane.
+
+The extension can be used as part of the bootstrapping process:
+
+```go
+import (
+	"github.com/openmcp-project/openmcp-testing/pkg/setup/extensions"
+	"github.com/openmcp-project/openmcp-testing/pkg/setup/extensions/prometheus"
+)
+
+var testenv env.Environment
+var promExt prometheus.Prometheus
+
+func TestMain(m *testing.M) {
+	promExt = prometheus.Prometheus{}
+	openmcp := setup.OpenMCPSetup{
+        // ...
+		Extensions: []extensions.Extension{
+			&promExt,
+		},
+	}
+	testenv = env.NewWithConfig(envconf.New().WithNamespace(openmcp.Namespace))
+	openmcp.Bootstrap(testenv)
+	os.Exit(testenv.Run(m))
+}
+```
+
+Or individually to run a test suite against an existing environment:
+
+```go
+var testenv env.Environment
+var promExt prometheus.Prometheus
+
+func TestMain(m *testing.M) {
+	promExt = prometheus.Prometheus{}
+	openmcp := setup.OpenMCPSetup{ /* ... */ }
+	testenv = env.NewWithConfig(envconf.New().WithNamespace(openmcp.Namespace))
+	testenv.Setup(func(ctx context.Context, c *envconf.Config) (context.Context, error) {
+		return ctx, promExt.Install(ctx, c)
+	}).Finish(func(ctx context.Context, c *envconf.Config) (context.Context, error) {
+		return ctx, promExt.Uninstall(ctx, c)
+	})
+	openmcp.Verify(testenv)
+	os.Exit(testenv.Run(m))
+}
+```
+
+Use `prometheus.Query` to execute any PromQL query that fits your service and testing scenario. Use the predefined queries as a reference to define custom queries. The [reference usage documentation](https://github.com/openmcp-project/openmcp-testing/blob/main/pkg/setup/extensions/prometheus/README.md#reference-usage) includes a working example.
