@@ -197,11 +197,11 @@ At the time of writing, the design of a `ProviderConfig` must address the follow
 1. Deployment prerequisites for restricted environments: A `ProviderConfig` **must** expose the configuration required to deploy a service provider in private or aig-gapped environments, for example by specifying image and Helm chart pull secrets.
 2. Constraining deployable domain service versions: A `ProviderConfig` **must** expose configuration that constraints which versions of a domain service the service provider is allowed to deploy. This enables platform operators to explicitly define an approved set of versions.
 It is required to add this for new service providers until dedicated Registry and TenantPolicy systems will replace this in the future (see [Discoverability of OpenControlPlane components](https://github.com/openmcp-project/backlog/issues/384)).
-3. Runtime behavior: A `ProviderConfig` **may** expose configuration settings that influence the runtime behavior of a service provider, such as the poll interval used in the service provider template or [support for custom CA bundles](./how-to-guides/01-custom-ca.md).
+3. Runtime behavior: A `ProviderConfig` **may** expose configuration settings that influence the runtime behavior of a service provider, such as the sync interval of the Flux objects it creates or [support for custom CA bundles](./how-to-guides/01-custom-ca.md). How often the runtime reconciles a service object is not a `ProviderConfig` setting, see [Requeue Behavior](#requeue-behavior).
 
 ### ProviderConfig Example
 
-Velero's ProviderConfig currently includes both operational settings and deployment artifacts:
+Velero's ProviderConfig currently includes deployment artifacts:
 
 ```yaml
 apiVersion: velero.services.open-control-plane.io/v1alpha1
@@ -209,9 +209,6 @@ kind: ProviderConfig
 metadata:
   name: default
 spec:
-  # OPERATIONAL SETTINGS (correct — permanent)
-  pollInterval: 1m
-
   # DEPLOYMENT ARTIFACTS (temporary — will move to separate API)
   availableImages:
     - name: velero
@@ -445,6 +442,41 @@ There is no generic way to enumerate every CRD a domain service installs, so eac
 :::info
 The [service-provider-template](https://github.com/openmcp-project/service-provider-template) does not yet provide a reference implementation for this check. Progress is tracked in [openmcp-project/service-provider-template#88](https://github.com/openmcp-project/service-provider-template/issues/88).
 :::
+
+### Requeue Behavior
+
+The runtime decides when a service object is reconciled again after `CreateOrUpdate` or `Delete` returns:
+
+1. If your reconciler returns a `ctrl.Result` with `RequeueAfter`, the object is reconciled again after that time.
+2. Otherwise the object is reconciled again after 30 minutes plus a random delay of up to 20%, whatever its status. This is only a safety net to correct drift, for example a `HelmRelease` that someone deleted from the workload cluster. The service provider cannot watch resources inside tenant clusters, so this periodic run is how drift is found.
+
+Changes to the status of the service object do not trigger a reconcile. If the object is not ready yet and your provider waits for something, for example a `HelmRelease` that Flux has not reconciled yet, return `RequeueAfter` explicitly. Otherwise the object stays `Progressing` until the next periodic run:
+
+```go
+if !allResourcesReady(managedResources) {
+ serviceprovider.StatusProgressing(obj, "Reconciling", "Waiting for managed resources to become ready")
+ return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+}
+serviceprovider.StatusReady(obj)
+return ctrl.Result{}, nil
+```
+
+If the reconcile fails, return the error and leave `RequeueAfter` unset: controller-runtime retries failed reconciles with exponential backoff and ignores the result when an error is returned.
+
+Periodic work that is not tied to the state of the service object, for example renewing a ServiceAccount token, belongs in its own controller. See [Provide a ControlPlane Token to the Workload Cluster](./how-to-guides/02-controlplane-token.md).
+
+You can change the default interval in code or with an environment variable:
+
+- In code, with the builder method `RequeueInterval`:
+
+  ```go
+  serviceprovider.NewAPIReconcilerBuilder[*apiv1alpha1.FooService, *apiv1alpha1.ProviderConfig]().
+   // ...
+   RequeueInterval(10 * time.Minute).
+   MustBuild()
+  ```
+
+- At run time, with the environment variable `REQUEUE_INTERVAL_OVERRIDE` on the service provider deployment, for example `10m`. It overrides the value set in code and is meant for testing and debugging. An invalid or non-positive value makes the service provider panic at startup.
 
 ## Cluster Access
 
