@@ -126,6 +126,28 @@
   overflow-wrap: anywhere;
 }
 
+.details {
+  margin: 0.25rem 0 0 2.25rem;
+  font-size: 0.9375rem;
+}
+
+.details > summary {
+  width: fit-content;
+  padding: 0.25rem 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.details > summary:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 3px;
+  border-radius: 0.25rem;
+}
+
+.details .description {
+  margin: 0.75rem 0 0;
+}
+
 .checked .label,
 .checked .description {
   color: var(--ifm-color-emphasis-700);

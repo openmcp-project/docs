@@ -15,6 +15,7 @@ import Checklist from '@site/src/components/Checklist';
     {
       id: 'tests',
       title: 'Run the tests',
+      expandable: true,
       description: <>Run <code>npm run build</code> and fix any errors.</>,
     },
     {
@@ -39,6 +40,7 @@ import Checklist from '@site/src/components/Checklist';
 | `items[].id` | string | Required unique, stable identifier within this checklist. |
 | `items[].title` | React node | Required checkbox label. Use text or non-interactive formatting. |
 | `items[].description` | React node | Optional supporting content. Can include links, inline code, or other JSX. |
+| `items[].expandable` | boolean | Defaults to `false`. Set to `true` to put the description behind an “Instructions” disclosure, collapsed initially. |
 
 Each checklist instance has independent state and unique checkbox IDs, so multiple checklists can appear on one page. Users can toggle an item with its checkbox or label, using a pointer or keyboard. Description links stay independently clickable.
 
