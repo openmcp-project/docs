@@ -1,0 +1,150 @@
+---
+sidebar_position: 1
+id: contribution-guidelines
+---
+
+import Checklist from '@site/src/components/Checklist';
+
+# Contribution Guidelines
+
+**Anyone is invited to contribute to OpenControlPlane**. You do not need organization membership to do so. 
+
+This page walks you trhough the **essential steps to make you an active contirbutor**!
+
+_For a detailed description, checkout the [org-wide contributing guide](https://github.com/openmcp-project/.github/blob/main/CONTRIBUTING.md)_.
+
+## 1. Bring your suggestions
+
+Changes and fixes are welcome—follow the approach below to help us collaborate effectively.
+
+### New Features
+New features are best discussed with maintainers in an issue **before implementing them**. 
+
+:::info Let's meet
+
+We hope to see you at one of our [community calls](https://github.com/orgs/openmcp-project/discussions/categories/community-calls) to meet, and discuss your next contribution idea.
+
+:::
+
+### Bug fixes
+For a bug fix or documentation change, link an issue or explain the motivation in your PR 
+
+### Code of conduct
+
+Follow the project's license and [Code of Conduct](https://github.com/openmcp-project/.github/blob/main/CODE_OF_CONDUCT.md). 
+
+Using AI-generated code or content? Read the [AI contribution guidelines](https://github.com/openmcp-project/.github/blob/main/CONTRIBUTING_USING_GENAI.md) first.
+
+## 2. Fork and create a feature branch
+
+:::info Every change must come from fork!
+
+**Every change to a public repo is submitted through a pull request from a fork.**
+
+:::
+
+1. Fork the repo and clone your fork.
+2. Create a feature branch from the original repo's default branch.
+
+   <a className="button button--outline button--primary button--sm" href="https://docs.github.com/en/get-started/quickstart/fork-a-repo">Learn how to Fork a Repo</a>
+
+3. Make your changes and push them to your fork.
+4. Open a PR from your fork to the original repo.
+
+   <a className="button button--outline button--primary button--sm" href="https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-a-pull-request-from-a-fork">Learn how to open PR from fork</a>
+
+## 3. Sign every commit
+
+Every commit needs all three:
+
+<Checklist
+  title="Commit requirements"
+  items={[
+    {
+      id: 'dco',
+      title: 'Add DCO sign-off',
+      description: <>Configure Git with your real name and email. <br/> Use <code>git commit -s</code> to certify your right to contribute under the <a href="https://developercertificate.org/">Developer Certificate of Origin</a>.</>,
+    },
+    {
+      id: 'signature',
+      title: 'Sign commit with your key',
+      description: <><a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits">Set up GPG or SSH commit signing</a> and register the key with GitHub. <br/>Use <code>git commit -S</code> and check that GitHub shows the commit as <strong>Verified</strong>.</>,
+    },
+    {
+      id: 'message',
+      title: 'Use conventional commit messages',
+      description: <>Use a type and a short description, such as <code>fix: handle missing configuration</code> or <code>docs: clarify setup</code>. <br/>See the <a href="https://www.conventionalcommits.org/en/v1.0.0/#summary">Conventional Commits summary</a>.</>,
+    },
+  ]}
+/>
+
+
+```sh title="Example commit fullfilling all requirements"
+git commit -s -S -m "docs: clarify setup"
+```
+
+_Wnat to learn more, see our [full commit requirements](https://github.com/openmcp-project/.github/blob/main/CONTRIBUTING.md#commit-requirements)_.
+
+## 4. Open Pull Request from fork
+
+Familiarize yourself with any repos' `README` and `CONTRIBUTING.md` for setup, tests, and repository-specific guidance. 
+
+For any controller change, also checkout our [General Controller Guidelines](/developers/general).
+
+<Checklist
+  title="PR checklist"
+  items={[
+    {
+      id: 'tests',
+      title: 'Run tests locally',
+      description: <>Run the repo's documented tests and checks. Update documentation where needed.</>,
+    },
+    {
+      id: 'open-pr',
+      title: 'Open your pull request',
+      description: <>Use your fork's feature branch and target the original repo's default branch, unless the repo specifies another target.</>,
+    },
+    {
+      id: 'description',
+      title: 'Explain your change',
+      description: <>Describe what changed, why, and how you tested it. Link the issue if one exists and highlight any breaking changes.</>,
+    },
+    {
+      id: 'commits',
+      title: 'Check every commit',
+      description: <>Each commit needs a DCO sign-off, a verified signature, and a conventional commit message. See <a href="#3-sign-every-commit">Sign every commit</a> for the checklist and setup links.</>,
+    },
+    {
+      id: 'checks',
+      title: 'Get all checks green',
+      description: <>Wait for GitHub Actions and fix failing checks. The required <code>pr-gate</code> check confirms all other workflows are green. If it fails, inspect the underlying workflow.</>,
+    },
+    {
+      id: 'review',
+      title: 'Address feedback and get approval',
+      description: <>Respond to review feedback and get at least one approval from a code owner where defined. Changes to <code>CODEOWNERS</code> also need Technical Steering Committee (TSC) approval.</>,
+    },
+  ]}
+/>
+
+:::warning Waiting for workflow approval?
+
+If you’re not an organization or contributor-team member, your workflow run needs approval—this is normal. Ask a maintainer to approve it in a PR comment. For members, workflows run automatically.
+
+:::
+
+
+## Access 
+
+### Features and improvements
+
+**You do not need membership to contribute** features and improvements to this project.
+
+### Administration
+
+If you think you should join the organization or a team, [reach out to the maintainers on GitHub Discussions](https://github.com/orgs/openmcp-project/discussions) to discuss the access you need.
+
+All organization settings are managed as code.
+
+- **Members and teams:** [`orgs/openmcp-project/org.yaml`](https://github.com/neonephos/account-administration/blob/main/orgs/openmcp-project/org.yaml). Follow the [administration guide](https://github.com/neonephos/account-administration/blob/main/docs/peribolos-setup.md) to propose changes through a PR.
+- **Repository rules and release settings:** [`openmcp-project/admin`](https://github.com/openmcp-project/admin) _(admins-only)_. 
